@@ -1,0 +1,13 @@
+.box {
+  display: flex;
+  flex-flow: column;
+  height: 100vh;
+}
+
+.box .row.header {
+  flex: 0 1 auto;
+}
+
+.box .row.content {
+  flex: 1 1 auto;
+}
