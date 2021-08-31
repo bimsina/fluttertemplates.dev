@@ -151,6 +151,15 @@ function ProductsList() {
         {nums.map((val) => {
           return (
             <Grid item md={3} xs={12} sm={6} key={val.id}>
+              {/* <Skeleton
+                variant="rect"
+                height="12rem"
+                style={{
+                  margin: "0.8rem",
+                  borderRadius: "0.5rem",
+                }}
+              /> */}
+
               <Card
                 elevation={0}
                 style={{
