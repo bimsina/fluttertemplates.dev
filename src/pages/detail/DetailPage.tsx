@@ -12,6 +12,8 @@ import "./DetailPage.css";
 import firebase from "../../firebase/clientApp";
 import Product from "../../models/Product";
 import CustomIframe from "./CustomIframe";
+import TemplateCategories from "./TemplateCategories";
+import PackagesUsed from "./PackagesUsed";
 
 function DetailPage() {
   const nums = Array.from(Array(4).keys());
@@ -60,10 +62,13 @@ function RenderBody(props: Product) {
       // case 0:
       //   return <PageNotFoundPage />;
       case 0:
-        if (props.codeGistUrl) return <Code url={props.codeGistUrl} />;
+        if (props.codeGistUrl)
+          return (
+            <Code codeGistUrl={props.codeGistUrl} fullCodeUrl={props.codeUrl} />
+          );
         else return <div />;
-      // case 2:
-      //   return <PageNotFoundPage />;
+      case 1:
+        return <PackagesUsed packages={props?.packageLinks ?? []} />;
       default:
         return <PageNotFoundPage />;
     }
@@ -99,27 +104,8 @@ function RenderBody(props: Product) {
             >
               {props.title}
             </Typography>
-            {/* <div
-              style={{
-                marginTop: "8px",
-              }}
-            >
-              <Grid container spacing={1}>
-                {nums.map((val) => {
-                  return (
-                    <Grid item key={val}>
-                      <Chip
-                        label={"Chip " + val}
-                        component="a"
-                        color="default"
-                        variant="outlined"
-                        clickable
-                      />
-                    </Grid>
-                  );
-                })}
-              </Grid>
-            </div> */}
+
+            <TemplateCategories categories={props.categories} />
           </CardContent>
 
           <Tabs
@@ -131,7 +117,7 @@ function RenderBody(props: Product) {
           >
             {/* <Tab label="Info" /> */}
             <Tab label="Code" />
-            {/* <Tab label="Reviews" /> */}
+            <Tab label="Packages Used" />
           </Tabs>
         </Card>
         {renderTabs(selectedTab)}

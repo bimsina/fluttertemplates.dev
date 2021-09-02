@@ -22,7 +22,6 @@ function HeroSection() {
       justifyContent="center"
       alignItems="center"
       style={{
-        // height: "90vh",
         width: "100%",
       }}
     >
@@ -83,9 +82,10 @@ function HeroSection() {
       <Grid item md={6}>
         <img
           src={HeroImage}
+          alt="hero"
           style={{
             width: "100%",
-            maxHeight: "85vh",
+            height: "85vh",
             objectFit: "scale-down",
           }}
         />

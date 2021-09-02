@@ -6,7 +6,6 @@ export const fetchCategories = async (): Promise<Category[]> => {
   const _storeData = Cookies.get("categories");
   if (_storeData) {
     const _categories: Category[] = JSON.parse(_storeData);
-    console.log("Offline data");
     return _categories;
   }
 

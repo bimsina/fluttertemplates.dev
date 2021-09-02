@@ -1,37 +1,115 @@
-import { CircularProgress, Grid, useTheme } from "@material-ui/core";
+import { CircularProgress, Grid, Snackbar, useTheme } from "@material-ui/core";
+import { GitHub } from "@material-ui/icons";
 import React, { useEffect, useState } from "react";
+import { MdContentCopy } from "react-icons/md";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import {
-  arduinoLight,
-  dracula,
-  github,
-  githubGist,
-} from "react-syntax-highlighter/dist/esm/styles/hljs";
+import { dracula, github } from "react-syntax-highlighter/dist/esm/styles/hljs";
+import CustomButton from "../../components/custom_button";
+import copy from "copy-to-clipboard";
 
-function Code(params: { url: string }) {
+interface CodeParams {
+  codeGistUrl?: string;
+  fullCodeUrl?: string;
+}
+
+function Code(params: CodeParams) {
   const [code, setCode] = useState("");
   const isDarkTheme = useTheme().palette.type === "dark";
 
+  const [open, setOpen] = React.useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleClose = (
+    event: React.SyntheticEvent | React.MouseEvent,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
+
   useEffect(() => {
-    // Update the document title using the browser API
-    fetch(params.url)
-      .then((response) => response.text())
-      .then((textString) => {
-        setCode(textString);
-      });
+    if (params.codeGistUrl) {
+      fetch(params.codeGistUrl)
+        .then((response) => response.text())
+        .then((textString) => {
+          setCode(textString);
+        });
+    }
   }, []);
 
   return (
     <div>
-      {code ? (
-        <SyntaxHighlighter
-          language="dart"
-          style={!isDarkTheme ? github : dracula}
-          showLineNumbers={false}
-          customStyle={{ maxWidth: "95vw", maxHeight: "60vh" }}
+      {code && params.codeGistUrl ? (
+        <div
+          style={{
+            position: "relative",
+          }}
         >
-          {code}
-        </SyntaxHighlighter>
+          <SyntaxHighlighter
+            language="dart"
+            style={!isDarkTheme ? github : dracula}
+            showLineNumbers={false}
+            customStyle={{
+              maxWidth: "95vw",
+              maxHeight: "55vh",
+              width: "100%",
+            }}
+          >
+            {code}
+          </SyntaxHighlighter>
+          {params.fullCodeUrl && (
+            <a
+              href={params.fullCodeUrl}
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <CustomButton
+                variant="contained"
+                color="primary"
+                style={{
+                  left: "50%",
+                }}
+              >
+                <GitHub
+                  fontSize="small"
+                  style={{
+                    marginBottom: "-4px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
+                />
+                Full Source code
+              </CustomButton>
+            </a>
+          )}
+          <CustomButton
+            variant="contained"
+            color="primary"
+            style={{
+              position: "absolute",
+              top: "8px",
+              right: "16px",
+            }}
+            onClick={() => {
+              copy(code);
+              setOpen(true);
+            }}
+          >
+            <MdContentCopy
+              style={{
+                marginBottom: "-2px",
+                marginRight: "2px",
+              }}
+            />
+            Copy
+          </CustomButton>
+        </div>
       ) : (
         <Grid
           container
@@ -47,6 +125,17 @@ function Code(params: { url: string }) {
           </Grid>
         </Grid>
       )}
+
+      <Snackbar
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "left",
+        }}
+        open={open}
+        autoHideDuration={4000}
+        onClose={handleClose}
+        message="Code copied successfully!"
+      />
     </div>
   );
 }

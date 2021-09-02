@@ -2,6 +2,7 @@ import React from "react";
 import Category from "./Category";
 
 interface Product {
+  id?: string;
   title: string;
   codeGistUrl?: string;
   codeUrl: string;

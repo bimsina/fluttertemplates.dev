@@ -4,12 +4,12 @@ import Category from "../../models/Category";
 import { Skeleton } from "@material-ui/lab";
 import { fetchCategories } from "../../utils/fetchcategories";
 import "../../App.css";
-interface CategoriesListProps {
-  selectedId: string;
-  onChange: (id: string) => void;
+
+interface TemplateCategoriesListProps {
+  categories: string[];
 }
 
-export default function CategoriesList(props: CategoriesListProps) {
+export default function TemplateCategories(props: TemplateCategoriesListProps) {
   const [categories, setCategories] = React.useState<Category[]>([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
@@ -20,34 +20,29 @@ export default function CategoriesList(props: CategoriesListProps) {
   async function _fetchCategories() {
     setIsLoading(true);
 
-    const _categories = await fetchCategories();
+    let _categories = await fetchCategories();
+    _categories = _categories.filter((element) => {
+      if (props.categories.includes(element.id)) {
+        return true;
+      } else return false;
+    });
     setCategories(_categories);
     setIsLoading(false);
   }
 
   if (!isLoading)
     return (
-      <div className="categories-list">
-        <Chip
-          label="All"
-          component="a"
-          color={props.selectedId === "all" ? "primary" : "default"}
-          variant="default"
-          clickable
-          style={{
-            margin: "4px",
-          }}
-          key="all"
-          onClick={() => {
-            props.onChange("all");
-          }}
-        />
+      <div
+        className="categories-list"
+        style={{
+          marginBottom: "-40px",
+        }}
+      >
         {categories.map((val) => {
           return (
             <Chip
               label={val.title}
               component="a"
-              color={props.selectedId === val.id ? "primary" : "default"}
               variant="default"
               clickable
               style={{
@@ -55,7 +50,7 @@ export default function CategoriesList(props: CategoriesListProps) {
               }}
               key={val.id}
               onClick={() => {
-                props.onChange(val.id);
+                // props.onChange(val.id);
               }}
             />
           );
