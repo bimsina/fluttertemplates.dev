@@ -1,23 +1,16 @@
 import React from "react";
-import {
-  Button,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
-  Grid,
-} from "@material-ui/core";
+import { Grid } from "@material-ui/core";
 import HeroImage from "../../assets/home_hero.svg";
 import { Typography } from "@material-ui/core";
-import { Divider } from "@material-ui/core";
-import { CardActionArea } from "@material-ui/core";
+
 import CustomButton from "../../components/custom_button";
+import TemplatesList from "./TemplatesList";
 
 export default function HomePage() {
   return (
     <div>
       <HeroSection />
-      <ProductsList />
+      <TemplatesList />
     </div>
   );
 }
@@ -41,7 +34,7 @@ function HeroSection() {
           alignItems="flex-start"
           spacing={4}
           style={{
-            padding: "4rem",
+            padding: "2rem",
           }}
         >
           <Grid>
@@ -98,95 +91,5 @@ function HeroSection() {
         />
       </Grid>
     </Grid>
-  );
-}
-
-function ProductsList() {
-  const nums = [
-    { id: 1, title: "All" },
-    { id: 2, title: "Android" },
-    { id: 3, title: "iOS" },
-    { id: 4, title: "Web" },
-  ];
-
-  return (
-    <div
-      style={{
-        padding: "4rem",
-      }}
-    >
-      <Typography
-        variant="h5"
-        style={{
-          fontWeight: "bold",
-        }}
-      >
-        All Apps
-      </Typography>
-
-      <Grid
-        container
-        spacing={1}
-        style={{
-          marginTop: "0.5rem",
-          marginBottom: "1rem",
-        }}
-      >
-        {nums.map((val) => {
-          return (
-            <Grid item key={val.id}>
-              <Chip
-                label={val.title}
-                component="a"
-                color={nums.indexOf(val) === 0 ? "primary" : "default"}
-                variant="default"
-                clickable
-              />
-            </Grid>
-          );
-        })}
-      </Grid>
-
-      <Grid container>
-        {nums.map((val) => {
-          return (
-            <Grid item md={3} xs={12} sm={6} key={val.id}>
-              {/* <Skeleton
-                variant="rect"
-                height="12rem"
-                style={{
-                  margin: "0.8rem",
-                  borderRadius: "0.5rem",
-                }}
-              /> */}
-
-              <Card
-                elevation={0}
-                style={{
-                  margin: "0.8rem",
-                }}
-              >
-                <CardActionArea
-                  onClick={() => (location.href = "/detail/1234")}
-                >
-                  <CardMedia
-                    image="https://www.instamobile.io/wp-content/uploads/2021/06/taxi-app-react-native.png"
-                    title={val.title}
-                    style={{
-                      height: "10rem",
-                    }}
-                  />
-                  <CardContent>
-                    <Typography gutterBottom variant="h6" component="h2">
-                      {val.title}
-                    </Typography>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          );
-        })}
-      </Grid>
-    </div>
   );
 }

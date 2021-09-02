@@ -107,7 +107,10 @@ function Navbar(props: Navbarinterface) {
             {user && (
               <div>
                 <IconButton onClick={handleClick}>
-                  <Avatar alt="Profile-image" src={user.photoURL ?? ""} />
+                  <Avatar
+                    alt={user.displayName ?? "Profile Image"}
+                    src={user.photoURL ?? ""}
+                  />
                 </IconButton>
                 <Menu
                   id="simple-menu"

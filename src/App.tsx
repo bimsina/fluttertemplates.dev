@@ -1,5 +1,9 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { createTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
+import {
+  unstable_createMuiStrictModeTheme as createTheme,
+  CssBaseline,
+  ThemeProvider,
+} from "@material-ui/core";
 
 import { BrowserRouter as Router, Switch, Route, Link } from "react-router-dom";
 import Navbar from "./components/navbar/Navbar";
@@ -9,6 +13,9 @@ import LoginPage from "./pages/login/LoginPage";
 import { MdBrightness2, MdBrightness7 } from "react-icons/md";
 import HomePage from "./pages/home/HomePage";
 import PageNotFoundPage from "./pages/404/404Page";
+import AdminPage from "./pages/admin/AdminPage";
+import AdminCategories from "./pages/admin/AdminCategories";
+import AdminAddTemplates from "./pages/admin/AdminAddtemplates";
 
 function App() {
   const [darkMode, setDarkMode] = useState(true);
@@ -54,6 +61,19 @@ function App() {
             <Route path="/login" exact>
               <LoginPage />
             </Route>
+
+            <Route path="/admin" exact>
+              <AdminPage />
+            </Route>
+
+            <Route path="/addCategories" exact>
+              <AdminCategories />
+            </Route>
+
+            <Route path="/addTemplates" exact>
+              <AdminAddTemplates />
+            </Route>
+
             <Route path="/" exact>
               <HomePage />
             </Route>
