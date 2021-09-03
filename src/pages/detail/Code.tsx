@@ -64,29 +64,32 @@ function Code(params: CodeParams) {
             {code}
           </SyntaxHighlighter>
           {params.fullCodeUrl && (
-            <a
-              href={params.fullCodeUrl}
-              target="_blank"
-              referrerPolicy="no-referrer"
+            <Grid
+              container
+              direction="row"
+              justifyContent="center"
+              alignItems="center"
             >
-              <CustomButton
-                variant="contained"
-                color="primary"
-                style={{
-                  left: "50%",
-                }}
-              >
-                <GitHub
-                  fontSize="small"
-                  style={{
-                    marginBottom: "-4px",
-                    marginRight: "8px",
-                    marginTop: "2px",
-                  }}
-                />
-                Full Source code
-              </CustomButton>
-            </a>
+              <Grid item>
+                <a
+                  href={params.fullCodeUrl}
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                >
+                  <CustomButton variant="contained" color="primary">
+                    <GitHub
+                      fontSize="small"
+                      style={{
+                        marginBottom: "-4px",
+                        marginRight: "8px",
+                        marginTop: "2px",
+                      }}
+                    />
+                    Full Source code
+                  </CustomButton>
+                </a>
+              </Grid>
+            </Grid>
           )}
           <CustomButton
             variant="contained"

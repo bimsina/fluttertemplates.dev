@@ -5,6 +5,7 @@ import firebase from "../../firebase/clientApp";
 import "firebase/auth";
 import "firebase/firestore";
 import { Redirect, useHistory } from "react-router-dom";
+import { checkifIsAdmin } from "../../utils/isAdmin";
 
 export interface AdminWrapperProps {
   children: JSX.Element;
@@ -30,27 +31,15 @@ const adminWrapper = (props: AdminWrapperProps) => {
     });
   }
 
-  function checkAdmin(id: string) {
-    firebase
-      .firestore()
-      .collection("users")
-      .doc(id)
-      .get()
-      .then(function (querySnapshot) {
-        if (querySnapshot) {
-          setIsLoading(false);
-          if (querySnapshot?.data()?.isAdmin ?? false) {
-            setIsAdmin(true);
-          } else {
-            history.push("/");
-          }
-        } else {
-          history.push("/");
-        }
-      })
-      .catch(function (error) {
-        history.push("/");
-      });
+  async function checkAdmin(id: string) {
+    const _isAdmin = await checkifIsAdmin(id);
+
+    if (_isAdmin) {
+      setIsLoading(false);
+      setIsAdmin(true);
+    } else {
+      history.push("/");
+    }
   }
 
   if (!isLoading && isAdmin) return props.children;

@@ -1,4 +1,10 @@
-import { Box, Chip, CircularProgress, Typography } from "@material-ui/core";
+import {
+  Box,
+  Chip,
+  CircularProgress,
+  IconButton,
+  Typography,
+} from "@material-ui/core";
 import { CardContent } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import { Tabs, Grid, Tab } from "@material-ui/core";
@@ -14,6 +20,8 @@ import Product from "../../models/Product";
 import CustomIframe from "./CustomIframe";
 import TemplateCategories from "./TemplateCategories";
 import PackagesUsed from "./PackagesUsed";
+import { Edit } from "@material-ui/icons";
+import { checkifIsAdmin } from "../../utils/isAdmin";
 
 function DetailPage() {
   const nums = Array.from(Array(4).keys());
@@ -45,13 +53,22 @@ function DetailPage() {
         </Grid>
       )}
       {!loading && snapshot?.data() && (
-        <RenderBody {...(snapshot.data()! as Product)} />
+        <RenderBody
+          product={{
+            id: snapshot.id,
+            ...(snapshot.data()! as Product),
+          }}
+        />
       )}
     </div>
   );
 }
 
-function RenderBody(props: Product) {
+interface RenderBodyProps {
+  product: Product;
+}
+
+function RenderBody(props: RenderBodyProps) {
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (event: any, newValue: any) => {
     setSelectedTab(newValue);
@@ -59,16 +76,17 @@ function RenderBody(props: Product) {
 
   function renderTabs(selectedTab: number) {
     switch (selectedTab) {
-      // case 0:
-      //   return <PageNotFoundPage />;
       case 0:
-        if (props.codeGistUrl)
+        if (props.product.codeGistUrl)
           return (
-            <Code codeGistUrl={props.codeGistUrl} fullCodeUrl={props.codeUrl} />
+            <Code
+              codeGistUrl={props.product.codeGistUrl}
+              fullCodeUrl={props.product.codeUrl}
+            />
           );
         else return <div />;
       case 1:
-        return <PackagesUsed packages={props?.packageLinks ?? []} />;
+        return <PackagesUsed packages={props.product?.packageLinks ?? []} />;
       default:
         return <PageNotFoundPage />;
     }
@@ -95,17 +113,30 @@ function RenderBody(props: Product) {
       >
         <Card elevation={0}>
           <CardContent>
-            <Typography
-              component="h5"
-              variant="h5"
-              style={{
-                fontWeight: "bold",
-              }}
+            <Grid
+              container
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
             >
-              {props.title}
-            </Typography>
+              <Grid item>
+                <Typography
+                  component="h5"
+                  variant="h5"
+                  style={{
+                    fontWeight: "bold",
+                  }}
+                >
+                  {props.product.title}
+                </Typography>
+              </Grid>
 
-            <TemplateCategories categories={props.categories} />
+              <Grid>
+                <EditButton id={props.product.id ?? "id"} />
+              </Grid>
+            </Grid>
+
+            <TemplateCategories categories={props.product.categories} />
           </CardContent>
 
           <Tabs
@@ -137,9 +168,9 @@ function RenderBody(props: Product) {
             aspectRatio: "9 / 16",
           }}
         >
-          <CustomIframe url={props.demoUrl} />
+          <CustomIframe url={props.product.demoUrl} />
           {/* <iframe
-            src={props.demoUrl}
+            src={props.product.demoUrl}
             style={{
               height: "100%",
               width: "100%",
@@ -150,6 +181,31 @@ function RenderBody(props: Product) {
       </Grid>
     </Grid>
   );
+}
+
+function EditButton(params: { id: string }) {
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    fetchUser();
+  }, []);
+
+  function fetchUser() {
+    firebase.auth().onAuthStateChanged(async (_currentUser) => {
+      if (_currentUser) {
+        const _isAdmin = await checkifIsAdmin(_currentUser.uid);
+        setIsAdmin(_isAdmin);
+      }
+    });
+  }
+
+  if (!isAdmin) return <div />;
+  else
+    return (
+      <IconButton size="small" href={`/addTemplates/${params.id}`}>
+        <Edit />
+      </IconButton>
+    );
 }
 
 export default DetailPage;

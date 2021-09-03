@@ -17,7 +17,7 @@ export default function PackagesUsed(params: Props) {
       direction="column"
       justifyContent="center"
       alignItems="center"
-      spacing={4}
+      spacing={1}
       style={{
         height: "80%",
         width: "100%",
@@ -38,36 +38,33 @@ export default function PackagesUsed(params: Props) {
           <Typography>No Packages Used</Typography>
         </Grid>
       )}
-      {params.packages.length !== 0 && (
+
+      {params.packages.map((packageName) => (
         <Grid item>
-          <List>
-            {params.packages.map((packageName) => (
-              <a
-                href={packageName}
-                target="_blank"
-                referrerPolicy="no-referrer"
+          <a
+            href={packageName}
+            target="_blank"
+            referrerPolicy="no-referrer"
+            style={{
+              color: "transparent",
+            }}
+          >
+            <Button
+              style={{
+                textTransform: "none",
+              }}
+            >
+              <Link
+                fontSize="small"
                 style={{
-                  color: "transparent",
+                  marginRight: "8px",
                 }}
-              >
-                <Button
-                  style={{
-                    textTransform: "none",
-                  }}
-                >
-                  <Link
-                    fontSize="small"
-                    style={{
-                      marginRight: "8px",
-                    }}
-                  />
-                  {packageName.split("/").pop()?.toLowerCase()}
-                </Button>
-              </a>
-            ))}
-          </List>
+              />
+              {packageName.split("/").pop()?.toLowerCase()}
+            </Button>
+          </a>
         </Grid>
-      )}
+      ))}
     </Grid>
   );
 }

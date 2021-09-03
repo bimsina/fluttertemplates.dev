@@ -17,35 +17,45 @@ import CustomButton from "../../components/custom_button";
 import { fetchCategories } from "../../utils/fetchcategories";
 import Category from "../../models/Category";
 import firebase from "../../firebase/clientApp";
+import { useParams } from "react-router";
 
 export default function AdminAddTemplates() {
   const {
     control,
     formState: { errors },
-    getValues,
+    reset,
     handleSubmit,
   } = useForm<Product>();
 
   const onSubmit: SubmitHandler<Product> = (data) => {
     data.categories = selectedCategory;
+    if (packageLinks === "") {
+      data.packageLinks = [];
+    } else data.packageLinks = packageLinks.split(",");
     addTemplate(data);
   };
 
   async function addTemplate(data: Product) {
     setLoading(true);
-    const _data = await firebase.firestore().collection("templates").add(data);
+    const _coll = firebase.firestore().collection("templates");
+    if (params.id) {
+      await _coll.doc(params.id).update(data);
+    } else {
+      await _coll.add(data);
+    }
     setLoading(false);
 
-    if (_data) {
-      alert("template added");
-    }
+    alert("template added");
   }
+
+  const params = useParams<{ id?: string }>();
 
   const [categories, setCategories] = React.useState<Category[]>([]);
 
   const [loading, setLoading] = React.useState(true);
 
   const [selectedCategory, setSelectedCategory] = React.useState<string[]>([]);
+  const [packageLinks, setPackageLinks] = React.useState("");
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setSelectedCategory(event.target.value as string[]);
@@ -65,6 +75,9 @@ export default function AdminAddTemplates() {
   };
 
   useEffect(() => {
+    if (params.id) {
+      fetchTemplate(params.id);
+    }
     _fetchCategories();
   }, []);
 
@@ -74,6 +87,26 @@ export default function AdminAddTemplates() {
     const _categories = await fetchCategories();
     setCategories(_categories);
     setLoading(false);
+  }
+
+  async function fetchTemplate(id: string) {
+    setLoading(true);
+    const snapshot = await firebase
+      .firestore()
+      .collection("templates")
+      .doc(id)
+      .get();
+    if (snapshot?.data()) {
+      setLoading(false);
+      const _template = snapshot.data() as Product;
+      reset(_template);
+      setSelectedCategory(_template.categories);
+      if (_template.packageLinks) {
+        setPackageLinks(_template.packageLinks?.join(","));
+      }
+    } else {
+      setLoading(false);
+    }
   }
 
   return (
@@ -203,12 +236,22 @@ export default function AdminAddTemplates() {
             </Select>
 
             <Grid item>
+              <TextField
+                label="Package Links"
+                variant="filled"
+                required
+                value={packageLinks}
+                onChange={(e) => setPackageLinks(e.target.value)}
+              />
+            </Grid>
+
+            <Grid item>
               <CustomButton
                 variant="contained"
                 color="primary"
                 onClick={handleSubmit(onSubmit)}
               >
-                Add Template
+                {params.id ? "Update Template" : "Add Template"}
               </CustomButton>
             </Grid>
           </Grid>

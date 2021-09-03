@@ -74,6 +74,10 @@ function App() {
               <AdminAddTemplates />
             </Route>
 
+            <Route path="/addTemplates/:id" exact>
+              <AdminAddTemplates />
+            </Route>
+
             <Route path="/" exact>
               <HomePage />
             </Route>

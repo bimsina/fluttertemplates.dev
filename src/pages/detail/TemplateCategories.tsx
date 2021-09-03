@@ -35,7 +35,7 @@ export default function TemplateCategories(props: TemplateCategoriesListProps) {
       <div
         className="categories-list"
         style={{
-          marginBottom: "-40px",
+          marginBottom: "-25px",
         }}
       >
         {categories.map((val) => {
