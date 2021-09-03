@@ -45,7 +45,7 @@ function Code(params: CodeParams) {
 
   return (
     <div>
-      {code && params.codeGistUrl ? (
+      {code && params.codeGistUrl && (
         <div
           style={{
             position: "relative",
@@ -63,34 +63,7 @@ function Code(params: CodeParams) {
           >
             {code}
           </SyntaxHighlighter>
-          {params.fullCodeUrl && (
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Grid item>
-                <a
-                  href={params.fullCodeUrl}
-                  target="_blank"
-                  referrerPolicy="no-referrer"
-                >
-                  <CustomButton variant="contained" color="primary">
-                    <GitHub
-                      fontSize="small"
-                      style={{
-                        marginBottom: "-4px",
-                        marginRight: "8px",
-                        marginTop: "2px",
-                      }}
-                    />
-                    Full Source code
-                  </CustomButton>
-                </a>
-              </Grid>
-            </Grid>
-          )}
+
           <CustomButton
             variant="contained"
             color="primary"
@@ -113,7 +86,9 @@ function Code(params: CodeParams) {
             Copy
           </CustomButton>
         </div>
-      ) : (
+      )}
+
+      {!code && params.codeGistUrl && (
         <Grid
           container
           direction="column"
@@ -129,6 +104,37 @@ function Code(params: CodeParams) {
         </Grid>
       )}
 
+      {params.fullCodeUrl && (
+        <Grid
+          container
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          style={{
+            height: params.codeGistUrl ? "100%" : "70vh",
+          }}
+        >
+          <Grid item>
+            <a
+              href={params.fullCodeUrl}
+              target="_blank"
+              referrerPolicy="no-referrer"
+            >
+              <CustomButton variant="contained" color="primary">
+                <GitHub
+                  fontSize="small"
+                  style={{
+                    marginBottom: "-4px",
+                    marginRight: "8px",
+                    marginTop: "2px",
+                  }}
+                />
+                Full Source code
+              </CustomButton>
+            </a>
+          </Grid>
+        </Grid>
+      )}
       <Snackbar
         anchorOrigin={{
           vertical: "bottom",

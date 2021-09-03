@@ -154,7 +154,7 @@ export default function TemplatesList() {
                           }}
                         />
                         <CardContent>
-                          <Typography gutterBottom variant="h6" component="h2">
+                          <Typography gutterBottom variant="h6">
                             {val?.title ?? "Title"}
                           </Typography>
                         </CardContent>

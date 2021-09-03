@@ -77,14 +77,12 @@ function RenderBody(props: RenderBodyProps) {
   function renderTabs(selectedTab: number) {
     switch (selectedTab) {
       case 0:
-        if (props.product.codeGistUrl)
-          return (
-            <Code
-              codeGistUrl={props.product.codeGistUrl}
-              fullCodeUrl={props.product.codeUrl}
-            />
-          );
-        else return <div />;
+        return (
+          <Code
+            codeGistUrl={props.product.codeGistUrl}
+            fullCodeUrl={props.product.codeUrl}
+          />
+        );
       case 1:
         return <PackagesUsed packages={props.product?.packageLinks ?? []} />;
       default:
@@ -165,18 +163,10 @@ function RenderBody(props: RenderBodyProps) {
         <div
           style={{
             height: "80vh",
-            aspectRatio: "9 / 16",
+            width: "45vh",
           }}
         >
           <CustomIframe url={props.product.demoUrl} />
-          {/* <iframe
-            src={props.product.demoUrl}
-            style={{
-              height: "100%",
-              width: "100%",
-              borderRadius: "1rem",
-            }}
-          ></iframe> */}
         </div>
       </Grid>
     </Grid>

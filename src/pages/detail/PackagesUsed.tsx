@@ -40,7 +40,7 @@ export default function PackagesUsed(params: Props) {
       )}
 
       {params.packages.map((packageName) => (
-        <Grid item>
+        <Grid item key={packageName}>
           <a
             href={packageName}
             target="_blank"
@@ -61,6 +61,14 @@ export default function PackagesUsed(params: Props) {
                 }}
               />
               {packageName.split("/").pop()?.toLowerCase()}
+              <img
+                src={`https://img.shields.io/pub/v/${packageName
+                  .split("/")
+                  .pop()}.svg`}
+                style={{
+                  marginLeft: "8px",
+                }}
+              />
             </Button>
           </a>
         </Grid>

@@ -38,9 +38,10 @@ function HeroSection() {
         >
           <Grid>
             <Typography
-              variant="h4"
+              variant="h1"
               style={{
                 fontWeight: "bold",
+                fontSize: "2.5rem",
               }}
             >
               Flutter UI Templates
