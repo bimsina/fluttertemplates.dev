@@ -11,7 +11,7 @@ import {
 export default function TemplatePage(props: TemplateCardProps) {
   return (
     <>
-      <TemplateDetailPage {...props.frontmatter} />;
+      <TemplateDetailPage {...props.frontmatter} />
     </>
   );
 }

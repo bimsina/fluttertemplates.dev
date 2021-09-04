@@ -1,11 +1,4 @@
-import {
-  Box,
-  Chip,
-  CircularProgress,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
-import { CardContent } from "@material-ui/core";
+import { Typography } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import { Tabs, Grid, Tab } from "@material-ui/core";
 
@@ -16,7 +9,6 @@ import CategoriesList from "./CategoriesList";
 import Code from "./Code";
 import CustomIframe from "./CustomIframe";
 import PackagesUsed from "./PackagesUsed";
-import Head from "next/head";
 import TemplatePageHead from "../head/TemplatePageHead";
 
 function TemplateDetailPage(params: TemplateFrontmatterProps) {
@@ -102,7 +94,6 @@ function RenderBody(props: TemplateFrontmatterProps) {
               textColor="primary"
               centered
             >
-              {/* <Tab label="Info" /> */}
               <Tab label="Code" />
               <Tab label="Packages Used" />
             </Tabs>
@@ -121,7 +112,7 @@ function RenderBody(props: TemplateFrontmatterProps) {
         <div
           style={{
             height: "80vh",
-            width: "45vh",
+            width: "calc(80vh/17 * 9)",
           }}
         >
           <CustomIframe url={props.demoUrl} />
