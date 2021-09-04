@@ -5,6 +5,7 @@ import { Typography, Grid } from "@material-ui/core";
 import CustomButton from "../components/custom_button";
 import TemplateCardProps from "../models/template_card";
 import getTemplatesList from "../utils/getTemplatesList";
+import TemplatesGrid from "../components/TemplatesGrid";
 
 export default function Home({
   templates,
@@ -19,26 +20,7 @@ export default function Home({
 
       <HeroSection />
 
-      <Typography
-        variant="h5"
-        style={{
-          fontWeight: "bold",
-        }}
-      >
-        All Apps
-      </Typography>
-
-      <Grid container>
-        {templates.map((template: TemplateCardProps, index: number) => {
-          return (
-            <TemplateCard
-              key={index}
-              id={template.id}
-              frontmatter={template.frontmatter}
-            />
-          );
-        })}
-      </Grid>
+      <TemplatesGrid templates={templates} limit={true} />
     </div>
   );
 }

@@ -11,8 +11,10 @@ import { Tabs, Grid, Tab } from "@material-ui/core";
 
 import React, { useEffect, useState } from "react";
 import TemplateFrontmatterProps from "../models/template_frontmatter";
+import PageNotFoundPage from "../pages/404";
 import Code from "./Code";
 import CustomIframe from "./CustomIframe";
+import PackagesUsed from "./PackagesUsed";
 
 function TemplateDetailPage(params: TemplateFrontmatterProps) {
   return (
@@ -35,11 +37,9 @@ function RenderBody(props: TemplateFrontmatterProps) {
           <Code codeGistUrl={props.codeGistUrl} fullCodeUrl={props.codeUrl} />
         );
       case 1:
-        return <div>Package</div>;
-      // return <PackagesUsed packages={props.product?.packageLinks ?? []} />;
+        return <PackagesUsed packages={props.packages ?? []} />;
       default:
-        return <div>Not found</div>;
-      // return <PageNotFoundPage />;
+        return <PageNotFoundPage />;
     }
   }
 

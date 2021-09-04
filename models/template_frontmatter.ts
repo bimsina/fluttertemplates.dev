@@ -5,4 +5,5 @@ export default interface TemplateFrontmatterProps {
   codeUrl: string;
   demoUrl: string;
   categories: string[];
+  packages: string[];
 }

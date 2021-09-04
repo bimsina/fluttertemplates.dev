@@ -16,3 +16,15 @@ a {
 * {
   box-sizing: border-box;
 }
+
+.categories-list {
+  display: flex;
+  flex-direction: row;
+  margin-top: 8px;
+  overflow-x: scroll;
+  overflow-y: hidden;
+  white-space: nowrap;
+}
+.categories-list::-webkit-scrollbar {
+  width: 0px;
+}
