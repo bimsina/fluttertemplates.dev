@@ -5,4 +5,5 @@ codeGistUrl: "https://raw.githubusercontent.com/fluttertemplates-dev/hero_listvi
 codeUrl: "https://github.com/fluttertemplates-dev/hero_listview"
 demoUrl: "https://fluttertemplates-dev.github.io/hero_listview/#/"
 categories: ["No Dependencies", "Micro Interaction"]
+isProtected: false
 ---

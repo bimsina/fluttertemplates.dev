@@ -82,7 +82,7 @@ function HeroSection() {
               href="#templates"
               disableElevation
               style={{
-                fontSize: "1.1rem",
+                fontSize: "1rem",
               }}
             >
               Let’s get started!

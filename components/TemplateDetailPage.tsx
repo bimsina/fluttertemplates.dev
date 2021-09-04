@@ -58,57 +58,58 @@ function RenderBody(props: TemplateFrontmatterProps) {
       // alignItems="center"
       justifyContent="space-evenly"
     >
-      <Grid
-        item
-        md={6}
-        style={{
-          height: "90vh",
-          width: "100%",
-        }}
-      >
-        <Card elevation={0}>
-          <Typography
-            component="h5"
-            variant="h5"
-            style={{
-              fontWeight: "bold",
-              marginLeft: "1rem",
-              marginTop: "1rem",
-            }}
-          >
-            {props.title}
-          </Typography>
-          {props.categories && props.categories.length > 0 && (
-            <div
+      {!(props.isProtected ?? false) && (
+        <Grid
+          item
+          md={6}
+          style={{
+            height: "90vh",
+            width: "100%",
+          }}
+        >
+          <Card elevation={0}>
+            <Typography
+              component="h5"
+              variant="h5"
               style={{
+                fontWeight: "bold",
                 marginLeft: "1rem",
-                marginBottom: "-10px",
+                marginTop: "1rem",
               }}
             >
-              <CategoriesList
-                categories={props.categories}
-                selected={""}
-                onChange={(val) => {}}
-                showAll={false}
-              />
-            </div>
-          )}
+              {props.title}
+            </Typography>
+            {props.categories && props.categories.length > 0 && (
+              <div
+                style={{
+                  marginLeft: "1rem",
+                  marginBottom: "-10px",
+                }}
+              >
+                <CategoriesList
+                  categories={props.categories}
+                  selected={""}
+                  onChange={(val) => {}}
+                  showAll={false}
+                />
+              </div>
+            )}
 
-          <Tabs
-            value={selectedTab}
-            onChange={handleTabChange}
-            indicatorColor="primary"
-            textColor="primary"
-            centered
-          >
-            {/* <Tab label="Info" /> */}
-            <Tab label="Code" />
-            <Tab label="Packages Used" />
-          </Tabs>
-        </Card>
-        {renderTabs(selectedTab)}
-      </Grid>
-
+            <Tabs
+              value={selectedTab}
+              onChange={handleTabChange}
+              indicatorColor="primary"
+              textColor="primary"
+              centered
+            >
+              {/* <Tab label="Info" /> */}
+              <Tab label="Code" />
+              <Tab label="Packages Used" />
+            </Tabs>
+          </Card>
+          {renderTabs(selectedTab)}
+        </Grid>
+      )}
       <Grid
         item
         md={6}

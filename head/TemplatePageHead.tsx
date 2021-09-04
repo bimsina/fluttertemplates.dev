@@ -24,11 +24,11 @@ export default function TemplatePageHead(params: Props) {
       />
       <meta
         name="title"
-        content={`${params.title} : Download free Flutter UI template`}
+        content={`${params.title} : Download free Flutter UI Template`}
       />
       <meta
         name="twitter:title"
-        content={`${params.title} : Download free Flutter UI template`}
+        content={`${params.title} : Download free Flutter UI Template`}
       />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:image" content={params.image} />

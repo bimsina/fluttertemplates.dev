@@ -38,6 +38,7 @@ export default function Header(props: HeaderProps) {
                   <Grid item>
                     <img
                       src="/favicon.svg"
+                      alt="Flutter UI Templates Logo"
                       style={{
                         height: "2.5rem",
                         width: "auto",

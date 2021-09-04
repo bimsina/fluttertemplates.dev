@@ -18,8 +18,8 @@ export default function HomePageHead() {
         name="description"
         content="Download Free Flutter UI Templates for Android, iOS and Web."
       />
-      <meta name="title" content="Download Free Flutter UI templates" />
-      <meta name="twitter:title" content="Download Free Flutter UI templates" />
+      <meta name="title" content="Download Free Flutter UI Templates" />
+      <meta name="twitter:title" content="Download Free Flutter UI Templates" />
       <meta name="twitter:card" content="summary_large_image" />
       <meta name="twitter:image" content="images/og.png" />
     </Head>
