@@ -55,6 +55,7 @@ export default function TemplatesGrid({
           setSelectedCategory(category);
         }}
         selected={selectedCategory}
+        showAll={true}
       />
 
       {filteredTemplates.length === 0 ? (
@@ -106,7 +107,7 @@ export default function TemplatesGrid({
           alignItems="center"
         >
           <Grid item>
-            <CustomButton variant="contained" color="primary">
+            <CustomButton variant="contained" color="primary" href="/templates">
               Browse All Templates
             </CustomButton>
           </Grid>

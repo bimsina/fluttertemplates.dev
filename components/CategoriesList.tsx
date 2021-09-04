@@ -5,25 +5,28 @@ interface CategoriesListProps {
   categories: string[];
   selected: string;
   onChange: (id: string) => void;
+  showAll: boolean;
 }
 
 export default function CategoriesList(props: CategoriesListProps) {
   return (
     <div className="categories-list">
-      <Chip
-        label="All"
-        component="a"
-        color={props.selected === "all" ? "primary" : "default"}
-        variant="default"
-        clickable
-        style={{
-          margin: "4px",
-        }}
-        key="all"
-        onClick={() => {
-          props.onChange("all");
-        }}
-      />
+      {props.showAll && (
+        <Chip
+          label="All"
+          component="a"
+          color={props.selected === "all" ? "primary" : "default"}
+          variant="default"
+          clickable
+          style={{
+            margin: "4px",
+          }}
+          key="all"
+          onClick={() => {
+            props.onChange("all");
+          }}
+        />
+      )}
       {props.categories.map((val) => {
         return (
           <Chip

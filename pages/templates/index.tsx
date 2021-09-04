@@ -6,6 +6,7 @@ import CustomButton from "../../components/custom_button";
 import TemplateCardProps from "../../models/template_card";
 import getTemplatesList from "../../utils/getTemplatesList";
 import TemplatesGrid from "../../components/TemplatesGrid";
+import HomePageHead from "../../head/HomePageHead";
 
 export default function TemplatesList({
   templates,
@@ -14,9 +15,7 @@ export default function TemplatesList({
 }) {
   return (
     <div>
-      <Head>
-        <title>Flutter UI Templates</title>
-      </Head>
+      <HomePageHead />
 
       <TemplatesGrid templates={templates} limit={false} />
     </div>

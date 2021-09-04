@@ -30,7 +30,13 @@ export default function TemplateCard(props: TemplateCardProps) {
                 }}
               />
               <CardContent>
-                <Typography gutterBottom variant="h6">
+                <Typography
+                  gutterBottom
+                  variant="h6"
+                  style={{
+                    fontSize: "1rem",
+                  }}
+                >
                   {props.frontmatter.title}
                 </Typography>
               </CardContent>

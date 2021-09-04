@@ -12,13 +12,17 @@ import { Tabs, Grid, Tab } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import TemplateFrontmatterProps from "../models/template_frontmatter";
 import PageNotFoundPage from "../pages/404";
+import CategoriesList from "./CategoriesList";
 import Code from "./Code";
 import CustomIframe from "./CustomIframe";
 import PackagesUsed from "./PackagesUsed";
+import Head from "next/head";
+import TemplatePageHead from "../head/TemplatePageHead";
 
 function TemplateDetailPage(params: TemplateFrontmatterProps) {
   return (
     <div>
+      <TemplatePageHead title={params.title} image={params.image} />
       <RenderBody {...params} />
     </div>
   );
@@ -63,26 +67,32 @@ function RenderBody(props: TemplateFrontmatterProps) {
         }}
       >
         <Card elevation={0}>
-          <CardContent>
-            <Grid
-              container
-              direction="row"
-              justifyContent="space-between"
-              alignItems="center"
+          <Typography
+            component="h5"
+            variant="h5"
+            style={{
+              fontWeight: "bold",
+              marginLeft: "1rem",
+              marginTop: "1rem",
+            }}
+          >
+            {props.title}
+          </Typography>
+          {props.categories && props.categories.length > 0 && (
+            <div
+              style={{
+                marginLeft: "1rem",
+                marginBottom: "-10px",
+              }}
             >
-              <Grid item>
-                <Typography
-                  component="h5"
-                  variant="h5"
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  {props.title}
-                </Typography>
-              </Grid>
-            </Grid>
-          </CardContent>
+              <CategoriesList
+                categories={props.categories}
+                selected={""}
+                onChange={(val) => {}}
+                showAll={false}
+              />
+            </div>
+          )}
 
           <Tabs
             value={selectedTab}

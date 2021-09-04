@@ -6,6 +6,7 @@ import CustomButton from "../components/custom_button";
 import TemplateCardProps from "../models/template_card";
 import getTemplatesList from "../utils/getTemplatesList";
 import TemplatesGrid from "../components/TemplatesGrid";
+import HomePageHead from "../head/HomePageHead";
 
 export default function Home({
   templates,
@@ -14,13 +15,13 @@ export default function Home({
 }) {
   return (
     <div>
-      <Head>
-        <title>Flutter UI Templates</title>
-      </Head>
+      <HomePageHead />
 
       <HeroSection />
 
-      <TemplatesGrid templates={templates} limit={true} />
+      <div id="templates">
+        <TemplatesGrid templates={templates} limit={true} />
+      </div>
     </div>
   );
 }
@@ -78,13 +79,13 @@ function HeroSection() {
             <CustomButton
               variant="contained"
               color="primary"
-              href="/detail/1234"
+              href="#templates"
               disableElevation
               style={{
                 fontSize: "1.1rem",
               }}
             >
-              Lets get started!
+              Let’s get started!
             </CustomButton>
           </Grid>
         </Grid>

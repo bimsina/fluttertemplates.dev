@@ -6,4 +6,5 @@ export default interface TemplateFrontmatterProps {
   demoUrl: string;
   categories: string[];
   packages: string[];
+  isProtected: boolean;
 }
