@@ -36,17 +36,18 @@ export default function Footer() {
           justifyContent: "center",
         }}
       >
-        <IconButton
+        <a
+          aria-label="Twitter"
           href="https://twitter.com/bimsina"
           target="_blank"
-          referrerPolicy="no-referrer"
+          rel="noopener noreferrer"
         >
           <Twitter className="footer-icon" />
-        </IconButton>
+        </a>
 
-        <IconButton href="mailto:fluttertemplatesdev@gmail.com">
+        <a href="mailto:fluttertemplatesdev@gmail.com" aria-label="E-mail">
           <MailOutlineRounded className="footer-icon" />
-        </IconButton>
+        </a>
       </div>
     </div>
   );

@@ -32,9 +32,7 @@ export default function Header(props: HeaderProps) {
     <div
       style={{
         background: "#1b1921",
-        paddingTop: "8px",
-        paddingBottom: "8px",
-        height: "70px",
+        height: "65px",
       }}
     >
       <Container maxWidth="lg">
@@ -75,6 +73,7 @@ export default function Header(props: HeaderProps) {
             }}
           >
             <IconButton
+              aria-label="Theme Toggle Button"
               onClick={props.onChange}
               style={{
                 color: "white",

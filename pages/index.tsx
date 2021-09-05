@@ -65,7 +65,13 @@ function HeroSection() {
               marginBottom: "2rem",
             }}
           >
-            <Typography>
+            <Typography
+              variant="h2"
+              style={{
+                fontSize: "16px",
+                lineHeight: "1.4",
+              }}
+            >
               Don’t you hate it when you pay hundreds of dollars for a flutter
               template which has limited functionalities? Don’t worry, we got
               your back. Here you will find a collection of mobile application
@@ -81,6 +87,7 @@ function HeroSection() {
               color="primary"
               href="#templates"
               disableElevation
+              aria-label="Lets start"
               style={{
                 fontSize: "1rem",
               }}

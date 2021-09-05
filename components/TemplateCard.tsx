@@ -19,30 +19,29 @@ export default function TemplateCard(props: TemplateCardProps) {
           <Card
             elevation={0}
             style={{
-              margin: "16px",
+              margin: "1rem",
             }}
           >
-            <CardActionArea>
-              <CardMedia
-                image={props.frontmatter.image}
-                title={props.frontmatter.title.toString()}
-                style={{
-                  height: "10rem",
-                }}
-              />
+            <CardMedia
+              image={props.frontmatter.image}
+              title={props.frontmatter.title.toString()}
+              style={{
+                height: "9rem",
+              }}
+            />
 
-              <Typography
-                gutterBottom
-                variant="h6"
-                style={{
-                  fontSize: "1rem",
-                  margin: "8px",
-                }}
-              >
-                {props.frontmatter.title}
-              </Typography>
+            <Typography
+              gutterBottom
+              variant="h6"
+              style={{
+                fontSize: "1rem",
+                margin: "8px",
+              }}
+            >
+              {props.frontmatter.title}
+            </Typography>
 
-              <div
+            {/* <div
                 className="categories-list"
                 style={{
                   marginLeft: "8px",
@@ -51,21 +50,12 @@ export default function TemplateCard(props: TemplateCardProps) {
                 {props.frontmatter.categories.map((category) => (
                   <Chip
                     label={category}
-                    // component="a"
-                    // color={props.selected === val ? "primary" : "default"}
-                    // variant="default"
-                    // clickable
                     style={{
                       marginRight: "4px",
                     }}
-                    // key={val}
-                    // onClick={() => {
-                    //   props.onChange(val);
-                    // }}
                   />
                 ))}
-              </div>
-            </CardActionArea>
+              </div> */}
           </Card>
         </a>
       </Link>

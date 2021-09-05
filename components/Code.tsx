@@ -61,6 +61,7 @@ function Code(params: CodeParams) {
           </SyntaxHighlighter>
 
           <CustomButton
+            aria-label="Copy"
             variant="contained"
             color="primary"
             style={{
@@ -113,6 +114,7 @@ function Code(params: CodeParams) {
         >
           <Grid item>
             <a
+              aria-label="Download Code"
               href={params.fullCodeUrl}
               target="_blank"
               rel="noopener noreferrer"

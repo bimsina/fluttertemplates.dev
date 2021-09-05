@@ -8,11 +8,15 @@ import TemplateCard from "./TemplateCard";
 export default function TemplatesGrid({
   templates,
   limit,
+  category,
 }: {
   templates: TemplateCardProps[];
   limit: boolean;
+  category?: string;
 }) {
-  const [selectedCategory, setSelectedCategory] = React.useState("all");
+  const [selectedCategory, setSelectedCategory] = React.useState(
+    category ?? "all"
+  );
   const [categories, setCategories] = React.useState<string[]>([]);
 
   const [filteredTemplates, setFilteredTemplates] = React.useState(
@@ -107,7 +111,12 @@ export default function TemplatesGrid({
           alignItems="center"
         >
           <Grid item>
-            <CustomButton variant="contained" color="primary" href="/templates">
+            <CustomButton
+              variant="contained"
+              color="primary"
+              href="/templates"
+              aria-label="Browse Templates"
+            >
               Browse All Templates
             </CustomButton>
           </Grid>

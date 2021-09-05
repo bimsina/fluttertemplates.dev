@@ -42,7 +42,7 @@ export default function PackagesUsed(params: Props) {
           <a
             href={packageName}
             target="_blank"
-            referrerPolicy="no-referrer"
+            rel="noopener noreferrer"
             style={{
               color: "transparent",
             }}
