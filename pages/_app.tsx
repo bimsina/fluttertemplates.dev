@@ -8,16 +8,18 @@ import {
   ThemeProvider,
   CssBaseline,
 } from "@material-ui/core";
-import { Brightness5Rounded, NightsStayRounded } from "@material-ui/icons";
+import { Brightness7Rounded, NightsStayRounded } from "@material-ui/icons";
+import Footer from "@/components/Footer";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [darkMode, setDarkMode] = useState(true);
-  const icon = darkMode ? <Brightness5Rounded /> : <NightsStayRounded />;
+  const [darkMode, setDarkMode] = useState<boolean | undefined>(undefined);
+  const icon = darkMode ? <Brightness7Rounded /> : <NightsStayRounded />;
 
   useEffect(() => {
     const _item = localStorage.getItem("dark") ?? "false";
     setDarkMode(JSON.parse(_item));
   }, []);
+
   const theme = useMemo(
     () =>
       createTheme({
@@ -33,6 +35,10 @@ function MyApp({ Component, pageProps }: AppProps) {
       }),
     [darkMode]
   );
+
+  if (darkMode === undefined) {
+    return <></>;
+  }
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
@@ -44,9 +50,16 @@ function MyApp({ Component, pageProps }: AppProps) {
           setDarkMode(!darkMode);
         }}
       />
-      <Container maxWidth="lg">
+      <Container
+        maxWidth="lg"
+        style={{
+          minHeight: "95vh",
+        }}
+      >
         <Component {...pageProps} />
       </Container>
+
+      <Footer />
     </ThemeProvider>
   );
 }

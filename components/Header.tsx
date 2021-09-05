@@ -1,13 +1,8 @@
-import Link from "next/link";
 import {
-  AppBar,
   Button,
   IconButton,
-  Toolbar,
   Typography,
-  Grid,
   Container,
-  CircularProgress,
   Avatar,
   Menu,
   MenuItem,
@@ -16,7 +11,6 @@ import firebase from "@/firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React from "react";
 import CustomButton from "@/components/custom_button";
-import { AccountCircleRounded } from "@material-ui/icons";
 
 interface HeaderProps {
   icon: any;
@@ -38,51 +32,48 @@ export default function Header(props: HeaderProps) {
     <div
       style={{
         background: "#1b1921",
+        paddingTop: "8px",
+        paddingBottom: "8px",
+        height: "70px",
       }}
     >
-      <AppBar position="static" color="transparent" elevation={0}>
-        <Container maxWidth="lg">
-          <Toolbar>
-            <div
+      <Container maxWidth="lg">
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+          }}
+        >
+          <Button href="/">
+            <img
+              src="/favicon.svg"
+              alt="Flutter UI Templates Logo"
               style={{
-                flexGrow: 1,
+                height: "2.5rem",
+                width: "2.5rem",
+              }}
+            />
+
+            <Typography
+              color="inherit"
+              style={{
+                textTransform: "capitalize",
+                fontSize: "1.3rem",
+                fontWeight: "bold",
+                marginLeft: "4px",
+                color: "white",
               }}
             >
-              <Button
-                href="/"
-                style={{
-                  marginTop: "8px",
-                }}
-              >
-                <Grid container alignItems="center">
-                  <Grid item>
-                    <img
-                      src="/favicon.svg"
-                      alt="Flutter UI Templates Logo"
-                      style={{
-                        height: "2.5rem",
-                        width: "auto",
-                      }}
-                    />
-                  </Grid>
-                  <Grid item>
-                    <Typography
-                      color="inherit"
-                      style={{
-                        textTransform: "capitalize",
-                        fontSize: "1.3rem",
-                        fontWeight: "bold",
-                        marginLeft: "4px",
-                        color: "white",
-                      }}
-                    >
-                      Templates
-                    </Typography>
-                  </Grid>
-                </Grid>
-              </Button>
-            </div>
+              Templates
+            </Typography>
+          </Button>
 
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
             <IconButton
               onClick={props.onChange}
               style={{
@@ -91,24 +82,16 @@ export default function Header(props: HeaderProps) {
             >
               {props.icon}
             </IconButton>
-
             {!user && !loading && (
               <CustomButton
                 href="/login"
                 style={{
                   color: "white",
+                  display: "flex",
                 }}
               >
                 Log In
               </CustomButton>
-            )}
-
-            {loading && (
-              <AccountCircleRounded
-                style={{
-                  color: "white",
-                }}
-              />
             )}
 
             {user && (
@@ -140,9 +123,9 @@ export default function Header(props: HeaderProps) {
                 </Menu>
               </div>
             )}
-          </Toolbar>
-        </Container>
-      </AppBar>
+          </div>
+        </div>
+      </Container>
     </div>
   );
 }

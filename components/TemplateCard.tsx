@@ -3,6 +3,7 @@ import {
   CardActionArea,
   CardContent,
   CardMedia,
+  Chip,
   Grid,
   Typography,
 } from "@material-ui/core";
@@ -29,17 +30,41 @@ export default function TemplateCard(props: TemplateCardProps) {
                   height: "10rem",
                 }}
               />
-              <CardContent>
-                <Typography
-                  gutterBottom
-                  variant="h6"
-                  style={{
-                    fontSize: "1rem",
-                  }}
-                >
-                  {props.frontmatter.title}
-                </Typography>
-              </CardContent>
+
+              <Typography
+                gutterBottom
+                variant="h6"
+                style={{
+                  fontSize: "1rem",
+                  margin: "8px",
+                }}
+              >
+                {props.frontmatter.title}
+              </Typography>
+
+              <div
+                className="categories-list"
+                style={{
+                  marginLeft: "8px",
+                }}
+              >
+                {props.frontmatter.categories.map((category) => (
+                  <Chip
+                    label={category}
+                    // component="a"
+                    // color={props.selected === val ? "primary" : "default"}
+                    // variant="default"
+                    // clickable
+                    style={{
+                      marginRight: "4px",
+                    }}
+                    // key={val}
+                    // onClick={() => {
+                    //   props.onChange(val);
+                    // }}
+                  />
+                ))}
+              </div>
             </CardActionArea>
           </Card>
         </a>

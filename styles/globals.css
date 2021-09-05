@@ -28,3 +28,7 @@ a {
 .categories-list::-webkit-scrollbar {
   width: 0px;
 }
+
+.footer-icon {
+  color: white;
+}
