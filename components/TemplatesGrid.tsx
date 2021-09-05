@@ -1,6 +1,6 @@
 import { Container, Grid, Typography } from "@material-ui/core";
 import React from "react";
-import TemplateCardProps from "../models/template_card";
+import TemplateCardProps from "@/models/template_card";
 import CategoriesList from "./CategoriesList";
 import CustomButton from "./custom_button";
 import TemplateCard from "./TemplateCard";

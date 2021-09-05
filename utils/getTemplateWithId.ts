@@ -1,8 +1,8 @@
 import fs from "fs";
 import matter from "gray-matter";
 import path from "path";
-import TemplateCardProps from "../models/template_card";
-import TemplateFrontmatterProps from "../models/template_frontmatter";
+import TemplateCardProps from "@/models/template_card";
+import TemplateFrontmatterProps from "@/models/template_frontmatter";
 
 export interface StaticProps {
   params: {

@@ -3,13 +3,13 @@ import { Card } from "@material-ui/core";
 import { Tabs, Grid, Tab } from "@material-ui/core";
 
 import React, { useEffect, useState } from "react";
-import TemplateFrontmatterProps from "../models/template_frontmatter";
-import PageNotFoundPage from "../pages/404";
+import TemplateFrontmatterProps from "@/models/template_frontmatter";
+import PageNotFoundPage from "@/pages/404";
 import CategoriesList from "./CategoriesList";
 import Code from "./Code";
 import CustomIframe from "./CustomIframe";
 import PackagesUsed from "./PackagesUsed";
-import TemplatePageHead from "../head/TemplatePageHead";
+import TemplatePageHead from "@/head/TemplatePageHead";
 
 function TemplateDetailPage(params: TemplateFrontmatterProps) {
   return (
@@ -47,7 +47,6 @@ function RenderBody(props: TemplateFrontmatterProps) {
         marginTop: "2rem",
       }}
       spacing={2}
-      // alignItems="center"
       justifyContent="space-evenly"
     >
       {!(props.isProtected ?? false) && (

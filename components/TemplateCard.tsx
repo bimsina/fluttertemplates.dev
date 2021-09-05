@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
-import TemplateCardProps from "../models/template_card";
+import TemplateCardProps from "@/models/template_card";
 
 export default function TemplateCard(props: TemplateCardProps) {
   return (

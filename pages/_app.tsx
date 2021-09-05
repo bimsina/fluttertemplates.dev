@@ -1,6 +1,6 @@
-import "../styles/globals.css";
+import "@/styles/globals.css";
 import type { AppProps } from "next/app";
-import Header from "../components/Header";
+import Header from "@/components/Header";
 import { useEffect, useMemo, useState } from "react";
 import {
   createTheme,

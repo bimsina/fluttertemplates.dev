@@ -1,12 +1,12 @@
 import Head from "next/head";
-import TemplateCard from "../components/TemplateCard";
+import TemplateCard from "@/components/TemplateCard";
 import React from "react";
 import { Typography, Grid } from "@material-ui/core";
-import CustomButton from "../components/custom_button";
-import TemplateCardProps from "../models/template_card";
-import getTemplatesList from "../utils/getTemplatesList";
-import TemplatesGrid from "../components/TemplatesGrid";
-import HomePageHead from "../head/HomePageHead";
+import CustomButton from "@/components/custom_button";
+import TemplateCardProps from "@/models/template_card";
+import getTemplatesList from "@/utils/getTemplatesList";
+import TemplatesGrid from "@/components/TemplatesGrid";
+import HomePageHead from "@/head/HomePageHead";
 
 export default function Home({
   templates,

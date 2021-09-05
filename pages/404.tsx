@@ -2,7 +2,7 @@ import React from "react";
 import { Grid } from "@material-ui/core";
 
 import { Typography } from "@material-ui/core";
-import CustomButton from "../components/custom_button";
+import CustomButton from "@/components/custom_button";
 
 export default function PageNotFoundPage() {
   return (
