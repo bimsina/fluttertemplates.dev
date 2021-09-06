@@ -10,6 +10,7 @@ import Code from "./Code";
 import CustomIframe from "./CustomIframe";
 import PackagesUsed from "./PackagesUsed";
 import TemplatePageHead from "@/head/TemplatePageHead";
+import { useRouter } from "next/dist/client/router";
 
 function TemplateDetailPage(params: TemplateFrontmatterProps) {
   return (
@@ -21,6 +22,8 @@ function TemplateDetailPage(params: TemplateFrontmatterProps) {
 }
 
 function RenderBody(props: TemplateFrontmatterProps) {
+  const router = useRouter();
+
   const [selectedTab, setSelectedTab] = useState(0);
   const handleTabChange = (event: any, newValue: any) => {
     setSelectedTab(newValue);
@@ -43,11 +46,10 @@ function RenderBody(props: TemplateFrontmatterProps) {
     <Grid
       container
       style={{
-        height: "90vh",
         marginTop: "2rem",
       }}
       spacing={2}
-      justifyContent="space-evenly"
+      justifyContent="center"
     >
       {!(props.isProtected ?? false) && (
         <Grid
@@ -80,7 +82,6 @@ function RenderBody(props: TemplateFrontmatterProps) {
                 <CategoriesList
                   categories={props.categories}
                   selected={""}
-                  onChange={(val) => {}}
                   showAll={false}
                 />
               </div>

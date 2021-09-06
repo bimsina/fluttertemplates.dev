@@ -1,5 +1,5 @@
 import { Container, Grid, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import TemplateCardProps from "@/models/template_card";
 import CategoriesList from "./CategoriesList";
 import CustomButton from "./custom_button";
@@ -8,23 +8,26 @@ import TemplateCard from "./TemplateCard";
 export default function TemplatesGrid({
   templates,
   limit,
-  category,
+  selectedCatId,
 }: {
   templates: TemplateCardProps[];
   limit: boolean;
-  category?: string;
+  selectedCatId?: string;
 }) {
-  const [selectedCategory, setSelectedCategory] = React.useState(
-    category ?? "all"
+  const [selectedCategory, setSelectedCategory] = useState(
+    selectedCatId ?? "all"
   );
-  const [categories, setCategories] = React.useState<string[]>([]);
+  const [categories, setCategories] = useState<string[]>([]);
 
-  const [filteredTemplates, setFilteredTemplates] = React.useState(
+  const [filteredTemplates, setFilteredTemplates] = useState(
     templates.slice(0, limit ? 12 : templates.length)
   );
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCategories(reduceTemplates(templates));
+  }, []);
+
+  function _changeCat() {
     if (selectedCategory === "all") {
       setFilteredTemplates(templates.slice(0, limit ? 12 : templates.length));
     } else {
@@ -35,8 +38,7 @@ export default function TemplatesGrid({
       });
       setFilteredTemplates(_filtered.slice(0, limit ? 12 : _filtered.length));
     }
-  }, [selectedCategory]);
-
+  }
   return (
     <Container
       style={{
@@ -53,14 +55,16 @@ export default function TemplatesGrid({
         All Templates
       </Typography>
 
-      <CategoriesList
-        categories={categories}
-        onChange={(category) => {
-          setSelectedCategory(category);
-        }}
-        selected={selectedCategory}
-        showAll={true}
-      />
+      {selectedCategory && (
+        <CategoriesList
+          categories={categories}
+          onChange={(category) => {
+            setSelectedCategory(category);
+          }}
+          selected={selectedCategory}
+          showAll={true}
+        />
+      )}
 
       {filteredTemplates.length === 0 ? (
         <Grid

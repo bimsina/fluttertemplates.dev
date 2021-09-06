@@ -1,5 +1,3 @@
-import Head from "next/head";
-import TemplateCard from "@/components/TemplateCard";
 import React from "react";
 import { Typography, Grid } from "@material-ui/core";
 import CustomButton from "@/components/custom_button";
@@ -20,7 +18,7 @@ export default function Home({
       <HeroSection />
 
       <div id="templates">
-        <TemplatesGrid templates={templates} limit={true} />
+        <TemplatesGrid templates={templates} limit={true} selectedCatId="all" />
       </div>
     </div>
   );

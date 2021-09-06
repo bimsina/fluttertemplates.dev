@@ -1,12 +1,4 @@
-import {
-  Card,
-  CardActionArea,
-  CardContent,
-  CardMedia,
-  Chip,
-  Grid,
-  Typography,
-} from "@material-ui/core";
+import { Card, CardMedia, Chip, Grid, Typography } from "@material-ui/core";
 import Link from "next/link";
 import React from "react";
 import TemplateCardProps from "@/models/template_card";

@@ -30,7 +30,6 @@ function Code(params: CodeParams) {
 
   useEffect(() => {
     if (params.codeGistUrl) {
-      console.log(process.env.NEXT_PUBLIC_FIREBASE_API_KEY);
       fetch(params.codeGistUrl)
         .then((response) => response.text())
         .then((textString) => {

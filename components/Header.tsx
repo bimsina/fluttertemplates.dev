@@ -32,13 +32,15 @@ export default function Header(props: HeaderProps) {
     <div
       style={{
         background: "#1b1921",
-        height: "65px",
+        height: "60px",
+        padding: "4px",
       }}
     >
       <Container maxWidth="lg">
         <div
           style={{
             display: "flex",
+            height: "100%",
             justifyContent: "space-between",
           }}
         >
@@ -97,6 +99,10 @@ export default function Header(props: HeaderProps) {
               <div>
                 <IconButton onClick={handleClick}>
                   <Avatar
+                    style={{
+                      width: "2rem",
+                      height: "2rem",
+                    }}
                     alt={user.displayName ?? "Profile Image"}
                     src={user.photoURL ?? ""}
                   />

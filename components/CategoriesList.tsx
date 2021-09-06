@@ -4,7 +4,8 @@ import { Chip, Grid } from "@material-ui/core";
 interface CategoriesListProps {
   categories: string[];
   selected: string;
-  onChange: (id: string) => void;
+  onChange?: (id: string) => void;
+  isDetailPage?: boolean;
   showAll: boolean;
 }
 
@@ -23,7 +24,9 @@ export default function CategoriesList(props: CategoriesListProps) {
           }}
           key="all"
           onClick={() => {
-            props.onChange("all");
+            if (props.onChange) {
+              props.onChange("all");
+            }
           }}
         />
       )}
@@ -32,15 +35,22 @@ export default function CategoriesList(props: CategoriesListProps) {
           <Chip
             label={val}
             component="a"
-            color={props.selected === val ? "primary" : "default"}
+            color={
+              props.selected.toLowerCase() === val.toLowerCase()
+                ? "primary"
+                : "default"
+            }
             variant="default"
             clickable
             style={{
               margin: "4px",
             }}
             key={val}
+            href={props.onChange ? undefined : `/templates?catId=${val}`}
             onClick={() => {
-              props.onChange(val);
+              if (props.onChange) {
+                props.onChange(val);
+              }
             }}
           />
         );
