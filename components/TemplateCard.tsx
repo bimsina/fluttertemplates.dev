@@ -8,12 +8,7 @@ export default function TemplateCard(props: TemplateCardProps) {
     <Grid item md={3} xs={12} sm={6}>
       <Link href={`/templates/${props.id}`} passHref>
         <a>
-          <Card
-            elevation={0}
-            style={{
-              margin: "1rem",
-            }}
-          >
+          <Card elevation={0}>
             <CardMedia
               image={props.frontmatter.image}
               title={props.frontmatter.title.toString()}

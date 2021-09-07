@@ -9,10 +9,12 @@ export default function TemplatesGrid({
   templates,
   limit,
   selectedCatId,
+  isFromHome,
 }: {
   templates: TemplateCardProps[];
   limit: boolean;
   selectedCatId?: string;
+  isFromHome?: boolean;
 }) {
   const [selectedCategory, setSelectedCategory] = useState(
     selectedCatId ?? "all"
@@ -43,22 +45,24 @@ export default function TemplatesGrid({
     }
   }
   return (
-    <Container
+    <div
       style={{
         marginBottom: "2.5rem",
       }}
     >
-      <Typography
-        variant="h5"
-        style={{
-          fontWeight: "bold",
-          marginTop: "2rem",
-        }}
-      >
-        All Templates
-      </Typography>
+      {!(isFromHome ?? false) && (
+        <Typography
+          variant="h5"
+          style={{
+            fontWeight: "bold",
+            marginTop: "2rem",
+          }}
+        >
+          All Templates
+        </Typography>
+      )}
 
-      {selectedCategory && (
+      {selectedCategory && !(isFromHome ?? false) && (
         <CategoriesList
           categories={categories}
           onChange={(category) => {
@@ -95,7 +99,7 @@ export default function TemplatesGrid({
           </Grid>
         </Grid>
       ) : (
-        <Grid container>
+        <Grid container spacing={4}>
           {filteredTemplates.map(
             (template: TemplateCardProps, index: number) => {
               return (
@@ -109,27 +113,7 @@ export default function TemplatesGrid({
           )}
         </Grid>
       )}
-
-      {limit && (
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid item>
-            <CustomButton
-              variant="contained"
-              color="primary"
-              href="/templates"
-              aria-label="Browse Templates"
-            >
-              Browse All Templates
-            </CustomButton>
-          </Grid>
-        </Grid>
-      )}
-    </Container>
+    </div>
   );
 
   function reduceTemplates(templates: TemplateCardProps[]): string[] {
