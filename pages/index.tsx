@@ -1,11 +1,15 @@
 import React from "react";
-import { Typography, Grid, Divider, IconButton } from "@material-ui/core";
+import { Typography, Grid, Divider, IconButton, Card } from "@material-ui/core";
 import CustomButton from "@/components/custom_button";
 import TemplateCardProps from "@/models/template_card";
 import getTemplatesList from "@/utils/getTemplatesList";
 import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/HomePageHead";
-import { ArrowDownward, ArrowForwardIosRounded } from "@material-ui/icons";
+import {
+  ArrowDownward,
+  ArrowForwardIosRounded,
+  Code,
+} from "@material-ui/icons";
 
 export default function Home({
   templates,
@@ -132,6 +136,86 @@ function SingleTemplatesCategorySection(props: TemplateSectionProps) {
     </div>
   );
 }
+
+// function FeaturesSection() {
+//   return (
+//     <Grid
+//       container
+//       direction="column"
+//       justifyContent="center"
+//       alignItems="center"
+//       style={{
+//         marginTop: "2rem",
+//         marginBottom: "2rem",
+//       }}
+//     >
+//       <Grid item>
+//         <Typography
+//           variant="h2"
+//           style={{
+//             fontWeight: "bold",
+//             fontSize: "1.6rem",
+//             marginBottom: "2rem",
+//             width: "100%",
+//           }}
+//         >
+//           Features
+//         </Typography>
+//       </Grid>
+//       <Grid item>
+//         <Grid
+//           container
+//           style={{
+//             width: "100%",
+//           }}
+//         >
+//           <Grid item>
+//             <Grid
+//               container
+//               direction="column"
+//               justifyContent="flex-start"
+//               alignItems="flex-start"
+//               spacing={1}
+//             >
+//               <Grid item>
+//                 <div
+//                   style={{
+//                     padding: "1rem",
+//                     marginBottom: "0.5rem",
+//                     background: "#fbb40525",
+//                     borderRadius: "2rem",
+//                   }}
+//                 >
+//                   <Code
+//                     style={{
+//                       fontSize: "5rem",
+//                       color: "#fbb405",
+//                     }}
+//                   />
+//                 </div>
+//               </Grid>
+//               <Grid item>
+//                 <Typography
+//                   variant="body1"
+//                   style={{
+//                     fontWeight: "bold",
+//                   }}
+//                 >
+//                   Completely Null Safe
+//                 </Typography>
+//               </Grid>
+//               <Grid item>
+//                 <Typography variant="caption">
+//                   All the templates are build with null safety in mind.
+//                 </Typography>
+//               </Grid>
+//             </Grid>
+//           </Grid>
+//         </Grid>
+//       </Grid>
+//     </Grid>
+//   );
+// }
 
 function HeroSection() {
   return (

@@ -10,6 +10,6 @@ packages:
     "https://pub.dev/packages/http",
     "https://pub.dev/packages/shared_preferences",
     "https://pub.dev/packages/provider",
-    "https://pub.dev/packages/flutter_swiper",
+    "https://pub.dev/packages/carousel_slider",
   ]
 ---

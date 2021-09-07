@@ -22,7 +22,7 @@ export default function TemplateCard(props: TemplateCardProps) {
               variant="h6"
               style={{
                 fontSize: "1rem",
-                margin: "8px",
+                margin: "10px",
               }}
             >
               {props.frontmatter.title}
