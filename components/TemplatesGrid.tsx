@@ -24,8 +24,11 @@ export default function TemplatesGrid({
   );
 
   useEffect(() => {
-    setCategories(reduceTemplates(templates));
-  }, []);
+    if (categories.length === 0) {
+      setCategories(reduceTemplates(templates));
+    }
+    _changeCat();
+  }, [selectedCategory]);
 
   function _changeCat() {
     if (selectedCategory === "all") {
