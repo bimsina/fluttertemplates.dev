@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:news="http://www.google.com/schemas/sitemap-news/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:mobile="http://www.google.com/schemas/sitemap-mobile/1.0" xmlns:image="http://www.google.com/schemas/sitemap-image/1.1" xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+<url><loc>https://fluttertemplates.dev</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.020Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/login</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/0-persistent-bottom</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/app-onboarding</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/dynamic_theme</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/hero_list</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/philz_coffee</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/recipes</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/sorting_algo</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/tmdb_movie_app</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+<url><loc>https://fluttertemplates.dev/templates/tourism_app</loc><changefreq>daily</changefreq><priority>0.7</priority><lastmod>2021-09-08T12:39:56.021Z</lastmod></url>
+</urlset>
