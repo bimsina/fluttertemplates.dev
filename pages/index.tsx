@@ -26,13 +26,13 @@ export default function Home({
         <SingleTemplatesCategorySection
           title="Full Apps"
           subtitle="Complete App UIs to kickstart you app development process."
-          catId="Full App"
+          catId="full-app"
           templates={templates}
         />
         <SingleTemplatesCategorySection
           title="Micro Interactions"
-          subtitle="Small interaction examples that make your app stand among the croud."
-          catId="Micro Interaction"
+          subtitle="Small interaction examples that make your app stand out among the croud."
+          catId="micro-interaction"
           templates={templates}
         />
       </div>

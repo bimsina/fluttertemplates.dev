@@ -24,7 +24,7 @@ export default function PackagesUsed(params: Props) {
       {params.packages.length === 0 && (
         <Grid item>
           <img
-            src="/404.svg"
+            src="/no_packages.svg"
             style={{
               height: "30vh",
             }}

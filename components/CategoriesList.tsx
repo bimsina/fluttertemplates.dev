@@ -14,7 +14,7 @@ export default function CategoriesList(props: CategoriesListProps) {
     <div className="categories-list">
       {props.showAll && (
         <Chip
-          label="All"
+          label="#all"
           component="a"
           color={props.selected === "all" ? "primary" : "default"}
           variant="default"
@@ -33,7 +33,7 @@ export default function CategoriesList(props: CategoriesListProps) {
       {props.categories.map((val) => {
         return (
           <Chip
-            label={val}
+            label={`#${val}`}
             component="a"
             color={
               props.selected.toLowerCase() === val.toLowerCase()

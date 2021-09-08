@@ -4,7 +4,7 @@ image: "/images/tmdb_movies.png"
 codeGistUrl: "https://raw.githubusercontent.com/bimsina/Matinee-Flutter/master/lib/main.dart"
 codeUrl: "https://github.com/bimsina/Matinee-Flutter"
 demoUrl: "https://bimsina.github.io/Matinee-Flutter/#/"
-categories: ["Full App"]
+categories: ["full-app"]
 packages:
   [
     "https://pub.dev/packages/http",

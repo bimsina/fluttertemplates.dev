@@ -4,7 +4,7 @@ image: "/images/tourism.png"
 codeGistUrl: "https://raw.githubusercontent.com/bimsina/visit_nepal/master/lib/main.dart"
 codeUrl: "https://github.com/bimsina/visit_nepal"
 demoUrl: "https://bimsina.github.io/visit_nepal/#/"
-categories: ["Full App"]
+categories: ["full-app"]
 packages:
   [
     "https://pub.dev/packages/shared_preferences",

@@ -1,5 +1,10 @@
 import { IconButton, Typography } from "@material-ui/core";
-import { MailOutlineRounded, Twitter, GitHub } from "@material-ui/icons";
+import {
+  MailOutlineRounded,
+  Twitter,
+  GitHub,
+  LinkedIn,
+} from "@material-ui/icons";
 
 export default function Footer() {
   return (
@@ -26,7 +31,7 @@ export default function Footer() {
             color: "white",
           }}
         >
-          Contact Us
+          Contact
         </Typography>
       </div>
 
@@ -36,6 +41,9 @@ export default function Footer() {
           justifyContent: "center",
         }}
       >
+        <a href="mailto:fluttertemplatesdev@gmail.com" aria-label="E-mail">
+          <MailOutlineRounded className="footer-icon" />
+        </a>
         <a
           aria-label="Twitter"
           href="https://twitter.com/bimsina"
@@ -45,8 +53,13 @@ export default function Footer() {
           <Twitter className="footer-icon" />
         </a>
 
-        <a href="mailto:fluttertemplatesdev@gmail.com" aria-label="E-mail">
-          <MailOutlineRounded className="footer-icon" />
+        <a
+          aria-label="LinkedIn"
+          href="https://www.linkedin.com/in/bimsina/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <LinkedIn className="footer-icon" />
         </a>
       </div>
     </div>
