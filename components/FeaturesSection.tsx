@@ -1,10 +1,5 @@
-import { Grid, Typography } from "@material-ui/core";
-import {
-  BrushRounded,
-  Code,
-  PermDataSettingRounded,
-  VisibilityRounded,
-} from "@material-ui/icons";
+import { Card, Grid, Typography } from "@material-ui/core";
+import { BrushRounded, Code, VisibilityRounded } from "@material-ui/icons";
 import React from "react";
 
 export default function FeaturesSection() {
@@ -37,7 +32,7 @@ export default function FeaturesSection() {
         <div
           style={{
             width: "80px",
-            background: "#fbb405",
+            background: "#c4d33a",
             height: "4px",
             marginTop: "0.5rem",
             marginBottom: "2.5rem",
@@ -114,17 +109,18 @@ function SingleFeature(props: SingleFeatureProps) {
         spacing={1}
       >
         <Grid item>
-          <div
+          <Card
+            elevation={0}
             style={{
               padding: "2rem",
               marginBottom: "0.5rem",
-              background: "#fbb40520",
+              // background: "#c4d33a20",
               borderRadius: "1.5rem",
-              color: "#fbb405",
+              color: "#c4d33a",
             }}
           >
             {props.icon}
-          </div>
+          </Card>
         </Grid>
         <Grid item>
           <Typography

@@ -1,10 +1,10 @@
 import { CircularProgress, Grid, Snackbar, useTheme } from "@material-ui/core";
 import { FileCopyRounded, GitHub } from "@material-ui/icons";
+import copy from "copy-to-clipboard";
 import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula, github } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CustomButton from "./custom_button";
-import copy from "copy-to-clipboard";
 
 interface CodeParams {
   codeGistUrl?: string;
@@ -54,6 +54,7 @@ function Code(params: CodeParams) {
               maxWidth: "95vw",
               maxHeight: "55vh",
               width: "100%",
+              fontSize: "0.95rem",
             }}
           >
             {code}

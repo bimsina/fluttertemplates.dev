@@ -4,8 +4,9 @@ html,
 body {
   padding: 0;
   margin: 0;
-  font-family: Ubuntu, -apple-system, BlinkMacSystemFont, Segoe UI, Roboto,
-    Oxygen, Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
+    Ubuntu, Fira Code Cantarell, Fira Sans, Droid Sans, Helvetica Neue,
+    sans-serif;
 }
 
 a {
@@ -32,4 +33,8 @@ a {
 .footer-icon {
   color: white;
   margin: 8px;
+}
+
+.footer-icon:hover {
+  color: #c4d33a;
 }

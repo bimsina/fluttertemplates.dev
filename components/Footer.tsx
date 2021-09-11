@@ -1,10 +1,5 @@
-import { IconButton, Typography } from "@material-ui/core";
-import {
-  MailOutlineRounded,
-  Twitter,
-  GitHub,
-  LinkedIn,
-} from "@material-ui/icons";
+import { Typography } from "@material-ui/core";
+import { LinkedIn, MailOutlineRounded, Twitter } from "@material-ui/icons";
 
 export default function Footer() {
   return (
@@ -15,6 +10,49 @@ export default function Footer() {
         width: "100%",
       }}
     >
+      {/* <Grid
+        container
+        justifyContent="center"
+        alignItems="center"
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+          marginBottom: "2rem",
+        }}
+      >
+        <Grid item>
+          <Typography
+            style={{
+              fontSize: "1rem",
+              fontWeight: "bold",
+              marginLeft: "4px",
+              color: "white",
+            }}
+          >
+            Find an issue with the page?
+          </Typography>
+        </Grid>
+
+        <Grid>
+          <a
+            aria-label="File an issue"
+            href="https://github.com/bimsina/fluttertemplates.dev/issues"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <CustomButton
+              style={{
+                color: "#c4d33a",
+                paddingLeft: "8px",
+              }}
+            >
+              Post it on GitHub!
+            </CustomButton>
+          </a>
+        </Grid>
+      </Grid> */}
+
       <div
         style={{
           width: "100%",

@@ -1,16 +1,12 @@
-import React from "react";
-import { Typography, Grid, Divider, IconButton, Card } from "@material-ui/core";
 import CustomButton from "@/components/custom_button";
-import TemplateCardProps from "@/models/template_card";
-import getTemplatesList from "@/utils/getTemplatesList";
+import FeaturesSection from "@/components/FeaturesSection";
 import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/HomePageHead";
-import {
-  ArrowDownward,
-  ArrowForwardIosRounded,
-  Code,
-} from "@material-ui/icons";
-import FeaturesSection from "@/components/FeaturesSection";
+import TemplateCardProps from "@/models/template_card";
+import getTemplatesList from "@/utils/getTemplatesList";
+import { Divider, Grid, Typography } from "@material-ui/core";
+import { ArrowForwardIosRounded } from "@material-ui/icons";
+import React from "react";
 
 export default function Home({
   templates,
@@ -150,7 +146,7 @@ function HeroSection() {
         width: "100%",
       }}
     >
-      <Grid item md={6}>
+      <Grid item md={7}>
         <Grid
           container
           direction="column"
@@ -212,7 +208,7 @@ function HeroSection() {
         </Grid>
       </Grid>
 
-      <Grid item md={6}>
+      <Grid item md={5}>
         <img
           src="/home_hero.svg"
           alt="hero"
