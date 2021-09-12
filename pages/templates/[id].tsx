@@ -7,7 +7,7 @@ import { getTemplateListWithId, StaticProps } from "@/utils/getTemplateWithId";
 export default function TemplatePage(props: TemplateCardProps) {
   return (
     <>
-      <TemplateDetailPage {...props.frontmatter} />
+      <TemplateDetailPage {...props} />
     </>
   );
 }

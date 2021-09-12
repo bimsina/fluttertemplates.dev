@@ -11,12 +11,17 @@ import CustomIframe from "./CustomIframe";
 import PackagesUsed from "./PackagesUsed";
 import TemplatePageHead from "@/head/TemplatePageHead";
 import { useRouter } from "next/dist/client/router";
+import TemplateCardProps from "@/models/template_card";
 
-function TemplateDetailPage(params: TemplateFrontmatterProps) {
+function TemplateDetailPage(params: TemplateCardProps) {
   return (
     <div>
-      <TemplatePageHead title={params.title} image={params.image} />
-      <RenderBody {...params} />
+      <TemplatePageHead
+        title={params.frontmatter.title}
+        image={`https://fluttertemplates.dev/${params.frontmatter.image}`}
+        id={params.id}
+      />
+      <RenderBody {...params.frontmatter} />
     </div>
   );
 }
