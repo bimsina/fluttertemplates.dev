@@ -17,6 +17,12 @@ function MyApp({ Component, pageProps }: AppProps) {
   const icon = darkMode ? <Brightness7Rounded /> : <NightsStayRounded />;
 
   useEffect(() => {
+    // Remove the server-side injected CSS.
+    const jssStyles = document.querySelector("#jss-server-side");
+    if (jssStyles) {
+      jssStyles.parentElement?.removeChild(jssStyles);
+    }
+
     const _item = localStorage.getItem("dark") ?? "false";
     setDarkMode(JSON.parse(_item));
   }, []);
