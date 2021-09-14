@@ -13,7 +13,7 @@ import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(true);
   const icon = darkMode ? <Brightness7Rounded /> : <NightsStayRounded />;
 
   useEffect(() => {
@@ -23,7 +23,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       jssStyles.parentElement?.removeChild(jssStyles);
     }
 
-    const _item = localStorage.getItem("dark") ?? "false";
+    const _item = localStorage.getItem("dark") ?? "true";
     setDarkMode(JSON.parse(_item));
   }, []);
 
@@ -34,6 +34,10 @@ function MyApp({ Component, pageProps }: AppProps) {
           type: darkMode ? "dark" : "light",
           primary: {
             main: darkMode ? "#ffffff" : "#030303",
+          },
+          background: {
+            default: darkMode ? "#12181b" : "#ffffff",
+            paper: darkMode ? "#2b2e35" : "#f5f5f5",
           },
         },
         typography: {
