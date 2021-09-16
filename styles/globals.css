@@ -36,3 +36,20 @@ a {
 .footer-icon:hover {
   color: #c4d33a;
 }
+
+.fab {
+  position: fixed;
+  margin: 0;
+  right: 20px;
+  bottom: 20px;
+  top: auto;
+  left: auto;
+  z-index: 10;
+  background: #c4d33a;
+  padding: 10px;
+  border-radius: 80px;
+  color: black;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+}

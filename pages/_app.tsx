@@ -1,14 +1,22 @@
-import Footer from "@/components/Footer";
 import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import "@/styles/globals.css";
 import {
   CircularProgress,
   Container,
   createTheme,
   CssBaseline,
+  Fab,
   ThemeProvider,
+  Typography,
 } from "@material-ui/core";
-import { Brightness7Rounded, NightsStayRounded } from "@material-ui/icons";
+import {
+  Brightness7Rounded,
+  FreeBreakfastOutlined,
+  HelpOutline,
+  Home,
+  NightsStayRounded,
+} from "@material-ui/icons";
 import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -50,6 +58,22 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        className="fab"
+        href="https://www.buymeacoffee.com/bimsina"
+      >
+        <FreeBreakfastOutlined />
+        <Typography
+          style={{
+            marginLeft: "4px",
+            fontWeight: "bold",
+          }}
+        >
+          Donate
+        </Typography>
+      </a>
 
       <Header
         icon={icon}
