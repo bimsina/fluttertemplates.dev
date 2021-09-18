@@ -79,7 +79,7 @@ export default function Footer() {
           justifyContent: "center",
         }}
       >
-        <a href="mailto:fluttertemplatesdev@gmail.com" aria-label="E-mail">
+        <a href="mailto:timsinabibek960@gmail.com" aria-label="E-mail">
           <MailOutlineRounded className="footer-icon" />
         </a>
         <a
