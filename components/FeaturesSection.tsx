@@ -1,8 +1,17 @@
-import { Card, Grid, Typography } from "@material-ui/core";
+import {
+  Card,
+  Divider,
+  Grid,
+  Paper,
+  Typography,
+  useTheme,
+} from "@material-ui/core";
 import { BrushRounded, Code, VisibilityRounded } from "@material-ui/icons";
 import React from "react";
 
 export default function FeaturesSection() {
+  const theme = useTheme();
+
   return (
     <Grid
       container
@@ -32,7 +41,7 @@ export default function FeaturesSection() {
         <div
           style={{
             width: "80px",
-            background: "#c4d33a",
+            background: `${theme.palette.secondary.main}50`,
             height: "4px",
             marginTop: "0.5rem",
             marginBottom: "2.5rem",
@@ -58,6 +67,7 @@ export default function FeaturesSection() {
             description="All the templates are built with pre configured null safety."
             icon={
               <Code
+                color="secondary"
                 style={{
                   fontSize: "4rem",
                 }}
@@ -69,6 +79,7 @@ export default function FeaturesSection() {
             description="All the templates are built keeping code readability in mind."
             icon={
               <VisibilityRounded
+                color="secondary"
                 style={{
                   fontSize: "4rem",
                 }}
@@ -80,6 +91,7 @@ export default function FeaturesSection() {
             description="Showcase the potential of Flutter through beautiful UI designs."
             icon={
               <BrushRounded
+                color="secondary"
                 style={{
                   fontSize: "4rem",
                 }}
@@ -99,6 +111,8 @@ interface SingleFeatureProps {
 }
 
 function SingleFeature(props: SingleFeatureProps) {
+  const theme = useTheme();
+
   return (
     <Grid item>
       <Grid
@@ -114,9 +128,8 @@ function SingleFeature(props: SingleFeatureProps) {
             style={{
               padding: "2rem",
               marginBottom: "0.5rem",
-              // background: "#c4d33a20",
+              background: `${theme.palette.secondary.main}20`,
               borderRadius: "1.5rem",
-              color: "#c4d33a",
             }}
           >
             {props.icon}

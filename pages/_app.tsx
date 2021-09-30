@@ -43,6 +43,9 @@ function MyApp({ Component, pageProps }: AppProps) {
           primary: {
             main: darkMode ? "#ffffff" : "#030303",
           },
+          secondary: {
+            main: darkMode ? "#c4d33a" : "#381796",
+          },
           background: {
             default: darkMode ? "#1c1e1f" : "#ffffff",
             paper: darkMode ? "#2b2e35" : "#f5f5f5",

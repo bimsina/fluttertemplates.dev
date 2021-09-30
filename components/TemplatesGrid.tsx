@@ -1,20 +1,22 @@
-import { Container, Grid, Typography } from "@material-ui/core";
+import { Grid, TextField, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import TemplateCardProps from "@/models/template_card";
 import CategoriesList from "./CategoriesList";
-import CustomButton from "./custom_button";
 import TemplateCard from "./TemplateCard";
+import { SearchOutlined } from "@material-ui/icons";
 
 export default function TemplatesGrid({
   templates,
   limit,
   selectedCatId,
   isFromHome,
+  shuffle,
 }: {
   templates: TemplateCardProps[];
   limit: boolean;
   selectedCatId?: string;
   isFromHome?: boolean;
+  shuffle?: boolean;
 }) {
   const [selectedCategory, setSelectedCategory] = useState(
     selectedCatId ?? "all"
@@ -50,18 +52,6 @@ export default function TemplatesGrid({
         marginBottom: "2.5rem",
       }}
     >
-      {!(isFromHome ?? false) && (
-        <Typography
-          variant="h5"
-          style={{
-            fontWeight: "bold",
-            marginTop: "2rem",
-          }}
-        >
-          All Templates
-        </Typography>
-      )}
-
       {selectedCategory && !(isFromHome ?? false) && (
         <CategoriesList
           categories={categories}

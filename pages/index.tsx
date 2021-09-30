@@ -28,12 +28,19 @@ export default function Home({
           catId="full-app"
           templates={templates}
         />
+
         <SingleTemplatesCategorySection
+          title="No Dependencies"
+          subtitle="Just copy and paste. No external packages required."
+          catId="no-dependencies"
+          templates={templates}
+        />
+        {/* <SingleTemplatesCategorySection
           title="Micro Interactions"
           subtitle="Small interaction examples that make your app stand out among the croud."
           catId="micro-interaction"
           templates={templates}
-        />
+        /> */}
       </div>
 
       <Grid
