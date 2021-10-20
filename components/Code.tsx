@@ -63,7 +63,8 @@ function Code(params: CodeParams) {
           <CustomButton
             aria-label="Copy"
             variant="contained"
-            color="primary"
+            color="secondary"
+            size="small"
             style={{
               position: "absolute",
               top: "8px",
@@ -97,7 +98,7 @@ function Code(params: CodeParams) {
           }}
         >
           <Grid item>
-            <CircularProgress size="1.5rem" thickness={8} />
+            <CircularProgress size="1.5rem" thickness={8} color="secondary" />
           </Grid>
         </Grid>
       )}
@@ -119,7 +120,7 @@ function Code(params: CodeParams) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <CustomButton variant="contained" color="primary">
+              <CustomButton variant="contained" color="secondary">
                 <GitHub
                   fontSize="small"
                   style={{

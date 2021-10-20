@@ -14,7 +14,11 @@ export default function Home({
   templates: TemplateCardProps[];
 }) {
   return (
-    <div>
+    <div
+      style={{
+        margin: "1rem",
+      }}
+    >
       <HomePageHead />
 
       <HeroSection />
@@ -55,7 +59,7 @@ export default function Home({
         <Grid item>
           <CustomButton
             variant="contained"
-            color="primary"
+            color="secondary"
             href="/templates"
             aria-label="Browse Templates"
           >
@@ -201,7 +205,7 @@ function HeroSection() {
           <Grid>
             <CustomButton
               variant="contained"
-              color="primary"
+              color="secondary"
               href="#templates"
               disableElevation
               aria-label="Lets start"

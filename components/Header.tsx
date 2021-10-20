@@ -6,6 +6,8 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  AppBar,
+  Toolbar,
 } from "@material-ui/core";
 import firebase from "@/firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -29,108 +31,114 @@ export default function Header(props: HeaderProps) {
   };
 
   return (
-    <div
-      style={{
-        background: "#1b1921",
-        height: "60px",
-        padding: "4px",
-      }}
-    >
-      <Container maxWidth="lg">
-        <div
-          style={{
-            display: "flex",
-            height: "100%",
-            justifyContent: "space-between",
-          }}
-        >
-          <Button href="/">
-            <img
-              src="/favicon.svg"
-              alt="Flutter UI Templates Logo"
-              style={{
-                height: "2.5rem",
-                width: "2.5rem",
-              }}
-            />
+    // <div
+    //   style={{
+    //     background: "#01102c",
+    //     height: "60px",
+    //     padding: "4px",
+    //   }}
+    // >
 
-            <Typography
-              color="inherit"
-              style={{
-                textTransform: "capitalize",
-                fontSize: "1.3rem",
-                fontWeight: "bold",
-                marginLeft: "4px",
-                color: "white",
-              }}
-            >
-              Templates
-            </Typography>
-          </Button>
-
+    <AppBar position="static" color="primary">
+      <Toolbar>
+        <Container maxWidth="lg">
           <div
             style={{
               display: "flex",
-              justifyContent: "center",
+              height: "100%",
+              justifyContent: "space-between",
             }}
           >
-            <IconButton
-              aria-label="Theme Toggle Button"
-              onClick={props.onChange}
-              style={{
-                color: "white",
-              }}
-            >
-              {props.icon}
-            </IconButton>
-            {!user && !loading && (
-              <CustomButton
-                href="/login"
+            <Button href="/">
+              <img
+                src="/favicon.svg"
+                alt="Flutter UI Templates Logo"
                 style={{
+                  height: "2.5rem",
+                  width: "2.5rem",
+                }}
+              />
+
+              <Typography
+                color="inherit"
+                style={{
+                  textTransform: "capitalize",
+                  fontSize: "1.3rem",
+                  fontWeight: "bold",
+                  marginLeft: "4px",
                   color: "white",
-                  display: "flex",
                 }}
               >
-                Log In
-              </CustomButton>
-            )}
+                Templates
+              </Typography>
+            </Button>
 
-            {user && (
-              <div>
-                <IconButton onClick={handleClick}>
-                  <Avatar
-                    style={{
-                      width: "2rem",
-                      height: "2rem",
-                    }}
-                    alt={user.displayName ?? "Profile Image"}
-                    src={user.photoURL ?? ""}
-                  />
-                </IconButton>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={anchorEl}
-                  keepMounted
-                  open={Boolean(anchorEl)}
-                  onClose={handleClose}
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "center",
+              }}
+            >
+              <IconButton
+                aria-label="Theme Toggle Button"
+                onClick={props.onChange}
+                style={{
+                  color: "white",
+                }}
+              >
+                {props.icon}
+              </IconButton>
+
+              {!user && !loading && (
+                <CustomButton
+                  href="/login"
                   style={{
-                    marginTop: "2rem",
+                    color: "white",
+                    display: "flex",
                   }}
                 >
-                  <MenuItem
-                    onClick={() => {
-                      firebase.auth().signOut();
-                      handleClose();
+                  Log In
+                </CustomButton>
+              )}
+
+              {user && (
+                <div>
+                  <IconButton onClick={handleClick}>
+                    <Avatar
+                      style={{
+                        width: "2rem",
+                        height: "2rem",
+                      }}
+                      alt={user.displayName ?? "Profile Image"}
+                      src={user.photoURL ?? ""}
+                    />
+                  </IconButton>
+                  <Menu
+                    id="simple-menu"
+                    anchorEl={anchorEl}
+                    keepMounted
+                    open={Boolean(anchorEl)}
+                    onClose={handleClose}
+                    style={{
+                      marginTop: "2rem",
                     }}
                   >
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </div>
-            )}
+                    <MenuItem
+                      onClick={() => {
+                        firebase.auth().signOut();
+                        handleClose();
+                      }}
+                    >
+                      Logout
+                    </MenuItem>
+                  </Menu>
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Container>
-    </div>
+        </Container>
+      </Toolbar>
+    </AppBar>
+    // </div>
   );
 }

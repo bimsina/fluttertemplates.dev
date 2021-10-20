@@ -2,26 +2,22 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import "@/styles/globals.css";
 import {
-  CircularProgress,
   Container,
   createTheme,
   CssBaseline,
-  Fab,
   ThemeProvider,
   Typography,
 } from "@material-ui/core";
 import {
   Brightness7Rounded,
   FreeBreakfastOutlined,
-  HelpOutline,
-  Home,
   NightsStayRounded,
 } from "@material-ui/icons";
 import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const icon = darkMode ? <Brightness7Rounded /> : <NightsStayRounded />;
 
   useEffect(() => {
@@ -31,7 +27,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       jssStyles.parentElement?.removeChild(jssStyles);
     }
 
-    const _item = localStorage.getItem("dark") ?? "true";
+    const _item = localStorage.getItem("dark") ?? "false";
     setDarkMode(JSON.parse(_item));
   }, []);
 
@@ -41,10 +37,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         palette: {
           type: darkMode ? "dark" : "light",
           primary: {
-            main: darkMode ? "#ffffff" : "#030303",
+            main: darkMode ? "#01102c" : "#01102c",
           },
           secondary: {
-            main: darkMode ? "#c4d33a" : "#381796",
+            main: darkMode ? "#c4d33a" : "#01102c",
           },
           background: {
             default: darkMode ? "#1c1e1f" : "#ffffff",

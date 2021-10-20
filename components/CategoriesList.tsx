@@ -16,7 +16,7 @@ export default function CategoriesList(props: CategoriesListProps) {
         <Chip
           label="#all"
           component="a"
-          color={props.selected === "all" ? "primary" : "default"}
+          color={props.selected === "all" ? "secondary" : "default"}
           variant="default"
           clickable
           style={{
@@ -37,7 +37,7 @@ export default function CategoriesList(props: CategoriesListProps) {
             component="a"
             color={
               props.selected.toLowerCase() === val.toLowerCase()
-                ? "primary"
+                ? "secondary"
                 : "default"
             }
             variant="default"

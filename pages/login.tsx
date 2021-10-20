@@ -81,7 +81,7 @@ export default function LoginPage() {
                     <Grid item>
                       <CustomButton
                         variant="contained"
-                        color="primary"
+                        color="secondary"
                         onClick={() => {
                           firebase.auth().signOut();
                         }}
@@ -93,25 +93,8 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {loading && <CircularProgress />}
+              {loading && <CircularProgress color="secondary" />}
             </Grid>
-            {/* <LoginButton
-            color="#333333"
-            icon={<AiFillGithub size={24} />}
-            title={"Login With GitHub"}
-          />
-
-          <LoginButton
-            color="#4284f4"
-            icon={<AiFillGoogleCircle size={24} />}
-            title={"Sign in With Google"}
-          />
-
-          <LoginButton
-            color="#405dad"
-            icon={<AiFillFacebook size={24} />}
-            title={"Continue With Facebook"}
-          /> */}
           </Grid>
         </Paper>
       </Container>

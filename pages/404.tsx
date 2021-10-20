@@ -31,7 +31,7 @@ export default function PageNotFoundPage() {
         <Grid item>
           <Typography>Page Not Found</Typography>
         </Grid>
-        <CustomButton href="/" variant="contained" color="primary">
+        <CustomButton href="/" variant="contained" color="secondary">
           Go Home
         </CustomButton>
       </Grid>

@@ -20,6 +20,7 @@ export async function getTemplateListWithId(props: StaticProps) {
   const _returnData: TemplateCardProps = {
     frontmatter: frontmatter as TemplateFrontmatterProps,
     id: props.params.id,
+    content: content,
   };
   return {
     props: _returnData,

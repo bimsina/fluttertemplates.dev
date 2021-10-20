@@ -41,7 +41,7 @@ export default function TemplatesList({
           }}
         >
           <Grid item>
-            <CircularProgress size="1.5rem" thickness={8} />
+            <CircularProgress size="1.5rem" thickness={8} color="secondary" />
           </Grid>
         </Grid>
       )}

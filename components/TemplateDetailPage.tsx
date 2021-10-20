@@ -12,6 +12,9 @@ import PackagesUsed from "./PackagesUsed";
 import TemplatePageHead from "@/head/TemplatePageHead";
 import { useRouter } from "next/dist/client/router";
 import TemplateCardProps from "@/models/template_card";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
 
 function TemplateDetailPage(params: TemplateCardProps) {
   return (
@@ -21,12 +24,12 @@ function TemplateDetailPage(params: TemplateCardProps) {
         image={`https://fluttertemplates.dev/${params.frontmatter.image}`}
         id={params.id}
       />
-      <RenderBody {...params.frontmatter} />
+      <RenderBody {...params} />
     </div>
   );
 }
 
-function RenderBody(props: TemplateFrontmatterProps) {
+function RenderBody(props: TemplateCardProps) {
   const router = useRouter();
 
   const [selectedTab, setSelectedTab] = useState(0);
@@ -34,16 +37,53 @@ function RenderBody(props: TemplateFrontmatterProps) {
     setSelectedTab(newValue);
   };
 
+  const _frontmatter = props.frontmatter;
+  const _hasMdContent = props.content.toString().length != 0;
+
   function renderTabs(selectedTab: number) {
-    switch (selectedTab) {
-      case 0:
-        return (
-          <Code codeGistUrl={props.codeGistUrl} fullCodeUrl={props.codeUrl} />
-        );
-      case 1:
-        return <PackagesUsed packages={props.packages ?? []} />;
-      default:
-        return <PageNotFoundPage />;
+    if (_hasMdContent && selectedTab == 0) {
+      return (
+        <div
+          style={{
+            width: "100%",
+            height: "80%",
+            overflowX: "hidden",
+            overflowY: "auto",
+          }}
+        >
+          <ReactMarkdown
+            children={props.content}
+            remarkPlugins={[remarkGfm]}
+            rehypePlugins={[rehypeRaw]}
+          />
+        </div>
+        // <div
+        //   dangerouslySetInnerHTML={{ __html: marked(props.content) }}
+        //   style={{
+        //     height: "80%",
+        //     width: "100%",
+        //     overflowX: "hidden",
+        //     overflowY: "auto",
+        //   }}
+        // ></div>
+      );
+    } else if (
+      (!_hasMdContent && selectedTab == 0) ||
+      (_hasMdContent && selectedTab == 1)
+    ) {
+      return (
+        <Code
+          codeGistUrl={_frontmatter.codeGistUrl}
+          fullCodeUrl={_frontmatter.codeUrl}
+        />
+      );
+    } else if (
+      (!_hasMdContent && selectedTab == 1) ||
+      (_hasMdContent && selectedTab == 2)
+    ) {
+      return <PackagesUsed packages={_frontmatter.packages ?? []} />;
+    } else {
+      return <PageNotFoundPage />;
     }
   }
 
@@ -56,7 +96,7 @@ function RenderBody(props: TemplateFrontmatterProps) {
       spacing={2}
       justifyContent="center"
     >
-      {!(props.isProtected ?? false) && (
+      {!(_frontmatter.isProtected ?? false) && (
         <Grid
           item
           md={6}
@@ -75,9 +115,9 @@ function RenderBody(props: TemplateFrontmatterProps) {
                 marginTop: "1rem",
               }}
             >
-              {props.title}
+              {_frontmatter.title}
             </Typography>
-            {props.categories && props.categories.length > 0 && (
+            {_frontmatter.categories && _frontmatter.categories.length > 0 && (
               <div
                 style={{
                   marginLeft: "1rem",
@@ -85,7 +125,7 @@ function RenderBody(props: TemplateFrontmatterProps) {
                 }}
               >
                 <CategoriesList
-                  categories={props.categories}
+                  categories={_frontmatter.categories}
                   selected={""}
                   showAll={false}
                 />
@@ -95,10 +135,11 @@ function RenderBody(props: TemplateFrontmatterProps) {
             <Tabs
               value={selectedTab}
               onChange={handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
+              indicatorColor="secondary"
+              textColor="secondary"
               centered
             >
+              {_hasMdContent && <Tab label="About" />}
               <Tab label="Code" />
               <Tab label="Packages Used" />
             </Tabs>
@@ -120,7 +161,7 @@ function RenderBody(props: TemplateFrontmatterProps) {
             width: "calc(80vh/17 * 9)",
           }}
         >
-          <CustomIframe url={props.demoUrl} />
+          <CustomIframe url={_frontmatter.demoUrl} />
         </div>
       </Grid>
     </Grid>

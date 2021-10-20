@@ -24,7 +24,7 @@ export default function CustomIframe(props: CustomIframeProps) {
           position: "absolute",
         }}
       >
-        <CircularProgress />
+        <CircularProgress color="secondary" />
         <Typography
           variant="h6"
           style={{

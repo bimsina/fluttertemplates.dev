@@ -1,11 +1,12 @@
-import { Typography } from "@material-ui/core";
+import { AppBar, Typography } from "@material-ui/core";
 import { LinkedIn, MailOutlineRounded, Twitter } from "@material-ui/icons";
 
 export default function Footer() {
   return (
-    <div
+    <AppBar
+      position="static"
+      color="primary"
       style={{
-        background: "#1b1921",
         padding: "2.5rem",
         width: "100%",
       }}
@@ -52,7 +53,6 @@ export default function Footer() {
           </a>
         </Grid>
       </Grid> */}
-
       <div
         style={{
           width: "100%",
@@ -72,7 +72,6 @@ export default function Footer() {
           Contact
         </Typography>
       </div>
-
       <div
         style={{
           display: "flex",
@@ -100,6 +99,6 @@ export default function Footer() {
           <LinkedIn className="footer-icon" />
         </a>
       </div>
-    </div>
+    </AppBar>
   );
 }
