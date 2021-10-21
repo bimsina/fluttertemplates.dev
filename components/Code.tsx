@@ -21,10 +21,6 @@ function Code(params: CodeParams) {
     event: React.SyntheticEvent | React.MouseEvent,
     reason?: string
   ) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
     setOpen(false);
   };
 

@@ -55,17 +55,25 @@ function RenderBody(props: TemplateCardProps) {
             children={props.content}
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
+            linkTarget="_blank"
+            components={{
+              img: ({ node, ...props }) => (
+                <img {...props} width="100%" height="100%" />
+              ),
+
+              tr: ({ node, ...props }) => (
+                <Grid container spacing={1}>
+                  {props.children}
+                </Grid>
+              ),
+              td: ({ node, ...props }) => (
+                <Grid item xs={4}>
+                  {props.children}
+                </Grid>
+              ),
+            }}
           />
         </div>
-        // <div
-        //   dangerouslySetInnerHTML={{ __html: marked(props.content) }}
-        //   style={{
-        //     height: "80%",
-        //     width: "100%",
-        //     overflowX: "hidden",
-        //     overflowY: "auto",
-        //   }}
-        // ></div>
       );
     } else if (
       (!_hasMdContent && selectedTab == 0) ||

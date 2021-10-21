@@ -6,13 +6,8 @@ import {
   createTheme,
   CssBaseline,
   ThemeProvider,
-  Typography,
 } from "@material-ui/core";
-import {
-  Brightness7Rounded,
-  FreeBreakfastOutlined,
-  NightsStayRounded,
-} from "@material-ui/icons";
+import { Brightness7Rounded, NightsStayRounded } from "@material-ui/icons";
 import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
 
@@ -37,14 +32,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         palette: {
           type: darkMode ? "dark" : "light",
           primary: {
-            main: darkMode ? "#01102c" : "#01102c",
+            main: "#24292e",
           },
           secondary: {
-            main: darkMode ? "#c4d33a" : "#01102c",
+            main: darkMode ? "#2ca44f" : "#2ca44f",
           },
           background: {
-            default: darkMode ? "#1c1e1f" : "#ffffff",
-            paper: darkMode ? "#2b2e35" : "#f5f5f5",
+            default: darkMode ? "#000409" : "#f6f8fa",
+            paper: darkMode ? "#0d1117" : "#ffffff",
           },
         },
         typography: {
@@ -57,22 +52,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <ThemeProvider theme={theme}>
       <CssBaseline />
-      <a
-        target="_blank"
-        rel="noopener noreferrer"
-        className="fab"
-        href="https://www.buymeacoffee.com/bimsina"
-      >
-        <FreeBreakfastOutlined />
-        <Typography
-          style={{
-            marginLeft: "4px",
-            fontWeight: "bold",
-          }}
-        >
-          Donate
-        </Typography>
-      </a>
 
       <Header
         icon={icon}

@@ -99,6 +99,15 @@ export default function Footer() {
           <LinkedIn className="footer-icon" />
         </a>
       </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
+        © 2021 Bibek Timsina
+      </div>
     </AppBar>
   );
 }

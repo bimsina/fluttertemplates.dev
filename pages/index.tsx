@@ -207,7 +207,6 @@ function HeroSection() {
               variant="contained"
               color="secondary"
               href="#templates"
-              disableElevation
               aria-label="Lets start"
               style={{
                 fontSize: "1rem",
