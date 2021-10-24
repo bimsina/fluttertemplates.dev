@@ -12,7 +12,6 @@ import {
 import firebase from "@/firebase/clientApp";
 import { useAuthState } from "react-firebase-hooks/auth";
 import React from "react";
-import CustomButton from "@/components/custom_button";
 
 interface HeaderProps {
   icon: any;
@@ -39,7 +38,7 @@ export default function Header(props: HeaderProps) {
     //   }}
     // >
 
-    <AppBar position="static" color="primary">
+    <AppBar position="static" color="primary" elevation={0}>
       <Toolbar>
         <Container maxWidth="lg">
           <div
@@ -66,7 +65,6 @@ export default function Header(props: HeaderProps) {
                   fontSize: "1.3rem",
                   fontWeight: "bold",
                   marginLeft: "4px",
-                  color: "white",
                 }}
               >
                 Templates
@@ -82,23 +80,19 @@ export default function Header(props: HeaderProps) {
               <IconButton
                 aria-label="Theme Toggle Button"
                 onClick={props.onChange}
-                style={{
-                  color: "white",
-                }}
               >
                 {props.icon}
               </IconButton>
 
               {!user && !loading && (
-                <CustomButton
+                <Button
                   href="/login"
                   style={{
-                    color: "white",
                     display: "flex",
                   }}
                 >
                   Log In
-                </CustomButton>
+                </Button>
               )}
 
               {user && (

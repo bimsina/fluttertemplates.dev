@@ -1,4 +1,10 @@
-import { CircularProgress, Grid, Snackbar, useTheme } from "@material-ui/core";
+import {
+  Button,
+  CircularProgress,
+  Grid,
+  Snackbar,
+  useTheme,
+} from "@material-ui/core";
 import { FileCopyRounded, GitHub } from "@material-ui/icons";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useState } from "react";
@@ -56,15 +62,16 @@ function Code(params: CodeParams) {
             {code}
           </SyntaxHighlighter>
 
-          <CustomButton
+          <Button
             aria-label="Copy"
+            size="medium"
             variant="contained"
             color="secondary"
-            size="small"
+            disableElevation
             style={{
               position: "absolute",
-              top: "8px",
-              right: "16px",
+              top: "16px",
+              right: "20px",
             }}
             onClick={() => {
               copy(code);
@@ -79,7 +86,7 @@ function Code(params: CodeParams) {
               }}
             />
             Copy
-          </CustomButton>
+          </Button>
         </div>
       )}
 
@@ -116,7 +123,7 @@ function Code(params: CodeParams) {
               target="_blank"
               rel="noopener noreferrer"
             >
-              <CustomButton variant="contained" color="secondary">
+              <CustomButton>
                 <GitHub
                   fontSize="small"
                   style={{

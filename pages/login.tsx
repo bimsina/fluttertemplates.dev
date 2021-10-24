@@ -51,10 +51,11 @@ export default function LoginPage() {
           >
             <Grid item>
               <img
-                src="/login.svg"
+                src="/favicon.svg"
+                alt="Flutter UI Templates Logo"
                 style={{
-                  height: "30vh",
-                  objectFit: "scale-down",
+                  height: "15vh",
+                  margin: "1.5rem",
                 }}
               />
             </Grid>
@@ -80,8 +81,6 @@ export default function LoginPage() {
                     </Grid>
                     <Grid item>
                       <CustomButton
-                        variant="contained"
-                        color="secondary"
                         onClick={() => {
                           firebase.auth().signOut();
                         }}

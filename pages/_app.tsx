@@ -12,7 +12,7 @@ import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(true);
   const icon = darkMode ? <Brightness7Rounded /> : <NightsStayRounded />;
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       jssStyles.parentElement?.removeChild(jssStyles);
     }
 
-    const _item = localStorage.getItem("dark") ?? "false";
+    const _item = localStorage.getItem("dark") ?? "true";
     setDarkMode(JSON.parse(_item));
   }, []);
 
@@ -32,18 +32,40 @@ function MyApp({ Component, pageProps }: AppProps) {
         palette: {
           type: darkMode ? "dark" : "light",
           primary: {
-            main: "#24292e",
+            main: darkMode ? "#141b2d" : "#ffffff",
           },
           secondary: {
-            main: darkMode ? "#2ca44f" : "#2ca44f",
+            main: darkMode ? "#696ffa" : "#2270e8",
           },
           background: {
-            default: darkMode ? "#000409" : "#f6f8fa",
-            paper: darkMode ? "#0d1117" : "#ffffff",
+            default: darkMode ? "#141b2d" : "#ffffff",
+            paper: darkMode ? "#1f2940" : "#f1f3f4",
           },
         },
         typography: {
           fontFamily: ["Ubuntu"].join(","),
+        },
+        overrides: {
+          MuiTab: {
+            wrapper: {
+              flexDirection: "row",
+            },
+          },
+          // MuiCssBaseline: {
+          //   "@global": {
+          //     "*": {
+          //       "scrollbar-width": "thick",
+          //     },
+          //     "*::-webkit-scrollbar": {
+          //       width: "4px",
+          //       height: "4px",
+          //     },
+          //     "*::-webkit-scrollbar-thumb": {
+          //       backgroundColor: "yellow",
+          //       outline: "0px",
+          //     },
+          //   },
+          // },
         },
       }),
     [darkMode]

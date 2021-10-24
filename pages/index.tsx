@@ -4,7 +4,7 @@ import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/HomePageHead";
 import TemplateCardProps from "@/models/template_card";
 import getTemplatesList from "@/utils/getTemplatesList";
-import { Divider, Grid, Typography } from "@material-ui/core";
+import { Button, Divider, Grid, Typography } from "@material-ui/core";
 import { ArrowForwardIosRounded } from "@material-ui/icons";
 import React from "react";
 
@@ -57,12 +57,7 @@ export default function Home({
         }}
       >
         <Grid item>
-          <CustomButton
-            variant="contained"
-            color="secondary"
-            href="/templates"
-            aria-label="Browse Templates"
-          >
+          <CustomButton href="/templates" aria-label="Browse Templates">
             Browse All Templates
           </CustomButton>
         </Grid>
@@ -113,7 +108,8 @@ function SingleTemplatesCategorySection(props: TemplateSectionProps) {
         </Grid>
 
         <Grid item>
-          <CustomButton
+          <Button
+            variant="outlined"
             href={`/templates?catId=${props.catId}`}
             style={{
               fontSize: "0.8rem",
@@ -126,7 +122,7 @@ function SingleTemplatesCategorySection(props: TemplateSectionProps) {
                 marginBottom: "-0.075rem",
               }}
             />
-          </CustomButton>
+          </Button>
         </Grid>
       </Grid>
 
@@ -212,7 +208,7 @@ function HeroSection() {
                 fontSize: "1rem",
               }}
             >
-              Let’s get started!
+              Let’s get started !
             </CustomButton>
           </Grid>
         </Grid>

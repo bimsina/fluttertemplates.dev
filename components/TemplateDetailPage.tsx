@@ -15,6 +15,11 @@ import TemplateCardProps from "@/models/template_card";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
+import {
+  AttachmentOutlined,
+  CodeOutlined,
+  InfoOutlined,
+} from "@material-ui/icons";
 
 function TemplateDetailPage(params: TemplateCardProps) {
   return (
@@ -144,12 +149,44 @@ function RenderBody(props: TemplateCardProps) {
               value={selectedTab}
               onChange={handleTabChange}
               indicatorColor="secondary"
-              textColor="secondary"
+              textColor="inherit"
               centered
             >
-              {_hasMdContent && <Tab label="About" />}
-              <Tab label="Code" />
-              <Tab label="Packages Used" />
+              {_hasMdContent && (
+                <Tab
+                  label="About"
+                  icon={
+                    <InfoOutlined
+                      style={{
+                        marginTop: "8px",
+                        marginRight: "8px",
+                      }}
+                    />
+                  }
+                />
+              )}
+              <Tab
+                label="Code"
+                icon={
+                  <CodeOutlined
+                    style={{
+                      marginTop: "8px",
+                      marginRight: "8px",
+                    }}
+                  />
+                }
+              />
+              <Tab
+                label="Packages Used"
+                icon={
+                  <AttachmentOutlined
+                    style={{
+                      marginTop: "8px",
+                      marginRight: "8px",
+                    }}
+                  />
+                }
+              />
             </Tabs>
           </Card>
           {renderTabs(selectedTab)}
@@ -167,6 +204,7 @@ function RenderBody(props: TemplateCardProps) {
           style={{
             height: "80vh",
             width: "calc(80vh/17 * 9)",
+            margin: "8px",
           }}
         >
           <CustomIframe url={_frontmatter.demoUrl} />
