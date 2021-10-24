@@ -199,15 +199,7 @@ function HeroSection() {
           </Grid>
 
           <Grid>
-            <CustomButton
-              variant="contained"
-              color="secondary"
-              href="#templates"
-              aria-label="Lets start"
-              style={{
-                fontSize: "1rem",
-              }}
-            >
+            <CustomButton href="#templates" aria-label="Lets start">
               Let’s get started !
             </CustomButton>
           </Grid>

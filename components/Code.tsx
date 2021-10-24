@@ -127,9 +127,7 @@ function Code(params: CodeParams) {
                 <GitHub
                   fontSize="small"
                   style={{
-                    marginBottom: "-4px",
                     marginRight: "8px",
-                    marginTop: "2px",
                   }}
                 />
                 Full Source code

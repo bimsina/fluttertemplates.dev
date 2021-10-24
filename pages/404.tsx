@@ -4,6 +4,7 @@ import { Grid } from "@material-ui/core";
 import { Typography } from "@material-ui/core";
 import CustomButton from "@/components/custom_button";
 import HomePageHead from "@/head/HomePageHead";
+import { HomeRounded } from "@material-ui/icons";
 
 export default function PageNotFoundPage() {
   return (
@@ -31,7 +32,10 @@ export default function PageNotFoundPage() {
         <Grid item>
           <Typography>Page Not Found</Typography>
         </Grid>
-        <CustomButton href="/">🏠 Go Home</CustomButton>
+        <CustomButton href="/">
+          <HomeRounded fontSize="small" style={{ marginRight: "8px" }} />
+          Go Home
+        </CustomButton>
       </Grid>
     </>
   );

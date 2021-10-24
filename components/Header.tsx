@@ -89,6 +89,7 @@ export default function Header(props: HeaderProps) {
                   href="/login"
                   style={{
                     display: "flex",
+                    textTransform: "capitalize",
                   }}
                 >
                   Log In
