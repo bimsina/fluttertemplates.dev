@@ -17,7 +17,7 @@ export default function CategoriesList(props: CategoriesListProps) {
           label="#all"
           component="a"
           color={props.selected === "all" ? "secondary" : "default"}
-          variant="default"
+          variant={props.selected === "all" ? "default" : "outlined"}
           clickable
           style={{
             margin: "4px",
@@ -40,7 +40,11 @@ export default function CategoriesList(props: CategoriesListProps) {
                 ? "secondary"
                 : "default"
             }
-            variant="default"
+            variant={
+              props.selected.toLowerCase() === val.toLowerCase()
+                ? "default"
+                : "outlined"
+            }
             clickable
             style={{
               margin: "4px",

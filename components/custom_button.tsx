@@ -8,10 +8,10 @@ function CustomButton(props: any) {
       variant="contained"
       disableElevation
       style={{
-        padding: "10px 16px",
-        borderRadius: "4px",
-        backgroundColor: `${theme.palette.secondary.main}25`,
-        color: theme.palette.secondary.main,
+        padding: "12px 24px",
+        borderRadius: "100px",
+        backgroundColor: `${theme.palette.secondary.main}`,
+        color: "#ffffff",
         textTransform: "capitalize",
         fontWeight: "bold",
       }}
