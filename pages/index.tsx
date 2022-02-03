@@ -1,12 +1,18 @@
 import CustomContainedButton from "@/components/buttons/ContainedButton";
-import BrowseWidgetsCTA from "@/components/homePageSections/BrowseWidgetsCTA";
+import BrowseComponentsCTA from "@/components/homePageSections/BrowseComponentsCTA";
 import FeaturesSection from "@/components/homePageSections/FeaturesSection";
 import HeroSection from "@/components/homePageSections/Hero";
 import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/SEOHead";
 import TemplateCardProps from "@/models/template_card";
 import getTemplatesList from "@/utils/getTemplatesList";
-import { Button, Divider, Grid, Typography } from "@material-ui/core";
+import {
+  Button,
+  Container,
+  Divider,
+  Grid,
+  Typography,
+} from "@material-ui/core";
 import { ArrowForwardIosRounded } from "@material-ui/icons";
 import React from "react";
 
@@ -16,16 +22,12 @@ export default function Home({
   templates: TemplateCardProps[];
 }) {
   return (
-    <div
-      style={{
-        margin: "1rem",
-      }}
-    >
+    <Container maxWidth="lg">
       <HomePageHead />
       <HeroSection />
       <FeaturesSection />
-      <BrowseWidgetsCTA />
-    </div>
+      <BrowseComponentsCTA />
+    </Container>
   );
 }
 

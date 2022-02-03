@@ -49,9 +49,7 @@ function CodeBlock(params: CodeBlockParams) {
           style={!isDarkTheme ? github : dracula}
           showLineNumbers={false}
           customStyle={{
-            maxWidth: "95vw",
             maxHeight: `${params.height}`,
-            width: "100%",
             fontSize: "0.95rem",
           }}
         >

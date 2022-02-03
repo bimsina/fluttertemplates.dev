@@ -33,14 +33,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         palette: {
           type: darkMode ? "dark" : "light",
           primary: {
-            main: darkMode ? "#161b22" : "#ffffff",
+            main: darkMode ? "#0d1117" : "#ffffff",
           },
           secondary: {
             main: darkMode ? "#0468d7" : "#0468d7",
           },
           background: {
-            default: darkMode ? "#161b22" : "#ffffff",
-            paper: darkMode ? "#0d1117" : "#f1f3f4",
+            default: darkMode ? "#0d1117" : "#ffffff",
+            paper: darkMode ? "#161b22" : "#f1f3f4",
           },
         },
         typography: {
@@ -68,14 +68,8 @@ function MyApp({ Component, pageProps }: AppProps) {
           setDarkMode(!darkMode);
         }}
       />
-      <Container
-        maxWidth="lg"
-        style={{
-          minHeight: "95vh",
-        }}
-      >
-        <Component {...pageProps} />
-      </Container>
+
+      <Component {...pageProps} />
 
       <Footer />
     </ThemeProvider>

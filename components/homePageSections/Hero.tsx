@@ -75,8 +75,8 @@ function HeroSection(props: any) {
           >
             <Grid item>
               <CustomContainedButton
-                href="/widgets"
-                label="Browse Widgets"
+                href="/components"
+                label="Browse Components"
                 icon={<ArrowForward fontSize="small" />}
               />
             </Grid>

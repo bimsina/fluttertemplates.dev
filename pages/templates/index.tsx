@@ -4,7 +4,7 @@ import getTemplatesList from "@/utils/getTemplatesList";
 import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/SEOHead";
 import { useRouter } from "next/dist/client/router";
-import { CircularProgress, Grid } from "@material-ui/core";
+import { CircularProgress, Container, Grid } from "@material-ui/core";
 
 export default function TemplatesList({
   templates,
@@ -28,7 +28,7 @@ export default function TemplatesList({
   }
 
   return (
-    <div>
+    <Container maxWidth="lg">
       <HomePageHead />
       {!category && (
         <Grid
@@ -52,7 +52,7 @@ export default function TemplatesList({
           selectedCatId={catId as string}
         />
       )}
-    </div>
+    </Container>
   );
 }
 

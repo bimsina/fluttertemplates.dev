@@ -1,4 +1,4 @@
-import { Typography } from "@material-ui/core";
+import { Container, Typography } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import { Tabs, Grid, Tab } from "@material-ui/core";
 
@@ -23,14 +23,14 @@ import {
 
 function TemplateDetailPage(params: TemplateCardProps) {
   return (
-    <div>
+    <Container maxWidth="lg">
       <TemplatePageHead
         title={params.frontmatter.title}
         image={`https://fluttertemplates.dev/${params.frontmatter.image}`}
         id={params.id}
       />
       <RenderBody {...params} />
-    </div>
+    </Container>
   );
 }
 

@@ -139,6 +139,7 @@ const displayMobile = (isOpen: boolean, onToggle: any) => {
       <Drawer open={isOpen} anchor="bottom" onClose={onToggle}>
         {commonNav.map((item) => (
           <ListItem
+            key={item.props.href}
             style={{
               padding: 16,
               justifyContent: "center",
@@ -153,7 +154,7 @@ const displayMobile = (isOpen: boolean, onToggle: any) => {
 };
 
 const commonNav: any[] = [
-  <CustomFlatButton href={GITHUB_LINK} label="GitHub" />,
-  <CustomFlatButton href="/widgets" label="Components" />,
+  <CustomFlatButton href="/components" label="Components" />,
   <CustomFlatButton href="/templates" label="Templates" />,
+  <CustomFlatButton href={GITHUB_LINK} label="GitHub" />,
 ];

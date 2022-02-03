@@ -1,9 +1,9 @@
-import { Card, Container, Grid, Typography, useTheme } from "@material-ui/core";
+import { Grid, Typography, useTheme } from "@material-ui/core";
 import { ArrowForward } from "@material-ui/icons";
 import React from "react";
 import CustomContainedButton from "../buttons/ContainedButton";
 
-export default function BrowseWidgetsCTA() {
+export default function BrowseComponentsCTA() {
   const theme = useTheme();
 
   return (
@@ -45,8 +45,8 @@ export default function BrowseWidgetsCTA() {
           }}
         >
           <CustomContainedButton
-            label="Browse Widgets"
-            href="/widgets"
+            label="Browse Components"
+            href="/components"
             icon={<ArrowForward fontSize="small" />}
           />
         </Grid>
