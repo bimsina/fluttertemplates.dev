@@ -1,5 +1,6 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
+import Header from "@/components/header/Header";
+import Footer from "@/components/footer/Footer";
+
 import "@/styles/globals.css";
 import {
   Container,
@@ -43,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
           },
         },
         typography: {
-          fontFamily: ["Ubuntu"].join(","),
+          fontFamily: "Work Sans",
         },
         overrides: {
           MuiTab: {
@@ -51,21 +52,6 @@ function MyApp({ Component, pageProps }: AppProps) {
               flexDirection: "row",
             },
           },
-          // MuiCssBaseline: {
-          //   "@global": {
-          //     "*": {
-          //       "scrollbar-width": "thick",
-          //     },
-          //     "*::-webkit-scrollbar": {
-          //       width: "4px",
-          //       height: "4px",
-          //     },
-          //     "*::-webkit-scrollbar-thumb": {
-          //       backgroundColor: "yellow",
-          //       outline: "0px",
-          //     },
-          //   },
-          // },
         },
       }),
     [darkMode]
@@ -76,8 +62,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       <CssBaseline />
 
       <Header
-        icon={icon}
-        onChange={() => {
+        themeIcon={icon}
+        onThemeChange={() => {
           localStorage.setItem("dark", (!darkMode).toString());
           setDarkMode(!darkMode);
         }}

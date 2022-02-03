@@ -6,10 +6,10 @@ import CustomContainedButton from "@/components/buttons/ContainedButton";
 import HomePageHead from "@/head/SEOHead";
 import { HomeRounded } from "@material-ui/icons";
 
-export default function PageNotFoundPage() {
+export default function ComponentsPage() {
   return (
     <>
-      <HomePageHead title="404 : Cant find the page you're looking for." />
+      <HomePageHead title="Browse production ready Flutter UI Components" />
       <Grid
         container
         direction="column"
@@ -30,7 +30,7 @@ export default function PageNotFoundPage() {
           />
         </Grid>
         <Grid item>
-          <Typography>Page Not Found</Typography>
+          <Typography>Coming soon</Typography>
         </Grid>
         <CustomContainedButton href="/" label="Go Home" />
       </Grid>

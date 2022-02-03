@@ -2,7 +2,7 @@ import React from "react";
 import TemplateCardProps from "@/models/template_card";
 import getTemplatesList from "@/utils/getTemplatesList";
 import TemplatesGrid from "@/components/TemplatesGrid";
-import HomePageHead from "@/head/HomePageHead";
+import HomePageHead from "@/head/SEOHead";
 import { useRouter } from "next/dist/client/router";
 import { CircularProgress, Grid } from "@material-ui/core";
 

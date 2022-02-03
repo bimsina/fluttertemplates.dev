@@ -1,11 +1,4 @@
-import {
-  Card,
-  Divider,
-  Grid,
-  Paper,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import { Card, Grid, Typography, useTheme } from "@material-ui/core";
 import { BrushRounded, Code, VisibilityRounded } from "@material-ui/icons";
 import React from "react";
 

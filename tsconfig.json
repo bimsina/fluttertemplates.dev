@@ -20,8 +20,7 @@
       "@/models/*": ["models/*"],
       "@/styles/*": ["styles/*"],
       "@/utils/*": ["utils/*"],
-      "@/pages/*": ["pages/*"],
-      "@/firebase/*": ["firebase/*"]
+      "@/pages/*": ["pages/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
