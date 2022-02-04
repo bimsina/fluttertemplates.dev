@@ -56,10 +56,10 @@ export default function Footer() {
                   <img
                     src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
                     alt="Buy Me A Coffee"
-                    height={40}
-                    width={142.47}
                     style={{
                       marginTop: "1rem",
+                      height: "60px !important",
+                      width: "217px !important",
                     }}
                   />
                 </a>

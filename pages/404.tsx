@@ -24,6 +24,7 @@ export default function PageNotFoundPage() {
         <Grid item>
           <img
             src="/404.svg"
+            alt="404 : Cant find the page you're looking for."
             style={{
               height: "30vh",
             }}

@@ -68,8 +68,13 @@ function MyApp({ Component, pageProps }: AppProps) {
           setDarkMode(!darkMode);
         }}
       />
-
-      <Component {...pageProps} />
+      <div
+        style={{
+          minHeight: "80vh",
+        }}
+      >
+        <Component {...pageProps} />
+      </div>
 
       <Footer />
     </ThemeProvider>

@@ -25,6 +25,7 @@ export default function PackagesUsed(params: Props) {
         <Grid item>
           <img
             src="/no_packages.svg"
+            alt="No Packages Used"
             style={{
               height: "30vh",
             }}
@@ -63,6 +64,7 @@ export default function PackagesUsed(params: Props) {
                 src={`https://img.shields.io/pub/v/${packageName
                   .split("/")
                   .pop()}.svg`}
+                alt={packageName}
                 style={{
                   marginLeft: "8px",
                 }}

@@ -1,6 +1,5 @@
 import {
   Button,
-  Divider,
   Grid,
   IconButton,
   Typography,
@@ -16,7 +15,7 @@ import {
 import React from "react";
 import CodeBlock from "../shared/CodeBlock";
 
-interface ComponentDemoBlockProps {
+interface WidgetDemoBlockProps {
   demoUrl: string;
   rawCodeUrl: string;
   codeUrl: string;
@@ -46,7 +45,7 @@ const _responsiveValues: ResponsiveProp[] = [
   },
 ];
 
-function ComponentDemoBlock(props: ComponentDemoBlockProps) {
+function WidgetDemoBlock(props: WidgetDemoBlockProps) {
   const theme = useTheme();
   const [responsiveSize, setResponsiveSize] = React.useState(
     _responsiveValues[2]
@@ -105,9 +104,9 @@ function ComponentDemoBlock(props: ComponentDemoBlockProps) {
         <Grid item>
           <div
             style={{
-              height: "80px",
               border: "1px solid #cccccc50",
               borderRadius: "0.5rem",
+              padding: "1rem",
             }}
           >
             <Grid
@@ -124,7 +123,6 @@ function ComponentDemoBlock(props: ComponentDemoBlockProps) {
                   variant="h6"
                   style={{
                     fontWeight: "bold",
-                    marginLeft: "1rem",
                   }}
                 >
                   {props.title}
@@ -238,4 +236,4 @@ function ComponentDemoBlock(props: ComponentDemoBlockProps) {
   );
 }
 
-export default ComponentDemoBlock;
+export default WidgetDemoBlock;

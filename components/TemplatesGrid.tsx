@@ -1,9 +1,8 @@
-import { Grid, TextField, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import React, { useEffect, useState } from "react";
 import TemplateCardProps from "@/models/template_card";
 import CategoriesList from "./CategoriesList";
 import TemplateCard from "./TemplateCard";
-import { SearchOutlined } from "@material-ui/icons";
 
 export default function TemplatesGrid({
   templates,

@@ -17,15 +17,14 @@ export default function TemplatesList({
   const { catId } = router.query;
 
   React.useEffect(() => {
+    function getCat() {
+      setTimeout(() => {
+        const _cat = (router.query.catId ?? "all").toString();
+        setCategory(_cat);
+      }, 1000);
+    }
     getCat();
-  }, []);
-
-  function getCat() {
-    setTimeout(() => {
-      const _cat = (router.query.catId ?? "all").toString();
-      setCategory(_cat);
-    }, 1000);
-  }
+  }, [router.query]);
 
   return (
     <Container maxWidth="lg">

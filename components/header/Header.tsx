@@ -103,8 +103,10 @@ export default function Header(props: HeaderProps) {
                   justifyContent="flex-end"
                   alignItems="center"
                 >
-                  {commonNav.map((item) => (
-                    <Grid item>{item}</Grid>
+                  {commonNav.map((item, index) => (
+                    <Grid item key={`nav_${index}`}>
+                      {item}
+                    </Grid>
                   ))}
                 </Grid>
               </Box>
@@ -154,7 +156,7 @@ const displayMobile = (isOpen: boolean, onToggle: any) => {
 };
 
 const commonNav: any[] = [
-  <CustomFlatButton href="/components" label="Components" />,
+  <CustomFlatButton href="/widgets" label="Widgets" />,
   <CustomFlatButton href="/templates" label="Templates" />,
   <CustomFlatButton href={GITHUB_LINK} label="GitHub" />,
 ];

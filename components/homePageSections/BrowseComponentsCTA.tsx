@@ -45,8 +45,8 @@ export default function BrowseComponentsCTA() {
           }}
         >
           <CustomContainedButton
-            label="Browse Components"
-            href="/components"
+            label="Browse Widgets"
+            href="/widgets"
             icon={<ArrowForward fontSize="small" />}
           />
         </Grid>

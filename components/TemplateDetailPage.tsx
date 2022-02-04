@@ -2,8 +2,7 @@ import { Container, Typography } from "@material-ui/core";
 import { Card } from "@material-ui/core";
 import { Tabs, Grid, Tab } from "@material-ui/core";
 
-import React, { useEffect, useState } from "react";
-import TemplateFrontmatterProps from "@/models/template_frontmatter";
+import React, { useState } from "react";
 import PageNotFoundPage from "@/pages/404";
 import CategoriesList from "./CategoriesList";
 import Code from "./Code";

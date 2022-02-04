@@ -1,3 +1,4 @@
+import { WidgetGroup, Widgetsubgroup } from "@/models/widget";
 import {
   List,
   ListItem,
@@ -5,16 +6,15 @@ import {
   Typography,
   useTheme,
 } from "@material-ui/core";
-import { ComponentGroup, ComponentSubgroup } from "../api/fetchComponents";
 
 const drawerWidth = 220;
 
-interface ComponentsSidebarProps {
-  componentGroups: ComponentGroup[];
-  selectedSubGroup?: ComponentSubgroup;
-  onSubGroupSelected: (subGroup: ComponentSubgroup) => void;
+interface WidgetSidebarProps {
+  widgetGroups: WidgetGroup[];
+  selectedSubGroup?: Widgetsubgroup;
+  onSubGroupSelected: (subGroup: Widgetsubgroup) => void;
 }
-function ComponentsSidebar(props: ComponentsSidebarProps) {
+function WidgetsSidebar(props: WidgetSidebarProps) {
   const theme = useTheme();
   return (
     <div
@@ -24,7 +24,7 @@ function ComponentsSidebar(props: ComponentsSidebarProps) {
       }}
     >
       <List>
-        {props.componentGroups.map((item, index) => (
+        {props.widgetGroups.map((item, index) => (
           <div key={`group_${index}`}>
             <Typography
               style={{
@@ -34,7 +34,7 @@ function ComponentsSidebar(props: ComponentsSidebarProps) {
               {item.title}
             </Typography>
             <List>
-              {item.component_subgroups.map((item, index) => (
+              {item.widget_subgroups.map((item, index) => (
                 <ListItem
                   button
                   key={`sub_group_${index}`}
@@ -65,4 +65,4 @@ function ComponentsSidebar(props: ComponentsSidebarProps) {
     </div>
   );
 }
-export default ComponentsSidebar;
+export default WidgetsSidebar;

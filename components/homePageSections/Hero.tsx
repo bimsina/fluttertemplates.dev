@@ -75,8 +75,8 @@ function HeroSection(props: any) {
           >
             <Grid item>
               <CustomContainedButton
-                href="/components"
-                label="Browse Components"
+                href="/widgets"
+                label="Browse Widgets"
                 icon={<ArrowForward fontSize="small" />}
               />
             </Grid>
@@ -93,7 +93,7 @@ function HeroSection(props: any) {
           alt="hero"
           style={{
             width: "100%",
-            height: "85vh",
+            height: "75vh",
             objectFit: "scale-down",
           }}
         />
