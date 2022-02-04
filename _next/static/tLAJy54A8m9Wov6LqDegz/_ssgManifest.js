@@ -1,0 +1,1 @@
+self.__SSG_MANIFEST=new Set(["\u002Ftemplates","\u002Fwidgets\u002F[[...id]]","\u002Ftemplates\u002F[id]"]);self.__SSG_MANIFEST_CB&&self.__SSG_MANIFEST_CB()
