@@ -3,11 +3,7 @@ import {
   getFolderNestedData,
   getPathList,
   getPostData,
-  getSortedFlatData,
 } from "../../utils/widgets/helper";
-import Head from "next/head";
-import Link from "next/link";
-import HomePageHead from "@/head/SEOHead";
 
 import { NestedFolder } from "@/utils/widgets/models";
 import { useEffect, useState } from "react";
@@ -20,6 +16,8 @@ import {
 import { CircularProgress, Grid } from "@material-ui/core";
 import WidgetsSidebar from "@/components/widgetsPageSections/WidgetsSidebar";
 import WidgetsList from "@/components/widgetsPageSections/WidgetsList";
+import WidgetPageHead from "@/head/WidgetPageHead";
+import { useRouter } from "next/router";
 
 export default function Docs({
   postData,
@@ -33,9 +31,19 @@ export default function Docs({
     useState<WidgetsResponse>();
 
   const [selectedSubGroup, setSelectedSubGroup] = useState<Widgetsubgroup>();
+  const router = useRouter();
 
   useEffect(() => {
     const _fetchComponents = async () => {
+      const _params = router.query ?? [];
+      let _selectedSubGroupId = "";
+
+      if (Array.isArray(_params.id)) {
+        if ((_params.id?.length ?? 0) === 2) {
+          _selectedSubGroupId = _params.id.join("/");
+        }
+      }
+
       let _groups: WidgetGroup[] = [];
       allDocsNestedData.files.map((group) => {
         let _subgroups: Widgetsubgroup[] = [];
@@ -49,15 +57,21 @@ export default function Docs({
               rawCodeUrl: widget.matter.rawCodeUrl!,
             });
           });
+
           const _subGroup: Widgetsubgroup = {
             title: subgroup.matter.title,
             widgets: _widgets,
+            id: subgroup.id,
           };
+          if (_selectedSubGroupId === subgroup.id) {
+            setSelectedSubGroup(_subGroup);
+          }
           _subgroups.push(_subGroup);
         });
         const _group: WidgetGroup = {
           title: group.matter.title,
           widget_subgroups: _subgroups,
+          id: group.id,
         };
         _groups.push(_group);
       });
@@ -67,15 +81,20 @@ export default function Docs({
       };
 
       setComponentsResponse(_response);
-      setSelectedSubGroup(_response.widget_groups[0].widget_subgroups[0]);
+      if (!selectedSubGroup) {
+        setSelectedSubGroup(_response.widget_groups[0].widget_subgroups[0]);
+      }
       setIsLoading(false);
     };
     _fetchComponents();
-  }, [allDocsNestedData]);
+  }, [router.query]);
 
   return (
     <>
-      <HomePageHead title="Browse production ready Flutter UI Components" />
+      <WidgetPageHead
+        title={postData.frontmatter.title}
+        description={postData.frontmatter.description}
+      />
 
       {isLoading ? (
         <Grid

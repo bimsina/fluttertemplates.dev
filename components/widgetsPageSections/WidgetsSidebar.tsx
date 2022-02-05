@@ -1,11 +1,6 @@
 import { WidgetGroup, Widgetsubgroup } from "@/models/widget";
-import {
-  List,
-  ListItem,
-  ListItemText,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import { List, ListItem, Typography, useTheme } from "@material-ui/core";
+import Link from "next/link";
 
 const drawerWidth = 220;
 
@@ -24,39 +19,46 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
       }}
     >
       <List>
-        {props.widgetGroups.map((item, index) => (
-          <div key={`group_${index}`}>
+        {props.widgetGroups.map((group) => (
+          <div key={`group_${group}`}>
             <Typography
               style={{
                 fontWeight: "bold",
               }}
             >
-              {item.title}
+              {group.title}
             </Typography>
             <List>
-              {item.widget_subgroups.map((item, index) => (
-                <ListItem
-                  button
+              {group.widget_subgroups.map((subgroup, index) => (
+                <Link
+                  href={`/widgets/${subgroup.id}`}
+                  replace
                   key={`sub_group_${index}`}
-                  onClick={() => props.onSubGroupSelected(item)}
-                  style={{
-                    backgroundColor:
-                      props.selectedSubGroup?.title === item.title
-                        ? `${theme.palette.secondary.main}10`
-                        : "",
-                  }}
                 >
-                  <Typography
-                    style={{
-                      color:
-                        props.selectedSubGroup?.title === item.title
-                          ? theme.palette.secondary.main
-                          : "",
-                    }}
-                  >
-                    {item.title}
-                  </Typography>
-                </ListItem>
+                  <a>
+                    <ListItem
+                      button
+                      // onClick={() => props.onSubGroupSelected(item)}
+                      style={{
+                        backgroundColor:
+                          props.selectedSubGroup?.title === subgroup.title
+                            ? `${theme.palette.secondary.main}10`
+                            : "",
+                      }}
+                    >
+                      <Typography
+                        style={{
+                          color:
+                            props.selectedSubGroup?.title === subgroup.title
+                              ? theme.palette.secondary.main
+                              : "",
+                        }}
+                      >
+                        {subgroup.title}
+                      </Typography>
+                    </ListItem>
+                  </a>
+                </Link>
               ))}
             </List>
           </div>
