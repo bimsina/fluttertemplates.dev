@@ -2,6 +2,8 @@ import {
   Button,
   Grid,
   IconButton,
+  Tab,
+  Tabs,
   Typography,
   useTheme,
 } from "@material-ui/core";
@@ -14,6 +16,7 @@ import {
 } from "@material-ui/icons";
 import React from "react";
 import CodeBlock from "../shared/CodeBlock";
+import { motion } from "framer-motion";
 
 interface WidgetDemoBlockProps {
   demoUrl: string;
@@ -66,16 +69,18 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
             backgroundColor: theme.palette.background.paper,
           }}
         >
-          <iframe
+          <motion.iframe
+            animate={{
+              maxWidth: responsiveSize.value,
+            }}
             src={props.demoUrl}
             style={{
               backgroundColor: theme.palette.background.paper,
-              maxWidth: responsiveSize.value,
               height: "100%",
               width: "100%",
               border: "none",
             }}
-          ></iframe>
+          ></motion.iframe>
         </div>
       );
     } else {
@@ -118,7 +123,7 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
                 height: "100%",
               }}
             >
-              <Grid item>
+              <Grid item xs={12} md={4}>
                 <Typography
                   variant="h6"
                   style={{
@@ -128,92 +133,57 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
                   {props.title}
                 </Typography>
               </Grid>
-
               <Grid
                 item
+                xs={12}
+                md={4}
                 style={{
                   display: "flex",
-                  flexGrow: 1,
-                  flexDirection: "row",
                   justifyContent: "center",
                 }}
               >
-                {selectedTab == 0 ? (
-                  <>
-                    {_responsiveValues.map((item) => (
-                      <IconButton
-                        area-label={item.label}
-                        size="small"
+                {renderResponsiveSelector()}
+              </Grid>
+
+              <Grid item xs={12} md={4}>
+                <Grid
+                  container
+                  direction="row"
+                  justifyContent="flex-end"
+                  alignItems="center"
+                >
+                  {[0, 1].map((item) => (
+                    <Grid item>
+                      <Button
                         style={{
-                          color: `${
-                            item.value === responsiveSize.value
-                              ? "white"
-                              : theme.palette.secondary.main
-                          }`,
+                          textTransform: "capitalize",
+                          color: `${selectedTab == item ? "white" : ""}`,
                           backgroundColor: `${
-                            item.value === responsiveSize.value
-                              ? theme.palette.secondary.main
-                              : `${theme.palette.secondary.main}10`
+                            selectedTab == item
+                              ? `${theme.palette.secondary.main}`
+                              : ""
                           }`,
-                          padding: "6px",
-                          borderRadius: "4px",
-                          marginRight: "0.5rem",
                         }}
                         onClick={() => {
-                          setResponsiveSize(item);
+                          setSelectedTab(item);
                         }}
                       >
-                        {item.icon}
+                        {item === 0 ? "Demo" : "Code"}
+                      </Button>
+                    </Grid>
+                  ))}
+                  <Grid item>
+                    <a
+                      href={props.codeUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <IconButton>
+                        <GitHub />
                       </IconButton>
-                    ))}
-                  </>
-                ) : (
-                  <div> </div>
-                )}
-              </Grid>
-              {[0, 1].map((item) => (
-                <Grid item>
-                  <Button
-                    style={{
-                      textTransform: "capitalize",
-                      color: `${selectedTab == item ? "white" : ""}`,
-                      backgroundColor: `${
-                        selectedTab == item
-                          ? `${theme.palette.secondary.main}`
-                          : ""
-                      }`,
-                    }}
-                    onClick={() => {
-                      setSelectedTab(item);
-                    }}
-                  >
-                    {item === 0 ? "Demo" : "Code"}
-                  </Button>
+                    </a>
+                  </Grid>
                 </Grid>
-              ))}
-
-              <Grid item>
-                <a
-                  href={props.codeUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IconButton>
-                    <GitHub />
-                  </IconButton>
-                </a>
-              </Grid>
-
-              <Grid item>
-                <a
-                  href={props.demoUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <IconButton>
-                    <OpenInNewRounded />
-                  </IconButton>
-                </a>
               </Grid>
             </Grid>
           </div>
@@ -234,6 +204,45 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
       </Grid>
     </div>
   );
+
+  function renderResponsiveSelector() {
+    return (
+      <motion.div
+        animate={{
+          scale: selectedTab == 0 ? 1 : 0,
+        }}
+      >
+        <>
+          {_responsiveValues.map((item) => (
+            <IconButton
+              area-label={item.label}
+              size="small"
+              style={{
+                color: `${
+                  item.value === responsiveSize.value
+                    ? "white"
+                    : theme.palette.secondary.main
+                }`,
+                backgroundColor: `${
+                  item.value === responsiveSize.value
+                    ? theme.palette.secondary.main
+                    : `${theme.palette.secondary.main}10`
+                }`,
+                padding: "6px",
+                borderRadius: "4px",
+                marginRight: "0.5rem",
+              }}
+              onClick={() => {
+                setResponsiveSize(item);
+              }}
+            >
+              {item.icon}
+            </IconButton>
+          ))}
+        </>
+      </motion.div>
+    );
+  }
 }
 
 export default WidgetDemoBlock;

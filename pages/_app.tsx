@@ -2,19 +2,13 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 
 import "@/styles/globals.css";
-import {
-  Container,
-  createTheme,
-  CssBaseline,
-  ThemeProvider,
-} from "@material-ui/core";
-import { Brightness7Rounded, NightsStayRounded } from "@material-ui/icons";
+import { createTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
 import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
+import SubmitProposalSection from "@/components/shared/SubmitProposalSection";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [darkMode, setDarkMode] = useState<boolean>(false);
-  const icon = darkMode ? <Brightness7Rounded /> : <NightsStayRounded />;
 
   useEffect(() => {
     // Remove the server-side injected CSS.
@@ -62,7 +56,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <CssBaseline />
 
       <Header
-        themeIcon={icon}
+        isDarkMode={darkMode}
         onThemeChange={() => {
           localStorage.setItem("dark", (!darkMode).toString());
           setDarkMode(!darkMode);
@@ -75,6 +69,8 @@ function MyApp({ Component, pageProps }: AppProps) {
       >
         <Component {...pageProps} />
       </div>
+
+      <SubmitProposalSection />
 
       <Footer />
     </ThemeProvider>

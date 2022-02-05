@@ -22,6 +22,7 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
         {props.widgetGroups.map((group) => (
           <div key={`group_${group}`}>
             <Typography
+              variant="body1"
               style={{
                 fontWeight: "bold",
               }}
@@ -38,7 +39,6 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
                   <a>
                     <ListItem
                       button
-                      // onClick={() => props.onSubGroupSelected(item)}
                       style={{
                         backgroundColor:
                           props.selectedSubGroup?.title === subgroup.title
@@ -47,6 +47,7 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
                       }}
                     >
                       <Typography
+                        variant="body2"
                         style={{
                           color:
                             props.selectedSubGroup?.title === subgroup.title

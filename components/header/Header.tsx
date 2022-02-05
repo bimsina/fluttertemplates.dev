@@ -12,13 +12,17 @@ import {
   Grid,
   Box,
 } from "@material-ui/core";
-import { MenuRounded } from "@material-ui/icons";
+import {
+  Brightness7Rounded,
+  MenuRounded,
+  NightsStayRounded,
+} from "@material-ui/icons";
 import { GITHUB_LINK } from "../../constants";
 import React, { useState } from "react";
 import CustomFlatButton from "../buttons/FlatButton";
 
 interface HeaderProps {
-  themeIcon: any;
+  isDarkMode: boolean;
   onThemeChange: VoidFunction;
 }
 export default function Header(props: HeaderProps) {
@@ -117,7 +121,11 @@ export default function Header(props: HeaderProps) {
                 aria-label="Theme Toggle Button"
                 onClick={props.onThemeChange}
               >
-                {props.themeIcon}
+                {props.isDarkMode ? (
+                  <Brightness7Rounded />
+                ) : (
+                  <NightsStayRounded />
+                )}
               </IconButton>
             </Grid>
 

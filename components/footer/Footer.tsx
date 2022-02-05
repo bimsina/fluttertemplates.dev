@@ -1,18 +1,10 @@
-import {
-  AppBar,
-  Divider,
-  Grid,
-  IconButton,
-  Typography,
-} from "@material-ui/core";
+import { AppBar, Grid, IconButton, Typography } from "@material-ui/core";
 import { LinkedIn, MailOutlineRounded, Twitter } from "@material-ui/icons";
 import { BUY_ME_A_COFFEE_LINK } from "../../constants";
-import Link from "next/link";
 
 export default function Footer() {
   return (
     <div>
-      <Divider />
       <AppBar
         position="static"
         color="primary"

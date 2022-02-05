@@ -15,6 +15,7 @@
     "@material-ui/icons": "^4.11.2",
     "@material-ui/lab": "^4.0.0-alpha.60",
     "copy-to-clipboard": "^3.3.1",
+    "framer-motion": "^6.2.4",
     "fs-extra": "^9.0.1",
     "gray-matter": "^4.0.3",
     "next": "11.1.2",
