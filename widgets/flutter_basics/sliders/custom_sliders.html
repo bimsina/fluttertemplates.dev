@@ -1,0 +1,1384 @@
+<!DOCTYPE html><html lang="en"><head><link rel="stylesheet" data-href="https://fonts.googleapis.com/css2?family=Work+Sans&amp;display=swap"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin /><meta name="viewport" content="width=device-width"/><meta charSet="utf-8"/><title>Custom Sliders : Download free Flutter UI Templates for Android, iOS and Web.</title><meta name="description" content="Custom Sliders : Some custom designed sliders in Flutter."/><meta name="keywords" content="flutter, flutter ui, flutter ui templates, flutter widgets"/><meta property="og:url" content="https://fluttertemplates.dev/widgets/flutter_basics/sliders/custom_sliders"/><meta property="og:type" content="website"/><meta property="og:title" content="Custom Sliders : Download free Flutter UI Templates for Android, iOS and Web."/><meta property="og:description" content="Custom Sliders : Some custom designed sliders in Flutter."/><meta property="og:image" content="https://fluttertemplates.dev/og.png"/><meta name="twitter:card" content="summary_large_image"/><meta property="twitter:url" content="https://fluttertemplates.dev"/><meta name="twitter:title" content="Custom Sliders : Download free Flutter UI Templates for Android, iOS and Web."/><meta name="twitter:description" content="Custom Sliders : Some custom designed sliders in Flutter."/><meta name="twitter:image" content="https://fluttertemplates.dev/og.png"/><meta name="next-head-count" content="15"/><link rel="preload" href="/_next/static/css/1bfb864d256d33e9e2c1.css" as="style"/><link rel="stylesheet" href="/_next/static/css/1bfb864d256d33e9e2c1.css" data-n-g=""/><noscript data-n-css=""></noscript><script defer="" nomodule="" src="/_next/static/chunks/polyfills-a40ef1678bae11e696dba45124eadd70.js"></script><script src="/_next/static/chunks/webpack-fb76148cfcfb42ca18eb.js" defer=""></script><script src="/_next/static/chunks/framework-2f612445bd50b211f15a.js" defer=""></script><script src="/_next/static/chunks/main-8af3309d1a9bc71624bc.js" defer=""></script><script src="/_next/static/chunks/pages/_app-e8787efea4921adff9ea.js" defer=""></script><script src="/_next/static/chunks/282-5d7d29b9e648798fe6d7.js" defer=""></script><script src="/_next/static/chunks/10-07004a17454ba68146d9.js" defer=""></script><script src="/_next/static/chunks/pages/widgets/%5B%5B...id%5D%5D-3478b966feaf9c99baa3.js" defer=""></script><script src="/_next/static/N2ltxvWQs_t7655oTDHwU/_buildManifest.js" defer=""></script><script src="/_next/static/N2ltxvWQs_t7655oTDHwU/_ssgManifest.js" defer=""></script><style id="jss-server-side">.MuiSvgIcon-root {
+  fill: currentColor;
+  width: 1em;
+  height: 1em;
+  display: inline-block;
+  font-size: 1.5rem;
+  transition: fill 200ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  flex-shrink: 0;
+  user-select: none;
+}
+.MuiSvgIcon-colorPrimary {
+  color: #ffffff;
+}
+.MuiSvgIcon-colorSecondary {
+  color: #0468d7;
+}
+.MuiSvgIcon-colorAction {
+  color: rgba(0, 0, 0, 0.54);
+}
+.MuiSvgIcon-colorError {
+  color: #f44336;
+}
+.MuiSvgIcon-colorDisabled {
+  color: rgba(0, 0, 0, 0.26);
+}
+.MuiSvgIcon-fontSizeInherit {
+  font-size: inherit;
+}
+.MuiSvgIcon-fontSizeSmall {
+  font-size: 1.25rem;
+}
+.MuiSvgIcon-fontSizeLarge {
+  font-size: 2.1875rem;
+}
+.MuiPaper-root {
+  color: rgba(0, 0, 0, 0.87);
+  transition: box-shadow 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: #f1f3f4;
+}
+.MuiPaper-rounded {
+  border-radius: 4px;
+}
+.MuiPaper-outlined {
+  border: 1px solid rgba(0, 0, 0, 0.12);
+}
+.MuiPaper-elevation0 {
+  box-shadow: none;
+}
+.MuiPaper-elevation1 {
+  box-shadow: 0px 2px 1px -1px rgba(0,0,0,0.2),0px 1px 1px 0px rgba(0,0,0,0.14),0px 1px 3px 0px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation2 {
+  box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation3 {
+  box-shadow: 0px 3px 3px -2px rgba(0,0,0,0.2),0px 3px 4px 0px rgba(0,0,0,0.14),0px 1px 8px 0px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation4 {
+  box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation5 {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 5px 8px 0px rgba(0,0,0,0.14),0px 1px 14px 0px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation6 {
+  box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation7 {
+  box-shadow: 0px 4px 5px -2px rgba(0,0,0,0.2),0px 7px 10px 1px rgba(0,0,0,0.14),0px 2px 16px 1px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation8 {
+  box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation9 {
+  box-shadow: 0px 5px 6px -3px rgba(0,0,0,0.2),0px 9px 12px 1px rgba(0,0,0,0.14),0px 3px 16px 2px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation10 {
+  box-shadow: 0px 6px 6px -3px rgba(0,0,0,0.2),0px 10px 14px 1px rgba(0,0,0,0.14),0px 4px 18px 3px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation11 {
+  box-shadow: 0px 6px 7px -4px rgba(0,0,0,0.2),0px 11px 15px 1px rgba(0,0,0,0.14),0px 4px 20px 3px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation12 {
+  box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 12px 17px 2px rgba(0,0,0,0.14),0px 5px 22px 4px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation13 {
+  box-shadow: 0px 7px 8px -4px rgba(0,0,0,0.2),0px 13px 19px 2px rgba(0,0,0,0.14),0px 5px 24px 4px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation14 {
+  box-shadow: 0px 7px 9px -4px rgba(0,0,0,0.2),0px 14px 21px 2px rgba(0,0,0,0.14),0px 5px 26px 4px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation15 {
+  box-shadow: 0px 8px 9px -5px rgba(0,0,0,0.2),0px 15px 22px 2px rgba(0,0,0,0.14),0px 6px 28px 5px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation16 {
+  box-shadow: 0px 8px 10px -5px rgba(0,0,0,0.2),0px 16px 24px 2px rgba(0,0,0,0.14),0px 6px 30px 5px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation17 {
+  box-shadow: 0px 8px 11px -5px rgba(0,0,0,0.2),0px 17px 26px 2px rgba(0,0,0,0.14),0px 6px 32px 5px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation18 {
+  box-shadow: 0px 9px 11px -5px rgba(0,0,0,0.2),0px 18px 28px 2px rgba(0,0,0,0.14),0px 7px 34px 6px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation19 {
+  box-shadow: 0px 9px 12px -6px rgba(0,0,0,0.2),0px 19px 29px 2px rgba(0,0,0,0.14),0px 7px 36px 6px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation20 {
+  box-shadow: 0px 10px 13px -6px rgba(0,0,0,0.2),0px 20px 31px 3px rgba(0,0,0,0.14),0px 8px 38px 7px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation21 {
+  box-shadow: 0px 10px 13px -6px rgba(0,0,0,0.2),0px 21px 33px 3px rgba(0,0,0,0.14),0px 8px 40px 7px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation22 {
+  box-shadow: 0px 10px 14px -6px rgba(0,0,0,0.2),0px 22px 35px 3px rgba(0,0,0,0.14),0px 8px 42px 7px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation23 {
+  box-shadow: 0px 11px 14px -7px rgba(0,0,0,0.2),0px 23px 36px 3px rgba(0,0,0,0.14),0px 9px 44px 8px rgba(0,0,0,0.12);
+}
+.MuiPaper-elevation24 {
+  box-shadow: 0px 11px 15px -7px rgba(0,0,0,0.2),0px 24px 38px 3px rgba(0,0,0,0.14),0px 9px 46px 8px rgba(0,0,0,0.12);
+}
+.MuiButtonBase-root {
+  color: inherit;
+  border: 0;
+  cursor: pointer;
+  margin: 0;
+  display: inline-flex;
+  outline: 0;
+  padding: 0;
+  position: relative;
+  align-items: center;
+  user-select: none;
+  border-radius: 0;
+  vertical-align: middle;
+  -moz-appearance: none;
+  justify-content: center;
+  text-decoration: none;
+  background-color: transparent;
+  -webkit-appearance: none;
+  -webkit-tap-highlight-color: transparent;
+}
+.MuiButtonBase-root::-moz-focus-inner {
+  border-style: none;
+}
+.MuiButtonBase-root.Mui-disabled {
+  cursor: default;
+  pointer-events: none;
+}
+@media print {
+  .MuiButtonBase-root {
+    color-adjust: exact;
+  }
+}
+  .MuiIconButton-root {
+    flex: 0 0 auto;
+    color: rgba(0, 0, 0, 0.54);
+    padding: 12px;
+    overflow: visible;
+    font-size: 1.5rem;
+    text-align: center;
+    transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    border-radius: 50%;
+  }
+  .MuiIconButton-root:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  .MuiIconButton-root.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26);
+    background-color: transparent;
+  }
+@media (hover: none) {
+  .MuiIconButton-root:hover {
+    background-color: transparent;
+  }
+}
+  .MuiIconButton-edgeStart {
+    margin-left: -12px;
+  }
+  .MuiIconButton-sizeSmall.MuiIconButton-edgeStart {
+    margin-left: -3px;
+  }
+  .MuiIconButton-edgeEnd {
+    margin-right: -12px;
+  }
+  .MuiIconButton-sizeSmall.MuiIconButton-edgeEnd {
+    margin-right: -3px;
+  }
+  .MuiIconButton-colorInherit {
+    color: inherit;
+  }
+  .MuiIconButton-colorPrimary {
+    color: #ffffff;
+  }
+  .MuiIconButton-colorPrimary:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+@media (hover: none) {
+  .MuiIconButton-colorPrimary:hover {
+    background-color: transparent;
+  }
+}
+  .MuiIconButton-colorSecondary {
+    color: #0468d7;
+  }
+  .MuiIconButton-colorSecondary:hover {
+    background-color: rgba(4, 104, 215, 0.04);
+  }
+@media (hover: none) {
+  .MuiIconButton-colorSecondary:hover {
+    background-color: transparent;
+  }
+}
+  .MuiIconButton-sizeSmall {
+    padding: 3px;
+    font-size: 1.125rem;
+  }
+  .MuiIconButton-label {
+    width: 100%;
+    display: flex;
+    align-items: inherit;
+    justify-content: inherit;
+  }
+  .MuiAppBar-root {
+    width: 100%;
+    display: flex;
+    z-index: 1100;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    flex-direction: column;
+  }
+  .MuiAppBar-positionFixed {
+    top: 0;
+    left: auto;
+    right: 0;
+    position: fixed;
+  }
+@media print {
+  .MuiAppBar-positionFixed {
+    position: absolute;
+  }
+}
+  .MuiAppBar-positionAbsolute {
+    top: 0;
+    left: auto;
+    right: 0;
+    position: absolute;
+  }
+  .MuiAppBar-positionSticky {
+    top: 0;
+    left: auto;
+    right: 0;
+    position: sticky;
+  }
+  .MuiAppBar-positionStatic {
+    position: static;
+  }
+  .MuiAppBar-positionRelative {
+    position: relative;
+  }
+  .MuiAppBar-colorDefault {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #f5f5f5;
+  }
+  .MuiAppBar-colorPrimary {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #ffffff;
+  }
+  .MuiAppBar-colorSecondary {
+    color: #fff;
+    background-color: #0468d7;
+  }
+  .MuiAppBar-colorInherit {
+    color: inherit;
+  }
+  .MuiAppBar-colorTransparent {
+    color: inherit;
+    background-color: transparent;
+  }
+
+  .jss1 {
+    display: flex;
+    flex-grow: 1;
+  }
+  .MuiTypography-root {
+    margin: 0;
+  }
+  .MuiTypography-body2 {
+    font-size: 0.875rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.43;
+  }
+  .MuiTypography-body1 {
+    font-size: 1rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.5;
+  }
+  .MuiTypography-caption {
+    font-size: 0.75rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.66;
+  }
+  .MuiTypography-button {
+    font-size: 0.875rem;
+    font-family: Work Sans;
+    font-weight: 500;
+    line-height: 1.75;
+    text-transform: uppercase;
+  }
+  .MuiTypography-h1 {
+    font-size: 6rem;
+    font-family: Work Sans;
+    font-weight: 300;
+    line-height: 1.167;
+  }
+  .MuiTypography-h2 {
+    font-size: 3.75rem;
+    font-family: Work Sans;
+    font-weight: 300;
+    line-height: 1.2;
+  }
+  .MuiTypography-h3 {
+    font-size: 3rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.167;
+  }
+  .MuiTypography-h4 {
+    font-size: 2.125rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.235;
+  }
+  .MuiTypography-h5 {
+    font-size: 1.5rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.334;
+  }
+  .MuiTypography-h6 {
+    font-size: 1.25rem;
+    font-family: Work Sans;
+    font-weight: 500;
+    line-height: 1.6;
+  }
+  .MuiTypography-subtitle1 {
+    font-size: 1rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 1.75;
+  }
+  .MuiTypography-subtitle2 {
+    font-size: 0.875rem;
+    font-family: Work Sans;
+    font-weight: 500;
+    line-height: 1.57;
+  }
+  .MuiTypography-overline {
+    font-size: 0.75rem;
+    font-family: Work Sans;
+    font-weight: 400;
+    line-height: 2.66;
+    text-transform: uppercase;
+  }
+  .MuiTypography-srOnly {
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+  }
+  .MuiTypography-alignLeft {
+    text-align: left;
+  }
+  .MuiTypography-alignCenter {
+    text-align: center;
+  }
+  .MuiTypography-alignRight {
+    text-align: right;
+  }
+  .MuiTypography-alignJustify {
+    text-align: justify;
+  }
+  .MuiTypography-noWrap {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  .MuiTypography-gutterBottom {
+    margin-bottom: 0.35em;
+  }
+  .MuiTypography-paragraph {
+    margin-bottom: 16px;
+  }
+  .MuiTypography-colorInherit {
+    color: inherit;
+  }
+  .MuiTypography-colorPrimary {
+    color: #ffffff;
+  }
+  .MuiTypography-colorSecondary {
+    color: #0468d7;
+  }
+  .MuiTypography-colorTextPrimary {
+    color: rgba(0, 0, 0, 0.87);
+  }
+  .MuiTypography-colorTextSecondary {
+    color: rgba(0, 0, 0, 0.54);
+  }
+  .MuiTypography-colorError {
+    color: #f44336;
+  }
+  .MuiTypography-displayInline {
+    display: inline;
+  }
+  .MuiTypography-displayBlock {
+    display: block;
+  }
+  .MuiButton-root {
+    color: rgba(0, 0, 0, 0.87);
+    padding: 6px 16px;
+    font-size: 0.875rem;
+    min-width: 64px;
+    box-sizing: border-box;
+    transition: background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+    font-family: Work Sans;
+    font-weight: 500;
+    line-height: 1.75;
+    border-radius: 4px;
+    text-transform: uppercase;
+  }
+  .MuiButton-root:hover {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.04);
+  }
+  .MuiButton-root.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26);
+  }
+@media (hover: none) {
+  .MuiButton-root:hover {
+    background-color: transparent;
+  }
+}
+  .MuiButton-root:hover.Mui-disabled {
+    background-color: transparent;
+  }
+  .MuiButton-label {
+    width: 100%;
+    display: inherit;
+    align-items: inherit;
+    justify-content: inherit;
+  }
+  .MuiButton-text {
+    padding: 6px 8px;
+  }
+  .MuiButton-textPrimary {
+    color: #ffffff;
+  }
+  .MuiButton-textPrimary:hover {
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+@media (hover: none) {
+  .MuiButton-textPrimary:hover {
+    background-color: transparent;
+  }
+}
+  .MuiButton-textSecondary {
+    color: #0468d7;
+  }
+  .MuiButton-textSecondary:hover {
+    background-color: rgba(4, 104, 215, 0.04);
+  }
+@media (hover: none) {
+  .MuiButton-textSecondary:hover {
+    background-color: transparent;
+  }
+}
+  .MuiButton-outlined {
+    border: 1px solid rgba(0, 0, 0, 0.23);
+    padding: 5px 15px;
+  }
+  .MuiButton-outlined.Mui-disabled {
+    border: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .MuiButton-outlinedPrimary {
+    color: #ffffff;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+  }
+  .MuiButton-outlinedPrimary:hover {
+    border: 1px solid #ffffff;
+    background-color: rgba(255, 255, 255, 0.04);
+  }
+@media (hover: none) {
+  .MuiButton-outlinedPrimary:hover {
+    background-color: transparent;
+  }
+}
+  .MuiButton-outlinedSecondary {
+    color: #0468d7;
+    border: 1px solid rgba(4, 104, 215, 0.5);
+  }
+  .MuiButton-outlinedSecondary:hover {
+    border: 1px solid #0468d7;
+    background-color: rgba(4, 104, 215, 0.04);
+  }
+  .MuiButton-outlinedSecondary.Mui-disabled {
+    border: 1px solid rgba(0, 0, 0, 0.26);
+  }
+@media (hover: none) {
+  .MuiButton-outlinedSecondary:hover {
+    background-color: transparent;
+  }
+}
+  .MuiButton-contained {
+    color: rgba(0, 0, 0, 0.87);
+    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+    background-color: #e0e0e0;
+  }
+  .MuiButton-contained:hover {
+    box-shadow: 0px 2px 4px -1px rgba(0,0,0,0.2),0px 4px 5px 0px rgba(0,0,0,0.14),0px 1px 10px 0px rgba(0,0,0,0.12);
+    background-color: #d5d5d5;
+  }
+  .MuiButton-contained.Mui-focusVisible {
+    box-shadow: 0px 3px 5px -1px rgba(0,0,0,0.2),0px 6px 10px 0px rgba(0,0,0,0.14),0px 1px 18px 0px rgba(0,0,0,0.12);
+  }
+  .MuiButton-contained:active {
+    box-shadow: 0px 5px 5px -3px rgba(0,0,0,0.2),0px 8px 10px 1px rgba(0,0,0,0.14),0px 3px 14px 2px rgba(0,0,0,0.12);
+  }
+  .MuiButton-contained.Mui-disabled {
+    color: rgba(0, 0, 0, 0.26);
+    box-shadow: none;
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+@media (hover: none) {
+  .MuiButton-contained:hover {
+    box-shadow: 0px 3px 1px -2px rgba(0,0,0,0.2),0px 2px 2px 0px rgba(0,0,0,0.14),0px 1px 5px 0px rgba(0,0,0,0.12);
+    background-color: #e0e0e0;
+  }
+}
+  .MuiButton-contained:hover.Mui-disabled {
+    background-color: rgba(0, 0, 0, 0.12);
+  }
+  .MuiButton-containedPrimary {
+    color: rgba(0, 0, 0, 0.87);
+    background-color: #ffffff;
+  }
+  .MuiButton-containedPrimary:hover {
+    background-color: rgb(178, 178, 178);
+  }
+@media (hover: none) {
+  .MuiButton-containedPrimary:hover {
+    background-color: #ffffff;
+  }
+}
+  .MuiButton-containedSecondary {
+    color: #fff;
+    background-color: #0468d7;
+  }
+  .MuiButton-containedSecondary:hover {
+    background-color: rgb(2, 72, 150);
+  }
+@media (hover: none) {
+  .MuiButton-containedSecondary:hover {
+    background-color: #0468d7;
+  }
+}
+  .MuiButton-disableElevation {
+    box-shadow: none;
+  }
+  .MuiButton-disableElevation:hover {
+    box-shadow: none;
+  }
+  .MuiButton-disableElevation.Mui-focusVisible {
+    box-shadow: none;
+  }
+  .MuiButton-disableElevation:active {
+    box-shadow: none;
+  }
+  .MuiButton-disableElevation.Mui-disabled {
+    box-shadow: none;
+  }
+  .MuiButton-colorInherit {
+    color: inherit;
+    border-color: currentColor;
+  }
+  .MuiButton-textSizeSmall {
+    padding: 4px 5px;
+    font-size: 0.8125rem;
+  }
+  .MuiButton-textSizeLarge {
+    padding: 8px 11px;
+    font-size: 0.9375rem;
+  }
+  .MuiButton-outlinedSizeSmall {
+    padding: 3px 9px;
+    font-size: 0.8125rem;
+  }
+  .MuiButton-outlinedSizeLarge {
+    padding: 7px 21px;
+    font-size: 0.9375rem;
+  }
+  .MuiButton-containedSizeSmall {
+    padding: 4px 10px;
+    font-size: 0.8125rem;
+  }
+  .MuiButton-containedSizeLarge {
+    padding: 8px 22px;
+    font-size: 0.9375rem;
+  }
+  .MuiButton-fullWidth {
+    width: 100%;
+  }
+  .MuiButton-startIcon {
+    display: inherit;
+    margin-left: -4px;
+    margin-right: 8px;
+  }
+  .MuiButton-startIcon.MuiButton-iconSizeSmall {
+    margin-left: -2px;
+  }
+  .MuiButton-endIcon {
+    display: inherit;
+    margin-left: 8px;
+    margin-right: -4px;
+  }
+  .MuiButton-endIcon.MuiButton-iconSizeSmall {
+    margin-right: -2px;
+  }
+  .MuiButton-iconSizeSmall > *:first-child {
+    font-size: 18px;
+  }
+  .MuiButton-iconSizeMedium > *:first-child {
+    font-size: 20px;
+  }
+  .MuiButton-iconSizeLarge > *:first-child {
+    font-size: 22px;
+  }
+  .MuiCircularProgress-root {
+    display: inline-block;
+  }
+  .MuiCircularProgress-static {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+  .MuiCircularProgress-indeterminate {
+    animation: MuiCircularProgress-keyframes-circular-rotate 1.4s linear infinite;
+  }
+  .MuiCircularProgress-determinate {
+    transition: transform 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+  .MuiCircularProgress-colorPrimary {
+    color: #ffffff;
+  }
+  .MuiCircularProgress-colorSecondary {
+    color: #0468d7;
+  }
+  .MuiCircularProgress-svg {
+    display: block;
+  }
+  .MuiCircularProgress-circle {
+    stroke: currentColor;
+  }
+  .MuiCircularProgress-circleStatic {
+    transition: stroke-dashoffset 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+  .MuiCircularProgress-circleIndeterminate {
+    animation: MuiCircularProgress-keyframes-circular-dash 1.4s ease-in-out infinite;
+    stroke-dasharray: 80px, 200px;
+    stroke-dashoffset: 0px;
+  }
+  .MuiCircularProgress-circleDeterminate {
+    transition: stroke-dashoffset 300ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  }
+@keyframes MuiCircularProgress-keyframes-circular-rotate {
+  0% {
+    transform-origin: 50% 50%;
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+@keyframes MuiCircularProgress-keyframes-circular-dash {
+  0% {
+    stroke-dasharray: 1px, 200px;
+    stroke-dashoffset: 0px;
+  }
+  50% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -15px;
+  }
+  100% {
+    stroke-dasharray: 100px, 200px;
+    stroke-dashoffset: -125px;
+  }
+}
+  .MuiCircularProgress-circleDisableShrink {
+    animation: none;
+  }
+  .MuiContainer-root {
+    width: 100%;
+    display: block;
+    box-sizing: border-box;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+@media (min-width:600px) {
+  .MuiContainer-root {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+  .MuiContainer-disableGutters {
+    padding-left: 0;
+    padding-right: 0;
+  }
+@media (min-width:600px) {
+  .MuiContainer-fixed {
+    max-width: 600px;
+  }
+}
+@media (min-width:960px) {
+  .MuiContainer-fixed {
+    max-width: 960px;
+  }
+}
+@media (min-width:1280px) {
+  .MuiContainer-fixed {
+    max-width: 1280px;
+  }
+}
+@media (min-width:1920px) {
+  .MuiContainer-fixed {
+    max-width: 1920px;
+  }
+}
+@media (min-width:0px) {
+  .MuiContainer-maxWidthXs {
+    max-width: 444px;
+  }
+}
+@media (min-width:600px) {
+  .MuiContainer-maxWidthSm {
+    max-width: 600px;
+  }
+}
+@media (min-width:960px) {
+  .MuiContainer-maxWidthMd {
+    max-width: 960px;
+  }
+}
+@media (min-width:1280px) {
+  .MuiContainer-maxWidthLg {
+    max-width: 1280px;
+  }
+}
+@media (min-width:1920px) {
+  .MuiContainer-maxWidthXl {
+    max-width: 1920px;
+  }
+}
+html {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+strong, b {
+  font-weight: 700;
+}
+body {
+  color: rgba(0, 0, 0, 0.87);
+  margin: 0;
+  font-size: 0.875rem;
+  font-family: Work Sans;
+  font-weight: 400;
+  line-height: 1.43;
+  background-color: #ffffff;
+}
+@media print {
+  body {
+    background-color: #fff;
+  }
+}
+body::backdrop {
+  background-color: #ffffff;
+}
+*::-webkit-scrollbar {
+  width: 0.5em;
+}
+*::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+*::-webkit-scrollbar-thumb {
+  border: none;
+  border-radius: 10px;
+  background-color: #0468d7;
+}
+  .MuiDrawer-docked {
+    flex: 0 0 auto;
+  }
+  .MuiDrawer-paper {
+    top: 0;
+    flex: 1 0 auto;
+    height: 100%;
+    display: flex;
+    outline: 0;
+    z-index: 1200;
+    position: fixed;
+    overflow-y: auto;
+    flex-direction: column;
+    -webkit-overflow-scrolling: touch;
+  }
+  .MuiDrawer-paperAnchorLeft {
+    left: 0;
+    right: auto;
+  }
+  .MuiDrawer-paperAnchorRight {
+    left: auto;
+    right: 0;
+  }
+  .MuiDrawer-paperAnchorTop {
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: auto;
+    height: auto;
+    max-height: 100%;
+  }
+  .MuiDrawer-paperAnchorBottom {
+    top: auto;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: auto;
+    max-height: 100%;
+  }
+  .MuiDrawer-paperAnchorDockedLeft {
+    border-right: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .MuiDrawer-paperAnchorDockedTop {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .MuiDrawer-paperAnchorDockedRight {
+    border-left: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .MuiDrawer-paperAnchorDockedBottom {
+    border-top: 1px solid rgba(0, 0, 0, 0.12);
+  }
+  .MuiGrid-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    box-sizing: border-box;
+  }
+  .MuiGrid-item {
+    margin: 0;
+    box-sizing: border-box;
+  }
+  .MuiGrid-zeroMinWidth {
+    min-width: 0;
+  }
+  .MuiGrid-direction-xs-column {
+    flex-direction: column;
+  }
+  .MuiGrid-direction-xs-column-reverse {
+    flex-direction: column-reverse;
+  }
+  .MuiGrid-direction-xs-row-reverse {
+    flex-direction: row-reverse;
+  }
+  .MuiGrid-wrap-xs-nowrap {
+    flex-wrap: nowrap;
+  }
+  .MuiGrid-wrap-xs-wrap-reverse {
+    flex-wrap: wrap-reverse;
+  }
+  .MuiGrid-align-items-xs-center {
+    align-items: center;
+  }
+  .MuiGrid-align-items-xs-flex-start {
+    align-items: flex-start;
+  }
+  .MuiGrid-align-items-xs-flex-end {
+    align-items: flex-end;
+  }
+  .MuiGrid-align-items-xs-baseline {
+    align-items: baseline;
+  }
+  .MuiGrid-align-content-xs-center {
+    align-content: center;
+  }
+  .MuiGrid-align-content-xs-flex-start {
+    align-content: flex-start;
+  }
+  .MuiGrid-align-content-xs-flex-end {
+    align-content: flex-end;
+  }
+  .MuiGrid-align-content-xs-space-between {
+    align-content: space-between;
+  }
+  .MuiGrid-align-content-xs-space-around {
+    align-content: space-around;
+  }
+  .MuiGrid-justify-content-xs-center {
+    justify-content: center;
+  }
+  .MuiGrid-justify-content-xs-flex-end {
+    justify-content: flex-end;
+  }
+  .MuiGrid-justify-content-xs-space-between {
+    justify-content: space-between;
+  }
+  .MuiGrid-justify-content-xs-space-around {
+    justify-content: space-around;
+  }
+  .MuiGrid-justify-content-xs-space-evenly {
+    justify-content: space-evenly;
+  }
+  .MuiGrid-spacing-xs-1 {
+    width: calc(100% + 8px);
+    margin: -4px;
+  }
+  .MuiGrid-spacing-xs-1 > .MuiGrid-item {
+    padding: 4px;
+  }
+  .MuiGrid-spacing-xs-2 {
+    width: calc(100% + 16px);
+    margin: -8px;
+  }
+  .MuiGrid-spacing-xs-2 > .MuiGrid-item {
+    padding: 8px;
+  }
+  .MuiGrid-spacing-xs-3 {
+    width: calc(100% + 24px);
+    margin: -12px;
+  }
+  .MuiGrid-spacing-xs-3 > .MuiGrid-item {
+    padding: 12px;
+  }
+  .MuiGrid-spacing-xs-4 {
+    width: calc(100% + 32px);
+    margin: -16px;
+  }
+  .MuiGrid-spacing-xs-4 > .MuiGrid-item {
+    padding: 16px;
+  }
+  .MuiGrid-spacing-xs-5 {
+    width: calc(100% + 40px);
+    margin: -20px;
+  }
+  .MuiGrid-spacing-xs-5 > .MuiGrid-item {
+    padding: 20px;
+  }
+  .MuiGrid-spacing-xs-6 {
+    width: calc(100% + 48px);
+    margin: -24px;
+  }
+  .MuiGrid-spacing-xs-6 > .MuiGrid-item {
+    padding: 24px;
+  }
+  .MuiGrid-spacing-xs-7 {
+    width: calc(100% + 56px);
+    margin: -28px;
+  }
+  .MuiGrid-spacing-xs-7 > .MuiGrid-item {
+    padding: 28px;
+  }
+  .MuiGrid-spacing-xs-8 {
+    width: calc(100% + 64px);
+    margin: -32px;
+  }
+  .MuiGrid-spacing-xs-8 > .MuiGrid-item {
+    padding: 32px;
+  }
+  .MuiGrid-spacing-xs-9 {
+    width: calc(100% + 72px);
+    margin: -36px;
+  }
+  .MuiGrid-spacing-xs-9 > .MuiGrid-item {
+    padding: 36px;
+  }
+  .MuiGrid-spacing-xs-10 {
+    width: calc(100% + 80px);
+    margin: -40px;
+  }
+  .MuiGrid-spacing-xs-10 > .MuiGrid-item {
+    padding: 40px;
+  }
+  .MuiGrid-grid-xs-auto {
+    flex-grow: 0;
+    max-width: none;
+    flex-basis: auto;
+  }
+  .MuiGrid-grid-xs-true {
+    flex-grow: 1;
+    max-width: 100%;
+    flex-basis: 0;
+  }
+  .MuiGrid-grid-xs-1 {
+    flex-grow: 0;
+    max-width: 8.333333%;
+    flex-basis: 8.333333%;
+  }
+  .MuiGrid-grid-xs-2 {
+    flex-grow: 0;
+    max-width: 16.666667%;
+    flex-basis: 16.666667%;
+  }
+  .MuiGrid-grid-xs-3 {
+    flex-grow: 0;
+    max-width: 25%;
+    flex-basis: 25%;
+  }
+  .MuiGrid-grid-xs-4 {
+    flex-grow: 0;
+    max-width: 33.333333%;
+    flex-basis: 33.333333%;
+  }
+  .MuiGrid-grid-xs-5 {
+    flex-grow: 0;
+    max-width: 41.666667%;
+    flex-basis: 41.666667%;
+  }
+  .MuiGrid-grid-xs-6 {
+    flex-grow: 0;
+    max-width: 50%;
+    flex-basis: 50%;
+  }
+  .MuiGrid-grid-xs-7 {
+    flex-grow: 0;
+    max-width: 58.333333%;
+    flex-basis: 58.333333%;
+  }
+  .MuiGrid-grid-xs-8 {
+    flex-grow: 0;
+    max-width: 66.666667%;
+    flex-basis: 66.666667%;
+  }
+  .MuiGrid-grid-xs-9 {
+    flex-grow: 0;
+    max-width: 75%;
+    flex-basis: 75%;
+  }
+  .MuiGrid-grid-xs-10 {
+    flex-grow: 0;
+    max-width: 83.333333%;
+    flex-basis: 83.333333%;
+  }
+  .MuiGrid-grid-xs-11 {
+    flex-grow: 0;
+    max-width: 91.666667%;
+    flex-basis: 91.666667%;
+  }
+  .MuiGrid-grid-xs-12 {
+    flex-grow: 0;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+@media (min-width:600px) {
+  .MuiGrid-grid-sm-auto {
+    flex-grow: 0;
+    max-width: none;
+    flex-basis: auto;
+  }
+  .MuiGrid-grid-sm-true {
+    flex-grow: 1;
+    max-width: 100%;
+    flex-basis: 0;
+  }
+  .MuiGrid-grid-sm-1 {
+    flex-grow: 0;
+    max-width: 8.333333%;
+    flex-basis: 8.333333%;
+  }
+  .MuiGrid-grid-sm-2 {
+    flex-grow: 0;
+    max-width: 16.666667%;
+    flex-basis: 16.666667%;
+  }
+  .MuiGrid-grid-sm-3 {
+    flex-grow: 0;
+    max-width: 25%;
+    flex-basis: 25%;
+  }
+  .MuiGrid-grid-sm-4 {
+    flex-grow: 0;
+    max-width: 33.333333%;
+    flex-basis: 33.333333%;
+  }
+  .MuiGrid-grid-sm-5 {
+    flex-grow: 0;
+    max-width: 41.666667%;
+    flex-basis: 41.666667%;
+  }
+  .MuiGrid-grid-sm-6 {
+    flex-grow: 0;
+    max-width: 50%;
+    flex-basis: 50%;
+  }
+  .MuiGrid-grid-sm-7 {
+    flex-grow: 0;
+    max-width: 58.333333%;
+    flex-basis: 58.333333%;
+  }
+  .MuiGrid-grid-sm-8 {
+    flex-grow: 0;
+    max-width: 66.666667%;
+    flex-basis: 66.666667%;
+  }
+  .MuiGrid-grid-sm-9 {
+    flex-grow: 0;
+    max-width: 75%;
+    flex-basis: 75%;
+  }
+  .MuiGrid-grid-sm-10 {
+    flex-grow: 0;
+    max-width: 83.333333%;
+    flex-basis: 83.333333%;
+  }
+  .MuiGrid-grid-sm-11 {
+    flex-grow: 0;
+    max-width: 91.666667%;
+    flex-basis: 91.666667%;
+  }
+  .MuiGrid-grid-sm-12 {
+    flex-grow: 0;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+}
+@media (min-width:960px) {
+  .MuiGrid-grid-md-auto {
+    flex-grow: 0;
+    max-width: none;
+    flex-basis: auto;
+  }
+  .MuiGrid-grid-md-true {
+    flex-grow: 1;
+    max-width: 100%;
+    flex-basis: 0;
+  }
+  .MuiGrid-grid-md-1 {
+    flex-grow: 0;
+    max-width: 8.333333%;
+    flex-basis: 8.333333%;
+  }
+  .MuiGrid-grid-md-2 {
+    flex-grow: 0;
+    max-width: 16.666667%;
+    flex-basis: 16.666667%;
+  }
+  .MuiGrid-grid-md-3 {
+    flex-grow: 0;
+    max-width: 25%;
+    flex-basis: 25%;
+  }
+  .MuiGrid-grid-md-4 {
+    flex-grow: 0;
+    max-width: 33.333333%;
+    flex-basis: 33.333333%;
+  }
+  .MuiGrid-grid-md-5 {
+    flex-grow: 0;
+    max-width: 41.666667%;
+    flex-basis: 41.666667%;
+  }
+  .MuiGrid-grid-md-6 {
+    flex-grow: 0;
+    max-width: 50%;
+    flex-basis: 50%;
+  }
+  .MuiGrid-grid-md-7 {
+    flex-grow: 0;
+    max-width: 58.333333%;
+    flex-basis: 58.333333%;
+  }
+  .MuiGrid-grid-md-8 {
+    flex-grow: 0;
+    max-width: 66.666667%;
+    flex-basis: 66.666667%;
+  }
+  .MuiGrid-grid-md-9 {
+    flex-grow: 0;
+    max-width: 75%;
+    flex-basis: 75%;
+  }
+  .MuiGrid-grid-md-10 {
+    flex-grow: 0;
+    max-width: 83.333333%;
+    flex-basis: 83.333333%;
+  }
+  .MuiGrid-grid-md-11 {
+    flex-grow: 0;
+    max-width: 91.666667%;
+    flex-basis: 91.666667%;
+  }
+  .MuiGrid-grid-md-12 {
+    flex-grow: 0;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+}
+@media (min-width:1280px) {
+  .MuiGrid-grid-lg-auto {
+    flex-grow: 0;
+    max-width: none;
+    flex-basis: auto;
+  }
+  .MuiGrid-grid-lg-true {
+    flex-grow: 1;
+    max-width: 100%;
+    flex-basis: 0;
+  }
+  .MuiGrid-grid-lg-1 {
+    flex-grow: 0;
+    max-width: 8.333333%;
+    flex-basis: 8.333333%;
+  }
+  .MuiGrid-grid-lg-2 {
+    flex-grow: 0;
+    max-width: 16.666667%;
+    flex-basis: 16.666667%;
+  }
+  .MuiGrid-grid-lg-3 {
+    flex-grow: 0;
+    max-width: 25%;
+    flex-basis: 25%;
+  }
+  .MuiGrid-grid-lg-4 {
+    flex-grow: 0;
+    max-width: 33.333333%;
+    flex-basis: 33.333333%;
+  }
+  .MuiGrid-grid-lg-5 {
+    flex-grow: 0;
+    max-width: 41.666667%;
+    flex-basis: 41.666667%;
+  }
+  .MuiGrid-grid-lg-6 {
+    flex-grow: 0;
+    max-width: 50%;
+    flex-basis: 50%;
+  }
+  .MuiGrid-grid-lg-7 {
+    flex-grow: 0;
+    max-width: 58.333333%;
+    flex-basis: 58.333333%;
+  }
+  .MuiGrid-grid-lg-8 {
+    flex-grow: 0;
+    max-width: 66.666667%;
+    flex-basis: 66.666667%;
+  }
+  .MuiGrid-grid-lg-9 {
+    flex-grow: 0;
+    max-width: 75%;
+    flex-basis: 75%;
+  }
+  .MuiGrid-grid-lg-10 {
+    flex-grow: 0;
+    max-width: 83.333333%;
+    flex-basis: 83.333333%;
+  }
+  .MuiGrid-grid-lg-11 {
+    flex-grow: 0;
+    max-width: 91.666667%;
+    flex-basis: 91.666667%;
+  }
+  .MuiGrid-grid-lg-12 {
+    flex-grow: 0;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+}
+@media (min-width:1920px) {
+  .MuiGrid-grid-xl-auto {
+    flex-grow: 0;
+    max-width: none;
+    flex-basis: auto;
+  }
+  .MuiGrid-grid-xl-true {
+    flex-grow: 1;
+    max-width: 100%;
+    flex-basis: 0;
+  }
+  .MuiGrid-grid-xl-1 {
+    flex-grow: 0;
+    max-width: 8.333333%;
+    flex-basis: 8.333333%;
+  }
+  .MuiGrid-grid-xl-2 {
+    flex-grow: 0;
+    max-width: 16.666667%;
+    flex-basis: 16.666667%;
+  }
+  .MuiGrid-grid-xl-3 {
+    flex-grow: 0;
+    max-width: 25%;
+    flex-basis: 25%;
+  }
+  .MuiGrid-grid-xl-4 {
+    flex-grow: 0;
+    max-width: 33.333333%;
+    flex-basis: 33.333333%;
+  }
+  .MuiGrid-grid-xl-5 {
+    flex-grow: 0;
+    max-width: 41.666667%;
+    flex-basis: 41.666667%;
+  }
+  .MuiGrid-grid-xl-6 {
+    flex-grow: 0;
+    max-width: 50%;
+    flex-basis: 50%;
+  }
+  .MuiGrid-grid-xl-7 {
+    flex-grow: 0;
+    max-width: 58.333333%;
+    flex-basis: 58.333333%;
+  }
+  .MuiGrid-grid-xl-8 {
+    flex-grow: 0;
+    max-width: 66.666667%;
+    flex-basis: 66.666667%;
+  }
+  .MuiGrid-grid-xl-9 {
+    flex-grow: 0;
+    max-width: 75%;
+    flex-basis: 75%;
+  }
+  .MuiGrid-grid-xl-10 {
+    flex-grow: 0;
+    max-width: 83.333333%;
+    flex-basis: 83.333333%;
+  }
+  .MuiGrid-grid-xl-11 {
+    flex-grow: 0;
+    max-width: 91.666667%;
+    flex-basis: 91.666667%;
+  }
+  .MuiGrid-grid-xl-12 {
+    flex-grow: 0;
+    max-width: 100%;
+    flex-basis: 100%;
+  }
+}
+  .MuiToolbar-root {
+    display: flex;
+    position: relative;
+    align-items: center;
+  }
+  .MuiToolbar-gutters {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+@media (min-width:600px) {
+  .MuiToolbar-gutters {
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+}
+  .MuiToolbar-regular {
+    min-height: 56px;
+  }
+@media (min-width:0px) and (orientation: landscape) {
+  .MuiToolbar-regular {
+    min-height: 48px;
+  }
+}
+@media (min-width:600px) {
+  .MuiToolbar-regular {
+    min-height: 64px;
+  }
+}
+  .MuiToolbar-dense {
+    min-height: 48px;
+  }
+  .jss2 {
+    font-size: 1px;
+    margin-left: 8px;
+  }</style><style data-href="https://fonts.googleapis.com/css2?family=Work+Sans&display=swap">@font-face{font-family:'Work Sans';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/worksans/v16/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXNis.woff) format('woff')}@font-face{font-family:'Work Sans';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/worksans/v16/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXBiAJoI3ZKyHaQfhf.woff) format('woff');unicode-range:U+0102-0103,U+0110-0111,U+0128-0129,U+0168-0169,U+01A0-01A1,U+01AF-01B0,U+1EA0-1EF9,U+20AB}@font-face{font-family:'Work Sans';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/worksans/v16/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXBiEJoI3ZKyHaQfhf.woff) format('woff');unicode-range:U+0100-024F,U+0259,U+1E00-1EFF,U+2020,U+20A0-20AB,U+20AD-20CF,U+2113,U+2C60-2C7F,U+A720-A7FF}@font-face{font-family:'Work Sans';font-style:normal;font-weight:400;font-display:swap;src:url(https://fonts.gstatic.com/s/worksans/v16/QGY_z_wNahGAdqQ43RhVcIgYT2Xz5u32K0nXBi8JoI3ZKyHaQQ.woff) format('woff');unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}</style></head><body><div id="__next"><header class="MuiPaper-root MuiAppBar-root MuiAppBar-positionSticky MuiAppBar-colorPrimary MuiPaper-elevation0"><div class="MuiToolbar-root MuiToolbar-regular MuiToolbar-gutters"><div class="MuiContainer-root MuiContainer-maxWidthLg"><div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-3 MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center"><div class="MuiBox-root jss1"><a class="MuiButtonBase-root MuiButton-root MuiButton-text" tabindex="0" aria-disabled="false" href="/"><span class="MuiButton-label"><img src="/favicon.svg" alt="Flutter UI Templates Logo" style="height:2.5rem;width:2.5rem;margin-right:0.5rem"/></span></a></div><div class="MuiGrid-root MuiGrid-item"><button class="MuiButtonBase-root MuiIconButton-root" tabindex="0" type="button" aria-label="Theme Toggle Button"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M11.1 12.08c-2-3.88-.92-7.36.07-9.27.19-.36-.12-.77-.53-.72-5.02.68-8.86 5.07-8.65 10.32.01 0 .01 0 .01.01.62-.27 1.29-.42 2-.42 1.66 0 3.18.83 4.1 2.15 1.67.48 2.9 2.02 2.9 3.85 0 1.52-.87 2.83-2.12 3.51.98.32 2.03.5 3.11.5 3.13 0 5.92-1.44 7.76-3.69.26-.32.04-.79-.37-.82-2.49-.13-6.28-1.53-8.28-5.42z"></path><path d="M7 16h-.18C6.4 14.84 5.3 14 4 14c-1.66 0-3 1.34-3 3s1.34 3 3 3h3c1.1 0 2-.9 2-2s-.9-2-2-2z"></path></svg></span></button></div><div class="MuiGrid-root MuiGrid-item"><div><button class="MuiButtonBase-root MuiIconButton-root" tabindex="0" type="button"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 18h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zm0-5h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1s.45 1 1 1zM3 7c0 .55.45 1 1 1h16c.55 0 1-.45 1-1s-.45-1-1-1H4c-.55 0-1 .45-1 1z"></path></svg></span></button></div></div></div></div></div></header><div style="min-height:80vh"><div class="MuiGrid-root MuiGrid-container MuiGrid-align-content-xs-center" style="display:flex;justify-content:center;height:80vh"><div class="MuiGrid-root MuiGrid-item"><div class="MuiCircularProgress-root MuiCircularProgress-colorSecondary MuiCircularProgress-indeterminate" style="width:1.5rem;height:1.5rem" role="progressbar"><svg class="MuiCircularProgress-svg" viewBox="22 22 44 44"><circle class="MuiCircularProgress-circle MuiCircularProgress-circleIndeterminate" cx="44" cy="44" r="18" fill="none" stroke-width="8"></circle></svg></div></div></div></div><section style="height:50vh;margin-top:5rem;margin-bottom:5rem;background-color:#0468d710"><div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center" style="height:100%"><div class="MuiGrid-root MuiGrid-item"><h5 class="MuiTypography-root MuiTypography-h5 MuiTypography-alignCenter">Didn&#x27;t find the template you were looking for?</h5></div><div class="MuiGrid-root MuiGrid-item" style="margin-top:1rem"><a href="https://github.com/bimsina/fluttertemplates.dev/issues" target="_blank" rel="noopener noreferrer"><button class="MuiButtonBase-root MuiButton-root MuiButton-contained MuiButton-disableElevation" tabindex="0" type="button" style="padding:12px 24px;background-color:#0468d7;color:#ffffff;text-transform:capitalize;font-weight:bold"><span class="MuiButton-label"><div>Submit a proposal</div><div class="jss2"><svg class="MuiSvgIcon-root MuiSvgIcon-fontSizeSmall" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.35 20.13c-.76.69-1.93.69-2.69-.01l-.11-.1C5.3 15.27 1.87 12.16 2 8.28c.06-1.7.93-3.33 2.34-4.29 2.64-1.8 5.9-.96 7.66 1.1 1.76-2.06 5.02-2.91 7.66-1.1 1.41.96 2.28 2.59 2.34 4.29.14 3.88-3.3 6.99-8.55 11.76l-.1.09z"></path></svg></div></span></button></a></div></div></section><div><header class="MuiPaper-root MuiAppBar-root MuiAppBar-positionStatic MuiAppBar-colorPrimary MuiPaper-elevation0" style="padding:2.5rem;width:100%"><div class="MuiGrid-root MuiGrid-container MuiGrid-spacing-xs-8 MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center"><div class="MuiGrid-root MuiGrid-item"><div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center"><div class="MuiGrid-root MuiGrid-item"><p class="MuiTypography-root MuiTypography-body1" style="font-size:1rem;font-weight:bold">Support Us</p></div><div class="MuiGrid-root MuiGrid-item"><a href="https://www.buymeacoffee.com/bimsina" target="_blank" rel="noopener noreferrer"><img src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" alt="Buy Me A Coffee" style="margin-top:1rem;height:60px !important;width:217px !important"/></a></div></div></div><div class="MuiGrid-root MuiGrid-item"><div class="MuiGrid-root MuiGrid-container MuiGrid-direction-xs-column MuiGrid-align-items-xs-center MuiGrid-justify-content-xs-center"><div class="MuiGrid-root MuiGrid-item"><p class="MuiTypography-root MuiTypography-body1" style="font-size:1rem;font-weight:bold">Contact</p></div><div class="MuiGrid-root MuiGrid-item"><div><a class="MuiButtonBase-root MuiIconButton-root" tabindex="0" aria-disabled="false" href="mailto:timsinabibek960@gmail.com" target="_blank" referrerPolicy="no-referrer"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-1 14H5c-.55 0-1-.45-1-1V8l6.94 4.34c.65.41 1.47.41 2.12 0L20 8v9c0 .55-.45 1-1 1zm-7-7L4 6h16l-8 5z"></path></svg></span></a><a class="MuiButtonBase-root MuiIconButton-root" tabindex="0" aria-disabled="false" href="https://twitter.com/bimsina" target="_blank" referrerPolicy="no-referrer"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M22.46 6c-.77.35-1.6.58-2.46.69.88-.53 1.56-1.37 1.88-2.38-.83.5-1.75.85-2.72 1.05C18.37 4.5 17.26 4 16 4c-2.35 0-4.27 1.92-4.27 4.29 0 .34.04.67.11.98C8.28 9.09 5.11 7.38 3 4.79c-.37.63-.58 1.37-.58 2.15 0 1.49.75 2.81 1.91 3.56-.71 0-1.37-.2-1.95-.5v.03c0 2.08 1.48 3.82 3.44 4.21a4.22 4.22 0 0 1-1.93.07 4.28 4.28 0 0 0 4 2.98 8.521 8.521 0 0 1-5.33 1.84c-.34 0-.68-.02-1.02-.06C3.44 20.29 5.7 21 8.12 21 16 21 20.33 14.46 20.33 8.79c0-.19 0-.37-.01-.56.84-.6 1.56-1.36 2.14-2.23z"></path></svg></span></a><a class="MuiButtonBase-root MuiIconButton-root" tabindex="0" aria-disabled="false" href="https://www.linkedin.com/in/bimsina/" target="_blank" referrerPolicy="no-referrer"><span class="MuiIconButton-label"><svg class="MuiSvgIcon-root" focusable="false" viewBox="0 0 24 24" aria-hidden="true"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"></path></svg></span></a></div></div></div></div></div></header></div></div><script id="__NEXT_DATA__" type="application/json">{"props":{"pageProps":{"postData":{"id":"flutter_basics/sliders/custom_sliders","frontmatter":{"title":"Custom Sliders","description":"Some custom designed sliders in Flutter.","demoUrl":"https://fluttertemplates-dev.github.io/components/#basics/sliders/custom_sliders","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/flutter_basics/sliders/custom_sliders.dart","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/flutter_basics/sliders/custom_sliders.dart"}},"allDocsNestedData":{"type":"folder","id":"","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/index.md","matter":{"title":"Widgets","codeUrl":null,"description":null,"rawCodeUrl":null,"demoUrl":null},"files":[{"type":"folder","id":"flutter_basics","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/index.md","matter":{"title":"Flutter Basics","codeUrl":null,"description":"Some basic Widget usecases in Flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"folder","id":"flutter_basics/animation","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/animation/index.md","matter":{"title":"Animation","codeUrl":null,"description":"Some basic uses of animation in Flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"flutter_basics/animation/hero_list_view","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/animation/hero_list_view.md","matter":{"title":"Hero List View","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/flutter_basics/animation/hero_listview.dart","description":"A demonstration of using Hero Widget inside list view in Flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/flutter_basics/animation/hero_listview.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#basics/animation/hero_list"},"files":[]}]},{"type":"folder","id":"flutter_basics/sliders","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/sliders/index.md","matter":{"title":"Sliders","codeUrl":null,"description":"Some basic uses of sliders in Flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"flutter_basics/sliders/custom_sliders","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/sliders/custom_sliders.md","matter":{"title":"Custom Sliders","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/flutter_basics/sliders/custom_sliders.dart","description":"Some custom designed sliders in Flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/flutter_basics/sliders/custom_sliders.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#basics/sliders/custom_sliders"},"files":[]}]},{"type":"folder","id":"flutter_basics/tabs","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/tabs/index.md","matter":{"title":"Tabs","codeUrl":null,"description":"Some basic uses of tab bars in Flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"flutter_basics/tabs/custom_tab_bar","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/flutter_basics/tabs/custom_tab_bar.md","matter":{"title":"Custom tab bars","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/flutter_basics/tabs/custom_tabbars.dart","description":"Some custom designed tab bars in Flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/flutter_basics/tabs/custom_tabbars.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#basics/tabs/custom_tab_bars"},"files":[]}]}]},{"type":"folder","id":"forms","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/forms/index.md","matter":{"title":"Forms","codeUrl":null,"description":"Browse through a list forms built in Flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"folder","id":"forms/sign_in","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/forms/sign_in/index.md","matter":{"title":"Sign In","codeUrl":null,"description":"Browse through a list sign in forms built in Flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"forms/sign_in/responsive_sign_in","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/forms/sign_in/responsive_sign_in.md","matter":{"title":"Responsive Sign In","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/forms/sign_in/sign_in_page2.dart","description":"A responsive sign in form built in Flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/forms/sign_in/sign_in_page2.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#forms/sign_in/sign_in_page2"},"files":[]},{"type":"file","id":"forms/sign_in/simple_sign_in","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/forms/sign_in/simple_sign_in.md","matter":{"title":"Simple Sign In","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/forms/sign_in/sign_in_page1.dart","description":"A simple sign in form built in Flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/forms/sign_in/sign_in_page1.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#forms/sign_in/sign_in_page1"},"files":[]}]}]},{"type":"folder","id":"navigation","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/index.md","matter":{"title":"Navigation","codeUrl":null,"description":"Browse through a list of navigation category.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"folder","id":"navigation/bottom_nav","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/bottom_nav/index.md","matter":{"title":"Bottom Navigation","codeUrl":null,"description":"Bottom Navigation bars built in flutter","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"navigation/bottom_nav/persistent","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/bottom_nav/persistent.md","matter":{"title":"Persistent Bottombar","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/navigation/bottom_nav/persistent_bottom.dart","description":"Persistent Bottom Navigation bar built in flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/navigation/bottom_nav/persistent_bottom.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#navigation/bottom_nav/persistent_bottom_nav"},"files":[]},{"type":"file","id":"navigation/bottom_nav/simple","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/bottom_nav/simple.md","matter":{"title":"Simple Bottombar","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/navigation/bottom_nav/simple_bottom.dart","description":"Simple Bottom Navigation bar built in flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/navigation/bottom_nav/simple_bottom.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#navigation/bottom_nav/simple_bottom_nav"},"files":[]}]},{"type":"folder","id":"navigation/nav_bar","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/nav_bar/index.md","matter":{"title":"Navigation Bar","codeUrl":null,"description":"Navigation bars built in flutter","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"navigation/nav_bar/responsive","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/nav_bar/responsive.md","matter":{"title":"Responsive Navbar","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/navigation/nav_bar/responsive_nav_bar.dart","description":"Navigation rail built in flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/navigation/nav_bar/responsive_nav_bar.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#navigation/nav_bar/responsive_nav_bar"},"files":[]}]},{"type":"folder","id":"navigation/side_bar","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/side_bar/index.md","matter":{"title":"Side Bars","codeUrl":null,"description":"Side bars built in flutter.","rawCodeUrl":null,"demoUrl":null},"files":[{"type":"file","id":"navigation/side_bar/nav_rail","path":"/Users/bimsina/Desktop/Development/Personal/flutter-templates/widgets/navigation/side_bar/nav_rail.md","matter":{"title":"Navigation Rail","codeUrl":"https://github.com/fluttertemplates-dev/components/blob/master/lib/components/navigation/side_bar/navigation_rail.dart","description":"Navigation rail built in flutter.","rawCodeUrl":"https://raw.githubusercontent.com/fluttertemplates-dev/components/master/lib/components/navigation/side_bar/navigation_rail.dart","demoUrl":"https://fluttertemplates-dev.github.io/components/#navigation/side_bar/navigation_rail"},"files":[]}]}]}]}},"__N_SSG":true},"page":"/widgets/[[...id]]","query":{"id":["flutter_basics","sliders","custom_sliders"]},"buildId":"N2ltxvWQs_t7655oTDHwU","isFallback":false,"gsp":true,"scriptLoader":[]}</script></body></html>
