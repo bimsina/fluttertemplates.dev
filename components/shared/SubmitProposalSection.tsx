@@ -21,7 +21,6 @@ export default function SubmitProposalSection() {
     >
       <Grid
         container
-        spacing={4}
         direction="column"
         justifyContent="center"
         alignItems="center"
@@ -30,12 +29,17 @@ export default function SubmitProposalSection() {
         }}
       >
         <Grid item>
-          <Typography variant="h5">
+          <Typography variant="h5" align="center">
             Didn't find the template you were looking for?
           </Typography>
         </Grid>
 
-        <Grid item>
+        <Grid
+          item
+          style={{
+            marginTop: "1rem",
+          }}
+        >
           <a
             href={`${GITHUB_LINK}/issues`}
             target="_blank"

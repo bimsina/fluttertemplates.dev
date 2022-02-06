@@ -107,12 +107,12 @@ function SingleFeature(props: SingleFeatureProps) {
   const theme = useTheme();
 
   return (
-    <Grid item>
+    <Grid item xs={12} md={4} lg={3}>
       <Grid
         container
         direction="column"
-        justifyContent="flex-start"
-        alignItems="flex-start"
+        justifyContent="center"
+        alignItems="center"
         spacing={1}
       >
         <Grid item>
@@ -139,16 +139,14 @@ function SingleFeature(props: SingleFeatureProps) {
             {props.title}
           </Typography>
         </Grid>
-        <Grid
-          item
-          style={{
-            maxWidth: "200px",
-          }}
-        >
+        <Grid item>
           <Typography
             variant="caption"
             style={{
               fontSize: "1rem",
+              display: "flex",
+              flexGrow: 1,
+              textAlign: "center",
             }}
           >
             {props.description}

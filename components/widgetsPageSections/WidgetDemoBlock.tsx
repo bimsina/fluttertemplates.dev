@@ -17,6 +17,7 @@ import {
 import React from "react";
 import CodeBlock from "../shared/CodeBlock";
 import { motion } from "framer-motion";
+import CustomIframe from "../CustomIframe";
 
 interface WidgetDemoBlockProps {
   demoUrl: string;
@@ -56,8 +57,15 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   function renderTabs(selectedTab: number) {
-    if (selectedTab == 0) {
-      return (
+    return (
+      <div
+        style={{
+          position: "relative",
+          width: "100%",
+          height: "100%",
+          marginTop: "-2rem",
+        }}
+      >
         <div
           style={{
             height: "100%",
@@ -66,34 +74,41 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
             justifyContent: "center",
             borderRadius: "0.5rem",
             padding: "1rem",
-            backgroundColor: theme.palette.background.paper,
+            position: "absolute",
+            opacity: selectedTab === 0 ? 1 : 0,
+            pointerEvents: selectedTab === 0 ? "all" : "none",
+            backgroundColor:
+              selectedTab === 0
+                ? theme.palette.background.paper
+                : "transparent",
           }}
         >
-          <motion.iframe
+          <motion.div
             animate={{
               maxWidth: responsiveSize.value,
             }}
-            src={props.demoUrl}
             style={{
-              backgroundColor: theme.palette.background.paper,
               height: "100%",
               width: "100%",
-              border: "none",
             }}
-          ></motion.iframe>
+          >
+            <CustomIframe url={props.demoUrl} />
+          </motion.div>
         </div>
-      );
-    } else {
-      return (
         <div
           style={{
+            opacity: selectedTab === 0 ? 0 : 1,
+            zIndex: selectedTab === 0 ? -1 : 0,
             width: "100%",
+            height: "100%",
+            position: "absolute",
+            marginTop: "-1rem",
           }}
         >
           <CodeBlock url={props.rawCodeUrl} height="70vh" />
         </div>
-      );
-    }
+      </div>
+    );
   }
 
   return (

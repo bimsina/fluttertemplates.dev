@@ -27,14 +27,14 @@ function MyApp({ Component, pageProps }: AppProps) {
         palette: {
           type: darkMode ? "dark" : "light",
           primary: {
-            main: darkMode ? "#0d1117" : "#ffffff",
+            main: darkMode ? "#222432" : "#ffffff",
           },
           secondary: {
             main: darkMode ? "#0468d7" : "#0468d7",
           },
           background: {
-            default: darkMode ? "#0d1117" : "#ffffff",
-            paper: darkMode ? "#161b22" : "#f1f3f4",
+            default: darkMode ? "#222432" : "#ffffff",
+            paper: darkMode ? "#22293d" : "#f1f3f4",
           },
         },
         typography: {
@@ -44,6 +44,22 @@ function MyApp({ Component, pageProps }: AppProps) {
           MuiTab: {
             wrapper: {
               flexDirection: "row",
+            },
+          },
+
+          MuiCssBaseline: {
+            "@global": {
+              "*::-webkit-scrollbar": {
+                width: "0.5em",
+              },
+              "*::-webkit-scrollbar-track": {
+                backgroundColor: "transparent",
+              },
+              "*::-webkit-scrollbar-thumb": {
+                borderRadius: "10px",
+                backgroundColor: darkMode ? "#0468d7" : "#0468d7",
+                border: "none",
+              },
             },
           },
         },

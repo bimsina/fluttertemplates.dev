@@ -1,10 +1,19 @@
 import { CircularProgress, Grid, Typography } from "@material-ui/core";
-import React from "react";
+import React, { useEffect } from "react";
 interface CustomIframeProps {
   url: string;
+  style?: React.CSSProperties;
 }
 
 export default function CustomIframe(props: CustomIframeProps) {
+  const [isLoading, setIsLoading] = React.useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 10000);
+  }, []);
+
   return (
     <div
       style={{
@@ -13,35 +22,29 @@ export default function CustomIframe(props: CustomIframeProps) {
         height: "100%",
       }}
     >
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        style={{
-          height: "100%",
-          width: "100%",
-          position: "absolute",
-        }}
-      >
-        <CircularProgress color="secondary" />
-        <Typography
-          variant="h6"
+      {isLoading && (
+        <Grid
+          container
+          direction="column"
+          justifyContent="center"
+          alignItems="center"
           style={{
-            marginTop: "16px",
+            height: "100%",
+            width: "100%",
+            position: "absolute",
           }}
         >
-          App is being loaded
-        </Typography>
-      </Grid>
+          <CircularProgress size="1.5rem" thickness={8} color="secondary" />
+        </Grid>
+      )}
       <iframe
         src={props.url}
         style={{
           height: "100%",
           width: "100%",
-          borderRadius: "16px",
-          border: "4px solid grey",
           position: "absolute",
+          border: "none",
+          ...props.style,
         }}
       ></iframe>
     </div>

@@ -73,9 +73,8 @@ function CodeBlock(params: CodeBlockParams) {
           }}
         >
           <FileCopyRounded
-            fontSize="small"
             style={{
-              marginBottom: "-2px",
+              fontSize: "1rem",
               marginRight: "2px",
             }}
           />

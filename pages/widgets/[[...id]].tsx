@@ -34,60 +34,76 @@ export default function Docs({
   const router = useRouter();
 
   useEffect(() => {
-    const _fetchComponents = async () => {
-      const _params = router.query ?? [];
-      let _selectedSubGroupId = "";
-
-      if (Array.isArray(_params.id)) {
-        if ((_params.id?.length ?? 0) === 2) {
-          _selectedSubGroupId = _params.id.join("/");
-        }
-      }
-
-      let _groups: WidgetGroup[] = [];
-      allDocsNestedData.files.map((group) => {
-        let _subgroups: Widgetsubgroup[] = [];
-        group.files.map((subgroup) => {
-          let _widgets: Widget[] = [];
-          subgroup.files.map((widget) => {
-            _widgets.push({
-              title: widget.matter.title,
-              demoUrl: widget.matter.demoUrl!,
-              codeUrl: widget.matter.codeUrl!,
-              rawCodeUrl: widget.matter.rawCodeUrl!,
-            });
-          });
-
-          const _subGroup: Widgetsubgroup = {
-            title: subgroup.matter.title,
-            widgets: _widgets,
-            id: subgroup.id,
-          };
-          if (_selectedSubGroupId === subgroup.id) {
-            setSelectedSubGroup(_subGroup);
-          }
-          _subgroups.push(_subGroup);
-        });
-        const _group: WidgetGroup = {
-          title: group.matter.title,
-          widget_subgroups: _subgroups,
-          id: group.id,
-        };
-        _groups.push(_group);
-      });
-
-      const _response: WidgetsResponse = {
-        widget_groups: _groups,
-      };
-
-      setComponentsResponse(_response);
-      if (!selectedSubGroup) {
-        setSelectedSubGroup(_response.widget_groups[0].widget_subgroups[0]);
-      }
-      setIsLoading(false);
-    };
     _fetchComponents();
   }, [router.query]);
+
+  const _fetchComponents = async () => {
+    const _params = router.query ?? [];
+    let _selectedSubGroupId = "";
+    let _selectedGroupId = "";
+    let _selectedGroup!: WidgetGroup;
+
+    if (_params.id?.length === 1) {
+      _selectedGroupId = _params.id[0];
+    }
+
+    if (_params.id?.length === 2) {
+      _selectedGroupId = _params.id[0];
+      _selectedSubGroupId = ((_params.id ?? []) as string[]).join("/");
+    }
+
+    let _groups: WidgetGroup[] = [];
+    allDocsNestedData.files.map((group) => {
+      let _subgroups: Widgetsubgroup[] = [];
+      group.files.map((subgroup) => {
+        let _widgets: Widget[] = [];
+        subgroup.files.map((widget) => {
+          _widgets.push({
+            title: widget.matter.title,
+            demoUrl: widget.matter.demoUrl!,
+            codeUrl: widget.matter.codeUrl!,
+            rawCodeUrl: widget.matter.rawCodeUrl!,
+          });
+        });
+
+        const _subGroup: Widgetsubgroup = {
+          title: subgroup.matter.title,
+          widgets: _widgets,
+          id: subgroup.id,
+        };
+        if (_selectedSubGroupId === subgroup.id) {
+          setSelectedSubGroup(_subGroup);
+        }
+        _subgroups.push(_subGroup);
+      });
+      const _group: WidgetGroup = {
+        title: group.matter.title,
+        widget_subgroups: _subgroups,
+        id: group.id,
+      };
+
+      if (_selectedGroupId === group.id) {
+        _selectedGroup = _group;
+      }
+
+      _groups.push(_group);
+    });
+
+    const _response: WidgetsResponse = {
+      widget_groups: _groups,
+    };
+
+    setComponentsResponse(_response);
+
+    if (_selectedSubGroupId === "") {
+      if (_selectedGroup) {
+        setSelectedSubGroup(_selectedGroup!.widget_subgroups[0]);
+      } else {
+        setSelectedSubGroup(_response.widget_groups[0].widget_subgroups[0]);
+      }
+    }
+    setIsLoading(false);
+  };
 
   return (
     <>

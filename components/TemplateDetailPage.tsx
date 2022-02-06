@@ -206,7 +206,13 @@ function RenderBody(props: TemplateCardProps) {
             margin: "8px",
           }}
         >
-          <CustomIframe url={_frontmatter.demoUrl} />
+          <CustomIframe
+            url={_frontmatter.demoUrl}
+            style={{
+              borderRadius: "16px",
+              border: "4px solid grey",
+            }}
+          />
         </div>
       </Grid>
     </Grid>
