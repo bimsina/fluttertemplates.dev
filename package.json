@@ -3,6 +3,12 @@
   "version": "0.1.0",
   "homepage": "https://fluttertemplates.dev",
   "private": true,
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bimsina/fluttertemplates.dev.git"
+  },
+  "author": "Bibek Timsina <timsinabibek960@gmail.com>",
   "scripts": {
     "dev": "next dev",
     "build": "rm -rf public/sitemap.xml public/robots.txt && next build && next-sitemap && next export",

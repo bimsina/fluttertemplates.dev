@@ -1,9 +1,5 @@
-# [fluttertemplates.dev](fluttertemplates.dev)
+# Flutter Templates️
 
-Firstly install the dependencies
+> Production-ready Flutter UI Widgets and Templates
 
-`yarn`
-
-Now to run the app
-
-` yarn dev`
+Visit the website: https://fluttertemplates.dev/
