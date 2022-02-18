@@ -1,23 +1,15 @@
-import {
-  Button,
-  Grid,
-  IconButton,
-  Tab,
-  Tabs,
-  Typography,
-  useTheme,
-} from "@material-ui/core";
+import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material";
 import {
   DesktopMacRounded,
   GitHub,
-  OpenInNewRounded,
   PhoneAndroidRounded,
   TabletAndroidRounded,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import React from "react";
 import CodeBlock from "../shared/CodeBlock";
 import { motion } from "framer-motion";
 import CustomIframe from "../CustomIframe";
+import makeStyles from "@mui/styles/makeStyles";
 
 interface WidgetDemoBlockProps {
   demoUrl: string;
@@ -49,8 +41,15 @@ const _responsiveValues: ResponsiveProp[] = [
   },
 ];
 
+const useStyles = makeStyles((theme) => ({
+  startIcon: {
+    margin: 0,
+  },
+}));
+
 function WidgetDemoBlock(props: WidgetDemoBlockProps) {
   const theme = useTheme();
+  const classes = useStyles();
   const [responsiveSize, setResponsiveSize] = React.useState(
     _responsiveValues[2]
   );
@@ -170,9 +169,12 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
                   {[0, 1].map((item) => (
                     <Grid item>
                       <Button
+                        variant={selectedTab == item ? "contained" : "text"}
+                        color={selectedTab == item ? "secondary" : "inherit"}
+                        disableElevation
                         style={{
+                          borderRadius: "10rem",
                           textTransform: "capitalize",
-                          color: `${selectedTab == item ? "white" : ""}`,
                           backgroundColor: `${
                             selectedTab == item
                               ? `${theme.palette.secondary.main}`
@@ -229,30 +231,28 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
       >
         <>
           {_responsiveValues.map((item) => (
-            <IconButton
+            <Button
+              classes={{ startIcon: classes.startIcon }}
               area-label={item.label}
               size="small"
+              variant={
+                item.value === responsiveSize.value ? "contained" : "outlined"
+              }
+              color="secondary"
               style={{
-                color: `${
-                  item.value === responsiveSize.value
-                    ? "white"
-                    : theme.palette.secondary.main
-                }`,
-                backgroundColor: `${
-                  item.value === responsiveSize.value
-                    ? theme.palette.secondary.main
-                    : `${theme.palette.secondary.main}10`
-                }`,
-                padding: "6px",
-                borderRadius: "4px",
+                maxWidth: "40px",
+                minWidth: "40px",
+                minHeight: "40px",
+                maxHeight: "40px",
+                borderRadius: "0.5rem",
                 marginRight: "0.5rem",
+                fontSize: "0.5rem",
               }}
               onClick={() => {
                 setResponsiveSize(item);
               }}
-            >
-              {item.icon}
-            </IconButton>
+              startIcon={item.icon}
+            ></Button>
           ))}
         </>
       </motion.div>

@@ -4,7 +4,7 @@ import getTemplatesList from "@/utils/getTemplatesList";
 import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/SEOHead";
 import { useRouter } from "next/dist/client/router";
-import { CircularProgress, Container, Grid } from "@material-ui/core";
+import { CircularProgress, Container, Grid } from "@mui/material";
 
 export default function TemplatesList({
   templates,

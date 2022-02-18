@@ -1,4 +1,4 @@
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TemplateCardProps from "@/models/template_card";
 import CategoriesList from "./CategoriesList";

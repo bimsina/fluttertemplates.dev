@@ -1,10 +1,10 @@
-import { Grid, Typography, useTheme } from "@material-ui/core";
+import { Grid, Typography, useTheme } from "@mui/material";
 import {
   BrushRounded,
   Edit,
   FavoriteRounded,
   HelpOutline,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { GITHUB_LINK } from "../../constants";
 import CustomContainedButton from "../buttons/ContainedButton";
 
@@ -47,7 +47,7 @@ export default function SubmitProposalSection() {
           >
             <CustomContainedButton
               label="Submit a proposal"
-              icon={<FavoriteRounded fontSize="small" />}
+              endIcon={<FavoriteRounded fontSize="small" />}
             />
           </a>
         </Grid>

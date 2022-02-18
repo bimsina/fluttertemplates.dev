@@ -2,14 +2,16 @@ import {
   Button,
   CircularProgress,
   Grid,
+  IconButton,
   Snackbar,
   useTheme,
-} from "@material-ui/core";
-import { FileCopyRounded, GitHub } from "@material-ui/icons";
+} from "@mui/material";
+import { Close, FileCopyRounded, GitHub } from "@mui/icons-material";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useState } from "react";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { dracula, github } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import Slide, { SlideProps } from "@mui/material/Slide";
 
 interface CodeBlockParams {
   url: string;
@@ -18,14 +20,18 @@ interface CodeBlockParams {
 
 function CodeBlock(params: CodeBlockParams) {
   const [code, setCode] = useState("");
-  const isDarkTheme = useTheme().palette.type === "dark";
+  const isDarkTheme = useTheme().palette.mode === "dark";
 
   const [open, setOpen] = React.useState(false);
 
   const handleClose = (
-    event: React.SyntheticEvent | React.MouseEvent,
+    event: React.SyntheticEvent | Event,
     reason?: string
   ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
     setOpen(false);
   };
 
@@ -36,6 +42,19 @@ function CodeBlock(params: CodeBlockParams) {
         setCode(textString);
       });
   }, [params.url]);
+
+  const _snackBarAction = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <Close fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   return (
     <div>
@@ -66,18 +85,14 @@ function CodeBlock(params: CodeBlockParams) {
             position: "absolute",
             top: "16px",
             right: "20px",
+            borderRadius: "10rem",
           }}
+          startIcon={<FileCopyRounded />}
           onClick={() => {
             copy(code);
             setOpen(true);
           }}
         >
-          <FileCopyRounded
-            style={{
-              fontSize: "1rem",
-              marginRight: "2px",
-            }}
-          />
           Copy
         </Button>
       </div>
@@ -99,17 +114,18 @@ function CodeBlock(params: CodeBlockParams) {
       )}
 
       <Snackbar
-        anchorOrigin={{
-          vertical: "bottom",
-          horizontal: "left",
-        }}
         open={open}
         autoHideDuration={4000}
         onClose={handleClose}
         message="Code copied successfully!"
+        action={_snackBarAction}
+        TransitionComponent={SlideTransition}
       />
     </div>
   );
 }
 
+function SlideTransition(props: SlideProps) {
+  return <Slide {...props} direction="right" />;
+}
 export default CodeBlock;

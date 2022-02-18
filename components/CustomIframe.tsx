@@ -1,4 +1,4 @@
-import { CircularProgress, Grid, Typography } from "@material-ui/core";
+import { CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
 interface CustomIframeProps {
   url: string;

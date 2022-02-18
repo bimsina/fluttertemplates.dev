@@ -1,6 +1,6 @@
-import { Container, Typography } from "@material-ui/core";
-import { Card } from "@material-ui/core";
-import { Tabs, Grid, Tab } from "@material-ui/core";
+import { Container, Typography } from "@mui/material";
+import { Card } from "@mui/material";
+import { Tabs, Grid, Tab } from "@mui/material";
 
 import React, { useState } from "react";
 import PageNotFoundPage from "@/pages/404";
@@ -18,7 +18,7 @@ import {
   AttachmentOutlined,
   CodeOutlined,
   InfoOutlined,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 
 function TemplateDetailPage(params: TemplateCardProps) {
   return (

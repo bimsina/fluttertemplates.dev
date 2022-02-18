@@ -1,5 +1,5 @@
 import { Widgetsubgroup } from "@/models/widget";
-import { List, Typography } from "@material-ui/core";
+import { List, Typography } from "@mui/material";
 import WidgetDemoBlock from "./WidgetDemoBlock";
 
 interface WidgetsListProps {

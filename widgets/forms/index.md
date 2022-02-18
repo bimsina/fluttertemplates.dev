@@ -1,4 +1,4 @@
 ---
 title: "Forms"
-description: "Browse through a list forms built in Flutter."
+description: "Browse through a list of forms built in Flutter."
 ---

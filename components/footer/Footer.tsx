@@ -1,5 +1,5 @@
-import { AppBar, Grid, IconButton, Typography } from "@material-ui/core";
-import { LinkedIn, MailOutlineRounded, Twitter } from "@material-ui/icons";
+import { AppBar, Grid, IconButton, Typography } from "@mui/material";
+import { LinkedIn, MailOutlineRounded, Twitter } from "@mui/icons-material";
 import { BUY_ME_A_COFFEE_LINK } from "../../constants";
 
 export default function Footer() {

@@ -2,10 +2,11 @@ import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
 
 import "@/styles/globals.css";
-import { createTheme, CssBaseline, ThemeProvider } from "@material-ui/core";
+
 import type { AppProps } from "next/app";
 import React, { useEffect, useMemo, useState } from "react";
 import SubmitProposalSection from "@/components/shared/SubmitProposalSection";
+import { createTheme, CssBaseline, Theme, ThemeProvider } from "@mui/material";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const [darkMode, setDarkMode] = useState<boolean>(false);
@@ -21,11 +22,11 @@ function MyApp({ Component, pageProps }: AppProps) {
     setDarkMode(JSON.parse(_item));
   }, []);
 
-  const theme = useMemo(
+  const theme: Theme = useMemo(
     () =>
       createTheme({
         palette: {
-          type: darkMode ? "dark" : "light",
+          mode: darkMode ? "dark" : "light",
           primary: {
             main: darkMode ? "#222432" : "#ffffff",
           },
@@ -40,36 +41,13 @@ function MyApp({ Component, pageProps }: AppProps) {
         typography: {
           fontFamily: "Work Sans",
         },
-        overrides: {
-          MuiTab: {
-            wrapper: {
-              flexDirection: "row",
-            },
-          },
-
-          MuiCssBaseline: {
-            "@global": {
-              "*::-webkit-scrollbar": {
-                width: "0.5em",
-              },
-              "*::-webkit-scrollbar-track": {
-                backgroundColor: "transparent",
-              },
-              "*::-webkit-scrollbar-thumb": {
-                borderRadius: "10px",
-                backgroundColor: darkMode ? "#0468d7" : "#0468d7",
-                border: "none",
-              },
-            },
-          },
-        },
       }),
     [darkMode]
   );
 
   return (
     <ThemeProvider theme={theme}>
-      <CssBaseline />
+      <CssBaseline enableColorScheme />
 
       <Header
         isDarkMode={darkMode}

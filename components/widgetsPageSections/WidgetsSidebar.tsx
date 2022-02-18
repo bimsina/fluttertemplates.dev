@@ -1,5 +1,5 @@
 import { WidgetGroup, Widgetsubgroup } from "@/models/widget";
-import { List, ListItem, Typography, useTheme } from "@material-ui/core";
+import { List, ListItem, Typography, useTheme } from "@mui/material";
 import Link from "next/link";
 
 const drawerWidth = 220;
@@ -40,6 +40,7 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
                     <ListItem
                       button
                       style={{
+                        borderRadius: "0 1rem 1rem 0",
                         backgroundColor:
                           props.selectedSubGroup?.title === subgroup.title
                             ? `${theme.palette.secondary.main}10`

@@ -1,5 +1,5 @@
-import { Grid } from "@material-ui/core";
-import { GitHub } from "@material-ui/icons";
+import { Grid } from "@mui/material";
+import { GitHub } from "@mui/icons-material";
 import React from "react";
 import CustomContainedButton from "./buttons/ContainedButton";
 import CodeBlock from "./shared/CodeBlock";
@@ -35,7 +35,7 @@ function Code(params: CodeParams) {
             >
               <CustomContainedButton
                 label="Full Source Code"
-                icon={<GitHub />}
+                endIcon={<GitHub />}
               />
             </a>
           </Grid>

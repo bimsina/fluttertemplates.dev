@@ -13,7 +13,7 @@ import {
   WidgetsResponse,
   Widgetsubgroup,
 } from "@/models/widget";
-import { CircularProgress, Grid } from "@material-ui/core";
+import { CircularProgress, Grid } from "@mui/material";
 import WidgetsSidebar from "@/components/widgetsPageSections/WidgetsSidebar";
 import WidgetsList from "@/components/widgetsPageSections/WidgetsList";
 import WidgetPageHead from "@/head/WidgetPageHead";

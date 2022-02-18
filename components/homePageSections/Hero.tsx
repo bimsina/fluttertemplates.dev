@@ -1,5 +1,5 @@
-import { Grid, Typography, useTheme } from "@material-ui/core";
-import { ArrowForward } from "@material-ui/icons";
+import { Grid, Typography, useTheme } from "@mui/material";
+import { ArrowForward } from "@mui/icons-material";
 import CustomContainedButton from "../buttons/ContainedButton";
 import CustomFlatButton from "../buttons/FlatButton";
 
@@ -77,7 +77,7 @@ function HeroSection(props: any) {
               <CustomContainedButton
                 href="/widgets"
                 label="Browse Widgets"
-                icon={<ArrowForward fontSize="small" />}
+                endIcon={<ArrowForward fontSize="small" />}
               />
             </Grid>
             <Grid item>

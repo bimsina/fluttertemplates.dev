@@ -1,8 +1,8 @@
 import React from "react";
-import { Button, Grid, List, ListItem } from "@material-ui/core";
+import { Button, Grid, List, ListItem } from "@mui/material";
 
-import { Typography } from "@material-ui/core";
-import { Link } from "@material-ui/icons";
+import { Typography } from "@mui/material";
+import { Link } from "@mui/icons-material";
 
 interface Props {
   packages: string[];

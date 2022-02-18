@@ -1,5 +1,5 @@
 import TemplateCardProps from "@/models/template_card";
-import { Card, CardMedia, Grid, Typography } from "@material-ui/core";
+import { Card, CardMedia, Grid, Typography } from "@mui/material";
 import Link from "next/link";
 import React from "react";
 

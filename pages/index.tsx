@@ -3,7 +3,7 @@ import FeaturesSection from "@/components/homePageSections/FeaturesSection";
 import HeroSection from "@/components/homePageSections/Hero";
 import HomePageHead from "@/head/SEOHead";
 
-import { Container } from "@material-ui/core";
+import { Container } from "@mui/material";
 import React from "react";
 
 export default function Home() {

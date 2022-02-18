@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Chip, Grid } from "@material-ui/core";
+import { Chip, Grid } from "@mui/material";
 
 interface CategoriesListProps {
   categories: string[];
@@ -17,7 +17,7 @@ export default function CategoriesList(props: CategoriesListProps) {
           label="#all"
           component="a"
           color={props.selected === "all" ? "secondary" : "default"}
-          variant={props.selected === "all" ? "default" : "outlined"}
+          variant={props.selected === "all" ? "filled" : "outlined"}
           clickable
           style={{
             margin: "4px",
@@ -42,7 +42,7 @@ export default function CategoriesList(props: CategoriesListProps) {
             }
             variant={
               props.selected.toLowerCase() === val.toLowerCase()
-                ? "default"
+                ? "filled"
                 : "outlined"
             }
             clickable

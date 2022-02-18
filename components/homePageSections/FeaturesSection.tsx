@@ -1,5 +1,5 @@
-import { Card, Grid, Typography, useTheme } from "@material-ui/core";
-import { BrushRounded, Code, VisibilityRounded } from "@material-ui/icons";
+import { Card, Grid, Typography, useTheme } from "@mui/material";
+import { BrushRounded, Code, VisibilityRounded } from "@mui/icons-material";
 import React from "react";
 
 export default function FeaturesSection() {

@@ -11,12 +11,12 @@ import {
   ListItem,
   Grid,
   Box,
-} from "@material-ui/core";
+} from "@mui/material";
 import {
   Brightness7Rounded,
   MenuRounded,
   NightsStayRounded,
-} from "@material-ui/icons";
+} from "@mui/icons-material";
 import { GITHUB_LINK } from "../../constants";
 import React, { useState } from "react";
 import CustomFlatButton from "../buttons/FlatButton";
@@ -26,16 +26,6 @@ interface HeaderProps {
   onThemeChange: VoidFunction;
 }
 export default function Header(props: HeaderProps) {
-  const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
   const [drawer, setDrawer] = useState(false);
 
   const theme = useTheme();
@@ -46,25 +36,30 @@ export default function Header(props: HeaderProps) {
   };
 
   return (
-    <AppBar position="sticky" color="primary" elevation={0}>
+    <AppBar
+      position="sticky"
+      elevation={0}
+      style={{
+        backgroundColor: theme.palette.primary.main,
+      }}
+    >
       <Toolbar>
         <Container maxWidth="lg">
           <Grid
             container
-            spacing={3}
             direction="row"
             justifyContent="center"
             alignItems="center"
           >
-            <Box display="flex" flexGrow={_isNotMobile ? 0 : 1}>
-              <Button href="/">
+            <Box sx={{ flexGrow: _isNotMobile ? 0 : 1 }}>
+              <Button href="/" variant="text" color="inherit">
                 <img
                   src="/favicon.svg"
                   alt="Flutter UI Templates Logo"
                   style={{
                     height: "2.5rem",
                     width: "2.5rem",
-                    marginRight: "0.5rem",
+                    paddingRight: "0.5rem",
                   }}
                 />
                 {_isNotMobile && (
@@ -83,7 +78,6 @@ export default function Header(props: HeaderProps) {
                     </Typography>
 
                     <Typography
-                      color="inherit"
                       style={{
                         textTransform: "capitalize",
                         maxLines: 1,
@@ -100,7 +94,7 @@ export default function Header(props: HeaderProps) {
             </Box>
 
             {_isNotMobile && (
-              <Box display="flex" flexGrow={1}>
+              <Box sx={{ flexGrow: 1 }}>
                 <Grid
                   container
                   direction="row"

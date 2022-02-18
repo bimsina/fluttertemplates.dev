@@ -1,10 +1,10 @@
 import React from "react";
-import { Grid } from "@material-ui/core";
+import { Grid } from "@mui/material";
 
-import { Typography } from "@material-ui/core";
+import { Typography } from "@mui/material";
 import CustomContainedButton from "@/components/buttons/ContainedButton";
 import HomePageHead from "@/head/SEOHead";
-import { HomeRounded } from "@material-ui/icons";
+import { HomeRounded } from "@mui/icons-material";
 
 export default function PageNotFoundPage() {
   return (

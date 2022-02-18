@@ -1,26 +1,16 @@
-import { Button, makeStyles, useTheme } from "@material-ui/core";
+import { Button, useTheme } from "@mui/material";
+import { makeStyles } from "@material-ui/core/styles";
 
 interface CustomFlatButtonProps {
   label: string;
   href?: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  button: {
-    "&:hover": {
-      backgroundColor: `${theme.palette.secondary.main}15`,
-      color: theme.palette.secondary.main,
-    },
-  },
-}));
-
 function CustomFlatButton(props: CustomFlatButtonProps) {
-  const styles = useStyles();
-
   return (
     <Button
-      className={styles.button}
       variant="text"
+      color="inherit"
       href={props.href}
       style={{
         textTransform: "capitalize",
