@@ -10,7 +10,7 @@ interface CustomContainedButtonProps {
 const useStyles = makeStyles((theme) => ({
   iconStyle: {
     fontSize: "1px",
-    marginLeft: "8px",
+    marginLeft: "4px",
   },
 }));
 
@@ -24,11 +24,12 @@ function CustomContainedButton(props: CustomContainedButtonProps) {
       href={props.href}
       disableElevation
       style={{
-        padding: "12px 24px",
+        padding: "12px 32px",
         backgroundColor: `${theme.palette.secondary.main}`,
         color: "#ffffff",
         textTransform: "capitalize",
         fontWeight: "bold",
+        borderRadius: "10rem",
       }}
     >
       <div>{props.label}</div>
