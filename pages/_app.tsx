@@ -38,9 +38,6 @@ function MyApp({ Component, pageProps }: AppProps) {
             paper: darkMode ? "#22293d" : "#f1f3f4",
           },
         },
-        typography: {
-          fontFamily: "Work Sans",
-        },
       }),
     [darkMode]
   );

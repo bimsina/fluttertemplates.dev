@@ -59,6 +59,7 @@ export default function Docs({
         let _widgets: Widget[] = [];
         subgroup.files.map((widget) => {
           _widgets.push({
+            id: widget.id,
             title: widget.matter.title,
             demoUrl: widget.matter.demoUrl!,
             codeUrl: widget.matter.codeUrl!,

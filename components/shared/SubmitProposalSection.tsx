@@ -29,7 +29,13 @@ export default function SubmitProposalSection() {
         }}
       >
         <Grid item>
-          <Typography variant="h5" align="center">
+          <Typography
+            variant="h6"
+            align="center"
+            style={{
+              fontWeight: "bold",
+            }}
+          >
             Didn't find the template you were looking for?
           </Typography>
         </Grid>

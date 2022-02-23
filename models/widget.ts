@@ -16,6 +16,7 @@ export interface Widgetsubgroup {
 
 export interface Widget {
   title: string;
+  id: string;
   demoUrl: string;
   codeUrl: string;
   rawCodeUrl: string;

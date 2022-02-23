@@ -3,20 +3,15 @@ import {
   DesktopMacRounded,
   GitHub,
   PhoneAndroidRounded,
-  TabletAndroidRounded,
+  TabletMac,
 } from "@mui/icons-material";
 import React from "react";
 import CodeBlock from "../shared/CodeBlock";
 import { motion } from "framer-motion";
 import CustomIframe from "../CustomIframe";
 import makeStyles from "@mui/styles/makeStyles";
+import { Widget } from "@/models/widget";
 
-interface WidgetDemoBlockProps {
-  demoUrl: string;
-  rawCodeUrl: string;
-  codeUrl: string;
-  title: string;
-}
 interface ResponsiveProp {
   value: string;
   icon: JSX.Element;
@@ -32,7 +27,7 @@ const _responsiveValues: ResponsiveProp[] = [
   {
     label: "Tablet",
     value: "650px",
-    icon: <TabletAndroidRounded />,
+    icon: <TabletMac />,
   },
   {
     label: "Desktop",
@@ -47,11 +42,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function WidgetDemoBlock(props: WidgetDemoBlockProps) {
+function WidgetDemoBlock(props: Widget) {
   const theme = useTheme();
   const classes = useStyles();
   const [responsiveSize, setResponsiveSize] = React.useState(
-    _responsiveValues[2]
+    _responsiveValues[0]
   );
   const [selectedTab, setSelectedTab] = React.useState(0);
 
@@ -111,7 +106,12 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
   }
 
   return (
-    <div>
+    <div
+      id={props.id}
+      style={{
+        scrollMargin: "70px 0 0 0",
+      }}
+    >
       <Grid
         spacing={2}
         container
@@ -213,6 +213,7 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
               flexDirection: "row",
               justifyContent: "center",
               height: "70vh",
+              minHeight: "500px",
             }}
           >
             {renderTabs(selectedTab)}
@@ -232,6 +233,7 @@ function WidgetDemoBlock(props: WidgetDemoBlockProps) {
         <>
           {_responsiveValues.map((item) => (
             <Button
+              disableElevation
               classes={{ startIcon: classes.startIcon }}
               area-label={item.label}
               size="small"

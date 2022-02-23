@@ -15,7 +15,13 @@ function HeroSection(props: any) {
         width: "100%",
       }}
     >
-      <Grid item md={7}>
+      <Grid
+        item
+        md={7}
+        style={{
+          margin: "2rem auto",
+        }}
+      >
         <Grid
           container
           direction="column"
@@ -54,13 +60,7 @@ function HeroSection(props: any) {
               marginBottom: "2rem",
             }}
           >
-            <Typography
-              variant="h2"
-              style={{
-                fontSize: "16px",
-                lineHeight: "1.4",
-              }}
-            >
+            <Typography variant="h6">
               A collection of production-ready open source Flutter UI Templates
               and Widgets.
             </Typography>
@@ -81,7 +81,11 @@ function HeroSection(props: any) {
               />
             </Grid>
             <Grid item>
-              <CustomFlatButton href="/templates" label="Browse Templates" />
+              <CustomFlatButton
+                href="/templates"
+                label="Browse Templates"
+                bold
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -93,7 +97,7 @@ function HeroSection(props: any) {
           alt="hero"
           style={{
             width: "100%",
-            height: "75vh",
+            height: "65vh",
             objectFit: "scale-down",
           }}
         />

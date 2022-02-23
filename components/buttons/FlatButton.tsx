@@ -1,9 +1,9 @@
 import { Button, useTheme } from "@mui/material";
-import { makeStyles } from "@material-ui/core/styles";
 
 interface CustomFlatButtonProps {
   label: string;
   href?: string;
+  bold?: boolean;
 }
 
 function CustomFlatButton(props: CustomFlatButtonProps) {
@@ -14,7 +14,7 @@ function CustomFlatButton(props: CustomFlatButtonProps) {
       href={props.href}
       style={{
         textTransform: "capitalize",
-        fontWeight: "bold",
+        fontWeight: `${props.bold ? "bold" : "normal"}`,
       }}
     >
       {props.label}

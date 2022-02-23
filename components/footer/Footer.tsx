@@ -106,6 +106,35 @@ export default function Footer() {
             </Grid>
           </Grid>
         </Grid>
+
+        <Typography
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "1rem",
+          }}
+        >
+          Made by
+          <a
+            href="https://twitter.com/bimsina"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{
+              margin: "0 0.25rem",
+            }}
+          >
+            Bibek Timsina
+          </a>
+          and
+          <a
+            href="https://github.com/bimsina/fluttertemplates.dev/graphs/contributors"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ marginLeft: "0.25rem" }}
+          >
+            contributors
+          </a>
+        </Typography>
       </AppBar>
     </div>
   );

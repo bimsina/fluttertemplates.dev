@@ -30,6 +30,7 @@ function WidgetsList(props: WidgetsListProps) {
             codeUrl={item.codeUrl}
             demoUrl={item.demoUrl}
             rawCodeUrl={item.rawCodeUrl}
+            id={item.id.split("/").slice(-1)[0]}
           />
         ))}
       </List>
