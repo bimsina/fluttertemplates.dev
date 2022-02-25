@@ -160,5 +160,7 @@ const displayMobile = (isOpen: boolean, onToggle: any) => {
 const commonNav: any[] = [
   <CustomFlatButton href="/widgets" label="Widgets" />,
   <CustomFlatButton href="/templates" label="Templates" />,
-  <CustomFlatButton href={GITHUB_LINK} label="GitHub" />,
+  <a href={GITHUB_LINK} target="_blank" rel="noopener noreferrer">
+    <CustomFlatButton label="GitHub" />
+  </a>,
 ];

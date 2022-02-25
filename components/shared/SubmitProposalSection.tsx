@@ -47,7 +47,7 @@ export default function SubmitProposalSection() {
           }}
         >
           <a
-            href={`${GITHUB_LINK}/issues`}
+            href={`${GITHUB_LINK}/issues/new?assignees=&labels=widget_template&template=request-a-new-widget.md`}
             target="_blank"
             rel="noopener noreferrer"
           >
