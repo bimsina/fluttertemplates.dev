@@ -29,8 +29,8 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
       }}
     >
       <List>
-        {props.widgetGroups.map((group) => (
-          <div key={`group_${group}`}>
+        {props.widgetGroups.map((group, index) => (
+          <div key={`group_${index}`}>
             <Typography
               variant="body1"
               style={{
@@ -40,6 +40,7 @@ function WidgetsSidebar(props: WidgetSidebarProps) {
               {group.title}
             </Typography>
             <SubGroupRenderer
+              key={`subgroup_${group}`}
               group={group}
               selectedSubGroup={props.selectedSubGroup}
             />
@@ -86,7 +87,7 @@ function SingleSubGroupRenderer(props: SingleSubGroupRendererProps) {
   useEffect(() => {
     setExpanded(props.selectedSubGroup?.id === props.subgroup.id);
     setIsSelected(props.selectedSubGroup?.id === props.subgroup.id);
-  }, []);
+  }, [props.selectedSubGroup]);
 
   return (
     <>
