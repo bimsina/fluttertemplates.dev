@@ -12,14 +12,14 @@ function MyApp({ Component, pageProps }: AppProps) {
   const [darkMode, setDarkMode] = useState<boolean>(false);
 
   useEffect(() => {
+    const _item = localStorage.getItem("darkMode") ?? "false";
+    setDarkMode(JSON.parse(_item));
+
     // Remove the server-side injected CSS.
     const jssStyles = document.querySelector("#jss-server-side");
     if (jssStyles) {
       jssStyles.parentElement?.removeChild(jssStyles);
     }
-
-    const _item = localStorage.getItem("dark") ?? "false";
-    setDarkMode(JSON.parse(_item));
   }, []);
 
   const theme: Theme = useMemo(
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Header
         isDarkMode={darkMode}
         onThemeChange={() => {
-          localStorage.setItem("dark", (!darkMode).toString());
+          localStorage.setItem("darkMode", (!darkMode).toString());
           setDarkMode(!darkMode);
         }}
       />

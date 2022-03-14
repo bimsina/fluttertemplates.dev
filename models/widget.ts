@@ -11,12 +11,14 @@ export interface WidgetGroup {
 export interface Widgetsubgroup {
   title: string;
   id: string;
+  description: string;
   widgets: Widget[];
 }
 
 export interface Widget {
   title: string;
   id: string;
+  description: string;
   demoUrl: string;
   codeUrl: string;
   rawCodeUrl: string;

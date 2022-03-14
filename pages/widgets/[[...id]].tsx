@@ -64,6 +64,7 @@ export default function Docs({
             demoUrl: widget.matter.demoUrl!,
             codeUrl: widget.matter.codeUrl!,
             rawCodeUrl: widget.matter.rawCodeUrl!,
+            description: widget.matter.description ?? "",
           });
         });
 
@@ -71,6 +72,7 @@ export default function Docs({
           title: subgroup.matter.title,
           widgets: _widgets,
           id: subgroup.id,
+          description: subgroup.matter.description ?? "",
         };
         if (_selectedSubGroupId === subgroup.id) {
           setSelectedSubGroup(_subGroup);
@@ -110,7 +112,13 @@ export default function Docs({
     <>
       <WidgetPageHead
         title={postData.frontmatter.title}
-        description={postData.frontmatter.description}
+        description={`${
+          postData.frontmatter.description
+            ? postData.frontmatter.description + " - "
+            : ""
+        }${selectedSubGroup?.widgets
+          .map((item) => item.description)
+          .join(" ")}`}
       />
 
       {isLoading ? (
