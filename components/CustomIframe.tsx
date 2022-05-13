@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 interface CustomIframeProps {
   url: string;
   style?: React.CSSProperties;
+  showLoadingIndicator: boolean;
 }
 
 export default function CustomIframe(props: CustomIframeProps) {
@@ -22,7 +23,7 @@ export default function CustomIframe(props: CustomIframeProps) {
         height: "100%",
       }}
     >
-      {isLoading && (
+      {isLoading && props.showLoadingIndicator && (
         <Grid
           container
           direction="column"

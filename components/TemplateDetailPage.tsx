@@ -208,6 +208,7 @@ function RenderBody(props: TemplateCardProps) {
         >
           <CustomIframe
             url={_frontmatter.demoUrl}
+            showLoadingIndicator={true}
             style={{
               borderRadius: "16px",
               border: "4px solid grey",

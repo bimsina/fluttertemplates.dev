@@ -86,7 +86,7 @@ function WidgetDemoBlock(props: Widget) {
               width: "100%",
             }}
           >
-            <CustomIframe url={props.demoUrl} />
+            <CustomIframe url={props.demoUrl} showLoadingIndicator={false} />
           </motion.div>
         </div>
         <div
