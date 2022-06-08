@@ -1,5 +1,4 @@
 import { Widgetsubgroup } from "@/models/widget";
-import { List, Typography } from "@mui/material";
 import WidgetDemoBlock from "./WidgetDemoBlock";
 
 interface WidgetsListProps {
@@ -7,22 +6,8 @@ interface WidgetsListProps {
 }
 function WidgetsList(props: WidgetsListProps) {
   return (
-    <div
-      style={{
-        width: `100%`,
-        marginTop: "1rem",
-        marginLeft: "1rem",
-      }}
-    >
-      <Typography
-        variant="h4"
-        style={{
-          fontWeight: "bold",
-        }}
-      >
-        {props.componentSubgroup.title}
-      </Typography>
-      <List>
+    <div className="w-full mt-4 ml-4">
+      <div className="grid grid-cols-1 w-full">
         {props.componentSubgroup.widgets.map((item, index) => (
           <WidgetDemoBlock
             key={`widget_${index}_${item.title}`}
@@ -34,7 +19,7 @@ function WidgetsList(props: WidgetsListProps) {
             id={item.id.split("/").slice(-1)[0]}
           />
         ))}
-      </List>
+      </div>
     </div>
   );
 }

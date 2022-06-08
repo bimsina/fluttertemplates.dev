@@ -1,141 +1,84 @@
-import { AppBar, Grid, IconButton, Typography } from "@mui/material";
-import { LinkedIn, MailOutlineRounded, Twitter } from "@mui/icons-material";
+import { MdMailOutline } from "react-icons/md";
+import { GrTwitter, GrLinkedin } from "react-icons/gr";
 import { BUY_ME_A_COFFEE_LINK } from "../../constants";
 
 export default function Footer() {
   return (
-    <div>
-      <AppBar
-        position="static"
-        color="primary"
-        elevation={0}
-        style={{
-          padding: "2.5rem",
-          width: "100%",
-        }}
-      >
-        <Grid
-          container
-          spacing={8}
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-        >
-          <Grid item>
-            <Grid
-              container
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
+    <footer className="bg-background">
+      <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8">
+        <div className="flex flex-row justify-center items-center">
+          <div className="flex flex-col items-center p-4">
+            <p className="text-base font-bold tracking-wide text-gray-900 mb-4">
+              Support Us
+            </p>
+            <a
+              href={BUY_ME_A_COFFEE_LINK}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              <Grid item>
-                <Typography
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Support Us
-                </Typography>
-              </Grid>
+              <img
+                src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
+                alt="Buy Me A Coffee"
+                className="h-14"
+              />
+            </a>
+          </div>
+          <div className="flex flex-col items-center p-4">
+            <p className="text-base font-bold tracking-wide text-gray-900 mb-4">
+              Contact
+            </p>
+            <div className="grid grid-cols-3 gap-2 text-gray-700">
+              <a
+                href="mailto:timsinabibek960@gmail.com"
+                target="_blank"
+                referrerPolicy="no-referrer"
+              >
+                <MdMailOutline size={24} />
+              </a>
 
-              <Grid item>
-                <a
-                  href={BUY_ME_A_COFFEE_LINK}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <img
-                    src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png"
-                    alt="Buy Me A Coffee"
-                    style={{
-                      marginTop: "1rem",
-                      height: "60px !important",
-                      width: "217px !important",
-                    }}
-                  />
-                </a>
-              </Grid>
-            </Grid>
-          </Grid>
-          <Grid item>
-            <Grid
-              container
-              direction="column"
-              justifyContent="center"
-              alignItems="center"
+              <a
+                href="https://twitter.com/bimsina"
+                target="_blank"
+                referrerPolicy="no-referrer"
+              >
+                <GrTwitter size={24} />
+              </a>
+
+              <a
+                href="https://www.linkedin.com/in/bimsina/"
+                target="_blank"
+                referrerPolicy="no-referrer"
+              >
+                <GrLinkedin size={24} />
+              </a>
+            </div>
+          </div>
+        </div>
+        <div className="flex flex-row justify-center py-8 border-t">
+          <p className="text-sm text-gray-600">
+            Made by
+            <a
+              href="https://twitter.com/bimsina"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{
+                margin: "0 0.25rem",
+              }}
             >
-              <Grid item>
-                <Typography
-                  style={{
-                    fontSize: "1rem",
-                    fontWeight: "bold",
-                  }}
-                >
-                  Contact
-                </Typography>
-              </Grid>
-
-              <Grid item>
-                <div>
-                  <IconButton
-                    href="mailto:timsinabibek960@gmail.com"
-                    target="_blank"
-                    referrerPolicy="no-referrer"
-                  >
-                    <MailOutlineRounded />
-                  </IconButton>
-
-                  <IconButton
-                    href="https://twitter.com/bimsina"
-                    target="_blank"
-                    referrerPolicy="no-referrer"
-                  >
-                    <Twitter />
-                  </IconButton>
-
-                  <IconButton
-                    href="https://www.linkedin.com/in/bimsina/"
-                    target="_blank"
-                    referrerPolicy="no-referrer"
-                  >
-                    <LinkedIn />
-                  </IconButton>
-                </div>
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-
-        <Typography
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            marginTop: "1rem",
-          }}
-        >
-          Made by
-          <a
-            href="https://twitter.com/bimsina"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{
-              margin: "0 0.25rem",
-            }}
-          >
-            Bibek Timsina
-          </a>
-          and
-          <a
-            href="https://github.com/bimsina/fluttertemplates.dev/graphs/contributors"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ marginLeft: "0.25rem" }}
-          >
-            contributors
-          </a>
-        </Typography>
-      </AppBar>
-    </div>
+              Bibek Timsina
+            </a>
+            and
+            <a
+              href="https://github.com/bimsina/fluttertemplates.dev/graphs/contributors"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ marginLeft: "0.25rem" }}
+            >
+              contributors
+            </a>
+          </p>
+        </div>
+      </div>
+    </footer>
   );
 }

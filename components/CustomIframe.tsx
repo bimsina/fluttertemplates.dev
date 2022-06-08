@@ -1,9 +1,10 @@
-import { CircularProgress, Grid, Typography } from "@mui/material";
 import React, { useEffect } from "react";
+import CircularProgress from "./shared/CircularProgress";
 interface CustomIframeProps {
   url: string;
   style?: React.CSSProperties;
   showLoadingIndicator: boolean;
+  className?: string | undefined;
 }
 
 export default function CustomIframe(props: CustomIframeProps) {
@@ -17,6 +18,7 @@ export default function CustomIframe(props: CustomIframeProps) {
 
   return (
     <div
+      className={props.className}
       style={{
         position: "relative",
         width: "100%",
@@ -24,19 +26,9 @@ export default function CustomIframe(props: CustomIframeProps) {
       }}
     >
       {isLoading && props.showLoadingIndicator && (
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          style={{
-            height: "100%",
-            width: "100%",
-            position: "absolute",
-          }}
-        >
-          <CircularProgress size="1.5rem" thickness={8} color="secondary" />
-        </Grid>
+        <div className="w-full h-full absolute">
+          <CircularProgress />
+        </div>
       )}
       <iframe
         src={props.url}

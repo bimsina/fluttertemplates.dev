@@ -1,4 +1,3 @@
-import { Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import TemplateCardProps from "@/models/template_card";
 import CategoriesList from "./CategoriesList";
@@ -46,11 +45,7 @@ export default function TemplatesGrid({
     }
   }
   return (
-    <div
-      style={{
-        marginBottom: "2.5rem",
-      }}
-    >
+    <div>
       {selectedCategory && !(isFromHome ?? false) && (
         <CategoriesList
           categories={categories}
@@ -62,46 +57,17 @@ export default function TemplatesGrid({
         />
       )}
 
-      {filteredTemplates.length === 0 ? (
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          spacing={4}
-          style={{
-            width: "100%",
-            marginTop: "2rem",
-            marginBottom: "2rem",
-          }}
-        >
-          <Grid item>
-            <img
-              src="/404.svg"
-              style={{
-                height: "30vh",
-              }}
+      <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 pb-8 px-8 md:px-0">
+        {filteredTemplates.map((template: TemplateCardProps, index: number) => {
+          return (
+            <TemplateCard
+              key={index}
+              id={template.id}
+              frontmatter={template.frontmatter}
             />
-          </Grid>
-          <Grid item>
-            <Typography>No Templates found</Typography>
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid container spacing={4}>
-          {filteredTemplates.map(
-            (template: TemplateCardProps, index: number) => {
-              return (
-                <TemplateCard
-                  key={index}
-                  id={template.id}
-                  frontmatter={template.frontmatter}
-                />
-              );
-            }
-          )}
-        </Grid>
-      )}
+          );
+        })}
+      </div>
     </div>
   );
 

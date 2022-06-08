@@ -1,56 +1,24 @@
-import { Grid, Typography, useTheme } from "@mui/material";
-import { ArrowForward } from "@mui/icons-material";
+import { MdArrowForward } from "react-icons/md";
 import React from "react";
 import CustomContainedButton from "../buttons/ContainedButton";
 
 export default function BrowseComponentsCTA() {
-  const theme = useTheme();
-
   return (
-    <div
-      style={{
-        backgroundColor: `${theme.palette.secondary.main}20`,
-        marginTop: "10rem",
-        marginBottom: "10rem",
-        padding: "2rem",
-        borderRadius: "0.5rem",
-      }}
-    >
-      <Grid
-        container
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={4}
-      >
-        <Grid item xs={12} md={6}>
-          <Typography
-            variant="h2"
-            style={{
-              fontSize: "1.8rem",
-              fontWeight: "bold",
-            }}
-          >
+    <section>
+      <div className="bg-secondary bg-opacity-5 my-10 rounded-lg">
+        <div className="mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 lg:flex lg:items-center lg:justify-between">
+          <h2 className="text-3xl font-bold tracking-tight text-gray-700 sm:text-xl pr-10">
             Explore production ready Flutter Widgets and Templates
-          </Typography>
-        </Grid>
-
-        <Grid
-          item
-          xs={12}
-          md={6}
-          style={{
-            display: "flex",
-            justifyContent: "center",
-          }}
-        >
-          <CustomContainedButton
-            label="Browse Widgets"
-            href="/widgets"
-            endIcon={<ArrowForward fontSize="small" />}
-          />
-        </Grid>
-      </Grid>
-    </div>
+          </h2>
+          <div className="mt-8 flex lg:mt-0 lg:flex-shrink-0">
+            <CustomContainedButton
+              label="Browse Widgets"
+              href="/widgets"
+              endIcon={<MdArrowForward fontSize="small" />}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }

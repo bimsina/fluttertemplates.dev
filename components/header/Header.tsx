@@ -1,161 +1,63 @@
-import {
-  Button,
-  IconButton,
-  Typography,
-  Container,
-  AppBar,
-  Toolbar,
-  useTheme,
-  useMediaQuery,
-  Drawer,
-  ListItem,
-  Grid,
-  Box,
-} from "@mui/material";
-import {
-  Brightness7Rounded,
-  MenuRounded,
-  NightsStayRounded,
-} from "@mui/icons-material";
 import { GITHUB_LINK } from "../../constants";
 import React, { useState } from "react";
 import CustomFlatButton from "../buttons/FlatButton";
+import { MdClose, MdMenu } from "react-icons/md";
 
-interface HeaderProps {
-  isDarkMode: boolean;
-  onThemeChange: VoidFunction;
-}
-export default function Header(props: HeaderProps) {
-  const [drawer, setDrawer] = useState(false);
-
-  const theme = useTheme();
-  const _isNotMobile = useMediaQuery(theme.breakpoints.up("sm"));
-
-  const toggleDrawer = () => () => {
-    setDrawer(!drawer);
-  };
-
+const Header = () => {
+  const [navbarOpen, setNavbarOpen] = React.useState(false);
   return (
-    <AppBar
-      position="sticky"
-      elevation={0}
-      style={{
-        backgroundColor: theme.palette.primary.main,
-      }}
-    >
-      <Toolbar>
-        <Container maxWidth="lg">
-          <Grid
-            container
-            direction="row"
-            justifyContent="center"
-            alignItems="center"
+    <>
+      <nav className="fixed flex justify-between py-4 w-full lg:px-48 md:px-12 px-4 content-center z-50 text-primary backdrop-blur-xl bg-background bg-opacity-50">
+        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
+          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+            <a
+              href="/"
+              className="font-extrabold inline-flex justify-center items-center"
+            >
+              <img
+                src="/favicon.svg"
+                alt="Flutter UI Templates Logo"
+                style={{
+                  height: "2.5rem",
+                  width: "2.5rem",
+                  paddingRight: "0.5rem",
+                }}
+              />
+              <div className="growing-underline text-primary text-xl font-bold">
+                Flutter
+                <span className="ml-1 text-gray-800">Templates</span>
+              </div>
+            </a>
+            <button
+              className="text-primary cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+              type="button"
+              onClick={() => setNavbarOpen(!navbarOpen)}
+            >
+              {!navbarOpen ? <MdMenu /> : <MdClose />}
+            </button>
+          </div>
+          <div
+            className={
+              "lg:flex flex-grow items-center" +
+              (navbarOpen ? " flex" : " hidden")
+            }
+            id="example-navbar-danger"
           >
-            <Box sx={{ flexGrow: _isNotMobile ? 0 : 1 }}>
-              <Button href="/" variant="text" color="inherit">
-                <img
-                  src="/favicon.svg"
-                  alt="Flutter UI Templates Logo"
-                  style={{
-                    height: "2.5rem",
-                    width: "2.5rem",
-                    paddingRight: "0.5rem",
-                  }}
-                />
-                {_isNotMobile && (
-                  <Grid container>
-                    <Typography
-                      style={{
-                        color: theme.palette.secondary.main,
-                        textTransform: "capitalize",
-                        maxLines: 1,
-                        fontSize: "1.3rem",
-                        fontWeight: "bold",
-                        marginLeft: "4px",
-                      }}
-                    >
-                      Flutter
-                    </Typography>
-
-                    <Typography
-                      style={{
-                        textTransform: "capitalize",
-                        maxLines: 1,
-                        fontSize: "1.3rem",
-                        fontWeight: "bold",
-                        marginLeft: "4px",
-                      }}
-                    >
-                      Templates
-                    </Typography>
-                  </Grid>
-                )}
-              </Button>
-            </Box>
-
-            {_isNotMobile && (
-              <Box sx={{ flexGrow: 1 }}>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="flex-end"
-                  alignItems="center"
-                >
-                  {commonNav.map((item, index) => (
-                    <Grid item key={`nav_${index}`}>
-                      {item}
-                    </Grid>
-                  ))}
-                </Grid>
-              </Box>
-            )}
-
-            <Grid item>
-              <IconButton
-                aria-label="Theme Toggle Button"
-                onClick={props.onThemeChange}
-              >
-                {props.isDarkMode ? (
-                  <Brightness7Rounded />
-                ) : (
-                  <NightsStayRounded />
-                )}
-              </IconButton>
-            </Grid>
-
-            {!_isNotMobile && (
-              <Grid item>{displayMobile(drawer, toggleDrawer())}</Grid>
-            )}
-          </Grid>
-        </Container>
-      </Toolbar>
-    </AppBar>
-    // </div>
-  );
-}
-
-const displayMobile = (isOpen: boolean, onToggle: any) => {
-  return (
-    <div>
-      <IconButton onClick={onToggle}>
-        <MenuRounded />
-      </IconButton>
-      <Drawer open={isOpen} anchor="bottom" onClose={onToggle}>
-        {commonNav.map((item) => (
-          <ListItem
-            key={item.props.href}
-            style={{
-              padding: 16,
-              justifyContent: "center",
-            }}
-          >
-            {item}
-          </ListItem>
-        ))}
-      </Drawer>
-    </div>
+            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
+              {commonNav.map((item) => (
+                <li key={item} className="m-2">
+                  {item}
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+      </nav>
+    </>
   );
 };
+
+export default Header;
 
 const commonNav: any[] = [
   <CustomFlatButton href="/widgets" label="Widgets" />,

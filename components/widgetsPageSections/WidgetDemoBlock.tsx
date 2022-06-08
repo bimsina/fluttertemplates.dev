@@ -1,15 +1,8 @@
-import { Button, Grid, IconButton, Typography, useTheme } from "@mui/material";
-import {
-  DesktopMacRounded,
-  GitHub,
-  PhoneAndroidRounded,
-  TabletMac,
-} from "@mui/icons-material";
+import { FaDesktop, FaGithub, FaMobileAlt, FaTabletAlt } from "react-icons/fa";
 import React from "react";
 import CodeBlock from "../shared/CodeBlock";
 import { motion } from "framer-motion";
 import CustomIframe from "../CustomIframe";
-import makeStyles from "@mui/styles/makeStyles";
 import { Widget } from "@/models/widget";
 
 interface ResponsiveProp {
@@ -22,29 +15,21 @@ const _responsiveValues: ResponsiveProp[] = [
   {
     label: "Mobile",
     value: "400px",
-    icon: <PhoneAndroidRounded />,
+    icon: <FaMobileAlt />,
   },
   {
     label: "Tablet",
     value: "650px",
-    icon: <TabletMac />,
+    icon: <FaTabletAlt />,
   },
   {
     label: "Desktop",
     value: "900px",
-    icon: <DesktopMacRounded />,
+    icon: <FaDesktop />,
   },
 ];
 
-const useStyles = makeStyles((theme) => ({
-  startIcon: {
-    margin: 0,
-  },
-}));
-
 function WidgetDemoBlock(props: Widget) {
-  const theme = useTheme();
-  const classes = useStyles();
   const [responsiveSize, setResponsiveSize] = React.useState(
     _responsiveValues[0]
   );
@@ -57,25 +42,14 @@ function WidgetDemoBlock(props: Widget) {
           position: "relative",
           width: "100%",
           height: "100%",
-          marginTop: "-2rem",
         }}
       >
         <div
-          style={{
-            height: "100%",
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            borderRadius: "0.5rem",
-            padding: "1rem",
-            position: "absolute",
-            opacity: selectedTab === 0 ? 1 : 0,
-            pointerEvents: selectedTab === 0 ? "all" : "none",
-            backgroundColor:
-              selectedTab === 0
-                ? theme.palette.background.paper
-                : "transparent",
-          }}
+          className={`flex flex-row justify-center absolute w-full h-full rounded-md ${
+            selectedTab === 0
+              ? "pointer-events-auto bg-card"
+              : "opacity-0 pointer-events-none bg-transparent"
+          }`}
         >
           <motion.div
             animate={{
@@ -90,14 +64,9 @@ function WidgetDemoBlock(props: Widget) {
           </motion.div>
         </div>
         <div
-          style={{
-            opacity: selectedTab === 0 ? 0 : 1,
-            zIndex: selectedTab === 0 ? -1 : 0,
-            width: "100%",
-            height: "100%",
-            position: "absolute",
-            marginTop: "-1rem",
-          }}
+          className={`w-full h-full absolute ${
+            selectedTab === 0 ? "opacity-0 -z-10" : ""
+          }`}
         >
           <CodeBlock url={props.rawCodeUrl} height="70vh" />
         </div>
@@ -112,114 +81,46 @@ function WidgetDemoBlock(props: Widget) {
         scrollMargin: "70px 0 0 0",
       }}
     >
-      <Grid
-        spacing={2}
-        container
-        direction="column"
-        style={{
-          borderRadius: "10px",
-        }}
-      >
-        <Grid item>
-          <div
-            style={{
-              border: "1px solid #cccccc50",
-              borderRadius: "0.5rem",
-              padding: "1rem",
-            }}
-          >
-            <Grid
-              container
-              direction="row"
-              justifyContent="center"
-              alignItems="center"
-              style={{
-                height: "100%",
-              }}
-            >
-              <Grid item xs={12} md={4}>
-                <Typography
-                  variant="h6"
-                  style={{
-                    fontWeight: "bold",
-                  }}
-                >
-                  {props.title}
-                </Typography>
-              </Grid>
-              <Grid
-                item
-                xs={12}
-                md={4}
-                style={{
-                  display: "flex",
-                  justifyContent: "center",
-                }}
-              >
-                {renderResponsiveSelector()}
-              </Grid>
+      <div className="grid grid-cols-1 gap-2">
+        <div className="p-4 border rounded-lg border-gray-200">
+          <div className="flex md:flex-row flex-col items-center justify-center h-full">
+            <h6 className="text-xl font-bold">{props.title}</h6>
+            <div className="grow">{renderResponsiveSelector()}</div>
 
-              <Grid item xs={12} md={4}>
-                <Grid
-                  container
-                  direction="row"
-                  justifyContent="flex-end"
-                  alignItems="center"
-                >
-                  {[0, 1].map((item) => (
-                    <Grid item>
-                      <Button
-                        variant={selectedTab == item ? "contained" : "text"}
-                        color={selectedTab == item ? "secondary" : "inherit"}
-                        disableElevation
-                        style={{
-                          borderRadius: "10rem",
-                          textTransform: "capitalize",
-                          backgroundColor: `${
-                            selectedTab == item
-                              ? `${theme.palette.secondary.main}`
-                              : ""
-                          }`,
-                        }}
-                        onClick={() => {
-                          setSelectedTab(item);
-                        }}
-                      >
-                        {item === 0 ? "Demo" : "Code"}
-                      </Button>
-                    </Grid>
-                  ))}
-                  <Grid item>
-                    <a
-                      href={props.codeUrl}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <IconButton>
-                        <GitHub />
-                      </IconButton>
-                    </a>
-                  </Grid>
-                </Grid>
-              </Grid>
-            </Grid>
-          </div>
-        </Grid>
+            <div>
+              <div className="flex flex-row items-center justify-end">
+                {[0, 1].map((item) => (
+                  <button
+                    onClick={() => {
+                      setSelectedTab(item);
+                    }}
+                    className={`px-3 py-1 rounded-3xl ${
+                      item === selectedTab
+                        ? "bg-primary text-primary bg-opacity-10"
+                        : ""
+                    }`}
+                  >
+                    {item === 0 ? "Demo" : "Code"}
+                  </button>
+                ))}
 
-        <Grid item>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "center",
-              height: "70vh",
-              minHeight: "500px",
-            }}
-          >
-            {renderTabs(selectedTab)}
+                <a
+                  href={props.codeUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xl text-gray-600 p-2"
+                >
+                  <FaGithub />
+                </a>
+              </div>
+            </div>
           </div>
-        </Grid>
-      </Grid>
+        </div>
+
+        <div className="flex flex-row justify-center min-h-[500px] h-[70vh]">
+          {renderTabs(selectedTab)}
+        </div>
+      </div>
     </div>
   );
 
@@ -230,33 +131,22 @@ function WidgetDemoBlock(props: Widget) {
           scale: selectedTab == 0 ? 1 : 0,
         }}
       >
-        <>
+        <div className="flex items-center justify-center">
           {_responsiveValues.map((item) => (
-            <Button
-              disableElevation
-              classes={{ startIcon: classes.startIcon }}
-              area-label={item.label}
-              size="small"
-              variant={
-                item.value === responsiveSize.value ? "contained" : "outlined"
-              }
-              color="secondary"
-              style={{
-                maxWidth: "40px",
-                minWidth: "40px",
-                minHeight: "40px",
-                maxHeight: "40px",
-                borderRadius: "0.5rem",
-                marginRight: "0.5rem",
-                fontSize: "0.5rem",
-              }}
+            <button
               onClick={() => {
                 setResponsiveSize(item);
               }}
-              startIcon={item.icon}
-            ></Button>
+              className={` h-10 w-10 inline-flex items-center justify-center rounded-lg mx-1 ${
+                responsiveSize.value === item.value
+                  ? "bg-primary text-primary bg-opacity-10"
+                  : "bg-card"
+              }`}
+            >
+              {item.icon}
+            </button>
           ))}
-        </>
+        </div>
       </motion.div>
     );
   }
