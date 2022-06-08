@@ -44,8 +44,8 @@ const Header = () => {
             id="example-navbar-danger"
           >
             <ul className="flex flex-col lg:flex-row list-none lg:ml-auto">
-              {commonNav.map((item) => (
-                <li key={item} className="m-2">
+              {commonNav.map((item, idx) => (
+                <li key={`nav_menu_${idx}`} className="m-2">
                   {item}
                 </li>
               ))}
@@ -62,7 +62,12 @@ export default Header;
 const commonNav: any[] = [
   <CustomFlatButton href="/widgets" label="Widgets" />,
   <CustomFlatButton href="/templates" label="Templates" />,
-  <a href={GITHUB_LINK} target="_blank" rel="noopener noreferrer">
-    <CustomFlatButton label="GitHub" />
+  <a
+    href={GITHUB_LINK}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="p-2 items-center text-sm text-gray-900 hover:text-primary"
+  >
+    GitHub
   </a>,
 ];

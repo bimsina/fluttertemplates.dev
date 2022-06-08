@@ -158,10 +158,7 @@ export default function Docs({
           >
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
               <li className="inline-flex items-center">
-                <a
-                  href="/widgets"
-                  className="inline-flex items-center dark:text-gray-400 dark:hover:text-white"
-                >
+                <a href="/widgets" className="inline-flex items-center ">
                   <MdHome className="text-xl mr-2" />
                   Widgets
                 </a>
@@ -205,12 +202,16 @@ export default function Docs({
                       {selectedGroup?.widget_subgroups.map((subgroup) => {
                         return (
                           <li className="" key={`group${subgroup.id}`}>
-                            <a
+                            <button
                               className="rounded-sm hover:bg-card py-2 px-4 block whitespace-no-wrap w-full text-left"
-                              href={`/widgets/${subgroup.id}`}
+                              // href={`/widgets/${subgroup.id}`}
+                              onClick={() => {
+                                if (subgroup.id === selectedSubGroup.id) return;
+                                setSelectedSubGroup(subgroup);
+                              }}
                             >
                               {subgroup.title}
-                            </a>
+                            </button>
                           </li>
                         );
                       })}
@@ -245,7 +246,7 @@ export default function Docs({
                             className="cursor-pointer"
                             key={`widget_subgroup${idx}`}
                           >
-                            <div className=" bg-card rounded-lg">
+                            <div className="bg-card rounded-lg border-2 border-card hover:border-primary transition-all">
                               {/* <img
                                 className="rounded-t-lg"
                                 src="https://via.placeholder.com/300x200"

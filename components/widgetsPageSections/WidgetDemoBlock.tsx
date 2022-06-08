@@ -94,6 +94,7 @@ function WidgetDemoBlock(props: Widget) {
                     onClick={() => {
                       setSelectedTab(item);
                     }}
+                    key={item}
                     className={`px-3 py-1 rounded-3xl ${
                       item === selectedTab
                         ? "bg-primary text-primary bg-opacity-10"
@@ -137,6 +138,7 @@ function WidgetDemoBlock(props: Widget) {
               onClick={() => {
                 setResponsiveSize(item);
               }}
+              key={item.value}
               className={` h-10 w-10 inline-flex items-center justify-center rounded-lg mx-1 ${
                 responsiveSize.value === item.value
                   ? "bg-primary text-primary bg-opacity-10"
