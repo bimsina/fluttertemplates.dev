@@ -13,11 +13,12 @@ import {
   WidgetsResponse,
   Widgetsubgroup,
 } from "@/models/widget";
-import { CircularProgress, Grid } from "@mui/material";
-import WidgetsSidebar from "@/components/widgetsPageSections/WidgetsSidebar";
-import WidgetsList from "@/components/widgetsPageSections/WidgetsList";
-import WidgetPageHead from "@/head/WidgetPageHead";
+
 import { useRouter } from "next/router";
+import WidgetPageHead from "@/head/WidgetPageHead";
+import CircularProgress from "@/components/shared/CircularProgress";
+import WidgetsList from "@/components/widgetsPageSections/WidgetsList";
+import { MdChevronRight, MdHome } from "react-icons/md";
 
 export default function Docs({
   postData,
@@ -30,7 +31,11 @@ export default function Docs({
   const [componentsResponse, setComponentsResponse] =
     useState<WidgetsResponse>();
 
-  const [selectedSubGroup, setSelectedSubGroup] = useState<Widgetsubgroup>();
+  const [selectedSubGroup, setSelectedSubGroup] =
+    useState<Widgetsubgroup | null>();
+
+  const [selectedGroup, setSelectedGroup] = useState<WidgetGroup | null>();
+
   const router = useRouter();
 
   useEffect(() => {
@@ -41,7 +46,7 @@ export default function Docs({
     const _params = router.query ?? [];
     let _selectedSubGroupId = "";
     let _selectedGroupId = "";
-    let _selectedGroup!: WidgetGroup;
+    let _selectedGroup: WidgetGroup | null = null;
 
     if (_params.id?.length === 1) {
       _selectedGroupId = _params.id[0];
@@ -72,6 +77,7 @@ export default function Docs({
           title: subgroup.matter.title,
           widgets: _widgets,
           id: subgroup.id,
+          image: subgroup.matter.image,
           description: subgroup.matter.description ?? "",
         };
         if (_selectedSubGroupId === subgroup.id) {
@@ -97,14 +103,15 @@ export default function Docs({
     };
 
     setComponentsResponse(_response);
+    setSelectedGroup(_selectedGroup);
 
-    if (_selectedSubGroupId === "") {
-      if (_selectedGroup) {
-        setSelectedSubGroup(_selectedGroup!.widget_subgroups[0]);
-      } else {
-        setSelectedSubGroup(_response.widget_groups[0].widget_subgroups[0]);
-      }
-    }
+    // if (_selectedSubGroupId === "") {
+    //   if (_selectedGroup) {
+    //     setSelectedSubGroup(_selectedGroup!.widget_subgroups[0]);
+    //   } else {
+    //     setSelectedSubGroup(_response.widget_groups[0].widget_subgroups[0]);
+    //   }
+    // }
     setIsLoading(false);
   };
 
@@ -121,42 +128,154 @@ export default function Docs({
           .join(" ")}`}
       />
 
-      {isLoading ? (
-        <Grid
-          container
-          alignContent="center"
-          style={{
-            display: "flex",
-            justifyContent: "center",
-            height: "80vh",
-          }}
-        >
-          <Grid item>
-            <CircularProgress size="1.5rem" thickness={8} color="secondary" />
-          </Grid>
-        </Grid>
-      ) : (
-        <Grid container direction="row" justifyContent="center">
-          <Grid item>
-            <WidgetsSidebar
-              selectedSubGroup={selectedSubGroup}
-              onSubGroupSelected={(subGroup) => {
-                setSelectedSubGroup(subGroup);
-              }}
-              widgetGroups={componentsResponse?.widget_groups ?? []}
-            />
-          </Grid>
-          <Grid item xs={12} md={8} lg={8}>
-            {selectedSubGroup ? (
-              <WidgetsList componentSubgroup={selectedSubGroup} />
-            ) : (
-              <div></div>
-            )}
-          </Grid>
-        </Grid>
-      )}
+      <div className="inline-flex w-full justify-center">
+        <div className="max-w-5xl w-full">
+          {renderNav()}
+
+          {isLoading ? (
+            <div className="w-full h-[80vh]">
+              <CircularProgress />
+            </div>
+          ) : (
+            <>
+              {renderContent()}
+              {selectedGroup && selectedSubGroup && (
+                <WidgetsList componentSubgroup={selectedSubGroup} />
+              )}
+            </>
+          )}
+        </div>
+      </div>
     </>
   );
+
+  function renderNav() {
+    return (
+      <>
+        {selectedGroup && selectedSubGroup && (
+          <nav
+            className="flex text-sm font-medium text-gray-700 hover:text-gray-900"
+            aria-label="Breadcrumb"
+          >
+            <ol className="inline-flex items-center space-x-1 md:space-x-3">
+              <li className="inline-flex items-center">
+                <a href="/widgets" className="inline-flex items-center ">
+                  <MdHome className="text-xl mr-2" />
+                  Widgets
+                </a>
+              </li>
+              <li>
+                <div className="flex items-center">
+                  <MdChevronRight />
+                  <div className="group inline-block relative">
+                    <button className="py-2 px-4 rounded inline-flex items-center">
+                      {selectedGroup.title}
+                    </button>
+                    <ul className="absolute hidden text-gray-700 pt-1 group-hover:block z-10 bg-white shadow-lg">
+                      {componentsResponse?.widget_groups.map((group) => {
+                        return (
+                          <li className="" key={`group${group.id}`}>
+                            <button
+                              className="rounded-sm hover:bg-card py-2 px-4 block whitespace-no-wrap w-full text-left"
+                              onClick={() => {
+                                if (group.id === selectedGroup.id) return;
+                                setSelectedGroup(group);
+                                setSelectedSubGroup(group.widget_subgroups[0]);
+                              }}
+                            >
+                              {group.title}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+              <li aria-current="page">
+                <div className="flex items-center">
+                  <MdChevronRight />
+                  <div className="group inline-block relative">
+                    <button className="py-2 px-4 rounded inline-flex items-center">
+                      {selectedSubGroup.title}
+                    </button>
+                    <ul className="absolute hidden text-gray-700 pt-1 group-hover:block z-10 bg-white shadow-lg">
+                      {selectedGroup?.widget_subgroups.map((subgroup) => {
+                        return (
+                          <li className="" key={`group${subgroup.id}`}>
+                            <button
+                              className="rounded-sm hover:bg-card py-2 px-4 block whitespace-no-wrap w-full text-left"
+                              // href={`/widgets/${subgroup.id}`}
+                              onClick={() => {
+                                if (subgroup.id === selectedSubGroup.id) return;
+                                setSelectedSubGroup(subgroup);
+                              }}
+                            >
+                              {subgroup.title}
+                            </button>
+                          </li>
+                        );
+                      })}
+                    </ul>
+                  </div>
+                </div>
+              </li>
+            </ol>
+          </nav>
+        )}
+      </>
+    );
+  }
+
+  function renderContent() {
+    return (
+      <>
+        {!(selectedGroup && selectedSubGroup) && (
+          <div className="grid grid-cols-1 py-4">
+            {(componentsResponse?.widget_groups ?? []).map(
+              (widget, index: number) => {
+                return (
+                  <div className="flex flex-col" key={`widget_group${index}`}>
+                    <h4 className="font-bold mb-2 px-8 lg:px-0">
+                      {widget.title}
+                    </h4>
+                    <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 pb-8 px-8 lg:px-0">
+                      {widget.widget_subgroups.map((subgroup, idx) => {
+                        return (
+                          <a
+                            href={`/widgets/${subgroup.id}`}
+                            className="cursor-pointer"
+                            key={`widget_subgroup${idx}`}
+                          >
+                            <div className="bg-white rounded-lg border-2 border-card hover:border-primary transition-all">
+                              <img
+                                className="rounded-t-lg bg-primaryLight bg-opacity-10"
+                                src={
+                                  subgroup.image ?? "images/widgets/default.svg"
+                                }
+                                alt={subgroup.title}
+                              />
+
+                              <h5 className="text-md tracking-tight text-gray-900 p-4">
+                                {subgroup.title}
+                              </h5>
+                              {/* <p className="truncate px-2 pb-2 text-sm text-gray-500">
+                                {subgroup.description}
+                              </p> */}
+                            </div>
+                          </a>
+                        );
+                      })}
+                    </div>
+                  </div>
+                );
+              }
+            )}
+          </div>
+        )}
+      </>
+    );
+  }
 }
 
 const WIDGETS_ROOT = path.join(process.cwd(), "/widgets");

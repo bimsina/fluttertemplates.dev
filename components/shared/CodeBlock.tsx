@@ -1,17 +1,9 @@
-import {
-  Button,
-  CircularProgress,
-  Grid,
-  IconButton,
-  Snackbar,
-  useTheme,
-} from "@mui/material";
-import { Close, FileCopyRounded, GitHub } from "@mui/icons-material";
 import copy from "copy-to-clipboard";
 import React, { useEffect, useState } from "react";
+import { MdCopyAll, MdDone } from "react-icons/md";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { dracula, github } from "react-syntax-highlighter/dist/cjs/styles/hljs";
-import Slide, { SlideProps } from "@mui/material/Slide";
+import { github } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import CircularProgress from "./CircularProgress";
 
 interface CodeBlockParams {
   url: string;
@@ -20,9 +12,8 @@ interface CodeBlockParams {
 
 function CodeBlock(params: CodeBlockParams) {
   const [code, setCode] = useState("");
-  const isDarkTheme = useTheme().palette.mode === "dark";
 
-  const [open, setOpen] = React.useState(false);
+  const [copied, setCopied] = React.useState(false);
 
   const handleClose = (
     event: React.SyntheticEvent | Event,
@@ -32,7 +23,7 @@ function CodeBlock(params: CodeBlockParams) {
       return;
     }
 
-    setOpen(false);
+    setCopied(false);
   };
 
   useEffect(() => {
@@ -43,18 +34,18 @@ function CodeBlock(params: CodeBlockParams) {
       });
   }, [params.url]);
 
-  const _snackBarAction = (
-    <React.Fragment>
-      <IconButton
-        size="small"
-        aria-label="close"
-        color="inherit"
-        onClick={handleClose}
-      >
-        <Close fontSize="small" />
-      </IconButton>
-    </React.Fragment>
-  );
+  // const _snackBarAction = (
+  //   <React.Fragment>
+  //     <IconButton
+  //       size="small"
+  //       aria-label="close"
+  //       color="inherit"
+  //       onClick={handleClose}
+  //     >
+  //       <Close fontSize="small" />
+  //     </IconButton>
+  //   </React.Fragment>
+  // );
 
   return (
     <div>
@@ -65,7 +56,7 @@ function CodeBlock(params: CodeBlockParams) {
       >
         <SyntaxHighlighter
           language="dart"
-          style={!isDarkTheme ? github : dracula}
+          style={github}
           showLineNumbers={false}
           customStyle={{
             maxHeight: `${params.height}`,
@@ -75,57 +66,44 @@ function CodeBlock(params: CodeBlockParams) {
           {code}
         </SyntaxHighlighter>
 
-        <Button
+        <button
           aria-label="Copy"
-          size="medium"
-          variant="contained"
-          color="secondary"
-          disableElevation
-          style={{
-            position: "absolute",
-            top: "16px",
-            right: "20px",
-            borderRadius: "10rem",
-          }}
-          startIcon={<FileCopyRounded />}
+          className="absolute top-4 right-5 rounded-lg bg-primaryLight p-2 flex items-center text-primary"
+          // style={{
+          //   position: "absolute",
+          //   top: "16px",
+          //   right: "20px",
+          //   borderRadius: "10rem",
+          // }}
           onClick={() => {
             copy(code);
-            setOpen(true);
+            setCopied(!copied);
           }}
         >
-          Copy
-        </Button>
+          {copied ? <MdDone /> : <MdCopyAll />}
+          <div className="ml-1">{copied ? "Copied" : "Copy"}</div>
+        </button>
       </div>
 
       {!code && (
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          style={{
-            minHeight: "40vh",
-          }}
-        >
-          <Grid item>
-            <CircularProgress size="1.5rem" thickness={8} color="secondary" />
-          </Grid>
-        </Grid>
+        <div className="inline-flex justify-center min-h-[40vh]">
+          <CircularProgress />
+        </div>
       )}
 
-      <Snackbar
+      {/* <Snackbar
         open={open}
         autoHideDuration={4000}
         onClose={handleClose}
         message="Code copied successfully!"
         action={_snackBarAction}
         TransitionComponent={SlideTransition}
-      />
+      /> */}
     </div>
   );
 }
 
-function SlideTransition(props: SlideProps) {
-  return <Slide {...props} direction="right" />;
-}
+// function SlideTransition(props: SlideProps) {
+//   return <Slide {...props} direction="right" />;
+// }
 export default CodeBlock;

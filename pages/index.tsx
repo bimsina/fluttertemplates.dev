@@ -3,16 +3,20 @@ import FeaturesSection from "@/components/homePageSections/FeaturesSection";
 import HeroSection from "@/components/homePageSections/Hero";
 import HomePageHead from "@/head/SEOHead";
 
-import { Container } from "@mui/material";
 import React from "react";
 
 export default function Home() {
   return (
-    <Container maxWidth="lg">
+    <>
       <HomePageHead />
-      <HeroSection />
-      <FeaturesSection />
-      <BrowseComponentsCTA />
-    </Container>
+      <div className="inline-flex justify-center items-center w-full">
+        <div className="max-w-6xl">
+          <HeroSection />
+
+          <FeaturesSection />
+          <BrowseComponentsCTA />
+        </div>
+      </div>
+    </>
   );
 }

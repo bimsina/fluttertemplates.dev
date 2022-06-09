@@ -1,10 +1,10 @@
 import React from "react";
 import TemplateCardProps from "@/models/template_card";
 import getTemplatesList from "@/utils/getTemplatesList";
-import TemplatesGrid from "@/components/TemplatesGrid";
 import HomePageHead from "@/head/SEOHead";
 import { useRouter } from "next/dist/client/router";
-import { CircularProgress, Container, Grid } from "@mui/material";
+import CircularProgress from "@/components/shared/CircularProgress";
+import TemplatesGrid from "@/components/TemplatesGrid";
 
 export default function TemplatesList({
   templates,
@@ -27,31 +27,23 @@ export default function TemplatesList({
   }, [router.query]);
 
   return (
-    <Container maxWidth="lg">
-      <HomePageHead />
-      {!category && (
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="center"
-          style={{
-            minHeight: "40vh",
-          }}
-        >
-          <Grid item>
-            <CircularProgress size="1.5rem" thickness={8} color="secondary" />
-          </Grid>
-        </Grid>
-      )}
-      {category && (
-        <TemplatesGrid
-          templates={templates}
-          limit={false}
-          selectedCatId={catId as string}
-        />
-      )}
-    </Container>
+    <div className="inline-flex w-full justify-center">
+      <div className="max-w-6xl">
+        <HomePageHead />
+        {!category && (
+          <div className="w-full min-h-[45vh]">
+            <CircularProgress />
+          </div>
+        )}
+        {category && (
+          <TemplatesGrid
+            templates={templates}
+            limit={false}
+            selectedCatId={catId as string}
+          />
+        )}
+      </div>
+    </div>
   );
 }
 

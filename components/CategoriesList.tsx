@@ -1,5 +1,4 @@
 import React, { useEffect } from "react";
-import { Chip, Grid } from "@mui/material";
 
 interface CategoriesListProps {
   categories: string[];
@@ -11,44 +10,32 @@ interface CategoriesListProps {
 
 export default function CategoriesList(props: CategoriesListProps) {
   return (
-    <div className="categories-list">
+    <div className="text-sm mb-4 overflow-x-auto flex-wrap flex flex-row ">
       {props.showAll && (
-        <Chip
-          label="#all"
-          component="a"
-          color={props.selected === "all" ? "secondary" : "default"}
-          variant={props.selected === "all" ? "filled" : "outlined"}
-          clickable
-          style={{
-            margin: "4px",
-          }}
+        <button
+          className={`border rounded-3xl px-4 py-2 my-1 text-xs cursor-pointer ml-2 md:ml-0  ${
+            props.selected === "all"
+              ? "bg-primary text-primary bg-opacity-10"
+              : "bg-background"
+          }`}
           key="all"
           onClick={() => {
             if (props.onChange) {
               props.onChange("all");
             }
           }}
-        />
+        >
+          #all
+        </button>
       )}
       {props.categories.map((val) => {
         return (
-          <Chip
-            label={`#${val}`}
-            component="a"
-            color={
+          <a
+            className={`border rounded-3xl px-4 py-2 ml-2 my-1 text-xs cursor-pointer ${
               props.selected.toLowerCase() === val.toLowerCase()
-                ? "secondary"
-                : "default"
-            }
-            variant={
-              props.selected.toLowerCase() === val.toLowerCase()
-                ? "filled"
-                : "outlined"
-            }
-            clickable
-            style={{
-              margin: "4px",
-            }}
+                ? "bg-primary text-primary bg-opacity-10"
+                : "bg-background"
+            }`}
             key={val}
             href={props.onChange ? undefined : `/templates?catId=${val}`}
             onClick={() => {
@@ -56,7 +43,9 @@ export default function CategoriesList(props: CategoriesListProps) {
                 props.onChange(val);
               }
             }}
-          />
+          >
+            {`#${val}`}
+          </a>
         );
       })}
     </div>

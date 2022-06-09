@@ -12,6 +12,7 @@ export interface Widgetsubgroup {
   title: string;
   id: string;
   description: string;
+  image?: string;
   widgets: Widget[];
 }
 

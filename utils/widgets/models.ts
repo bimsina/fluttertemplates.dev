@@ -8,6 +8,7 @@ export interface NestedFolder {
 
 export interface MatterData {
   title: string;
+  image?: string;
   description?: string;
   rawCodeUrl?: string;
   demoUrl?: string;

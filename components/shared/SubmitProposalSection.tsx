@@ -1,63 +1,23 @@
-import { Grid, Typography, useTheme } from "@mui/material";
-import {
-  BrushRounded,
-  Edit,
-  FavoriteRounded,
-  HelpOutline,
-} from "@mui/icons-material";
+import { MdFavorite } from "react-icons/md";
 import { GITHUB_LINK } from "../../constants";
-import CustomContainedButton from "../buttons/ContainedButton";
 
 export default function SubmitProposalSection() {
-  const theme = useTheme();
   return (
-    <section
-      style={{
-        height: "50vh",
-        marginTop: "5rem",
-        marginBottom: "5rem",
-        backgroundColor: `${theme.palette.secondary.main}10`,
-      }}
-    >
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        style={{
-          height: "100%",
-        }}
-      >
-        <Grid item>
-          <Typography
-            variant="h6"
-            align="center"
-            style={{
-              fontWeight: "bold",
-            }}
-          >
-            Didn't find the template you were looking for?
-          </Typography>
-        </Grid>
-
-        <Grid
-          item
-          style={{
-            marginTop: "1rem",
-          }}
+    <section className="flex flex-col items-center justify-center min-h-[50vh] bg-primary bg-opacity-5">
+      <h6 className="pb-4 text-xl font-semibold">
+        Didn't find the template you were looking for?
+      </h6>
+      <div className="inline-flex rounded-md">
+        <a
+          href={`${GITHUB_LINK}/issues/new?assignees=&labels=widget_template&template=request-a-new-widget.md`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-full text-white bg-primary"
         >
-          <a
-            href={`${GITHUB_LINK}/issues/new?assignees=&labels=widget_template&template=request-a-new-widget.md`}
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <CustomContainedButton
-              label="Submit a proposal"
-              endIcon={<FavoriteRounded fontSize="small" />}
-            />
-          </a>
-        </Grid>
-      </Grid>
+          <span>Submit a proposal</span>
+          <div className="ml-2">{<MdFavorite fontSize="small" />}</div>
+        </a>
+      </div>
     </section>
   );
 }

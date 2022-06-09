@@ -1,40 +1,30 @@
 import React from "react";
-import { Grid } from "@mui/material";
-
-import { Typography } from "@mui/material";
-import CustomContainedButton from "@/components/buttons/ContainedButton";
 import HomePageHead from "@/head/SEOHead";
-import { HomeRounded } from "@mui/icons-material";
 
 export default function PageNotFoundPage() {
   return (
     <>
       <HomePageHead title="404 : Cant find the page you're looking for." />
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={4}
-        style={{
-          height: "80vh",
-          width: "100%",
-        }}
-      >
-        <Grid item>
-          <img
-            src="/404.svg"
-            alt="404 : Cant find the page you're looking for."
-            style={{
-              height: "30vh",
-            }}
-          />
-        </Grid>
-        <Grid item>
-          <Typography>Page Not Found</Typography>
-        </Grid>
-        <CustomContainedButton href="/" label="Go Home" />
-      </Grid>
+      <div className="flex items-center justify-center w-screen h-screen bg-secondary bg-opacity-5">
+        <div className="flex flex-col items-center">
+          <h1 className="font-bold text-primary text-9xl">404</h1>
+
+          <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
+            <span className="text-red-500">Oops!</span> Page not found
+          </h6>
+
+          <p className="mb-8 text-center text-gray-500 md:text-lg">
+            The page you’re looking for doesn’t exist.
+          </p>
+
+          <a
+            href="/"
+            className="px-8 py-4 font-semibold  rounded-lg text-primary border-primary border-2"
+          >
+            Go home
+          </a>
+        </div>
+      </div>
     </>
   );
 }

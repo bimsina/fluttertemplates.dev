@@ -1,3 +1,16 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer {
+  .selectedTab {
+    @apply text-sm inline-flex p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500;
+  }
+  .unselectedTab {
+    @apply text-sm inline-flex p-4 text-gray-600 rounded-t-lg dark:text-gray-500;
+  }
+}
+
 html,
 body {
   padding: 0;

@@ -1,8 +1,7 @@
-import { Grid } from "@mui/material";
-import { GitHub } from "@mui/icons-material";
 import React from "react";
 import CustomContainedButton from "./buttons/ContainedButton";
 import CodeBlock from "./shared/CodeBlock";
+import { AiFillGithub } from "react-icons/ai";
 
 interface CodeParams {
   codeGistUrl?: string;
@@ -17,29 +16,19 @@ function Code(params: CodeParams) {
       )}
 
       {params.fullCodeUrl && (
-        <Grid
-          container
-          direction="row"
-          justifyContent="center"
-          alignItems="center"
-          style={{
-            height: params.codeGistUrl ? "100%" : "70vh",
-          }}
-        >
-          <Grid item>
-            <a
-              aria-label="Download Code"
-              href={params.fullCodeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <CustomContainedButton
-                label="Full Source Code"
-                endIcon={<GitHub />}
-              />
-            </a>
-          </Grid>
-        </Grid>
+        <div className="inline-flex items-center justify-center w-full">
+          <a
+            aria-label="Download Code"
+            href={params.fullCodeUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <CustomContainedButton
+              label="Full Source Code"
+              endIcon={<AiFillGithub />}
+            />
+          </a>
+        </div>
       )}
     </div>
   );

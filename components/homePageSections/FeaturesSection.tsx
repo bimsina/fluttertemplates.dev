@@ -1,158 +1,62 @@
-import { Card, Grid, Typography, useTheme } from "@mui/material";
-import { BrushRounded, Code, VisibilityRounded } from "@mui/icons-material";
 import React from "react";
+import { MdBrush, MdCode, MdVisibility } from "react-icons/md";
 
-export default function FeaturesSection() {
-  const theme = useTheme();
+let features: FeatureModel[] = [
+  {
+    icon: <MdCode fontSize={32} />,
+    title: "Completely Null Safe",
+    description: "All the templates are built with pre configured null safety.",
+  },
+  {
+    icon: <MdVisibility fontSize={32} />,
+    title: "Readable Code",
+    description:
+      "All the templates are built keeping code readability in mind.",
+  },
+  {
+    icon: <MdBrush fontSize={32} />,
+    title: "Beautiful design",
+    description:
+      "Showcase the potential of Flutter through beautiful UI designs.",
+  },
+];
 
-  return (
-    <Grid
-      container
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
-      style={{
-        marginTop: "2rem",
-        marginBottom: "2rem",
-        minHeight: "50vh",
-      }}
-    >
-      <Grid item>
-        <Typography
-          variant="h2"
-          style={{
-            fontWeight: "bold",
-            fontSize: "1.7rem",
-            width: "100%",
-          }}
-        >
-          Features
-        </Typography>
-      </Grid>
-
-      <Grid item>
-        <div
-          style={{
-            width: "80px",
-            background: `${theme.palette.secondary.main}50`,
-            height: "4px",
-            marginTop: "0.5rem",
-            marginBottom: "2.5rem",
-            borderRadius: "4px",
-          }}
-        ></div>
-      </Grid>
-      <Grid
-        item
-        style={{
-          width: "100%",
-        }}
-      >
-        <Grid
-          container
-          direction="row"
-          alignItems="center"
-          justifyContent="space-evenly"
-          spacing={4}
-        >
-          <SingleFeature
-            title="Completely Null Safe"
-            description="All the templates are built with pre configured null safety."
-            icon={
-              <Code
-                color="secondary"
-                style={{
-                  fontSize: "4rem",
-                }}
-              />
-            }
-          />
-          <SingleFeature
-            title="Readable Code"
-            description="All the templates are built keeping code readability in mind."
-            icon={
-              <VisibilityRounded
-                color="secondary"
-                style={{
-                  fontSize: "4rem",
-                }}
-              />
-            }
-          />
-          <SingleFeature
-            title="Beautiful design"
-            description="Showcase the potential of Flutter through beautiful UI designs."
-            icon={
-              <BrushRounded
-                color="secondary"
-                style={{
-                  fontSize: "4rem",
-                }}
-              />
-            }
-          />
-        </Grid>
-      </Grid>
-    </Grid>
-  );
-}
-
-interface SingleFeatureProps {
+interface FeatureModel {
+  icon: any;
   title: string;
   description: string;
-  icon: any;
 }
 
-function SingleFeature(props: SingleFeatureProps) {
-  const theme = useTheme();
-
+const FeaturesSection = () => {
   return (
-    <Grid item xs={12} md={4} lg={3}>
-      <Grid
-        container
-        direction="column"
-        justifyContent="center"
-        alignItems="center"
-        spacing={1}
-      >
-        <Grid item>
-          <Card
-            elevation={0}
-            style={{
-              padding: "2rem",
-              marginBottom: "0.5rem",
-              background: `${theme.palette.secondary.main}20`,
-              borderRadius: "1.5rem",
-            }}
+    <div className="px-4 py-16 mx-auto sm:max-w-xl md:max-w-full lg:max-w-screen-xl md:px-24 lg:px-8 lg:py-20">
+      <div className="max-w-xl mb-10 md:mx-auto sm:text-center lg:max-w-2xl md:mb-12">
+        <div>
+          <p className="inline-block px-3 py-px mb-4 text-2xl font-bold">
+            Features
+          </p>
+        </div>
+      </div>
+      <div className="grid gap-8 row-gap-10 lg:grid-cols-3">
+        {features.map((feature, index) => (
+          <div
+            className="sm:mx-auto sm:text-center max-w-sm flex flex-col justify-center items-center text-center"
+            key={`feature${index}`}
           >
-            {props.icon}
-          </Card>
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="h4"
-            style={{
-              fontSize: "1.2rem",
-              fontWeight: "bold",
-            }}
-          >
-            {props.title}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography
-            variant="caption"
-            style={{
-              fontSize: "1rem",
-              display: "flex",
-              flexGrow: 1,
-              textAlign: "center",
-            }}
-          >
-            {props.description}
-          </Typography>
-        </Grid>
-      </Grid>
-    </Grid>
+            <div className="flex items-center justify-center w-16 h-16 mb-4 rounded-full bg-primary sm:mx-auto sm:w-24 sm:h-24 bg-opacity-10 text-primary">
+              {feature.icon}
+            </div>
+            <h6 className="mb-3 text-xl font-bold leading-5">
+              {feature.title}
+            </h6>
+            <p className="mb-3 text-md text-gray-900 max-w-xs">
+              {feature.description}
+            </p>
+          </div>
+        ))}
+      </div>
+    </div>
   );
-}
+};
+
+export default FeaturesSection;

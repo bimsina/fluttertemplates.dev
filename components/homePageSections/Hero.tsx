@@ -1,108 +1,40 @@
-import { Grid, Typography, useTheme } from "@mui/material";
-import { ArrowForward } from "@mui/icons-material";
+import { MdArrowForward } from "react-icons/md";
 import CustomContainedButton from "../buttons/ContainedButton";
 import CustomFlatButton from "../buttons/FlatButton";
 
 function HeroSection(props: any) {
-  const theme = useTheme();
-
   return (
-    <Grid
-      container
-      justifyContent="center"
-      alignItems="center"
-      style={{
-        width: "100%",
-      }}
-    >
-      <Grid
-        item
-        md={7}
-        style={{
-          margin: "2rem auto",
-        }}
-      >
-        <Grid
-          container
-          direction="column"
-          justifyContent="center"
-          alignItems="flex-start"
-          spacing={4}
-          style={{
-            padding: "2rem",
-          }}
-        >
-          <Grid>
-            <Typography
-              variant="h1"
-              style={{
-                fontWeight: "bolder",
-                fontSize: "2.4rem",
-                color: theme.palette.secondary.main,
-              }}
-            >
-              Production-ready
-            </Typography>
-            <Typography
-              variant="h1"
-              style={{
-                fontWeight: "bold",
-                fontSize: "2.9rem",
-              }}
-            >
-              Flutter UI Templates
-            </Typography>
-          </Grid>
-
-          <Grid
-            style={{
-              marginTop: "2rem",
-              marginBottom: "2rem",
-            }}
-          >
-            <Typography variant="h6">
-              A collection of production-ready open source Flutter UI Templates
-              and Widgets.
-            </Typography>
-          </Grid>
-
-          <Grid
-            container
-            spacing={2}
-            direction="row"
-            justifyContent="flex-start"
-            alignItems="center"
-          >
-            <Grid item>
-              <CustomContainedButton
-                href="/widgets"
-                label="Browse Widgets"
-                endIcon={<ArrowForward fontSize="small" />}
-              />
-            </Grid>
-            <Grid item>
-              <CustomFlatButton
-                href="/templates"
-                label="Browse Templates"
-                bold
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-
-      <Grid item md={5}>
+    <div className="flex flex-col justify-between max-w-xl px-4 mx-auto lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl bg-background">
+      <div className="pt-16 mb-16 lg:mb-0 lg:pt-32 lg:max-w-lg lg:pr-5">
+        <div className="max-w-xl mb-6">
+          <h1 className="mb-2 font-sans text-3xl font-bold tracking-tight text-primary sm:text-4xl sm:leading-none">
+            Production-ready
+          </h1>
+          <h1 className="mb-6 font-sans text-4xl font-bold tracking-tight text-black sm:text-5xl sm:leading-none">
+            Flutter UI Templates
+          </h1>
+          <p className="text-base text-gray-700 md:text-lg">
+            A collection of production-ready open source Flutter UI Templates
+            and Widgets.
+          </p>
+        </div>
+        <div className="flex items-center space-x-4">
+          <CustomContainedButton
+            href="/widgets"
+            label="Browse Widgets"
+            endIcon={<MdArrowForward fontSize="small" />}
+          />
+          <CustomFlatButton href="/templates" label="Browse Templates" bold />
+        </div>
+      </div>
+      <div>
         <img
           src="/home_hero.svg"
-          alt="hero"
-          style={{
-            width: "100%",
-            height: "65vh",
-            objectFit: "scale-down",
-          }}
+          className="object-cover object-top w-full mx-auto lg:h-auto xl:mr-24 md:max-w-sm"
+          alt=""
         />
-      </Grid>
-    </Grid>
+      </div>
+    </div>
   );
 }
 export default HeroSection;

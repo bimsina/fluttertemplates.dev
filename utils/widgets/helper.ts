@@ -196,6 +196,7 @@ function nestData(paths: any, pageFileCache: any, start = [""]): NestedFolder {
   const matterResult = matter(fileContents);
   const _matterData: MatterData = {
     title: matterResult.data.title,
+    image: matterResult.data.image ?? null,
     codeUrl: matterResult.data.codeUrl ?? null,
     description: matterResult.data.description ?? null,
     rawCodeUrl: matterResult.data.rawCodeUrl ?? null,

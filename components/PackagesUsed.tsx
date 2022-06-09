@@ -1,8 +1,5 @@
 import React from "react";
-import { Button, Grid, List, ListItem } from "@mui/material";
-
-import { Typography } from "@mui/material";
-import { Link } from "@mui/icons-material";
+import { MdLink } from "react-icons/md";
 
 interface Props {
   packages: string[];
@@ -10,36 +7,20 @@ interface Props {
 
 export default function PackagesUsed(params: Props) {
   return (
-    <Grid
-      container
-      direction="column"
-      justifyContent="center"
-      alignItems="center"
-      spacing={1}
-      style={{
-        height: "80%",
-        width: "100%",
-      }}
-    >
+    <div className="flex flex-col items-center justify-center w-full h-[80%] p-8">
       {params.packages.length === 0 && (
-        <Grid item>
-          <img
-            src="/no_packages.svg"
-            alt="No Packages Used"
-            style={{
-              height: "30vh",
-            }}
-          />
-        </Grid>
+        <img
+          src="/no_packages.svg"
+          alt="No Packages Used"
+          className="h-[30vh]"
+        />
       )}
       {params.packages.length === 0 && (
-        <Grid item>
-          <Typography>No Packages Used</Typography>
-        </Grid>
+        <h4 className="font-bold">No Packages Used</h4>
       )}
 
       {params.packages.map((packageName) => (
-        <Grid item key={packageName}>
+        <div key={packageName}>
           <a
             href={packageName}
             target="_blank"
@@ -48,12 +29,8 @@ export default function PackagesUsed(params: Props) {
               color: "transparent",
             }}
           >
-            <Button
-              style={{
-                textTransform: "none",
-              }}
-            >
-              <Link
+            <button className="flex flex-row text-blue-400 justify-center items-center p-2">
+              <MdLink
                 fontSize="small"
                 style={{
                   marginRight: "8px",
@@ -69,10 +46,10 @@ export default function PackagesUsed(params: Props) {
                   marginLeft: "8px",
                 }}
               />
-            </Button>
+            </button>
           </a>
-        </Grid>
+        </div>
       ))}
-    </Grid>
+    </div>
   );
 }

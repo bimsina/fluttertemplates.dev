@@ -17,30 +17,29 @@
     "deploy": "rm -rf public/sitemap.xml public/robots.txt && next build && next-sitemap && next export && gh-pages -d out/"
   },
   "dependencies": {
-    "@emotion/react": "^11.7.1",
-    "@emotion/styled": "^11.6.0",
-    "@mui/icons-material": "^5.4.2",
-    "@mui/material": "^5.4.2",
-    "@mui/styles": "^5.4.2",
     "copy-to-clipboard": "^3.3.1",
-    "framer-motion": "^6.2.6",
-    "fs-extra": "^10.0.0",
+    "framer-motion": "^6.3.10",
+    "fs-extra": "^10.1.0",
     "gray-matter": "^4.0.3",
-    "next": "^12.1.0",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "react-markdown": "^8.0.0",
-    "react-syntax-highlighter": "^15.4.5",
+    "next": "^12.1.6",
+    "react": "^18.1.0",
+    "react-dom": "^18.1.0",
+    "react-icons": "^4.4.0",
+    "react-markdown": "^8.0.3",
+    "react-syntax-highlighter": "^15.5.0",
     "rehype-raw": "^6.1.1",
     "remark-gfm": "^3.0.1"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.13",
-    "@types/react": "^17.0.39",
-    "@types/react-syntax-highlighter": "^13.5.2",
-    "eslint": "^8.9.0",
-    "eslint-config-next": "^12.1.0",
-    "next-sitemap": "^2.4.2",
-    "typescript": "^4.5.5"
+    "@types/react": "^18.0.12",
+    "@types/react-syntax-highlighter": "^15.5.1",
+    "autoprefixer": "^10.4.7",
+    "eslint": "^8.17.0",
+    "eslint-config-next": "^12.1.6",
+    "next-sitemap": "^2.5.27",
+    "postcss": "^8.4.14",
+    "tailwindcss": "^3.0.24",
+    "typescript": "^4.7.3"
   }
 }
