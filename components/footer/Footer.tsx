@@ -1,6 +1,27 @@
 import { MdMailOutline } from "react-icons/md";
-import { GrTwitter, GrLinkedin } from "react-icons/gr";
+import { GrTwitter, GrLinkedin, GrMail } from "react-icons/gr";
 import { BUY_ME_A_COFFEE_LINK } from "../../constants";
+
+interface LinkData {
+  icon: JSX.Element;
+  url: string;
+}
+
+const _links: LinkData[] = [
+  {
+    icon: <GrMail />,
+    url: "mailto:timsinabibek960@gmail.com",
+  },
+  {
+    icon: <GrTwitter />,
+    url: "https://twitter.com/bimsina",
+  },
+
+  {
+    icon: <GrLinkedin />,
+    url: "https://www.linkedin.com/in/bimsina/",
+  },
+];
 
 export default function Footer() {
   return (
@@ -25,30 +46,18 @@ export default function Footer() {
           </div>
           <div className="flex flex-col items-center p-4">
             <p className="text-base font-bold tracking-wide  mb-4">Contact</p>
-            <div className="grid grid-cols-3 gap-2 text-gray-700 dark:text-gray-200">
-              <a
-                href="mailto:timsinabibek960@gmail.com"
-                target="_blank"
-                referrerPolicy="no-referrer"
-              >
-                <MdMailOutline size={24} />
-              </a>
-
-              <a
-                href="https://twitter.com/bimsina"
-                target="_blank"
-                referrerPolicy="no-referrer"
-              >
-                <GrTwitter size={24} />
-              </a>
-
-              <a
-                href="https://www.linkedin.com/in/bimsina/"
-                target="_blank"
-                referrerPolicy="no-referrer"
-              >
-                <GrLinkedin size={24} />
-              </a>
+            <div className="flex justify-center gap-4 items-center text-gray-700 dark:text-gray-200 h-14">
+              {_links.map((link) => (
+                <a
+                  key={link.url}
+                  href="mailto:timsinabibek960@gmail.com"
+                  target="_blank"
+                  referrerPolicy="no-referrer"
+                  className="dark:hover:text-primary hover:text-primary text-2xl"
+                >
+                  {link.icon}
+                </a>
+              ))}
             </div>
           </div>
         </div>

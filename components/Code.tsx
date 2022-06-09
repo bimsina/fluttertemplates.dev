@@ -16,7 +16,7 @@ function Code(params: CodeParams) {
       )}
 
       {params.fullCodeUrl && (
-        <div className="inline-flex items-center justify-center w-full">
+        <div className="inline-flex items-center justify-center w-full mt-4">
           <a
             aria-label="Download Code"
             href={params.fullCodeUrl}

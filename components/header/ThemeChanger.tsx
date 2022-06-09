@@ -93,13 +93,13 @@ const ThemeChanger = () => {
         <ul
           className={`${
             isComponentVisible ? "block" : "hidden"
-          } absolute text-gray-700 dark:text-gray-200 pt-1  z-10 bg-card dark:bg-darkCard shadow-lg -ml-32 rounded-lg p-2 mt-2`}
+          } absolute text-gray-700 dark:text-gray-200 pt-1  z-10 bg-card dark:bg-darkCard shadow-lg -ml-32 rounded-lg p-2 mt-2 text-md`}
         >
           <li>
             {_themeOptions.map((item) => (
               <button
                 key={item.value}
-                className="rounded-sm hover:bg-background dark:hover:bg-darkBackground py-2 px-4 whitespace-no-wrap text-left w-36 flex items-center gap-2 capitalize"
+                className="rounded-sm hover:bg-background dark:hover:bg-darkBackground  hover:bg-opacity-10 dark:hover:bg-opacity-10 py-2 px-4 whitespace-no-wrap text-left w-36 flex items-center gap-4 capitalize"
                 onClick={() => {
                   setTheme(item.value);
                   setIsComponentVisible(!isComponentVisible);

@@ -71,7 +71,7 @@ const commonNav: any[] = [
     href={GITHUB_LINK}
     target="_blank"
     rel="noopener noreferrer"
-    className="items-center text-sm text-gray-900 hover:text-primary dark:text-gray-50"
+    className="items-center text-sm text-gray-900 hover:text-primary dark:text-gray-50 dark:hover:text-primary"
   >
     GitHub
   </a>,

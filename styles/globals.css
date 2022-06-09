@@ -1,30 +1,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@layer {
-  .selectedTab {
-    @apply text-sm inline-flex p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500;
-  }
-  .unselectedTab {
-    @apply text-sm inline-flex p-4 text-gray-600 rounded-t-lg dark:text-gray-500;
-  }
-
-  body {
-    @apply bg-background dark:bg-darkBackground;
-    padding: 0;
-    margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, Segoe UI, Roboto, Oxygen,
-      Fira Code Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    scroll-behavior: smooth;
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-}

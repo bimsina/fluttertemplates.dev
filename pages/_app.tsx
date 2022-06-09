@@ -9,7 +9,11 @@ import { ThemeProvider } from "next-themes";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider attribute="class">
+    <ThemeProvider
+      //  forcedTheme={Component.theme || undefined}
+      // defaultTheme="light"
+      attribute="class"
+    >
       <Header />
       <div className="min-h-screen pt-20">
         <Component {...pageProps} />

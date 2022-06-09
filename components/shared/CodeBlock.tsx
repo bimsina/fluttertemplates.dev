@@ -22,9 +22,6 @@ function CodeBlock(params: CodeBlockParams) {
 
   useEffect(() => {
     setMounted(true);
-  }, []);
-
-  useEffect(() => {
     fetch(params.url)
       .then((response) => response.text())
       .then((textString) => {
@@ -33,7 +30,7 @@ function CodeBlock(params: CodeBlockParams) {
   }, [params.url]);
 
   const renderSyntaxHighlighter = () => {
-    if (!mounted) return <></>;
+    if (!mounted) return null;
 
     return (
       <SyntaxHighlighter
@@ -90,20 +87,8 @@ function CodeBlock(params: CodeBlockParams) {
           <CircularProgress />
         </div>
       )}
-
-      {/* <Snackbar
-        open={open}
-        autoHideDuration={4000}
-        onClose={handleClose}
-        message="Code copied successfully!"
-        action={_snackBarAction}
-        TransitionComponent={SlideTransition}
-      /> */}
     </div>
   );
 }
 
-// function SlideTransition(props: SlideProps) {
-//   return <Slide {...props} direction="right" />;
-// }
 export default CodeBlock;
