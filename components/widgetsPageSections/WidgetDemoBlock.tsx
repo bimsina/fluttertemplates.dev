@@ -37,17 +37,11 @@ function WidgetDemoBlock(props: Widget) {
 
   function renderTabs(selectedTab: number) {
     return (
-      <div
-        style={{
-          position: "relative",
-          width: "100%",
-          height: "100%",
-        }}
-      >
+      <div className="relative w-full h-full">
         <div
           className={`flex flex-row justify-center absolute w-full h-full rounded-md ${
             selectedTab === 0
-              ? "pointer-events-auto bg-card"
+              ? "pointer-events-auto"
               : "opacity-0 pointer-events-none bg-transparent"
           }`}
         >
@@ -75,12 +69,7 @@ function WidgetDemoBlock(props: Widget) {
   }
 
   return (
-    <div
-      id={props.id}
-      style={{
-        scrollMargin: "70px 0 0 0",
-      }}
-    >
+    <div id={props.id} className="scroll-m-16 mb-8">
       <div className="grid grid-cols-1 gap-2">
         <div className="p-4 border rounded-lg border-gray-200">
           <div className="flex md:flex-row flex-col items-center justify-center h-full">
