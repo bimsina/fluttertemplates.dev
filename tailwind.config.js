@@ -14,11 +14,11 @@ module.exports = {
       purple: colors.purple,
       black: colors.black,
       transparent: colors.transparent,
-      primary: "#1f27cf",
+      primary: "#0669d7",
       primaryLight: "#e2e4f4",
       secondary: "#0468d7",
       background: "#ffffff",
-      card: "#f1f3f4",
+      card: "#f8f9fa",
     },
     extend: {
       aspectRatio: {

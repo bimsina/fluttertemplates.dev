@@ -77,6 +77,7 @@ export default function Docs({
           title: subgroup.matter.title,
           widgets: _widgets,
           id: subgroup.id,
+          image: subgroup.matter.image,
           description: subgroup.matter.description ?? "",
         };
         if (_selectedSubGroupId === subgroup.id) {
@@ -246,17 +247,18 @@ export default function Docs({
                             className="cursor-pointer"
                             key={`widget_subgroup${idx}`}
                           >
-                            <div className="bg-card rounded-lg border-2 border-card hover:border-primary transition-all">
-                              {/* <img
-                                className="rounded-t-lg"
-                                src="https://via.placeholder.com/300x200"
-                                alt=""
-                              /> */}
+                            <div className="bg-white rounded-lg border-2 border-card hover:border-primary transition-all">
+                              <img
+                                className="rounded-t-lg bg-primaryLight bg-opacity-10"
+                                src={
+                                  subgroup.image ?? "images/widgets/default.svg"
+                                }
+                                alt={subgroup.title}
+                              />
 
                               <h5 className="text-md tracking-tight text-gray-900 p-4">
                                 {subgroup.title}
                               </h5>
-
                               {/* <p className="truncate px-2 pb-2 text-sm text-gray-500">
                                 {subgroup.description}
                               </p> */}
