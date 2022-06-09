@@ -147,8 +147,8 @@ const CustomTabs = (props: TemplateCardProps) => {
   ]);
   return (
     <div className="flex flex-col">
-      <div className="border-b border-gray-200 dark:border-gray-700">
-        <ul className="flex flex-wrap -mb-px">
+      <div className="border-b border-gray-200 dark:border-gray-700 mb-2">
+        <ul className="flex flex-wrap">
           {_tabs.map((tab, index) => (
             <li className="mr-2 cursor-pointer" key={`tab${index}`}>
               <button
@@ -156,7 +156,7 @@ const CustomTabs = (props: TemplateCardProps) => {
                 className={
                   selectedTab === index
                     ? "text-sm inline-flex p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500"
-                    : "text-sm inline-flex p-4 text-gray-600 rounded-t-lg dark:text-gray-500;"
+                    : "text-sm inline-flex p-4 text-gray-600 rounded-t-lg dark:text-gray-200"
                 }
               >
                 <div className="text-xl mr-2">{tab.icon}</div>

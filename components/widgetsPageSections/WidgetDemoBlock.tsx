@@ -69,7 +69,7 @@ function WidgetDemoBlock(props: Widget) {
   }
 
   return (
-    <div id={props.id} className="scroll-m-16 mb-8">
+    <div id={props.id} className="mb-8">
       <div className="grid grid-cols-1 gap-2">
         <div className="p-4 border rounded-lg border-gray-200">
           <div className="flex md:flex-row flex-col items-center justify-center h-full">
@@ -98,7 +98,7 @@ function WidgetDemoBlock(props: Widget) {
                   href={props.codeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xl text-gray-600 p-2"
+                  className="text-xl text-gray-600 dark:text-gray-200 p-2"
                 >
                   <FaGithub />
                 </a>
@@ -131,7 +131,7 @@ function WidgetDemoBlock(props: Widget) {
               className={` h-10 w-10 inline-flex items-center justify-center rounded-lg mx-1 ${
                 responsiveSize.value === item.value
                   ? "bg-primary text-primary bg-opacity-10"
-                  : "bg-card"
+                  : "bg-card dark:bg-darkCard"
               }`}
             >
               {item.icon}

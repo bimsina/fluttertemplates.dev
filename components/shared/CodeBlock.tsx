@@ -1,8 +1,9 @@
 import copy from "copy-to-clipboard";
+import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { MdCopyAll, MdDone } from "react-icons/md";
 import SyntaxHighlighter from "react-syntax-highlighter";
-import { github } from "react-syntax-highlighter/dist/cjs/styles/hljs";
+import { github, dracula } from "react-syntax-highlighter/dist/cjs/styles/hljs";
 import CircularProgress from "./CircularProgress";
 
 interface CodeBlockParams {
@@ -11,20 +12,17 @@ interface CodeBlockParams {
 }
 
 function CodeBlock(params: CodeBlockParams) {
+  const { theme, systemTheme } = useTheme();
+
   const [code, setCode] = useState("");
 
   const [copied, setCopied] = React.useState(false);
 
-  const handleClose = (
-    event: React.SyntheticEvent | Event,
-    reason?: string
-  ) => {
-    if (reason === "clickaway") {
-      return;
-    }
+  const [mounted, setMounted] = useState(false);
 
-    setCopied(false);
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     fetch(params.url)
@@ -34,18 +32,31 @@ function CodeBlock(params: CodeBlockParams) {
       });
   }, [params.url]);
 
-  // const _snackBarAction = (
-  //   <React.Fragment>
-  //     <IconButton
-  //       size="small"
-  //       aria-label="close"
-  //       color="inherit"
-  //       onClick={handleClose}
-  //     >
-  //       <Close fontSize="small" />
-  //     </IconButton>
-  //   </React.Fragment>
-  // );
+  const renderSyntaxHighlighter = () => {
+    if (!mounted) return <></>;
+
+    return (
+      <SyntaxHighlighter
+        language="dart"
+        style={
+          theme === "system"
+            ? systemTheme === "dark"
+              ? dracula
+              : github
+            : theme === "dark"
+            ? dracula
+            : github
+        }
+        showLineNumbers={false}
+        customStyle={{
+          maxHeight: `${params.height}`,
+          fontSize: "0.95rem",
+        }}
+      >
+        {code}
+      </SyntaxHighlighter>
+    );
+  };
 
   return (
     <div>
@@ -54,18 +65,7 @@ function CodeBlock(params: CodeBlockParams) {
           position: "relative",
         }}
       >
-        <SyntaxHighlighter
-          language="dart"
-          style={github}
-          showLineNumbers={false}
-          customStyle={{
-            maxHeight: `${params.height}`,
-            fontSize: "0.95rem",
-          }}
-        >
-          {code}
-        </SyntaxHighlighter>
-
+        {renderSyntaxHighlighter()}
         <button
           aria-label="Copy"
           className="absolute top-4 right-5 rounded-lg bg-primaryLight p-2 flex items-center text-primary"

@@ -4,11 +4,11 @@ import { BUY_ME_A_COFFEE_LINK } from "../../constants";
 
 export default function Footer() {
   return (
-    <footer className="bg-background">
+    <footer className="bg-background dark:bg-darkBackground text-gray-900 dark:text-gray-50">
       <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8">
         <div className="flex flex-row justify-center items-center">
           <div className="flex flex-col items-center p-4">
-            <p className="text-base font-bold tracking-wide text-gray-900 mb-4">
+            <p className="text-base font-bold tracking-wide  mb-4">
               Support Us
             </p>
             <a
@@ -24,10 +24,8 @@ export default function Footer() {
             </a>
           </div>
           <div className="flex flex-col items-center p-4">
-            <p className="text-base font-bold tracking-wide text-gray-900 mb-4">
-              Contact
-            </p>
-            <div className="grid grid-cols-3 gap-2 text-gray-700">
+            <p className="text-base font-bold tracking-wide  mb-4">Contact</p>
+            <div className="grid grid-cols-3 gap-2 text-gray-700 dark:text-gray-200">
               <a
                 href="mailto:timsinabibek960@gmail.com"
                 target="_blank"
@@ -54,8 +52,8 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="flex flex-row justify-center py-8 border-t">
-          <p className="text-sm text-gray-600">
+        <div className="flex flex-row justify-center py-8 border-t dark:border-gray-600 border-gray-200">
+          <p className="text-sm text-gray-600 dark:text-gray-400">
             Made by
             <a
               href="https://twitter.com/bimsina"

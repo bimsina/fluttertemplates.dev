@@ -6,7 +6,7 @@ interface WidgetsListProps {
 }
 function WidgetsList(props: WidgetsListProps) {
   return (
-    <div className="w-full mt-4 ml-4">
+    <div className="w-full mt-4 px-4">
       <div className="grid grid-cols-1 w-full">
         {props.componentSubgroup.widgets.map((item, index) => (
           <WidgetDemoBlock

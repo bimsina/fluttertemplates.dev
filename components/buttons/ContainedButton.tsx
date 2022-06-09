@@ -4,37 +4,27 @@ interface CustomContainedButtonProps {
   href?: string;
   ariaLabel?: string;
   reverse?: boolean;
+  target?: string;
+  rel?: string;
 }
 
 function CustomContainedButton(props: CustomContainedButtonProps) {
-  // const styles = useStyles();
-
-  return (
-    <div className="inline-flex rounded-md">
-      <a
-        href={props.href}
-        className="inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-full text-white bg-primary"
-      >
-        <span>{props.label}</span>
-        {props.endIcon && <div className="ml-2">{props.endIcon}</div>}
+  const renderContent = () => {
+    return (
+      <div className="inline-flex rounded-md">
+        <div className="inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-full text-white bg-primary">
+          <span>{props.label}</span>
+          {props.endIcon && <div className="ml-2">{props.endIcon}</div>}
+        </div>
+      </div>
+    );
+  };
+  if (props.href) {
+    return (
+      <a href={props.href} target={props.target} rel={props.rel}>
+        {renderContent()}
       </a>
-    </div>
-    // <Button
-    //   variant="contained"
-    //   href={props.href}
-    //   disableElevation
-    //   endIcon={props.endIcon}
-    //   style={{
-    //     padding: "12px 32px",
-    //     backgroundColor: `${theme.palette.secondary.main}`,
-    //     color: "#ffffff",
-    //     textTransform: "capitalize",
-    //     fontWeight: "bold",
-    //     borderRadius: "10rem",
-    //   }}
-    // >
-    //   {props.label}
-    // </Button>
-  );
+    );
+  } else return <>{renderContent()}</>;
 }
 export default CustomContainedButton;

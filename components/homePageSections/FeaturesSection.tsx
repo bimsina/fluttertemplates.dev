@@ -37,7 +37,7 @@ const FeaturesSection = () => {
           </p>
         </div>
       </div>
-      <div className="grid gap-8 row-gap-10 lg:grid-cols-3">
+      <div className="grid gap-8 row-gap-10 md:grid-cols-3 grid-cols-2">
         {features.map((feature, index) => (
           <div
             className="sm:mx-auto sm:text-center max-w-sm flex flex-col justify-center items-center text-center"
@@ -49,7 +49,7 @@ const FeaturesSection = () => {
             <h6 className="mb-3 text-xl font-bold leading-5">
               {feature.title}
             </h6>
-            <p className="mb-3 text-md text-gray-900 max-w-xs">
+            <p className="mb-3 text-md text-gray-900 dark:text-gray-200 max-w-xs">
               {feature.description}
             </p>
           </div>

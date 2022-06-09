@@ -13,10 +13,10 @@ export default function CategoriesList(props: CategoriesListProps) {
     <div className="text-sm mb-4 overflow-x-auto flex-wrap flex flex-row ">
       {props.showAll && (
         <button
-          className={`border rounded-3xl px-4 py-2 my-1 text-xs cursor-pointer ml-2 md:ml-0  ${
+          className={`border rounded-3xl px-4 py-2 my-1 text-xs cursor-pointer ml-2 md:ml-0 transition-all ${
             props.selected === "all"
-              ? "bg-primary text-primary bg-opacity-10"
-              : "bg-background"
+              ? "bg-primary text-background border-primary"
+              : "bg-background dark:bg-darkBackground"
           }`}
           key="all"
           onClick={() => {
@@ -31,10 +31,10 @@ export default function CategoriesList(props: CategoriesListProps) {
       {props.categories.map((val) => {
         return (
           <a
-            className={`border rounded-3xl px-4 py-2 ml-2 my-1 text-xs cursor-pointer ${
+            className={`border rounded-3xl px-4 py-2 ml-2 my-1 text-xs cursor-pointer transition-all ${
               props.selected.toLowerCase() === val.toLowerCase()
-                ? "bg-primary text-primary bg-opacity-10"
-                : "bg-background"
+                ? "bg-primary text-background border-primary"
+                : "bg-background dark:bg-darkBackground"
             }`}
             key={val}
             href={props.onChange ? undefined : `/templates?catId=${val}`}

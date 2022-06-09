@@ -5,6 +5,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx}",
     "./components/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: "class",
   theme: {
     colors: {
       blue: colors.fuchsia,
@@ -19,6 +20,9 @@ module.exports = {
       secondary: "#0468d7",
       background: "#ffffff",
       card: "#f8f9fa",
+
+      darkBackground: "#0f172b",
+      darkCard: "#1e293b",
     },
     extend: {
       aspectRatio: {

@@ -154,7 +154,7 @@ export default function Docs({
       <>
         {selectedGroup && selectedSubGroup && (
           <nav
-            className="flex text-sm font-medium text-gray-700 hover:text-gray-900"
+            className="flex text-sm font-medium text-gray-700 dark:text-gray-200 px-4"
             aria-label="Breadcrumb"
           >
             <ol className="inline-flex items-center space-x-1 md:space-x-3">
@@ -171,12 +171,12 @@ export default function Docs({
                     <button className="py-2 px-4 rounded inline-flex items-center">
                       {selectedGroup.title}
                     </button>
-                    <ul className="absolute hidden text-gray-700 pt-1 group-hover:block z-10 bg-white shadow-lg">
+                    <ul className="absolute hidden text-gray-700 dark:text-gray-200 pt-1 group-hover:block z-10 bg-card dark:bg-darkCard shadow-lg ml-3">
                       {componentsResponse?.widget_groups.map((group) => {
                         return (
                           <li className="" key={`group${group.id}`}>
                             <button
-                              className="rounded-sm hover:bg-card py-2 px-4 block whitespace-no-wrap w-full text-left"
+                              className="rounded-sm hover:bg-background dark:hover:bg-darkBackground py-2 px-4 block whitespace-no-wrap w-full text-left"
                               onClick={() => {
                                 if (group.id === selectedGroup.id) return;
                                 setSelectedGroup(group);
@@ -199,7 +199,7 @@ export default function Docs({
                     <button className="py-2 px-4 rounded inline-flex items-center">
                       {selectedSubGroup.title}
                     </button>
-                    <ul className="absolute hidden text-gray-700 pt-1 group-hover:block z-10 bg-white shadow-lg">
+                    <ul className="absolute hidden text-gray-700 dark:text-gray-200 pt-1 group-hover:block z-10 bg-card dark:bg-darkCard shadow-lg ml-3">
                       {selectedGroup?.widget_subgroups.map((subgroup) => {
                         return (
                           <li className="" key={`group${subgroup.id}`}>
@@ -247,7 +247,7 @@ export default function Docs({
                             className="cursor-pointer"
                             key={`widget_subgroup${idx}`}
                           >
-                            <div className="bg-white rounded-lg border-2 border-card hover:border-primary transition-all">
+                            <div className="bg-background dark:bg-darkCard rounded-lg border-2 border-card dark:border-darkCard hover:border-primary dark:hover:border-primary transition-all">
                               <img
                                 className="rounded-t-lg bg-primaryLight bg-opacity-10"
                                 src={
@@ -256,7 +256,7 @@ export default function Docs({
                                 alt={subgroup.title}
                               />
 
-                              <h5 className="text-md tracking-tight text-gray-900 p-4">
+                              <h5 className="text-md tracking-tight text-gray-900 dark:text-gray-50 p-4">
                                 {subgroup.title}
                               </h5>
                               {/* <p className="truncate px-2 pb-2 text-sm text-gray-500">
