@@ -1,4 +1,4 @@
-(function initTheme() {
+function initTheme() {
   var theme = localStorage.getItem("theme") || "light";
   console.log("theme", theme);
   if (theme === "dark") {
@@ -6,4 +6,7 @@
     document.querySelector("html").classList.add("dark");
     document.querySelector("html").style.setProperty("color-scheme", "dark");
   }
-})();
+}
+
+console.log("Fetching theme");
+initTheme();
