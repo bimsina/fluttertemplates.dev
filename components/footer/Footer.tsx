@@ -50,7 +50,7 @@ export default function Footer() {
               {_links.map((link) => (
                 <a
                   key={link.url}
-                  href="mailto:timsinabibek960@gmail.com"
+                  href={link.url}
                   target="_blank"
                   referrerPolicy="no-referrer"
                   className="dark:hover:text-primary hover:text-primary text-2xl"

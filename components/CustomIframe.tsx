@@ -2,7 +2,6 @@ import React, { useEffect } from "react";
 import CircularProgress from "./shared/CircularProgress";
 interface CustomIframeProps {
   url: string;
-  style?: React.CSSProperties;
   showLoadingIndicator: boolean;
   className?: string | undefined;
 }
@@ -11,20 +10,24 @@ export default function CustomIframe(props: CustomIframeProps) {
   const [isLoading, setIsLoading] = React.useState(true);
 
   useEffect(() => {
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 10000);
+    startLoading();
   }, []);
 
+  function awaitFor10s(x: any) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(x);
+      }, 10000);
+    });
+  }
+
+  async function startLoading() {
+    var x = await awaitFor10s(10);
+    setIsLoading(false);
+  }
+
   return (
-    <div
-      className={props.className}
-      style={{
-        position: "relative",
-        width: "100%",
-        height: "100%",
-      }}
-    >
+    <div className="relative w-full h-full">
       {isLoading && props.showLoadingIndicator && (
         <div className="w-full h-full absolute">
           <CircularProgress />
@@ -32,13 +35,7 @@ export default function CustomIframe(props: CustomIframeProps) {
       )}
       <iframe
         src={props.url}
-        style={{
-          height: "100%",
-          width: "100%",
-          position: "absolute",
-          border: "none",
-          ...props.style,
-        }}
+        className={`w-full h-full absolute ${props.className}`}
       ></iframe>
     </div>
   );

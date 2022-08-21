@@ -11,7 +11,7 @@
   "author": "Bibek Timsina <timsinabibek960@gmail.com>",
   "scripts": {
     "dev": "next dev",
-    "build": "rm -rf public/sitemap.xml public/robots.txt && next build && next-sitemap && next export",
+    "build": "rm -rf public/sitemap.xml public/robots.txt && next build && next-sitemap",
     "start": "next start",
     "lint": "next lint",
     "deploy": "rm -rf public/sitemap.xml public/robots.txt && next build && next-sitemap && next export && gh-pages -d out/"

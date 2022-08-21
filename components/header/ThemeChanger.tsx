@@ -65,7 +65,12 @@ const ThemeChanger = () => {
     useComponentVisible(false);
 
   const renderThemeChanger = () => {
-    if (!mounted) return null;
+    if (!mounted)
+      return (
+        <div className="bg-card dark:bg-darkCard rounded-md w-8 h-8 ml-2">
+          <MdDesktopMac />
+        </div>
+      );
 
     const currentTheme = theme === "system" ? systemTheme : theme;
 
@@ -93,7 +98,7 @@ const ThemeChanger = () => {
         <ul
           className={`${
             isComponentVisible ? "block" : "hidden"
-          } absolute text-gray-700 dark:text-gray-200 pt-1  z-10 bg-card dark:bg-darkCard shadow-lg -ml-32 rounded-lg p-2 mt-2 text-md`}
+          } absolute text-gray-700 dark:text-gray-200 pt-1  z-10 bg-card dark:bg-darkCard shadow-lg lg:-ml-32 rounded-lg p-2 mt-2 text-md`}
         >
           <li>
             {_themeOptions.map((item) => (
@@ -106,7 +111,7 @@ const ThemeChanger = () => {
                 }}
               >
                 {item.icon}
-                {item.value}
+                <span className="text-sm"> {item.value}</span>
               </button>
             ))}
           </li>

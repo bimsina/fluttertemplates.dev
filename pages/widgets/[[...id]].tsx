@@ -204,7 +204,7 @@ export default function Docs({
                         return (
                           <li className="" key={`group${subgroup.id}`}>
                             <button
-                              className="rounded-sm hover:bg-card py-2 px-4 block whitespace-no-wrap w-full text-left"
+                              className="rounded-sm hover:bg-background dark:hover:bg-darkBackground py-2 px-4 block whitespace-no-wrap w-full text-left"
                               // href={`/widgets/${subgroup.id}`}
                               onClick={() => {
                                 if (subgroup.id === selectedSubGroup.id) return;
