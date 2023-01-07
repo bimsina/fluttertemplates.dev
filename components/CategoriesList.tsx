@@ -1,3 +1,4 @@
+import Link from "next/link";
 import React, { useEffect } from "react";
 
 interface CategoriesListProps {
@@ -30,14 +31,14 @@ export default function CategoriesList(props: CategoriesListProps) {
       )}
       {props.categories.map((val) => {
         return (
-          <a
+          <Link
             className={`border rounded-3xl px-4 py-2 ml-2 my-1 text-xs cursor-pointer transition-all ${
               props.selected.toLowerCase() === val.toLowerCase()
                 ? "bg-primary text-background border-primary"
                 : "bg-background dark:bg-darkBackground"
             }`}
             key={val}
-            href={props.onChange ? undefined : `/templates?catId=${val}`}
+            href={props.onChange ? {} : { pathname: `/templates?catId=${val}` }}
             onClick={() => {
               if (props.onChange) {
                 props.onChange(val);
@@ -45,7 +46,7 @@ export default function CategoriesList(props: CategoriesListProps) {
             }}
           >
             {`#${val}`}
-          </a>
+          </Link>
         );
       })}
     </div>

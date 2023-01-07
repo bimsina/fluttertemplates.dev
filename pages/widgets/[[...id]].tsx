@@ -20,7 +20,7 @@ import CircularProgress from "@/components/shared/CircularProgress";
 import WidgetsList from "@/components/widgetsPageSections/WidgetsList";
 import { MdChevronRight, MdHome } from "react-icons/md";
 
-export default function Docs({
+export default function WidgetsPage({
   postData,
   allDocsNestedData,
 }: {
@@ -138,7 +138,9 @@ export default function Docs({
             </div>
           ) : (
             <>
-              {renderContent()}
+              {!(selectedGroup && selectedSubGroup) && (
+                <>{renderWidgetGrid()}</>
+              )}
               {selectedGroup && selectedSubGroup && (
                 <WidgetsList componentSubgroup={selectedSubGroup} />
               )}
@@ -227,7 +229,7 @@ export default function Docs({
     );
   }
 
-  function renderContent() {
+  function renderWidgetGrid() {
     return (
       <>
         {!(selectedGroup && selectedSubGroup) && (

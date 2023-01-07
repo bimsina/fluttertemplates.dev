@@ -1,4 +1,3 @@
-import copy from "copy-to-clipboard";
 import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { MdCopyAll, MdDone } from "react-icons/md";
@@ -66,14 +65,8 @@ function CodeBlock(params: CodeBlockParams) {
         <button
           aria-label="Copy"
           className="absolute top-4 right-5 rounded-lg bg-primaryLight p-2 flex items-center text-primary"
-          // style={{
-          //   position: "absolute",
-          //   top: "16px",
-          //   right: "20px",
-          //   borderRadius: "10rem",
-          // }}
           onClick={() => {
-            copy(code);
+            navigator.clipboard.writeText(code);
             setCopied(!copied);
           }}
         >
