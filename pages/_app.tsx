@@ -1,5 +1,6 @@
 import Header from "@/components/header/Header";
 import Footer from "@/components/footer/Footer";
+import { Analytics } from "@vercel/analytics/react";
 
 import "@/styles/globals.css";
 
@@ -9,20 +10,23 @@ import { ThemeProvider } from "next-themes";
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider
-      //  forcedTheme={Component.theme || undefined}
-      // defaultTheme="light"
-      attribute="class"
-    >
-      <Header />
-      <div className="min-h-screen pt-20">
-        <Component {...pageProps} />
-      </div>
+    <>
+      <ThemeProvider
+        //  forcedTheme={Component.theme || undefined}
+        // defaultTheme="light"
+        attribute="class"
+      >
+        <Header />
+        <div className="min-h-screen pt-20">
+          <Component {...pageProps} />
+        </div>
 
-      <SubmitProposalSection />
+        <SubmitProposalSection />
 
-      <Footer />
-    </ThemeProvider>
+        <Footer />
+      </ThemeProvider>
+      <Analytics />
+    </>
   );
 }
 export default MyApp;

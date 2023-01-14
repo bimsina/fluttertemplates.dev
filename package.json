@@ -17,6 +17,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@vercel/analytics": "^0.1.8",
     "framer-motion": "^8.2.4",
     "fs-extra": "^11.1.0",
     "gray-matter": "^4.0.3",
