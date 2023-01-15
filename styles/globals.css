@@ -1,3 +1,19 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* width */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  @apply bg-background dark:bg-darkBackground !important;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  @apply bg-[#c1c1c1] dark:bg-[#6b6b6b] rounded-lg !important;
+}

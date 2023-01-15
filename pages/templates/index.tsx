@@ -5,6 +5,8 @@ import HomePageHead from "@/head/SEOHead";
 import { useRouter } from "next/dist/client/router";
 import CircularProgress from "@/components/shared/CircularProgress";
 import TemplatesGrid from "@/components/TemplatesGrid";
+import SubmitProposalSection from "@/components/shared/SubmitProposalSection";
+import Footer from "@/components/footer/Footer";
 
 export default function TemplatesList({
   templates,
@@ -28,7 +30,7 @@ export default function TemplatesList({
 
   return (
     <div className="inline-flex w-full justify-center">
-      <div className="max-w-6xl">
+      <div className="max-w-6xl w-full">
         <HomePageHead />
         {!category && (
           <div className="w-full min-h-[45vh]">
@@ -42,6 +44,10 @@ export default function TemplatesList({
             selectedCatId={catId as string}
           />
         )}
+
+        <SubmitProposalSection />
+
+        <Footer />
       </div>
     </div>
   );

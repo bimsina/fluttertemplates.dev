@@ -4,5 +4,5 @@ export default interface TemplateCardProps {
   id: string;
   frontmatter: TemplateFrontmatterProps;
   allCategories?: string[];
-  content?: any;
+  content?: string;
 }

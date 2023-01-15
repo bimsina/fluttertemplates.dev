@@ -65,11 +65,11 @@ function RenderBody(props: TemplateCardProps) {
 
 const CustomTabs = (props: TemplateCardProps) => {
   const [selectedTab, setSelectedTab] = useState(0);
-  const handleTabChange = (newValue: any) => {
+  const handleTabChange = (newValue: number) => {
     setSelectedTab(newValue);
   };
 
-  const _hasMdContent = props.content.toString().length != 0;
+  const _hasMdContent = (props.content ?? "").toString().length != 0;
   const _frontmatter = props.frontmatter;
 
   function renderTabs(selectedTab: number) {
@@ -78,7 +78,7 @@ const CustomTabs = (props: TemplateCardProps) => {
         <div className="w-full h-[80%] overflow-x-hidden overflow-y-auto">
           <ReactMarkdown
             className="m-2"
-            children={props.content}
+            children={props.content ?? ""}
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
             linkTarget="_blank"

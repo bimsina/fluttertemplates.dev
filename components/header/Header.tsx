@@ -64,7 +64,7 @@ const Header = () => {
 
 export default Header;
 
-const commonNav: any[] = [
+const commonNav = [
   <CustomFlatButton href="/widgets" label="Widgets" />,
   <CustomFlatButton href="/templates" label="Templates" />,
   <a

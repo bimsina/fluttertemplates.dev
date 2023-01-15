@@ -14,12 +14,12 @@ interface ResponsiveProp {
 const _responsiveValues: ResponsiveProp[] = [
   {
     label: "Mobile",
-    value: "400px",
+    value: "350px",
     icon: <FaMobileAlt />,
   },
   {
     label: "Tablet",
-    value: "650px",
+    value: "550px",
     icon: <FaTabletAlt />,
   },
   {

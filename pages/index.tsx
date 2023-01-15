@@ -1,6 +1,8 @@
+import Footer from "@/components/footer/Footer";
 import BrowseComponentsCTA from "@/components/homePageSections/BrowseComponentsCTA";
 import FeaturesSection from "@/components/homePageSections/FeaturesSection";
 import HeroSection from "@/components/homePageSections/Hero";
+import SubmitProposalSection from "@/components/shared/SubmitProposalSection";
 import HomePageHead from "@/head/SEOHead";
 
 import React from "react";
@@ -15,6 +17,8 @@ export default function Home() {
 
           <FeaturesSection />
           <BrowseComponentsCTA />
+          <SubmitProposalSection />
+          <Footer />
         </div>
       </div>
     </>

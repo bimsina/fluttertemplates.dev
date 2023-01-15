@@ -2,7 +2,7 @@ import { MdArrowForward } from "react-icons/md";
 import CustomContainedButton from "../buttons/ContainedButton";
 import CustomFlatButton from "../buttons/FlatButton";
 
-function HeroSection(props: any) {
+function HeroSection() {
   return (
     <div className="flex flex-col justify-between max-w-xl px-4 mx-auto lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl bg-background dark:bg-darkBackground">
       <div className="pt-16 mb-16 lg:mb-0 lg:pt-32 lg:max-w-lg lg:pr-5">

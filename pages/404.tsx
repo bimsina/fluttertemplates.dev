@@ -1,15 +1,16 @@
 import React from "react";
 import HomePageHead from "@/head/SEOHead";
+import Footer from "@/components/footer/Footer";
 
 export default function PageNotFoundPage() {
   return (
     <>
       <HomePageHead title="404 : Cant find the page you're looking for." />
-      <div className="flex items-center justify-center w-screen h-screen bg-secondary bg-opacity-5">
+      <div className="flex items-center justify-center h-screen bg-secondary bg-opacity-5">
         <div className="flex flex-col items-center">
           <h1 className="font-bold text-primary text-9xl">404</h1>
 
-          <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 md:text-3xl">
+          <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 dark:text-gray-300 md:text-3xl">
             <span className="text-red-500">Oops!</span> Page not found
           </h6>
 
@@ -25,6 +26,7 @@ export default function PageNotFoundPage() {
           </a>
         </div>
       </div>
+      <Footer />
     </>
   );
 }

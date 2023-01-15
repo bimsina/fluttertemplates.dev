@@ -11,19 +11,11 @@ import { ThemeProvider } from "next-themes";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
-      <ThemeProvider
-        //  forcedTheme={Component.theme || undefined}
-        // defaultTheme="light"
-        attribute="class"
-      >
+      <ThemeProvider attribute="class">
         <Header />
-        <div className="min-h-screen pt-20">
+        <div className="min-h-screen pt-20 scroll-smooth">
           <Component {...pageProps} />
         </div>
-
-        <SubmitProposalSection />
-
-        <Footer />
       </ThemeProvider>
       <Analytics />
     </>

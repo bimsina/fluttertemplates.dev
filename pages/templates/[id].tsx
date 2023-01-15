@@ -3,11 +3,14 @@ import TemplateCardProps from "@/models/template_card";
 import getTemplatePaths from "@/utils/getTemplatePaths";
 import { getTemplateListWithId, StaticProps } from "@/utils/getTemplateWithId";
 import TemplateDetailPage from "@/components/TemplateDetailPage";
+import Footer from "@/components/footer/Footer";
 
 export default function TemplatePage(props: TemplateCardProps) {
   return (
     <>
       <TemplateDetailPage {...props} />
+
+      <Footer />
     </>
   );
 }

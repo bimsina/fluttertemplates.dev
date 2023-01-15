@@ -1,6 +1,6 @@
 interface CustomContainedButtonProps {
   label: string;
-  endIcon?: any;
+  endIcon?: JSX.Element;
   href?: string;
   ariaLabel?: string;
   reverse?: boolean;

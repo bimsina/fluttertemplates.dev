@@ -20,6 +20,8 @@ module.exports = {
       secondary: "#0468d7",
       background: "#ffffff",
       card: "#f8f9fa",
+      borderColor: "#D0D0D0",
+      darkBorderColor: "#303030",
 
       darkBackground: "#0f172b",
       darkCard: "#1e293b",

@@ -22,7 +22,7 @@ let features: FeatureModel[] = [
 ];
 
 interface FeatureModel {
-  icon: any;
+  icon: JSX.Element;
   title: string;
   description: string;
 }

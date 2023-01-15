@@ -13,7 +13,7 @@ export default function CustomIframe(props: CustomIframeProps) {
     startLoading();
   }, []);
 
-  function awaitFor10s(x: any) {
+  function awaitFor10s(x: number) {
     return new Promise((resolve) => {
       setTimeout(() => {
         resolve(x);
