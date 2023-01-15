@@ -181,9 +181,9 @@ const _LeftSizeBarSubGroupItem = ({
   const [isExpanded, setIsExpanded] = useState(expanded);
   return (
     <div className="flex flex-col">
-      <Link href={`/widgets/${sub_group.id}`} className="flex">
+      <div className="flex">
         <div className="flex-1 text-gray-700 dark:text-gray-300">
-          {sub_group.title}
+          <Link href={`/widgets/${sub_group.id}`}>{sub_group.title}</Link>
         </div>
         <motion.button
           animate={{
@@ -196,7 +196,7 @@ const _LeftSizeBarSubGroupItem = ({
         >
           <MdArrowDropDown />
         </motion.button>
-      </Link>
+      </div>
 
       <AnimatePresence initial={false}>
         {isExpanded && (
