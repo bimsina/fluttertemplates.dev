@@ -69,9 +69,9 @@ function WidgetDemoBlock(props: Widget) {
   }
 
   return (
-    <div id={props.id} className="mb-8">
+    <div id={props.id} className="mb-8 scroll-mt-24">
       <div className="grid grid-cols-1 gap-2">
-        <div className="p-4 border rounded-lg border-gray-200">
+        <div className="p-4 border rounded-lg border-borderColor dark:border-darkBorderColor">
           <div className="flex md:flex-row flex-col items-center justify-center h-full">
             <h6 className="text-xl font-bold">{props.title}</h6>
             <div className="grow">{renderResponsiveSelector()}</div>

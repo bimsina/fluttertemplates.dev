@@ -49,6 +49,21 @@ export default function WidgetsListPage({
       ];
 
     setSelectedSubGroup(_selectedSubGroup);
+
+    // just a fix for not scrolling into section on load
+    // find what's causing the issue and remove this
+    const _pathWithSectionId = router.asPath.split("#");
+    if (_pathWithSectionId.length === 2) {
+      setTimeout(() => {
+        const id = _pathWithSectionId.pop();
+
+        if (!id) return;
+
+        document.getElementById(id)?.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 100);
+    }
   }, [group, subGroup]);
 
   return (
@@ -83,7 +98,7 @@ export default function WidgetsListPage({
 
   function leftSideBar() {
     return (
-      <aside className="w-56 h-screen overflow-y-auto flex flex-col fixed pr-3">
+      <aside className="w-56 h-screen overflow-y-auto flex flex-col fixed pr-3 pb-24 border-r border-borderColor dark:border-darkBorderColor">
         {componentsResponse.widget_groups.map((grp) => (
           <_LeftSizeBarGroupItem
             key={`group_${grp.id}`}
@@ -205,6 +220,7 @@ const _LeftSizeBarSubGroupItem = ({
                     className="text-gray-800 dark:text-gray-400 text-sm py-1 border-l pl-2 dark:border-transparent border-transparent hover:border-primary dark:hover:border-primary"
                     key={`widget_${widget.id}`}
                     href={`/widgets/${sub_group.id}#${id}`}
+                    scroll={false}
                   >
                     {widget.title}
                   </Link>
