@@ -8,7 +8,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { MdArrowDropDown } from "react-icons/md";
+import { MdArrowRight } from "react-icons/md";
 
 export default function WidgetsListPage({
   postData,
@@ -125,20 +125,22 @@ const _LeftSizeBarGroupItem = ({
   return (
     <div className="flex flex-col">
       <div
-        className="flex cursor-pointer"
+        className="flex cursor-pointer items-center  gap-2 hover:bg-card dark:hover:bg-darkCard rounded-md"
         onClick={() => {
           setIsExpanded(!isExpanded);
         }}
       >
-        <div className="flex-1 text-md font-semibold">{group.title}</div>
         <motion.div
           animate={{
-            rotate: isExpanded ? 180 : 0,
+            rotate: isExpanded ? 90 : 0,
           }}
           className="w-8 h-8 flex justify-center items-center text-2xl"
         >
-          <MdArrowDropDown />
+          <MdArrowRight />
         </motion.div>
+        <div className="flex-1 text-gray-700 dark:text-gray-200 w-full font-bold text-sm">
+          {group.title}
+        </div>
       </div>
 
       <AnimatePresence initial={false}>
@@ -155,7 +157,7 @@ const _LeftSizeBarGroupItem = ({
             }}
             transition={{ duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
-            <div className="flex flex-col border-b mb-4 dark:border-darkBorderColor border-borderColor">
+            <div className="flex flex-col border-b mb-4 pb-4 dark:border-darkBorderColor border-borderColor">
               {group.widget_subgroups.map((sub_group) => (
                 <_LeftSizeBarSubGroupItem
                   key={`subgroup_item_${sub_group.id}`}
@@ -181,21 +183,25 @@ const _LeftSizeBarSubGroupItem = ({
   const [isExpanded, setIsExpanded] = useState(expanded);
   return (
     <div className="flex flex-col">
-      <div className="flex">
-        <div className="flex-1 text-gray-700 dark:text-gray-300">
-          <Link href={`/widgets/${sub_group.id}`}>{sub_group.title}</Link>
-        </div>
+      <div className="flex items-center p-1 gap-2 w-full">
         <motion.button
           animate={{
-            rotate: isExpanded ? 180 : 0,
+            rotate: isExpanded ? 90 : 0,
           }}
           onClick={() => {
             setIsExpanded(!isExpanded);
           }}
-          className="w-8 h-8 flex justify-center items-center text-2xl"
+          className="w-6 h-6 flex justify-center items-center text-2xl hover:bg-card dark:hover:bg-darkCard rounded-md"
         >
-          <MdArrowDropDown />
+          <MdArrowRight />
         </motion.button>
+
+        <Link
+          href={`/widgets/${sub_group.id}`}
+          className="flex-1 text-gray-600 dark:text-gray-400 w-full font-semibold text-sm"
+        >
+          {sub_group.title}
+        </Link>
       </div>
 
       <AnimatePresence initial={false}>
@@ -212,12 +218,12 @@ const _LeftSizeBarSubGroupItem = ({
             }}
             transition={{ duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
-            <div className="flex flex-col pb-2 mb-4">
+            <div className="flex flex-col pl-6">
               {sub_group.widgets.map((widget) => {
                 const id = widget.id.split("/").pop();
                 return (
                   <Link
-                    className="text-gray-800 dark:text-gray-400 text-sm py-1 border-l pl-2 dark:border-transparent border-transparent hover:border-primary dark:hover:border-primary"
+                    className="transition-all text-gray-500 dark:text-gray-400 text-sm py-1 border-l pl-2 dark:border-darkBorderColor border-borderColor hover:border-primary dark:hover:border-primary hover:bg-card dark:hover:bg-darkCard rounded-r-md"
                     key={`widget_${widget.id}`}
                     href={`/widgets/${sub_group.id}#${id}`}
                     scroll={false}
