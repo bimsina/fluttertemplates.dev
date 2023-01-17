@@ -1,6 +1,6 @@
 import { WidgetsResponse } from "@/models/widget";
 
-import WidgetsListPage from "../../../components/WidgetsListPage";
+import WidgetsListPage from "../../../../components/WidgetsListPage";
 import {
   getWidgetStaticPaths,
   getWidgetStaticProps,

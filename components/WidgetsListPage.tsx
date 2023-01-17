@@ -24,7 +24,7 @@ export default function WidgetsListPage({
 
   const router = useRouter();
 
-  const { group, subGroup } = router.query;
+  const { group, subGroup, widgetId } = router.query;
 
   useEffect(() => {
     const _groupIndex = Math.max(
@@ -53,9 +53,9 @@ export default function WidgetsListPage({
     // just a fix for not scrolling into section on load
     // find what's causing the issue and remove this
     const _pathWithSectionId = router.asPath.split("#");
-    if (_pathWithSectionId.length === 2) {
+    if (_pathWithSectionId.length === 2 || widgetId) {
       setTimeout(() => {
-        const id = _pathWithSectionId.pop();
+        const id = widgetId ? widgetId.toString() : _pathWithSectionId.pop();
 
         if (!id) return;
 

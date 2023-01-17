@@ -14,12 +14,14 @@ export const getWidgetStaticProps = async ({
   params: {
     group?: string;
     subGroup?: string;
+    widgetId?: string;
   };
 }) => {
   let slugPath: string = "";
 
   if (params.group) slugPath = params.group;
   if (params.subGroup) slugPath = slugPath + "/" + params.subGroup;
+  if (params.widgetId) slugPath = slugPath + "/" + params.widgetId;
 
   if (!pageFileCache[slugPath]) {
     await getWidgetStaticPaths(isSubGroup);
@@ -50,6 +52,7 @@ export const getWidgetStaticPaths = async (isSubGroup?: boolean) => {
       params: {
         group: val.params.id[0],
         subGroup: val.params.id[1],
+        widgetId: val.params.id[2],
       },
     };
   });
