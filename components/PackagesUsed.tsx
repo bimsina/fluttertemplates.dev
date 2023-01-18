@@ -2,24 +2,22 @@ import React from "react";
 import { MdLink } from "react-icons/md";
 
 interface Props {
-  packages: string[];
+  packages?: string[];
 }
 
-export default function PackagesUsed(params: Props) {
+export default function PackagesUsed({ packages = [] }: Props) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-[80%] p-8">
-      {params.packages.length === 0 && (
+    <div className="flex flex-col items-center justify-center w-full h-[80%] p-8 overflow-y-auto">
+      {packages.length === 0 && (
         <img
           src="/no_packages.svg"
           alt="No Packages Used"
           className="h-[30vh]"
         />
       )}
-      {params.packages.length === 0 && (
-        <h4 className="font-bold">No Packages Used</h4>
-      )}
+      {packages.length === 0 && <h4 className="font-bold">No Packages Used</h4>}
 
-      {params.packages.map((packageName) => (
+      {packages.map((packageName) => (
         <div key={packageName}>
           <a
             href={packageName}

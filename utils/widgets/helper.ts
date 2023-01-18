@@ -156,6 +156,8 @@ function nestData(
         description: matterResult.data.description ?? null,
         rawCodeUrl: matterResult.data.rawCodeUrl ?? null,
         demoUrl: matterResult.data.demoUrl ?? null,
+        packages: matterResult.data.packages ?? [],
+        image: matterResult.data.image ?? "",
       };
 
       files.push({

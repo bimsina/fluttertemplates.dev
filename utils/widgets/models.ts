@@ -13,4 +13,5 @@ export interface MatterData {
   rawCodeUrl?: string;
   demoUrl?: string;
   codeUrl?: string;
+  packages?: string[];
 }

@@ -17,6 +17,7 @@ function WidgetsList(props: WidgetsListProps) {
             rawCodeUrl={item.rawCodeUrl}
             description={item.description}
             id={item.id.split("/").slice(-1)[0]}
+            packages={item.packages}
           />
         ))}
       </div>

@@ -20,6 +20,7 @@ export default async function getWidgetsList(): Promise<WidgetsResponse> {
           codeUrl: widget.matter.codeUrl!,
           rawCodeUrl: widget.matter.rawCodeUrl!,
           description: widget.matter.description ?? "",
+          packages: widget.matter.packages ?? [],
         };
       });
 

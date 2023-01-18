@@ -23,4 +23,5 @@ export interface Widget {
   demoUrl: string;
   codeUrl: string;
   rawCodeUrl: string;
+  packages?: string[];
 }

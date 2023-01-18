@@ -4,6 +4,7 @@ import CodeBlock from "../shared/CodeBlock";
 import { motion } from "framer-motion";
 import CustomIframe from "../CustomIframe";
 import { Widget } from "@/models/widget";
+import PackagesUsed from "../PackagesUsed";
 
 interface ResponsiveProp {
   value: string;
@@ -14,7 +15,7 @@ interface ResponsiveProp {
 const _responsiveValues: ResponsiveProp[] = [
   {
     label: "Mobile",
-    value: "350px",
+    value: "400px",
     icon: <FaMobileAlt />,
   },
   {
@@ -59,10 +60,18 @@ function WidgetDemoBlock(props: Widget) {
         </div>
         <div
           className={`w-full h-full absolute ${
-            selectedTab === 0 ? "opacity-0 -z-10" : ""
+            selectedTab !== 1 ? "opacity-0 -z-10" : ""
           }`}
         >
           <CodeBlock url={props.rawCodeUrl} height="70vh" />
+        </div>
+
+        <div
+          className={`w-full h-full absolute ${
+            selectedTab !== 2 ? "opacity-0 -z-10" : ""
+          }`}
+        >
+          <PackagesUsed packages={props.packages} />
         </div>
       </div>
     );
@@ -77,20 +86,23 @@ function WidgetDemoBlock(props: Widget) {
             <div className="grow">{renderResponsiveSelector()}</div>
 
             <div>
-              <div className="flex flex-row items-center justify-end">
-                {[0, 1].map((item) => (
+              <div className="flex flex-row items-center justify-end gap-1">
+                {((props.packages ?? []).length > 0
+                  ? ["Demo", "Code", "Packages"]
+                  : ["Demo", "Code"]
+                ).map((item, index) => (
                   <button
                     onClick={() => {
-                      setSelectedTab(item);
+                      setSelectedTab(index);
                     }}
-                    key={item}
-                    className={`px-3 py-1 rounded-3xl ${
-                      item === selectedTab
-                        ? "bg-primary text-primary bg-opacity-10"
+                    key={`Tab_${index}`}
+                    className={`px-3 py-1 rounded-3xl hover:bg-primary hover:text-white transition-all ${
+                      index === selectedTab
+                        ? "bg-primary text-primary bg-opacity-5"
                         : ""
                     }`}
                   >
-                    {item === 0 ? "Demo" : "Code"}
+                    {item}
                   </button>
                 ))}
 
@@ -128,7 +140,7 @@ function WidgetDemoBlock(props: Widget) {
                 setResponsiveSize(item);
               }}
               key={item.value}
-              className={` h-10 w-10 inline-flex items-center justify-center rounded-lg mx-1 ${
+              className={` h-10 w-10 inline-flex items-center justify-center rounded-lg mx-1 hover:bg-primary dark:hover:bg-primary hover:text-white transition-all ${
                 responsiveSize.value === item.value
                   ? "bg-primary text-primary bg-opacity-10"
                   : "bg-card dark:bg-darkCard"
