@@ -11,12 +11,12 @@ interface CategoriesListProps {
 
 export default function CategoriesList(props: CategoriesListProps) {
   return (
-    <div className="text-sm mb-4 overflow-x-auto flex-wrap flex flex-row ">
+    <div className="mb-4 flex flex-row flex-wrap overflow-x-auto text-sm ">
       {props.showAll && (
         <button
-          className={`border rounded-3xl px-4 py-2 my-1 text-xs cursor-pointer ml-2 md:ml-0 transition-all ${
+          className={`my-1 ml-2 cursor-pointer rounded-3xl border px-4 py-2 text-xs transition-all md:ml-0 ${
             props.selected === "all"
-              ? "bg-primary text-background border-primary"
+              ? "border-primary bg-primary text-background"
               : "bg-background dark:bg-darkBackground"
           }`}
           key="all"
@@ -32,9 +32,9 @@ export default function CategoriesList(props: CategoriesListProps) {
       {props.categories.map((val) => {
         return (
           <Link
-            className={`border rounded-3xl px-4 py-2 ml-2 my-1 text-xs cursor-pointer transition-all ${
+            className={`my-1 ml-2 cursor-pointer rounded-3xl border px-4 py-2 text-xs transition-all ${
               props.selected.toLowerCase() === val.toLowerCase()
-                ? "bg-primary text-background border-primary"
+                ? "border-primary bg-primary text-background"
                 : "bg-background dark:bg-darkBackground"
             }`}
             key={val}

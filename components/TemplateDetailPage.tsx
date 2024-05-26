@@ -31,10 +31,10 @@ function RenderBody(props: TemplateCardProps) {
   const _frontmatter = props.frontmatter;
 
   return (
-    <div className="flex h-full w-full flex-col md:flex-row max-w-6xl">
-      <div className="grow flex flex-col p-4 justify-start h-full ">
+    <div className="flex h-full w-full max-w-6xl flex-col md:flex-row">
+      <div className="flex h-full grow flex-col justify-start p-4 ">
         <div>
-          <h5 className="mt-4 ml-4 mb-1 font-bold text-xl">
+          <h5 className="mb-1 ml-4 mt-4 text-xl font-bold">
             {_frontmatter.title}
           </h5>
           {_frontmatter.categories && _frontmatter.categories.length > 0 && (
@@ -47,16 +47,16 @@ function RenderBody(props: TemplateCardProps) {
             </div>
           )}
         </div>
-        <div className="flex-grow min-h-[60vh] max-w-2xl w-full">
+        <div className="min-h-[60vh] w-full max-w-2xl flex-grow">
           <CustomTabs {...props} />
         </div>
       </div>
 
-      <div className="h-[85vh] aspect-phone">
+      <div className="aspect-phone h-[85vh]">
         <CustomIframe
           url={_frontmatter.demoUrl}
           showLoadingIndicator={true}
-          className="rounded-2xl m-3.5 border-2 border-black"
+          className="m-3.5 rounded-2xl border-2 border-black"
         />
       </div>
     </div>
@@ -75,7 +75,7 @@ const CustomTabs = (props: TemplateCardProps) => {
   function renderTabs(selectedTab: number) {
     if (_hasMdContent && selectedTab == 0) {
       return (
-        <div className="w-full h-[80%] overflow-x-hidden overflow-y-auto">
+        <div className="h-[80%] w-full overflow-y-auto overflow-x-hidden">
           <ReactMarkdown
             className="m-2"
             children={props.content ?? ""}
@@ -143,7 +143,7 @@ const CustomTabs = (props: TemplateCardProps) => {
   ]);
   return (
     <div className="flex flex-col">
-      <div className="border-b border-gray-200 dark:border-gray-700 mb-2">
+      <div className="mb-2 border-b border-gray-200 dark:border-gray-700">
         <ul className="flex flex-wrap">
           {_tabs.map((tab, index) => (
             <li className="mr-2 cursor-pointer" key={`tab${index}`}>
@@ -151,11 +151,11 @@ const CustomTabs = (props: TemplateCardProps) => {
                 onClick={() => handleTabChange(index)}
                 className={
                   selectedTab === index
-                    ? "text-sm inline-flex p-4 text-blue-600 rounded-t-lg border-b-2 border-blue-600 dark:text-blue-500 dark:border-blue-500"
-                    : "text-sm inline-flex p-4 text-gray-600 rounded-t-lg dark:text-gray-200"
+                    ? "inline-flex rounded-t-lg border-b-2 border-blue-600 p-4 text-sm text-blue-600 dark:border-blue-500 dark:text-blue-500"
+                    : "inline-flex rounded-t-lg p-4 text-sm text-gray-600 dark:text-gray-200"
                 }
               >
-                <div className="text-xl mr-2">{tab.icon}</div>
+                <div className="mr-2 text-xl">{tab.icon}</div>
                 {tab.label}
               </button>
             </li>
@@ -163,7 +163,7 @@ const CustomTabs = (props: TemplateCardProps) => {
         </ul>
       </div>
 
-      <div className="w-full h-full">{renderTabs(selectedTab)}</div>
+      <div className="h-full w-full">{renderTabs(selectedTab)}</div>
     </div>
   );
 };

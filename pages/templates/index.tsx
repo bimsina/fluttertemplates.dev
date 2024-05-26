@@ -30,10 +30,10 @@ export default function TemplatesList({
 
   return (
     <div className="inline-flex w-full justify-center">
-      <div className="max-w-6xl w-full">
+      <div className="w-full max-w-6xl">
         <HomePageHead />
         {!category && (
-          <div className="w-full min-h-[45vh]">
+          <div className="min-h-[45vh] w-full">
             <CircularProgress />
           </div>
         )}

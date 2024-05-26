@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <>
       <ThemeProvider attribute="class">
         <Header />
-        <div className="min-h-screen pt-20 scroll-smooth">
+        <div className="min-h-screen scroll-smooth pt-20">
           <Component {...pageProps} />
         </div>
       </ThemeProvider>

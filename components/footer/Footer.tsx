@@ -25,11 +25,11 @@ const _links: LinkData[] = [
 
 export default function Footer() {
   return (
-    <footer className="bg-background dark:bg-darkBackground text-gray-900 dark:text-gray-50">
-      <div className="px-4 pt-16 mx-auto sm:max-w-xl md:max-w-full md:px-24 lg:px-8">
-        <div className="flex flex-row justify-center items-center">
+    <footer className="bg-background text-gray-900 dark:bg-darkBackground dark:text-gray-50">
+      <div className="mx-auto px-4 pt-16 sm:max-w-xl md:max-w-full md:px-24 lg:px-8">
+        <div className="flex flex-row items-center justify-center">
           <div className="flex flex-col items-center p-4">
-            <p className="text-base font-bold tracking-wide  mb-4">
+            <p className="mb-4 text-base font-bold  tracking-wide">
               Support Us
             </p>
             <a
@@ -45,15 +45,15 @@ export default function Footer() {
             </a>
           </div>
           <div className="flex flex-col items-center p-4">
-            <p className="text-base font-bold tracking-wide  mb-4">Contact</p>
-            <div className="flex justify-center gap-4 items-center text-gray-700 dark:text-gray-200 h-14">
+            <p className="mb-4 text-base font-bold  tracking-wide">Contact</p>
+            <div className="flex h-14 items-center justify-center gap-4 text-gray-700 dark:text-gray-200">
               {_links.map((link) => (
                 <a
                   key={link.url}
                   href={link.url}
                   target="_blank"
                   referrerPolicy="no-referrer"
-                  className="dark:hover:text-primary hover:text-primary text-2xl"
+                  className="text-2xl hover:text-primary dark:hover:text-primary"
                 >
                   {link.icon}
                 </a>
@@ -61,7 +61,7 @@ export default function Footer() {
             </div>
           </div>
         </div>
-        <div className="flex flex-row justify-center py-8 border-t dark:border-gray-600 border-gray-200">
+        <div className="flex flex-row justify-center border-t border-gray-200 py-8 dark:border-gray-600">
           <p className="text-sm text-gray-600 dark:text-gray-400">
             Made by
             <a

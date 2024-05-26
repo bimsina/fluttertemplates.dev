@@ -4,7 +4,7 @@ import CustomContainedButton from "../buttons/ContainedButton";
 
 export default function SubmitProposalSection() {
   return (
-    <section className="flex flex-col items-center justify-center min-h-[50vh] bg-primary bg-opacity-5">
+    <section className="flex min-h-[50vh] flex-col items-center justify-center bg-primary bg-opacity-5">
       <h6 className="pb-4 text-xl font-semibold">
         Didn't find the template you were looking for?
       </h6>

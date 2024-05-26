@@ -15,7 +15,7 @@ export default function WidgetsPage({
 
       <div>
         <div className="inline-flex w-full justify-center">
-          <div className="max-w-5xl w-full">
+          <div className="w-full max-w-5xl">
             <>{renderWidgetGrid()}</>
           </div>
         </div>
@@ -34,10 +34,10 @@ export default function WidgetsPage({
             (widget, index: number) => {
               return (
                 <div className="flex flex-col" key={`widget_group${index}`}>
-                  <h4 className="font-bold mb-2 px-8 lg:px-0">
+                  <h4 className="mb-2 px-8 font-bold lg:px-0">
                     {widget.title}
                   </h4>
-                  <div className="grid lg:grid-cols-4 md:grid-cols-3 grid-cols-2 gap-4 pb-8 px-8 lg:px-0">
+                  <div className="grid grid-cols-2 gap-4 px-8 pb-8 md:grid-cols-3 lg:grid-cols-4 lg:px-0">
                     {widget.widget_subgroups.map((subgroup, idx) => {
                       return (
                         <a
@@ -45,7 +45,7 @@ export default function WidgetsPage({
                           className="cursor-pointer"
                           key={`widget_subgroup${idx}`}
                         >
-                          <div className="bg-background dark:bg-darkCard rounded-lg border-2 border-card dark:border-darkCard hover:border-primary dark:hover:border-primary transition-all">
+                          <div className="rounded-lg border-2 border-card bg-background transition-all hover:border-primary dark:border-darkCard dark:bg-darkCard dark:hover:border-primary">
                             <img
                               className="rounded-t-lg bg-primaryLight bg-opacity-10"
                               src={
@@ -54,7 +54,7 @@ export default function WidgetsPage({
                               alt={subgroup.title}
                             />
 
-                            <h5 className="text-md tracking-tight text-gray-900 dark:text-gray-50 p-4">
+                            <h5 className="text-md p-4 tracking-tight text-gray-900 dark:text-gray-50">
                               {subgroup.title}
                             </h5>
                           </div>
@@ -64,7 +64,7 @@ export default function WidgetsPage({
                   </div>
                 </div>
               );
-            }
+            },
           )}
         </div>
       </>

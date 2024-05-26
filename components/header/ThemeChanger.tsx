@@ -67,7 +67,7 @@ const ThemeChanger = () => {
   const renderThemeChanger = () => {
     if (!mounted)
       return (
-        <div className="bg-card dark:bg-darkCard rounded-md w-8 h-8 ml-2">
+        <div className="ml-2 h-8 w-8 rounded-md bg-card dark:bg-darkCard">
           <MdDesktopMac />
         </div>
       );
@@ -77,9 +77,9 @@ const ThemeChanger = () => {
     return (
       <div
         ref={ref}
-        className="group inline-block relative text-black dark:text-white items-center bg-card dark:bg-darkCard rounded-md w-8 h-8 ml-2 text-lg justify-center"
+        className="group relative ml-2 inline-block h-8 w-8 items-center justify-center rounded-md bg-card text-lg text-black dark:bg-darkCard dark:text-white"
       >
-        <div className="inline-flex justify-center items-center w-full h-full">
+        <div className="inline-flex h-full w-full items-center justify-center">
           <button
             onClick={() => {
               setIsComponentVisible(!isComponentVisible);
@@ -98,13 +98,13 @@ const ThemeChanger = () => {
         <ul
           className={`${
             isComponentVisible ? "block" : "hidden"
-          } absolute text-gray-700 dark:text-gray-200 pt-1  z-10 bg-card dark:bg-darkCard shadow-lg lg:-ml-32 rounded-lg p-2 mt-2 text-md`}
+          } text-md absolute z-10 mt-2  rounded-lg bg-card p-2 pt-1 text-gray-700 shadow-lg dark:bg-darkCard dark:text-gray-200 lg:-ml-32`}
         >
           <li>
             {_themeOptions.map((item) => (
               <button
                 key={item.value}
-                className="rounded-sm hover:bg-background dark:hover:bg-darkBackground  hover:bg-opacity-10 dark:hover:bg-opacity-10 py-2 px-4 whitespace-no-wrap text-left w-36 flex items-center gap-4 capitalize"
+                className="whitespace-no-wrap flex w-36 items-center gap-4 rounded-sm px-4 py-2 text-left capitalize hover:bg-background hover:bg-opacity-10 dark:hover:bg-darkBackground dark:hover:bg-opacity-10"
                 onClick={() => {
                   setTheme(item.value);
                   setIsComponentVisible(!isComponentVisible);

@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <>
       <HomePageHead />
-      <div className="inline-flex justify-center items-center w-full">
+      <div className="inline-flex w-full items-center justify-center">
         <div className="max-w-6xl">
           <HeroSection />
 

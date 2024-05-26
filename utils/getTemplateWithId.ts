@@ -13,7 +13,7 @@ export interface StaticProps {
 export async function getTemplateListWithId(props: StaticProps) {
   const markDownWithMeta = fs.readFileSync(
     path.join("templates", `${props.params.id}.md`),
-    "utf8"
+    "utf8",
   );
   const { data: frontmatter, content } = matter(markDownWithMeta);
 

@@ -1,10 +1,9 @@
 ---
 name: Request a new widget
 about: Create a widget request for fluttertemplates.dev
-title: ''
+title: ""
 labels: widget_request
-assignees: ''
-
+assignees: ""
 ---
 
 # Widget request

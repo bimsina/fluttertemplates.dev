@@ -8,12 +8,12 @@ const Header = () => {
   const [navbarOpen, setNavbarOpen] = React.useState(false);
   return (
     <>
-      <nav className="fixed flex justify-between py-4 w-full lg:px-48 md:px-12 px-4 content-center z-50 text-primary backdrop-blur-xl dark:backdrop-blur-xl bg-background dark:bg-darkBackground bg-opacity-50 dark:bg-opacity-50">
-        <div className="container px-4 mx-auto flex flex-wrap items-center justify-between">
-          <div className="w-full relative flex justify-between lg:w-auto lg:static lg:block lg:justify-start">
+      <nav className="fixed z-50 flex w-full content-center justify-between bg-background bg-opacity-50 px-4 py-4 text-primary backdrop-blur-xl dark:bg-darkBackground dark:bg-opacity-50 dark:backdrop-blur-xl md:px-12 lg:px-48">
+        <div className="container mx-auto flex flex-wrap items-center justify-between px-4">
+          <div className="relative flex w-full justify-between lg:static lg:block lg:w-auto lg:justify-start">
             <a
               href="/"
-              className="font-extrabold inline-flex justify-center items-center"
+              className="inline-flex items-center justify-center font-extrabold"
             >
               <img
                 src="/favicon.svg"
@@ -24,7 +24,7 @@ const Header = () => {
                   paddingRight: "0.5rem",
                 }}
               />
-              <div className="growing-underline text-primary text-xl font-bold">
+              <div className="growing-underline text-xl font-bold text-primary">
                 Flutter
                 <span className="ml-1 text-gray-800 dark:text-gray-50">
                   Templates
@@ -33,7 +33,7 @@ const Header = () => {
             </a>
 
             <button
-              className="text-primary cursor-pointer text-xl leading-none px-3 py-1 border border-solid border-transparent rounded bg-transparent block lg:hidden outline-none focus:outline-none"
+              className="block cursor-pointer rounded border border-solid border-transparent bg-transparent px-3 py-1 text-xl leading-none text-primary outline-none focus:outline-none lg:hidden"
               type="button"
               onClick={() => setNavbarOpen(!navbarOpen)}
             >
@@ -42,12 +42,12 @@ const Header = () => {
           </div>
           <div
             className={
-              "lg:flex flex-grow items-center" +
+              "flex-grow items-center lg:flex" +
               (navbarOpen ? " flex" : " hidden")
             }
             id="example-navbar-danger"
           >
-            <ul className="flex flex-col lg:flex-row list-none lg:ml-auto lg:justify-center lg:items-center">
+            <ul className="flex list-none flex-col lg:ml-auto lg:flex-row lg:items-center lg:justify-center">
               {commonNav.map((item, idx) => (
                 <li key={`nav_menu_${idx}`} className="m-2">
                   {item}

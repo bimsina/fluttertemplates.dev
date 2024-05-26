@@ -6,8 +6,8 @@ interface WidgetsListProps {
 }
 function WidgetsList(props: WidgetsListProps) {
   return (
-    <div className="w-full mt-4 px-4">
-      <div className="grid grid-cols-1 w-full">
+    <div className="mt-4 w-full px-4">
+      <div className="grid w-full grid-cols-1">
         {props.componentSubgroup.widgets.map((item, index) => (
           <WidgetDemoBlock
             key={`widget_${index}_${item.title}`}

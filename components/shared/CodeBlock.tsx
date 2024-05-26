@@ -40,8 +40,8 @@ function CodeBlock(params: CodeBlockParams) {
               ? dracula
               : github
             : theme === "dark"
-            ? dracula
-            : github
+              ? dracula
+              : github
         }
         showLineNumbers={false}
         customStyle={{
@@ -64,7 +64,7 @@ function CodeBlock(params: CodeBlockParams) {
         {renderSyntaxHighlighter()}
         <button
           aria-label="Copy"
-          className="absolute top-4 right-5 rounded-lg bg-primaryLight p-2 flex items-center text-primary"
+          className="absolute right-5 top-4 flex items-center rounded-lg bg-primaryLight p-2 text-primary"
           onClick={() => {
             navigator.clipboard.writeText(code);
             setCopied(!copied);
@@ -76,7 +76,7 @@ function CodeBlock(params: CodeBlockParams) {
       </div>
 
       {!code && (
-        <div className="inline-flex justify-center min-h-[40vh]">
+        <div className="inline-flex min-h-[40vh] justify-center">
           <CircularProgress />
         </div>
       )}

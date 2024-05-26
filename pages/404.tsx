@@ -6,11 +6,11 @@ export default function PageNotFoundPage() {
   return (
     <>
       <HomePageHead title="404 : Cant find the page you're looking for." />
-      <div className="flex items-center justify-center h-screen bg-secondary bg-opacity-5">
+      <div className="flex h-screen items-center justify-center bg-secondary bg-opacity-5">
         <div className="flex flex-col items-center">
-          <h1 className="font-bold text-primary text-9xl">404</h1>
+          <h1 className="text-9xl font-bold text-primary">404</h1>
 
-          <h6 className="mb-2 text-2xl font-bold text-center text-gray-800 dark:text-gray-300 md:text-3xl">
+          <h6 className="mb-2 text-center text-2xl font-bold text-gray-800 dark:text-gray-300 md:text-3xl">
             <span className="text-red-500">Oops!</span> Page not found
           </h6>
 
@@ -20,7 +20,7 @@ export default function PageNotFoundPage() {
 
           <a
             href="/"
-            className="px-8 py-4 font-semibold  rounded-lg text-primary border-primary border-2"
+            className="rounded-lg border-2 border-primary  px-8 py-4 font-semibold text-primary"
           >
             Go home
           </a>

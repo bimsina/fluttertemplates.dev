@@ -7,7 +7,7 @@ interface Props {
 
 export default function PackagesUsed({ packages = [] }: Props) {
   return (
-    <div className="flex flex-col items-center justify-center w-full h-[80%] p-8 overflow-y-auto">
+    <div className="flex h-[80%] w-full flex-col items-center justify-center overflow-y-auto p-8">
       {packages.length === 0 && (
         <img
           src="/no_packages.svg"
@@ -27,7 +27,7 @@ export default function PackagesUsed({ packages = [] }: Props) {
               color: "transparent",
             }}
           >
-            <button className="flex flex-row text-blue-400 justify-center items-center p-2">
+            <button className="flex flex-row items-center justify-center p-2 text-blue-400">
               <MdLink
                 fontSize="small"
                 style={{

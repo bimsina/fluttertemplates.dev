@@ -29,7 +29,7 @@ export default function WidgetsListPage({
   useEffect(() => {
     const _groupIndex = Math.max(
       0,
-      componentsResponse.widget_groups.findIndex((val) => val.id === group)
+      componentsResponse.widget_groups.findIndex((val) => val.id === group),
     );
 
     const _selectedGroup = componentsResponse.widget_groups[_groupIndex];
@@ -39,8 +39,8 @@ export default function WidgetsListPage({
     const _subGroupIndex = Math.max(
       0,
       _selectedGroup.widget_subgroups.findIndex(
-        (val) => val.id === _selectedGroup.id + "/" + subGroup
-      )
+        (val) => val.id === _selectedGroup.id + "/" + subGroup,
+      ),
     );
 
     const _selectedSubGroup =
@@ -82,7 +82,7 @@ export default function WidgetsListPage({
       <div className="inline-flex w-full justify-center px-8">
         <div className="flex w-full max-w-[100rem]">
           {leftSideBar()}
-          <div className="flex-1 w-full ml-56">
+          <div className="ml-56 w-full flex-1">
             {selectedGroup && selectedSubGroup && (
               <WidgetsList componentSubgroup={selectedSubGroup} />
             )}
@@ -98,7 +98,7 @@ export default function WidgetsListPage({
 
   function leftSideBar() {
     return (
-      <aside className="w-56 h-screen overflow-y-auto flex flex-col fixed pr-3 pb-24 border-r border-borderColor dark:border-darkBorderColor">
+      <aside className="fixed flex h-screen w-56 flex-col overflow-y-auto border-r border-borderColor pb-24 pr-3 dark:border-darkBorderColor">
         {componentsResponse.widget_groups.map((grp) => (
           <_LeftSizeBarGroupItem
             key={`group_${grp.id}`}
@@ -125,7 +125,7 @@ const _LeftSizeBarGroupItem = ({
   return (
     <div className="flex flex-col">
       <div
-        className="flex cursor-pointer items-center  gap-2 hover:bg-card dark:hover:bg-darkCard rounded-md"
+        className="flex cursor-pointer items-center  gap-2 rounded-md hover:bg-card dark:hover:bg-darkCard"
         onClick={() => {
           setIsExpanded(!isExpanded);
         }}
@@ -134,11 +134,11 @@ const _LeftSizeBarGroupItem = ({
           animate={{
             rotate: isExpanded ? 90 : 0,
           }}
-          className="w-8 h-8 flex justify-center items-center text-2xl"
+          className="flex h-8 w-8 items-center justify-center text-2xl"
         >
           <MdArrowRight />
         </motion.div>
-        <div className="flex-1 text-gray-700 dark:text-gray-200 w-full font-bold text-sm">
+        <div className="w-full flex-1 text-sm font-bold text-gray-700 dark:text-gray-200">
           {group.title}
         </div>
       </div>
@@ -157,7 +157,7 @@ const _LeftSizeBarGroupItem = ({
             }}
             transition={{ duration: 0.2, ease: [0.04, 0.62, 0.23, 0.98] }}
           >
-            <div className="flex flex-col border-b mb-4 pb-4 dark:border-darkBorderColor border-borderColor">
+            <div className="mb-4 flex flex-col border-b border-borderColor pb-4 dark:border-darkBorderColor">
               {group.widget_subgroups.map((sub_group) => (
                 <_LeftSizeBarSubGroupItem
                   key={`subgroup_item_${sub_group.id}`}
@@ -183,7 +183,7 @@ const _LeftSizeBarSubGroupItem = ({
   const [isExpanded, setIsExpanded] = useState(expanded);
   return (
     <div className="flex flex-col">
-      <div className="flex items-center p-1 gap-2 w-full">
+      <div className="flex w-full items-center gap-2 p-1">
         <motion.button
           animate={{
             rotate: isExpanded ? 90 : 0,
@@ -191,14 +191,14 @@ const _LeftSizeBarSubGroupItem = ({
           onClick={() => {
             setIsExpanded(!isExpanded);
           }}
-          className="w-6 h-6 flex justify-center items-center text-2xl hover:bg-card dark:hover:bg-darkCard rounded-md"
+          className="flex h-6 w-6 items-center justify-center rounded-md text-2xl hover:bg-card dark:hover:bg-darkCard"
         >
           <MdArrowRight />
         </motion.button>
 
         <Link
           href={`/widgets/${sub_group.id}`}
-          className="flex-1 text-gray-600 dark:text-gray-400 w-full font-semibold text-sm"
+          className="w-full flex-1 text-sm font-semibold text-gray-600 dark:text-gray-400"
         >
           {sub_group.title}
         </Link>
@@ -223,7 +223,7 @@ const _LeftSizeBarSubGroupItem = ({
                 const id = widget.id.split("/").pop();
                 return (
                   <Link
-                    className="transition-all text-gray-500 dark:text-gray-400 text-sm py-1 border-l pl-2 dark:border-darkBorderColor border-borderColor hover:border-primary dark:hover:border-primary hover:bg-card dark:hover:bg-darkCard rounded-r-md"
+                    className="rounded-r-md border-l border-borderColor py-1 pl-2 text-sm text-gray-500 transition-all hover:border-primary hover:bg-card dark:border-darkBorderColor dark:text-gray-400 dark:hover:border-primary dark:hover:bg-darkCard"
                     key={`widget_${widget.id}`}
                     href={`/widgets/${sub_group.id}#${id}`}
                     scroll={false}

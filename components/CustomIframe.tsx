@@ -27,15 +27,15 @@ export default function CustomIframe(props: CustomIframeProps) {
   }
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative h-full w-full">
       {isLoading && props.showLoadingIndicator && (
-        <div className="w-full h-full absolute">
+        <div className="absolute h-full w-full">
           <CircularProgress />
         </div>
       )}
       <iframe
         src={props.url}
-        className={`w-full h-full absolute ${props.className}`}
+        className={`absolute h-full w-full ${props.className}`}
       ></iframe>
     </div>
   );

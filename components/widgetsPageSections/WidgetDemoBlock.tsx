@@ -32,18 +32,18 @@ const _responsiveValues: ResponsiveProp[] = [
 
 function WidgetDemoBlock(props: Widget) {
   const [responsiveSize, setResponsiveSize] = React.useState(
-    _responsiveValues[0]
+    _responsiveValues[0],
   );
   const [selectedTab, setSelectedTab] = React.useState(0);
 
   function renderTabs(selectedTab: number) {
     return (
-      <div className="relative w-full h-full">
+      <div className="relative h-full w-full">
         <div
-          className={`flex flex-row justify-center absolute w-full h-full rounded-md ${
+          className={`absolute flex h-full w-full flex-row justify-center rounded-md ${
             selectedTab === 0
               ? "pointer-events-auto"
-              : "opacity-0 pointer-events-none bg-transparent"
+              : "pointer-events-none bg-transparent opacity-0"
           }`}
         >
           <motion.div
@@ -59,16 +59,16 @@ function WidgetDemoBlock(props: Widget) {
           </motion.div>
         </div>
         <div
-          className={`w-full h-full absolute ${
-            selectedTab !== 1 ? "opacity-0 -z-10" : ""
+          className={`absolute h-full w-full ${
+            selectedTab !== 1 ? "-z-10 opacity-0" : ""
           }`}
         >
           <CodeBlock url={props.rawCodeUrl} height="70vh" />
         </div>
 
         <div
-          className={`w-full h-full absolute ${
-            selectedTab !== 2 ? "opacity-0 -z-10" : ""
+          className={`absolute h-full w-full ${
+            selectedTab !== 2 ? "-z-10 opacity-0" : ""
           }`}
         >
           <PackagesUsed packages={props.packages} />
@@ -80,8 +80,8 @@ function WidgetDemoBlock(props: Widget) {
   return (
     <div id={props.id} className="mb-8 scroll-mt-24">
       <div className="grid grid-cols-1 gap-2">
-        <div className="p-4 border rounded-lg border-borderColor dark:border-darkBorderColor border-opacity-20 dark:border-opacity-20">
-          <div className="flex md:flex-row flex-col items-center justify-center h-full">
+        <div className="rounded-lg border border-borderColor border-opacity-20 p-4 dark:border-darkBorderColor dark:border-opacity-20">
+          <div className="flex h-full flex-col items-center justify-center md:flex-row">
             <h6 className="text-xl font-bold">{props.title}</h6>
             <div className="grow">{renderResponsiveSelector()}</div>
 
@@ -96,9 +96,9 @@ function WidgetDemoBlock(props: Widget) {
                       setSelectedTab(index);
                     }}
                     key={`Tab_${index}`}
-                    className={`px-3 py-1 rounded-3xl hover:bg-primary hover:text-white transition-all ${
+                    className={`rounded-3xl px-3 py-1 transition-all hover:bg-primary hover:text-white ${
                       index === selectedTab
-                        ? "bg-primary text-primary bg-opacity-5"
+                        ? "bg-primary bg-opacity-5 text-primary"
                         : ""
                     }`}
                   >
@@ -110,7 +110,7 @@ function WidgetDemoBlock(props: Widget) {
                   href={props.codeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xl text-gray-600 dark:text-gray-200 p-2"
+                  className="p-2 text-xl text-gray-600 dark:text-gray-200"
                 >
                   <FaGithub />
                 </a>
@@ -119,7 +119,7 @@ function WidgetDemoBlock(props: Widget) {
           </div>
         </div>
 
-        <div className="flex flex-row justify-center min-h-[500px] h-[70vh]">
+        <div className="flex h-[70vh] min-h-[500px] flex-row justify-center">
           {renderTabs(selectedTab)}
         </div>
       </div>
@@ -140,9 +140,9 @@ function WidgetDemoBlock(props: Widget) {
                 setResponsiveSize(item);
               }}
               key={item.value}
-              className={` h-10 w-10 inline-flex items-center justify-center rounded-lg mx-1 hover:bg-primary dark:hover:bg-primary hover:text-white transition-all ${
+              className={` mx-1 inline-flex h-10 w-10 items-center justify-center rounded-lg transition-all hover:bg-primary hover:text-white dark:hover:bg-primary ${
                 responsiveSize.value === item.value
-                  ? "bg-primary text-primary bg-opacity-10"
+                  ? "bg-primary bg-opacity-10 text-primary"
                   : "bg-card dark:bg-darkCard"
               }`}
             >

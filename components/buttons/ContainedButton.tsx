@@ -12,7 +12,7 @@ function CustomContainedButton(props: CustomContainedButtonProps) {
   const renderContent = () => {
     return (
       <div className="inline-flex rounded-md">
-        <div className="inline-flex items-center justify-center px-5 py-3 text-base font-medium rounded-full text-white bg-primary">
+        <div className="inline-flex items-center justify-center rounded-full bg-primary px-5 py-3 text-base font-medium text-white">
           <span>{props.label}</span>
           {props.endIcon && <div className="ml-2">{props.endIcon}</div>}
         </div>

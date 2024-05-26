@@ -4,9 +4,9 @@ import CustomFlatButton from "../buttons/FlatButton";
 
 function HeroSection() {
   return (
-    <div className="flex flex-col justify-between max-w-xl px-4 mx-auto lg:pt-16 lg:flex-row md:px-8 lg:max-w-screen-xl bg-background dark:bg-darkBackground">
-      <div className="pt-16 mb-16 lg:mb-0 lg:pt-32 lg:max-w-lg lg:pr-5">
-        <div className="max-w-xl mb-6">
+    <div className="mx-auto flex max-w-xl flex-col justify-between bg-background px-4 dark:bg-darkBackground md:px-8 lg:max-w-screen-xl lg:flex-row lg:pt-16">
+      <div className="mb-16 pt-16 lg:mb-0 lg:max-w-lg lg:pr-5 lg:pt-32">
+        <div className="mb-6 max-w-xl">
           <h1 className="mb-2 font-sans text-3xl font-bold tracking-tight text-primary sm:text-4xl sm:leading-none">
             Production-ready
           </h1>
@@ -30,7 +30,7 @@ function HeroSection() {
       <div>
         <img
           src="/home_hero.svg"
-          className="object-cover object-top w-full mx-auto lg:h-auto xl:mr-24 md:max-w-sm"
+          className="mx-auto w-full object-cover object-top md:max-w-sm lg:h-auto xl:mr-24"
           alt=""
         />
       </div>

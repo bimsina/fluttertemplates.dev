@@ -11,7 +11,7 @@ interface CustomPath {
 export async function getPathList(
   folder: string,
   ogPath: string,
-  pageFileCache: Record<string, string>
+  pageFileCache: Record<string, string>,
 ): Promise<CustomPath[]> {
   let nestedPaths = await getNestedPathList(folder, ogPath, pageFileCache);
   return flatten(nestedPaths).filter((x: any) => !!x);
@@ -22,13 +22,11 @@ export async function getPathList(
 export async function getNestedPathList(
   folder: string,
   ogPath: string,
-  pageFileCache: Record<string, string>
+  pageFileCache: Record<string, string>,
 ): Promise<any> {
   return (
     await Promise.all(
-      (
-        await fs.readdir(folder)
-      ).map(async (file) => {
+      (await fs.readdir(folder)).map(async (file) => {
         const joined = path.join(folder, file);
 
         //  Call recursively if a directory
@@ -58,7 +56,7 @@ export async function getNestedPathList(
         } else {
           return null;
         }
-      })
+      }),
     )
   ).filter((x) => !!x);
 }
@@ -90,7 +88,7 @@ export async function getSortedFlatData(folder: any) {
   const paths = await getPathList(
     fullFolderPath,
     fullFolderPath,
-    pageFileCache
+    pageFileCache,
   );
 
   const allPostsData: {
@@ -126,7 +124,7 @@ export async function getSortedFlatData(folder: any) {
 function nestData(
   paths: any,
   pageFileCache: Record<string, string>,
-  start = [""]
+  start = [""],
 ): NestedFolder {
   let files: NestedFolder[] = [];
   let startPath = pageFileCache[start.join("/")];
@@ -205,7 +203,7 @@ function nestData(
 }
 
 export async function getFolderNestedData(
-  folder: string
+  folder: string,
 ): Promise<NestedFolder> {
   let fullFolderPath = path.join(process.cwd(), "/" + folder);
 
@@ -213,7 +211,7 @@ export async function getFolderNestedData(
   const paths = await getNestedPathList(
     fullFolderPath,
     fullFolderPath,
-    pageFileCache
+    pageFileCache,
   );
 
   return nestData(paths, { ...pageFileCache });

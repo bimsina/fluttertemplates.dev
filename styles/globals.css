@@ -15,5 +15,5 @@
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  @apply bg-[#c1c1c1] dark:bg-[#6b6b6b] rounded-lg !important;
+  @apply rounded-lg bg-[#c1c1c1] dark:bg-[#6b6b6b] !important;
 }

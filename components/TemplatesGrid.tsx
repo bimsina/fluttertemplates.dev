@@ -17,12 +17,12 @@ export default function TemplatesGrid({
   shuffle?: boolean;
 }) {
   const [selectedCategory, setSelectedCategory] = useState(
-    selectedCatId ?? "all"
+    selectedCatId ?? "all",
   );
   const [categories, setCategories] = useState<string[]>([]);
 
   const [filteredTemplates, setFilteredTemplates] = useState(
-    templates.slice(0, limit ? 12 : templates.length)
+    templates.slice(0, limit ? 12 : templates.length),
   );
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export default function TemplatesGrid({
         />
       )}
 
-      <div className="grid md:grid-cols-4 sm:grid-cols-2 grid-cols-1 gap-4 pb-8 px-8 md:px-0">
+      <div className="grid grid-cols-1 gap-4 px-8 pb-8 sm:grid-cols-2 md:grid-cols-4 md:px-0">
         {filteredTemplates.map((template: TemplateCardProps, index: number) => {
           return (
             <TemplateCard

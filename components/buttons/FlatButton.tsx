@@ -9,7 +9,7 @@ function CustomFlatButton(props: CustomFlatButtonProps) {
     <a
       className={`items-center text-sm ${
         props.bold ? "font-bold" : "font-normal"
-      }  text-gray-900 dark:text-gray-50 hover:text-primary dark:hover:text-primary`}
+      }  text-gray-900 hover:text-primary dark:text-gray-50 dark:hover:text-primary`}
       href={props.href}
     >
       {props.label}
