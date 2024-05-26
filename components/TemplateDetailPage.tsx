@@ -81,7 +81,6 @@ const CustomTabs = (props: TemplateCardProps) => {
             children={props.content ?? ""}
             remarkPlugins={[remarkGfm]}
             rehypePlugins={[rehypeRaw]}
-            linkTarget="_blank"
             components={
               {
                 // img: ({ node, ...props }) => (
