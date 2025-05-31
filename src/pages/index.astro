@@ -1,0 +1,16 @@
+---
+import Hero from "@/components/Hero.astro";
+import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
+import BaseHtml from "@/components/BaseHtml.astro";
+import Footer from "@/components/Footer.astro";
+import WidgetsGrid from "@/components/WidgetsGrid.astro";
+---
+
+<BaseHtml title={SITE_TITLE} description={SITE_DESCRIPTION}>
+  <Hero />
+  <section class="max-w-6xl mx-auto px-4 py-8">
+    <h2 class="text-2xl font-bold">Browse Free Flutter Widgets</h2>
+    <WidgetsGrid />
+  </section>
+  <Footer />
+</BaseHtml>

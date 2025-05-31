@@ -1,0 +1,109 @@
+---
+import BaseHtml from "@/components/BaseHtml.astro";
+import SingleAppComponent from "@/components/SingleAppComponent";
+import { type CollectionEntry, getCollection } from "astro:content";
+import { render } from "astro:content";
+import fs from "fs/promises";
+import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
+import WidgetsNavSidebar from "@/components/WidgetsNavSidebar.astro";
+import Footer from "@/components/Footer.astro";
+
+export async function getStaticPaths() {
+  const widgets = await getCollection("widgets");
+
+  return widgets.map((widget) => ({
+    params: { slug: widget.id },
+    props: widget,
+  }));
+}
+type Props = CollectionEntry<"widgets">;
+
+const widget = Astro.props;
+
+const isGroup = widget.filePath?.endsWith("index.md");
+
+const widgets = await getCollection("widgets");
+const childrenColponents = isGroup
+  ? widgets.filter(
+      (c) =>
+        c.id.startsWith(widget.id) &&
+        c.id !== widget.id &&
+        (c.data.path ?? "").trim().length > 0
+    )
+  : [];
+
+const childrenCode = await Promise.all(
+  childrenColponents.map(async (c) => {
+    return {
+      id: c.id,
+      code_files: await Promise.all(
+        c.data.code_files.map(async (file) => {
+          const filePath = "flutter_apps/" + c.data.app + "/lib/" + file;
+          const fileContent = await fs.readFile(filePath, "utf8");
+          return {
+            file,
+            id: c.id,
+            content: fileContent,
+          };
+        })
+      ),
+    };
+  })
+);
+
+const code = await Promise.all(
+  widget.data.code_files.map(async (file) => {
+    const filePath = "flutter_apps/" + widget.data.app + "/lib/" + file;
+    const fileContent = await fs.readFile(filePath, "utf8");
+    return {
+      file,
+      content: fileContent,
+    };
+  })
+);
+
+const { Content } = await render(widget);
+
+const groupedWidgets = await getGroupedWidgets();
+---
+
+<BaseHtml title={widget.data.title} description={widget.data.description}>
+  <div class="flex flex-row w-full h-[calc(100vh-4rem)]">
+    <aside class="w-64 shrink-0 border-r overflow-y-scroll">
+      {groupedWidgets.map((group) => <WidgetsNavSidebar group={group} />)}
+    </aside>
+    <div class="flex-1 w-full h-full overflow-y-scroll">
+      <div class="max-w-6xl mx-auto px-4 py-8">
+        <main>
+          {
+            isGroup ? (
+              <div class="flex flex-col gap-4">
+                {childrenColponents.map((c) => (
+                  <div id={c.id} class="scroll-mt-10">
+                    <SingleAppComponent
+                      widget={c.data}
+                      code={
+                        childrenCode.find((cc) => cc.id === c.id)?.code_files
+                      }
+                      client:load
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div id={widget.id} class="scroll-mt-10">
+                <SingleAppComponent
+                  widget={widget.data}
+                  code={code}
+                  client:load
+                />
+              </div>
+            )
+          }
+        </main>
+      </div>
+
+      <Footer />
+    </div>
+  </div>
+</BaseHtml>

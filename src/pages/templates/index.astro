@@ -1,0 +1,35 @@
+---
+import BaseHtml from "@/components/BaseHtml.astro";
+import Footer from "@/components/Footer.astro";
+import { Image } from "astro:assets";
+import { getCollection } from "astro:content";
+
+const templates = await getCollection("templates");
+---
+
+<BaseHtml title="Templates">
+  <section class="px-8 min-h-[90vh] max-w-6xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {
+        templates.map((template) => (
+          <a
+            href={`/templates/${template.id}/`}
+            class="border-8 border-muted bg-card rounded-lg hover:bg-muted hover:text-primary hover:border-primary/10 flex flex-col items-center transition-all text-muted-foreground overflow-clip group"
+          >
+            {template.data.heroImage && (
+              <Image
+                class="h-48 w-full object-cover rounded-md"
+                src={template.data.heroImage}
+                alt={template.data.title}
+              />
+            )}
+            <div class="text-sm font-medium bg-transparent group-hover:bg-primary/10 group-hover:text-primary w-full p-2 text-center transition-all">
+              {template.data.title}
+            </div>
+          </a>
+        ))
+      }
+    </div>
+  </section>
+  <Footer />
+</BaseHtml>

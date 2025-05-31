@@ -1,51 +1,36 @@
 {
-  "compilerOptions": {
-    "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
-    "allowJs": true,
-    "skipLibCheck": true,
-    "strict": true,
-    "forceConsistentCasingInFileNames": true,
-    "noEmit": true,
-    "esModuleInterop": true,
-    "module": "esnext",
-    "moduleResolution": "node",
-    "resolveJsonModule": true,
-    "isolatedModules": true,
-    "jsx": "preserve",
-    "baseUrl": ".",
-    "paths": {
-      "@/components/*": [
-        "components/*"
-      ],
-      "@/head/*": [
-        "head/*"
-      ],
-      "@/models/*": [
-        "models/*"
-      ],
-      "@/styles/*": [
-        "styles/*"
-      ],
-      "@/utils/*": [
-        "utils/*"
-      ],
-      "@/pages/*": [
-        "pages/*"
-      ]
-    },
-    "incremental": true
-  },
+  "extends": "astro/tsconfigs/strict",
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
+    ".astro/types.d.ts",
+    "**/*"
   ],
   "exclude": [
-    "node_modules"
-  ]
+    "dist"
+  ],
+  "compilerOptions": {
+    "strictNullChecks": true,
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "src/*"
+      ],
+      "@components/*": [
+        "src/components/*"
+      ],
+      "@layouts/*": [
+        "src/layouts/*"
+      ],
+      "@utils/*": [
+        "src/utils/*"
+      ],
+      "@styles/*": [
+        "src/styles/*"
+      ],
+      "@assets/*": [
+        "src/assets/*"
+      ]
+    },
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  }
 }

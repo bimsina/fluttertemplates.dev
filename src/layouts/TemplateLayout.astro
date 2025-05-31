@@ -1,0 +1,56 @@
+---
+import type { CollectionEntry } from "astro:content";
+import BaseHead from "../components/BaseHead.astro";
+import Header from "../components/Header.astro";
+import Footer from "../components/Footer.astro";
+import FormattedDate from "../components/FormattedDate.astro";
+import BaseHtml from "@/components/BaseHtml.astro";
+import FlutterAppIframe from "@/components/FlutterAppIframe";
+import { Icon } from "astro-icon/components";
+
+type Props = CollectionEntry<"templates">["data"];
+
+const { title, description, heroImage, demoUrl, githubUrl } = Astro.props;
+---
+
+<BaseHtml title={title} description={description} image={heroImage?.src}>
+  <div
+    class="flex gap-2 w-full max-w-screen-lg mx-auto md:h-[calc(100vh-4rem)] flex-col-reverse md:flex-row"
+  >
+    <div
+      class="flex-1 w-full flex items-start flex-col overflow-auto p-4 gap-4"
+    >
+      <h1 class="text-2xl font-bold">{title}</h1>
+      <p class="text-sm text-muted-foreground">{description}</p>
+      {
+        githubUrl && (
+          <a
+            href={githubUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="bg-primary text-primary-foreground px-2 py-1 rounded-md flex items-center gap-1"
+          >
+            <Icon name="mdi:code" class="w-4 h-4" />
+            Get Source Code
+          </a>
+        )
+      }
+      <article class="prose dark:prose-invert">
+        <slot />
+      </article>
+    </div>
+    <div class="flex-1 w-full flex items-center justify-center p-4">
+      <div
+        class="relative bg-card rounded-[3rem] overflow-clip border-4 border-border shadow-xl w-[280px] md:w-[320px]"
+      >
+        <FlutterAppIframe
+          path={demoUrl}
+          skipUrlFormatting
+          className="h-[600px] md:h-[680px] w-full rounded-[2.5rem]"
+        />
+      </div>
+    </div>
+  </div>
+
+  <Footer />
+</BaseHtml>

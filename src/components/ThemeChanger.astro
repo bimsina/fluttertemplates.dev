@@ -1,0 +1,54 @@
+---
+
+---
+
+<label for="theme-selector" class="sr-only">Theme</label>
+<select id="theme-selector" class="bg-background text-foreground text-sm">
+  <option value="light"> Light</option>
+  <option value="dark">Dark</option>
+  <option value="system">System</option>
+</select>
+
+<script is:inline>
+  if (!window.themeSelectors) {
+    const themeSelectors = document.querySelectorAll("#theme-selector");
+
+    function setTheme(theme) {
+      const isDark =
+        theme === "dark" ||
+        (theme === "system" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+      document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+
+      const codeTheme = isDark ? "github-dark-dimmed" : "github-light";
+      document.documentElement.setAttribute("data-theme", codeTheme);
+    }
+
+    if (themeSelectors) {
+      themeSelectors.forEach((themeSelector) => {
+        themeSelector.addEventListener("change", (e) => {
+          const theme = e.target.value;
+          setTheme(theme);
+
+          localStorage.setItem("theme", theme);
+        });
+      });
+
+      const getThemePreference = () => {
+        if (
+          typeof localStorage !== "undefined" &&
+          localStorage.getItem("theme")
+        ) {
+          return localStorage.getItem("theme");
+        }
+        return "system";
+      };
+
+      themeSelectors.forEach((themeSelector) => {
+        themeSelector.value = getThemePreference() || "system";
+
+        setTheme(themeSelector.value);
+      });
+    }
+  }
+</script>

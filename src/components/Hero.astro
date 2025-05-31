@@ -1,0 +1,134 @@
+---
+import { Icon } from "astro-icon/components";
+import { GITHUB_URL } from "@/consts";
+---
+
+<section
+  class="relative overflow-hidden bg-background min-h-[90vh] flex items-center"
+>
+  <div class="relative mx-auto max-w-7xl px-6 lg:px-8">
+    <div class="mx-auto max-w-4xl text-center">
+      <div
+        class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary mb-8 animate-fade-in-up"
+      >
+        <Icon name="mdi:rocket-launch" class="w-5 h-5" />
+        <span class="text-sm font-medium">Open Source Flutter Templates</span>
+      </div>
+
+      <h1
+        class="text-5xl font-bold tracking-tight text-gray-900 dark:text-white sm:text-7xl lg:text-8xl animate-fade-in-up animation-delay-200"
+      >
+        <span
+          class="bg-gradient-to-r from-blue-500 via-blue-400 to-cyan-400 bg-clip-text text-transparent"
+        >
+          Flutter Templates
+        </span>
+        <br />
+        <span class="relative">for Modern Apps</span>
+      </h1>
+
+      <p
+        class="mt-8 text-xl leading-8 max-w-3xl mx-auto animate-fade-in-up animation-delay-400 text-foreground"
+      >
+        A curated collection of production-ready Flutter templates and snippets.
+        Build beautiful apps faster with our open-source components, designed
+        for modern mobile and web applications.
+      </p>
+
+      <div
+        class="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up animation-delay-600"
+      >
+        <a
+          href="/widgets"
+          class="flex items-center gap-2 px-6 py-3 rounded-lg shadow transition-all duration-200 hover:-translate-y-1.5 border-2 border-primary bg-primary text-primary-foreground hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
+        >
+          <Icon name="mdi:rocket-launch" />
+          Explore Templates
+        </a>
+        <a
+          href={GITHUB_URL}
+          class="flex items-center gap-2 px-6 py-3 rounded-lg shadow transition-all duration-200 hover:-translate-y-1.5 border-2 border-muted bg-background hover:bg-muted focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary text-foreground"
+        >
+          <Icon name="mdi:github" />
+          Star on GitHub
+        </a>
+      </div>
+
+      <div
+        class="mt-16 flex items-center justify-center gap-8 text-sm text-muted-foreground animate-fade-in-up animation-delay-800"
+      >
+        <div class="flex items-center gap-2">
+          <Icon name="mdi:check-circle" class="w-5 h-5 text-primary" />
+          <span>Production Ready</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <Icon name="mdi:check-circle" class="w-5 h-5 text-primary" />
+          <span>Open Source</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <Icon name="mdi:check-circle" class="w-5 h-5 text-primary" />
+          <span>MIT License</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  @keyframes blob {
+    0%,
+    100% {
+      transform: translate(0px, 0px) scale(1);
+    }
+    33% {
+      transform: translate(20px, -20px) scale(1.05);
+    }
+    66% {
+      transform: translate(-10px, 10px) scale(0.97);
+    }
+  }
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  @keyframes draw {
+    0% {
+      stroke-dasharray: 0, 200;
+    }
+    100% {
+      stroke-dasharray: 200, 0;
+    }
+  }
+  .animate-blob {
+    animation: blob 7s infinite;
+  }
+  .animate-fade-in-up {
+    animation: fade-in-up 0.8s ease-out forwards;
+    opacity: 0;
+  }
+  .animate-draw {
+    animation: draw 2s ease-out 1s forwards;
+    stroke-dasharray: 0, 200;
+  }
+  .animation-delay-200 {
+    animation-delay: 200ms;
+  }
+  .animation-delay-400 {
+    animation-delay: 400ms;
+  }
+  .animation-delay-600 {
+    animation-delay: 600ms;
+  }
+  .animation-delay-800 {
+    animation-delay: 800ms;
+  }
+  .animation-delay-2000 {
+    animation-delay: 2s;
+  }
+</style>
