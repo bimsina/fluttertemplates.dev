@@ -1,0 +1,17 @@
+---
+import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
+import BaseHtml from "@/components/BaseHtml.astro";
+import Footer from "@/components/Footer.astro";
+import SearchComponent from "astro-pagefind/components/Search";
+---
+
+<BaseHtml title={"Search " + SITE_TITLE} description={SITE_DESCRIPTION}>
+  <section class="max-w-6xl mx-auto px-4 py-8 min-h-screen">
+    <SearchComponent
+      id="search"
+      className="pagefind-ui"
+      uiOptions={{ showImages: false }}
+    />
+  </section>
+  <Footer />
+</BaseHtml>

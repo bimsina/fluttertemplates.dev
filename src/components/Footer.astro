@@ -1,0 +1,120 @@
+---
+import { Icon } from "astro-icon/components";
+import { SITE_TITLE, GITHUB_URL, LINKEDIN_URL, TWITTER_URL } from "@/consts";
+import Logo from "./Logo.astro";
+
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-card">
+  <div class="mx-auto max-w-7xl px-6 py-12 sm:py-16 lg:px-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+      <!-- Brand Section -->
+      <div>
+        <div class="flex items-center space-x-2 mb-4">
+          <Logo />
+        </div>
+        <p class="text-foreground mb-6 max-w-md">
+          An open-source collection of production-ready Flutter templates and
+          snippets. Built by the community, for the community.
+        </p>
+        <div class="flex space-x-4">
+          <a
+            href={GITHUB_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group p-2 rounded-lg transition-colors duration-300 hover:bg-muted"
+            aria-label="GitHub"
+          >
+            <Icon
+              name="mdi:github"
+              class="w-5 h-5 text-foreground transition-colors duration-300 group-hover:text-primary"
+            />
+          </a>
+          <a
+            href={TWITTER_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group p-2 rounded-lg transition-colors duration-300 hover:bg-muted"
+            aria-label="Twitter"
+          >
+            <Icon
+              name="mdi:twitter"
+              class="w-5 h-5 text-foreground transition-colors duration-300 group-hover:text-primary"
+            />
+          </a>
+          <a
+            href={LINKEDIN_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            class="group p-2 rounded-lg transition-colors duration-300 hover:bg-muted"
+            aria-label="LinkedIn"
+          >
+            <Icon
+              name="mdi:linkedin"
+              class="w-5 h-5 text-foreground transition-colors duration-300 group-hover:text-primary"
+            />
+          </a>
+        </div>
+      </div>
+
+      <!-- Quick Links -->
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <h3
+            class="text-sm font-semibold text-foreground uppercase tracking-wider mb-4"
+          >
+            Resources
+          </h3>
+          <ul class="space-y-3">
+            <li>
+              <a
+                href="/widgets"
+                class="text-foreground hover:text-primary transition-colors duration-300"
+              >
+                Widgets
+              </a>
+            </li>
+            <li>
+              <a
+                href="/templates"
+                class="text-foreground hover:text-primary transition-colors duration-300"
+              >
+                Templates
+              </a>
+            </li>
+            <li>
+              <a
+                href="/search"
+                class="text-foreground hover:text-primary transition-colors duration-300"
+              >
+                Search
+              </a>
+            </li>
+            <li>
+              <a
+                href="/blog"
+                class="text-foreground hover:text-primary transition-colors duration-300"
+              >
+                Blog
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Section -->
+    <div
+      class="mt-12 pt-8 border-t border-border flex flex-col md:flex-row items-center justify-between"
+    >
+      <p class="text-foreground text-sm">
+        © {currentYear}
+        {SITE_TITLE}. Made with ❤️ for the Flutter community.
+      </p>
+      <div class="mt-4 md:mt-0">
+        <p class="text-sm text-muted-foreground">MIT Licensed. Open Source.</p>
+      </div>
+    </div>
+  </div>
+</footer>

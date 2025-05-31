@@ -1,0 +1,8 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "fluttertemplates",
+  "compatibility_date": "2025-05-24",
+  "assets": {
+    "directory": "./dist"
+  }
+}

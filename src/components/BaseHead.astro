@@ -1,0 +1,145 @@
+---
+import "../styles/global.css";
+import { SITE_TITLE } from "../consts";
+
+interface Props {
+  title: string;
+  description: string;
+  image?: string;
+}
+
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+
+const { title, description, image = "/og.png" } = Astro.props;
+---
+
+<!-- Global Metadata -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="sitemap" href="/sitemap-index.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title={SITE_TITLE}
+  href={new URL("rss.xml", Astro.site)}
+/>
+<meta name="generator" content={Astro.generator} />
+
+<!-- Font preloads -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
+  rel="stylesheet"
+/>
+
+<!-- Canonical URL -->
+<link rel="canonical" href={canonicalURL} />
+
+<!-- Primary Meta Tags -->
+<title>{title}</title>
+<meta name="title" content={title} />
+<meta name="description" content={description} />
+<meta name="robots" content="index, follow" />
+<meta name="author" content="Flutter Templates" />
+<meta
+  name="keywords"
+  content="Flutter, Flutter templates, Flutter UI, Flutter snippets, open source, production ready, mobile app development, Flutter components"
+/>
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="website" />
+<meta property="og:url" content={Astro.url} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:image" content={new URL(image, Astro.url)} />
+<meta property="og:site_name" content={SITE_TITLE} />
+<meta property="og:locale" content="en_US" />
+<meta property="og:image:alt" content={title} />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:site" content={SITE_TITLE} />
+<meta name="twitter:creator" content={SITE_TITLE} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />
+<meta name="twitter:image" content={new URL(image, Astro.url)} />
+<meta name="twitter:image:alt" content={title} />
+
+<script is:inline>
+  // Theme management system
+  const THEME_KEY = "theme";
+  const THEME_ATTRIBUTE = "data-theme";
+  const THEME_DARK = "dark";
+  const THEME_LIGHT = "light";
+
+  // Get system preference
+  const getSystemPreference = () => {
+    return window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? THEME_DARK
+      : THEME_LIGHT;
+  };
+
+  // Get stored theme or system preference
+  const getStoredTheme = () => {
+    if (typeof localStorage === "undefined") return THEME_LIGHT;
+    return localStorage.getItem(THEME_KEY) || getSystemPreference();
+  };
+
+  // Apply theme to document
+  const applyTheme = (theme) => {
+    document.documentElement.setAttribute(THEME_ATTRIBUTE, theme);
+    document.documentElement.classList.toggle("dark", theme === THEME_DARK);
+  };
+
+  // Initialize theme
+  const initializeTheme = () => {
+    const theme = getStoredTheme();
+    applyTheme(theme);
+  };
+
+  // Listen for system theme changes
+  const setupThemeListener = () => {
+    const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
+
+    const handleChange = (e) => {
+      if (!localStorage.getItem(THEME_KEY)) {
+        applyTheme(e.matches ? THEME_DARK : THEME_LIGHT);
+      }
+    };
+
+    if (mediaQuery.addEventListener) {
+      mediaQuery.addEventListener("change", handleChange);
+    } else {
+      // For older browsers
+      mediaQuery.addListener(handleChange);
+    }
+  };
+
+  // Setup theme persistence
+  const setupThemePersistence = () => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (mutation.attributeName === "class") {
+          const isDark = document.documentElement.classList.contains("dark");
+          localStorage.setItem(THEME_KEY, isDark ? THEME_DARK : THEME_LIGHT);
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class"],
+    });
+  };
+
+  // Initialize everything
+  if (typeof document !== "undefined") {
+    initializeTheme();
+    setupThemeListener();
+    setupThemePersistence();
+  }
+</script>

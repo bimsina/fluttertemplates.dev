@@ -1,9 +1,4 @@
-# *
 User-agent: *
 Allow: /
 
-# Host
-Host: https://fluttertemplates.dev
-
-# Sitemaps
-Sitemap: https://fluttertemplates.dev/sitemap.xml
+Sitemap: https://fluttertemplates.dev/sitemap-index.xml 

@@ -1,0 +1,21 @@
+---
+import TemplateLayout from "@/layouts/TemplateLayout.astro";
+import { type CollectionEntry, getCollection } from "astro:content";
+import { render } from "astro:content";
+
+export async function getStaticPaths() {
+  const templates = await getCollection("templates");
+  return templates.map((template) => ({
+    params: { slug: template.id },
+    props: template,
+  }));
+}
+type Props = CollectionEntry<"templates">;
+
+const template = Astro.props;
+const { Content } = await render(template);
+---
+
+<TemplateLayout {...template.data}>
+  <Content />
+</TemplateLayout>

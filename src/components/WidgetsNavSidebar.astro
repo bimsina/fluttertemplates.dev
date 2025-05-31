@@ -1,0 +1,122 @@
+---
+import type { WidgetGroupType } from "@/types";
+import WidgetsNav from "./WidgetsNavSidebar.astro";
+import { Icon } from "astro-icon/components";
+interface Props {
+  group: WidgetGroupType;
+  isNested?: boolean;
+}
+
+const { group, isNested } = Astro.props;
+---
+
+{
+  group.indexFile &&
+    (group.items.length > 0 ||
+      (group.children && group.children.length > 0)) && (
+      <ul class="pl-0 pt-2">
+        <li>
+          <div class="group-header">
+            <div class="flex items-center justify-between w-full">
+              <a
+                href={"/widgets/" + group.indexFile.id}
+                class="flex-1 font-medium px-4 py-3 text-foreground flex items-center gap-2 hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
+              >
+                {group.indexFile.data.icon && (
+                  <Icon
+                    name={group.indexFile.data.icon}
+                    class="size-4 shrink-0"
+                  />
+                )}
+                <span class="truncate">{group.indexFile.data.title}</span>
+              </a>
+              <button
+                class="p-2 text-foreground hover:bg-muted/50 rounded-md transition-colors cursor-pointer"
+                data-collapse-target={`group-${group.indexFile.id}`}
+                aria-expanded="true"
+                aria-label="Toggle section"
+              >
+                <Icon
+                  name="mdi:chevron-down"
+                  class="size-4 shrink-0 transition-transform duration-200"
+                  data-chevron
+                  style={{
+                    transform: "rotate(180deg)",
+                  }}
+                />
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="overflow-hidden transition-all duration-200 ease-in-out"
+            data-collapse-content={`group-${group.indexFile.id}`}
+            style="max-height: 1000px;"
+          >
+            <ul class={"pl-4 space-y-1 " + (!isNested ? "border-b pb-4" : "")}>
+              {group.items
+                .filter((item) => !item.filePath?.endsWith("index.md"))
+                .map((item) => (
+                  <li>
+                    <a
+                      href={`/widgets/${group.indexFile?.id}#${item.id}`}
+                      class="px-2 py-2 rounded-md hover:bg-muted/50 text-foreground flex items-center gap-2 transition-colors"
+                    >
+                      {item.data.icon && (
+                        <Icon name={item.data.icon} class="size-4 shrink-0" />
+                      )}
+                      <span class="truncate">{item.data.title}</span>
+                    </a>
+                  </li>
+                ))}
+              {group.children?.map((childGroup) => (
+                <li>
+                  <WidgetsNav group={childGroup} isNested />
+                </li>
+              ))}
+            </ul>
+          </div>
+        </li>
+      </ul>
+    )
+}
+
+<script>
+  // Add collapsible functionality
+  document.querySelectorAll("[data-collapse-target]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const targetId = button.getAttribute("data-collapse-target");
+      const content = document.querySelector(
+        `[data-collapse-content="${targetId}"]`
+      );
+      const chevron = button.querySelector("[data-chevron]");
+      const isExpanded = button.getAttribute("aria-expanded") === "true";
+
+      button.setAttribute("aria-expanded", String(!isExpanded));
+      if (chevron instanceof SVGElement) {
+        const currentTransform = chevron.style.transform || "";
+        chevron.style.transform = currentTransform.includes("rotate(0deg)")
+          ? "rotate(180deg)"
+          : "rotate(0deg)";
+      }
+
+      if (content instanceof HTMLElement) {
+        if (isExpanded) {
+          content.style.maxHeight = "0";
+        } else {
+          content.style.maxHeight = `${content.scrollHeight}px`;
+        }
+      }
+    });
+  });
+</script>
+
+<style>
+  .group-header button[aria-expanded="true"] + div {
+    max-height: 1000px;
+  }
+
+  .group-header button[aria-expanded="false"] + div {
+    max-height: 0;
+  }
+</style>

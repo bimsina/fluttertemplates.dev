@@ -1,0 +1,33 @@
+---
+import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
+
+const widgets = (await getCollection("widgets"))
+  .filter((cmp) => cmp.filePath?.endsWith("index.md") && !cmp.id.includes("/"))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+
+<div
+  class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto py-8"
+>
+  {
+    widgets.map((widget) => (
+      <a
+        href={`/widgets/${widget.id}/`}
+        class="border-8 border-muted bg-card rounded-lg hover:bg-muted hover:text-primary hover:border-primary/10 flex flex-col items-center transition-all text-muted-foreground overflow-clip group"
+      >
+        {widget.data.icon && (
+          <div class="p-8 bg-muted w-full flex items-center justify-center">
+            <Icon
+              name={widget.data.icon}
+              class="size-16 text-muted-foreground group-hover:text-primary"
+            />
+          </div>
+        )}
+        <div class="text-sm font-medium bg-transparent group-hover:bg-primary/10 group-hover:text-primary w-full p-2 text-center transition-all">
+          {widget.data.title}
+        </div>
+      </a>
+    ))
+  }
+</div>

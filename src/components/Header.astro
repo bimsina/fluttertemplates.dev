@@ -1,0 +1,136 @@
+---
+import HeaderLink from "./HeaderLink.astro";
+import Logo from "./Logo.astro";
+import ThemeChanger from "./ThemeChanger.astro";
+import { Icon } from "astro-icon/components";
+
+const links: { href: string; label: string }[] = [
+  { href: "/widgets", label: "Widgets" },
+  { href: "/templates", label: "Templates" },
+  { href: "/search", label: "Search" },
+];
+---
+
+<div class="relative">
+  <header class="fixed top-0 z-50 backdrop-blur-xl bg-transparent w-full">
+    <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Global">
+      <div class="flex h-16 items-center justify-between">
+        <div class="flex items-center">
+          <Logo />
+        </div>
+
+        <!-- Mobile menu button -->
+        <div class="flex lg:hidden">
+          <button
+            type="button"
+            class="inline-flex items-center justify-center rounded-md p-2 text-foreground hover:bg-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+            aria-controls="mobile-menu"
+            aria-expanded="false"
+            id="mobile-menu-button"
+          >
+            <span class="sr-only">Open main menu</span>
+            <Icon name="mdi:menu" class="h-6 w-6" id="menu-icon" />
+            <Icon name="mdi:close" class="hidden h-6 w-6" id="close-icon" />
+          </button>
+        </div>
+
+        <!-- Desktop menu -->
+        <div class="hidden lg:flex lg:items-center lg:space-x-4">
+          {
+            links.map((link) => (
+              <HeaderLink href={link.href}>{link.label}</HeaderLink>
+            ))
+          }
+          <div class="flex items-center space-x-4">
+            <ThemeChanger />
+          </div>
+        </div>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Mobile menu -->
+  <div
+    class="hidden lg:hidden fixed inset-0 z-[100]"
+    id="mobile-menu"
+    role="dialog"
+    aria-modal="true"
+  >
+    <!-- Background overlay -->
+    <div
+      class="fixed inset-0 bg-background/80 backdrop-blur-sm"
+      aria-hidden="true"
+    >
+    </div>
+
+    <!-- Menu panel -->
+    <div
+      class="fixed inset-y-0 right-0 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-border"
+    >
+      <div class="flex items-center justify-between">
+        <Logo />
+        <button
+          type="button"
+          class="rounded-md p-2 text-foreground hover:bg-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+          id="mobile-menu-close"
+        >
+          <span class="sr-only">Close menu</span>
+          <Icon name="mdi:close" class="h-6 w-6" />
+        </button>
+      </div>
+      <div class="mt-6 flow-root">
+        <div class="-my-6 divide-y divide-border">
+          <div class="space-y-2 py-6">
+            {
+              links.map((link) => (
+                <a
+                  href={link.href}
+                  class="block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-foreground hover:bg-muted hover:text-primary"
+                >
+                  {link.label}
+                </a>
+              ))
+            }
+          </div>
+          <div class="py-6">
+            <ThemeChanger />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const mobileMenuButton = document.getElementById("mobile-menu-button");
+  const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuClose = document.getElementById("mobile-menu-close");
+  const menuIcon = document.getElementById("menu-icon");
+  const closeIcon = document.getElementById("close-icon");
+
+  function toggleMenu() {
+    mobileMenu?.classList.toggle("hidden");
+    menuIcon?.classList.toggle("hidden");
+    closeIcon?.classList.toggle("hidden");
+    document.body.style.overflow = mobileMenu?.classList.contains("hidden")
+      ? ""
+      : "hidden";
+  }
+
+  mobileMenuButton?.addEventListener("click", toggleMenu);
+  mobileMenuClose?.addEventListener("click", toggleMenu);
+
+  // Close mobile menu when clicking outside
+  document.addEventListener("click", (event) => {
+    const isClickInside = mobileMenu?.contains(event.target as Node);
+    const isClickOnButton = mobileMenuButton?.contains(event.target as Node);
+
+    if (
+      !isClickInside &&
+      !isClickOnButton &&
+      !mobileMenu?.classList.contains("hidden")
+    ) {
+      toggleMenu();
+    }
+  });
+</script>
