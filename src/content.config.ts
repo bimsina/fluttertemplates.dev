@@ -1,6 +1,6 @@
 import { glob } from "astro/loaders";
 import { defineCollection, z } from "astro:content";
-import { appFolder, templateType } from "./types";
+import { appFolder, previewSizeEnum, templateType } from "./types";
 
 const blog = defineCollection({
   loader: glob({ base: "./src/content/blog", pattern: "**/*.{md,mdx}" }),
@@ -37,6 +37,7 @@ const widgets = defineCollection({
     path: z.string().optional(),
     icon: z.string().optional(),
     order: z.number().default(0),
+    previewSize: previewSizeEnum.default("mobile"),
     code_files: z
       .array(z.string())
       .default(["main.dart"])

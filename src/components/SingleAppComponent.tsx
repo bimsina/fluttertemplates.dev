@@ -1,4 +1,4 @@
-import type { InferEntrySchema } from "astro:content";
+import type { InferEntrySchema, z } from "astro:content";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 import {
   Code as CodeIcon,
@@ -17,6 +17,7 @@ import {
   oneDark,
   oneLight,
 } from "react-syntax-highlighter/dist/cjs/styles/prism";
+import type { previewSizeEnum } from "@/types";
 
 export default function SingleAppComponent({
   widget,
@@ -30,8 +31,8 @@ export default function SingleAppComponent({
 }) {
   const theme = useTheme();
   const [previewSize, setPreviewSize] = useState<
-    "mobile" | "tablet" | "desktop"
-  >("mobile");
+    z.infer<typeof previewSizeEnum>
+  >(widget.previewSize);
   const [copied, setCopied] = useState(false);
 
   const handleCopy = (content: string) => {

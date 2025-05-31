@@ -19,6 +19,7 @@ import 'navigation/bottom_nav/google_bottom_bar.dart';
 import 'navigation/bottom_nav/material3_bottom.dart';
 import 'navigation/bottom_nav/persistent_bottom.dart';
 import 'navigation/bottom_nav/simple_bottom.dart';
+import 'navigation/nav_bar/navigation_rail.dart';
 import 'navigation/nav_bar/responsive_nav_bar.dart';
 
 void main() {
@@ -74,6 +75,8 @@ class _MyAppState extends State<MyApp> {
                   return PersistentBottomNavPage();
                 case "/navigation/nav_bar/responsive_nav_bar":
                   return ResponsiveNavBarPage();
+                case "/navigation/nav_bar/navigation_rail":
+                  return const CustomNavigationRail();
 
                 case "/forms/sign_in/sign_in_page1":
                   return const SignInPage1();

@@ -26,4 +26,6 @@ export const templateType = z.enum([
   "clone",
 ]);
 
+export const previewSizeEnum = z.enum(["mobile", "tablet", "desktop"]);
+
 export const appFolder = z.enum(["core"]);
