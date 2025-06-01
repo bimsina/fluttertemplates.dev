@@ -1,21 +1,28 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import BaseHead from "../components/BaseHead.astro";
-import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
-import FormattedDate from "../components/FormattedDate.astro";
 import BaseHtml from "@/components/BaseHtml.astro";
 import FlutterAppIframe from "@/components/FlutterAppIframe";
 import { Icon } from "astro-icon/components";
+import { Image } from "astro:assets";
+import { YouTube } from "astro-embed";
 
 type Props = CollectionEntry<"templates">["data"];
 
-const { title, description, heroImage, demoUrl, githubUrl } = Astro.props;
+const {
+  title,
+  description,
+  heroImage,
+  demoUrl,
+  githubUrl,
+  appImages,
+  youtubeVideoId,
+} = Astro.props;
 ---
 
 <BaseHtml title={title} description={description} image={heroImage?.src}>
   <div
-    class="flex gap-2 w-full max-w-screen-lg mx-auto md:h-[calc(100vh-4rem)] flex-col-reverse md:flex-row"
+    class="flex gap-2 w-full max-w-[1080px] mx-auto md:h-[calc(100vh-4rem)] flex-col-reverse md:flex-row"
   >
     <div
       class="flex-1 w-full flex items-start flex-col overflow-auto p-4 gap-4"
@@ -35,18 +42,49 @@ const { title, description, heroImage, demoUrl, githubUrl } = Astro.props;
           </a>
         )
       }
+      {
+        appImages && (
+          <>
+            <h2 class="text-lg font-bold">App Screenshots</h2>
+            <div class="grid grid-cols-2 gap-2 w-full flex-wrap">
+              {appImages.map((image) => (
+                <Image
+                  src={image}
+                  alt={title}
+                  class="h-full w-auto object-cover"
+                  width={320}
+                  height={180}
+                  loading="lazy"
+                />
+              ))}
+            </div>
+          </>
+        )
+      }
+
+      {
+        youtubeVideoId && (
+          <>
+            <h2 class="text-lg font-bold">Demo</h2>
+            <YouTube id={youtubeVideoId} class="w-full h-full" />
+          </>
+        )
+      }
+
       <article class="prose dark:prose-invert">
         <slot />
       </article>
     </div>
     <div class="flex-1 w-full flex items-center justify-center p-4">
       <div
-        class="relative bg-card rounded-[3rem] overflow-clip border-4 border-border shadow-xl w-[280px] md:w-[320px]"
+        class="relative w-[280px] md:w-[320px] flex flex-col gap-2 items-center justify-center"
       >
         <FlutterAppIframe
           path={demoUrl}
+          client:load
           skipUrlFormatting
-          className="h-[600px] md:h-[680px] w-full rounded-[2.5rem]"
+          className="h-[600px] md:h-[680px] w-full bg-card rounded-[3rem] overflow-clip border-4 border-border shadow-xl"
+          enableShowFullScreenButton
         />
       </div>
     </div>

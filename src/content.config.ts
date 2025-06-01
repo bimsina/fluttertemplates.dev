@@ -22,8 +22,10 @@ const templates = defineCollection({
       type: templateType.optional(),
       app: appFolder.default("core"),
       heroImage: image().optional(),
+      appImages: z.array(image()).optional(),
       githubUrl: z.string().optional(),
       demoUrl: z.string().optional(),
+      youtubeVideoId: z.string().optional(),
       tags: z.array(z.string()).optional(),
     }),
 });

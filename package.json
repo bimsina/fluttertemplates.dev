@@ -32,6 +32,7 @@
     "@types/react": "19.1.5",
     "@types/react-dom": "19.1.5",
     "astro": "5.8.0",
+    "astro-embed": "^0.9.0",
     "astro-icon": "1.1.5",
     "astro-pagefind": "1.8.3",
     "class-variance-authority": "0.7.1",
