@@ -120,7 +120,9 @@ class _SimpleChatState extends State<SimpleChat> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
             decoration: BoxDecoration(
-              color: Colors.grey[200],
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[800]
+                  : Colors.grey[200],
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -151,7 +153,9 @@ class _SimpleChatState extends State<SimpleChat> {
             width: 8,
             height: 8,
             decoration: BoxDecoration(
-              color: Colors.grey[600],
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Colors.grey[400]
+                  : Colors.grey[600],
               shape: BoxShape.circle,
             ),
           ),
@@ -190,13 +194,19 @@ class _SimpleChatState extends State<SimpleChat> {
                     decoration: BoxDecoration(
                       color: message.isMe
                           ? Theme.of(context).primaryColor
+                          : Theme.of(context).brightness == Brightness.dark
+                          ? Colors.grey[800]
                           : Colors.grey[300],
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: Text(
                       message.text,
                       style: TextStyle(
-                        color: message.isMe ? Colors.white : Colors.black,
+                        color: message.isMe
+                            ? Colors.white
+                            : Theme.of(context).brightness == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
                       ),
                     ),
                   ),
@@ -207,10 +217,14 @@ class _SimpleChatState extends State<SimpleChat> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: Theme.of(context).brightness == Brightness.dark
+                  ? Theme.of(context).scaffoldBackgroundColor
+                  : Colors.white,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.grey.withValues(alpha: 0.2),
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? Colors.black.withOpacity(0.2)
+                      : Colors.grey.withOpacity(0.2),
                   spreadRadius: 1,
                   blurRadius: 3,
                   offset: const Offset(0, -1),
@@ -222,15 +236,25 @@ class _SimpleChatState extends State<SimpleChat> {
                 Expanded(
                   child: TextField(
                     controller: _controller,
-                    decoration: const InputDecoration(
+                    style: TextStyle(
+                      color: Theme.of(context).brightness == Brightness.dark
+                          ? Colors.white
+                          : Colors.black,
+                    ),
+                    decoration: InputDecoration(
                       hintText: 'Type a message...',
+                      hintStyle: TextStyle(
+                        color: Theme.of(context).brightness == Brightness.dark
+                            ? Colors.grey[400]
+                            : Colors.grey[600],
+                      ),
                       border: InputBorder.none,
                     ),
                     onSubmitted: _sendMessage,
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send),
+                  icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
                   onPressed: () => _sendMessage(_controller.text),
                 ),
               ],
