@@ -1,6 +1,6 @@
 ---
-title: "TMDB Movies App"
-description: "A beautiful Flutter application that displays movie details fetched from The Movie Database (TMDB) API. Search, browse, and discover your favorite movies with an elegant user interface."
+title: "TMDB Movie App"
+description: "Build a professional movie discovery app with this Flutter template. Features real-time movie search, TMDB API integration, dark/light theme support, and responsive UI. Perfect for learning Flutter development and creating production-ready movie applications."
 demoUrl: "https://tmdb-movies-9g5.pages.dev/"
 heroImage: "../../assets/template_images/tmdb.png"
 appImages:

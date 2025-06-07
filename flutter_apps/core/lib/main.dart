@@ -1,6 +1,7 @@
 import 'package:core/animation/hero_list_view.dart';
 import 'package:flutter/material.dart';
 
+import 'chat/group_chat.dart';
 import 'core/button_demo.dart';
 import 'core/loading_demo.dart';
 import 'core/toast_demo.dart';
@@ -21,6 +22,7 @@ import 'navigation/bottom_nav/persistent_bottom.dart';
 import 'navigation/bottom_nav/simple_bottom.dart';
 import 'navigation/nav_bar/navigation_rail.dart';
 import 'navigation/nav_bar/responsive_nav_bar.dart';
+import 'chat/simple_chat.dart';
 
 void main() {
   runApp(const MyApp());
@@ -101,6 +103,10 @@ class _MyAppState extends State<MyApp> {
                   return const SettingsPage2();
                 case "/must_haves/profile_page/profile_page_1":
                   return const ProfilePage1();
+                case "/chat/simple_chat":
+                  return const SimpleChat();
+                case "/chat/group_chat":
+                  return const GroupChat();
 
                 default:
                   return Scaffold(body: Center(child: Text("No page found")));
