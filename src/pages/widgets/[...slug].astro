@@ -69,7 +69,11 @@ const sidebarGroups = serializeWidgetGroupsForSidebar(groupedWidgets);
 const { prev, next } = await getPrevNext(widget.id);
 ---
 
-<BaseHtml title={widget.data.title} description={widget.data.description}>
+<BaseHtml
+  title={widget.data.title}
+  description={widget.data.description}
+  image={`/og/widgets/${widget.id}.png`}
+>
   <div class="section-shell pt-24 pb-6">
     <div class="surface overflow-hidden">
       <div class="flex min-h-[calc(100vh-9rem)] w-full flex-col lg:flex-row">

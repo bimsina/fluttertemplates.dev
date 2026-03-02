@@ -7,7 +7,9 @@ import { Icon } from "astro-icon/components";
 import { Image } from "astro:assets";
 import { YouTube } from "astro-embed";
 
-type Props = CollectionEntry<"templates">["data"];
+type Props = CollectionEntry<"templates">["data"] & {
+  ogImage?: string;
+};
 
 const {
   title,
@@ -17,10 +19,15 @@ const {
   githubUrl,
   appImages,
   youtubeVideoId,
+  ogImage,
 } = Astro.props;
 ---
 
-<BaseHtml title={title} description={description} image={heroImage?.src}>
+<BaseHtml
+  title={title}
+  description={description}
+  image={ogImage ?? heroImage?.src}
+>
   <section class="transition-page section-shell pt-28 pb-6">
     <div class="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
       <div class="surface p-6 md:p-8">

@@ -1,4 +1,5 @@
 ---
+import { SEO } from "astro-seo";
 import "../styles/global.css";
 import { SITE_TITLE } from "../consts";
 
@@ -14,8 +15,8 @@ const cleanPathname = Astro.url.pathname
 const canonicalURL = cleanPathname
   ? new URL(cleanPathname, Astro.site!).href
   : Astro.site!.href.replace(/\/$/, "");
-
 const { title, description, image = "/og.png" } = Astro.props;
+const imageURL = new URL(image, Astro.url).toString();
 ---
 
 <meta charset="utf-8" />
@@ -41,36 +42,71 @@ const { title, description, image = "/og.png" } = Astro.props;
   rel="stylesheet"
 />
 
-<link rel="canonical" href={canonicalURL} />
-
-<title>{title}</title>
-<meta name="title" content={title} />
-<meta name="description" content={description} />
-<meta name="robots" content="index, follow" />
-<meta name="author" content="Flutter Templates" />
-<meta
-  name="keywords"
-  content="Flutter, Flutter templates, Flutter UI, Flutter snippets, open source, production ready, mobile app development, Flutter components"
+<SEO
+  title={title}
+  description={description}
+  canonical={canonicalURL}
+  openGraph={{
+    basic: {
+      title,
+      type: "website",
+      image: imageURL,
+      url: Astro.url.toString(),
+    },
+    optional: {
+      description,
+      siteName: SITE_TITLE,
+      locale: "en_US",
+    },
+    image: {
+      url: imageURL,
+      alt: title,
+      width: 1200,
+      height: 630,
+    },
+  }}
+  twitter={{
+    card: "summary_large_image",
+    site: SITE_TITLE,
+    creator: SITE_TITLE,
+    title,
+    description,
+    image: imageURL,
+  }}
+  extend={{
+    meta: [
+      {
+        name: "robots",
+        content: "index, follow",
+      },
+      {
+        name: "author",
+        content: "Flutter Templates",
+      },
+      {
+        name: "keywords",
+        content:
+          "Flutter, Flutter templates, Flutter UI, Flutter snippets, open source, production ready, mobile app development, Flutter components",
+      },
+      {
+        name: "twitter:image:alt",
+        content: title,
+      },
+      {
+        property: "og:image:alt",
+        content: title,
+      },
+      {
+        property: "og:image:width",
+        content: "1200",
+      },
+      {
+        property: "og:image:height",
+        content: "630",
+      },
+    ],
+  }}
 />
-
-<meta property="og:type" content="website" />
-<meta property="og:url" content={Astro.url} />
-<meta property="og:title" content={title} />
-<meta property="og:description" content={description} />
-<meta property="og:image" content={new URL(image, Astro.url)} />
-<meta property="og:site_name" content={SITE_TITLE} />
-<meta property="og:locale" content="en_US" />
-<meta property="og:image:alt" content={title} />
-<meta property="og:image:width" content="1200" />
-<meta property="og:image:height" content="630" />
-
-<meta name="twitter:card" content="summary_large_image" />
-<meta name="twitter:site" content={SITE_TITLE} />
-<meta name="twitter:creator" content={SITE_TITLE} />
-<meta name="twitter:title" content={title} />
-<meta name="twitter:description" content={description} />
-<meta name="twitter:image" content={new URL(image, Astro.url)} />
-<meta name="twitter:image:alt" content={title} />
 
 <script is:inline>
   const THEME_KEY = "theme";
