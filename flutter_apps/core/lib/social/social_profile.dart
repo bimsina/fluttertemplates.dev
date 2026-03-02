@@ -12,7 +12,7 @@ class _SocialProfileState extends State<SocialProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
-        headerSliverBuilder: (_, __) => [
+        headerSliverBuilder: (_, _) => [
           SliverAppBar(
             expandedHeight: 200,
             pinned: true,
@@ -22,10 +22,7 @@ class _SocialProfileState extends State<SocialProfile> {
                   gradient: LinearGradient(
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.blue.shade700,
-                      Colors.blue.shade400,
-                    ],
+                    colors: [Colors.blue.shade700, Colors.blue.shade400],
                   ),
                 ),
               ),
@@ -42,7 +39,10 @@ class _SocialProfileState extends State<SocialProfile> {
                       backgroundColor: Colors.white,
                       child: CircleAvatar(
                         radius: 46,
-                        child: Text('JD', style: Theme.of(context).textTheme.headlineMedium),
+                        child: Text(
+                          'JD',
+                          style: Theme.of(context).textTheme.headlineMedium,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 8),
@@ -75,17 +75,22 @@ class _SocialProfileState extends State<SocialProfile> {
           length: 2,
           child: Column(
             children: [
-              const TabBar(tabs: [Tab(text: 'Grid'), Tab(text: 'List')]),
+              const TabBar(
+                tabs: [
+                  Tab(text: 'Grid'),
+                  Tab(text: 'List'),
+                ],
+              ),
               Expanded(
                 child: TabBarView(
                   children: [
                     GridView.builder(
                       gridDelegate:
                           const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: 2,
-                        crossAxisSpacing: 2,
-                      ),
+                            crossAxisCount: 3,
+                            mainAxisSpacing: 2,
+                            crossAxisSpacing: 2,
+                          ),
                       itemCount: 9,
                       itemBuilder: (_, i) => Container(
                         color: Colors.primaries[i % 9].withValues(alpha: 0.3),
@@ -93,9 +98,7 @@ class _SocialProfileState extends State<SocialProfile> {
                     ),
                     ListView.builder(
                       itemCount: 5,
-                      itemBuilder: (_, i) => ListTile(
-                        title: Text('Post $i'),
-                      ),
+                      itemBuilder: (_, i) => ListTile(title: Text('Post $i')),
                     ),
                   ],
                 ),

@@ -88,11 +88,7 @@ function isItemActive(itemId: string, path: string): boolean {
                 .map((item) => (
                   <li>
                     <a
-                      href={
-                        group.indexFile?.id?.includes("/")
-                          ? `/widgets/${item.id}`
-                          : `/widgets/${group.indexFile?.id}#${item.id}`
-                      }
+                      href={`/widgets/${item.id}`}
                       data-item-id={item.id}
                       data-item-title={item.data.title}
                       class:list={[

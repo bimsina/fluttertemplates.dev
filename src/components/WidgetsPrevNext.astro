@@ -1,0 +1,51 @@
+---
+import { Icon } from "astro-icon/components";
+
+interface PageLink {
+  url: string;
+  title: string;
+}
+
+interface Props {
+  prev?: PageLink;
+  next?: PageLink;
+}
+
+const { prev, next } = Astro.props;
+---
+
+{(prev || next) && (
+  <nav
+    class="flex flex-col sm:flex-row gap-4 sm:gap-0 sm:justify-between items-stretch sm:items-center border-t border-border pt-8 mt-8"
+    aria-label="Widget navigation"
+  >
+    {prev ? (
+      <a
+        href={prev.url}
+        class="group flex items-center gap-2 py-2 px-4 rounded-md hover:bg-muted text-foreground transition-colors max-w-[50%]"
+      >
+        <Icon name="mdi:chevron-left" class="size-5 shrink-0 text-muted-foreground group-hover:text-primary" />
+        <span class="flex flex-col items-start min-w-0">
+          <span class="text-xs text-muted-foreground uppercase tracking-wider">Previous</span>
+          <span class="truncate font-medium group-hover:text-primary">{prev.title}</span>
+        </span>
+      </a>
+    ) : (
+      <div />
+    )}
+    {next ? (
+      <a
+        href={next.url}
+        class="group flex items-center gap-2 py-2 px-4 rounded-md hover:bg-muted text-foreground transition-colors max-w-[50%] sm:text-right sm:flex-row-reverse"
+      >
+        <Icon name="mdi:chevron-right" class="size-5 shrink-0 text-muted-foreground group-hover:text-primary" />
+        <span class="flex flex-col items-start sm:items-end min-w-0">
+          <span class="text-xs text-muted-foreground uppercase tracking-wider">Next</span>
+          <span class="truncate font-medium group-hover:text-primary">{next.title}</span>
+        </span>
+      </a>
+    ) : (
+      <div />
+    )}
+  </nav>
+)}

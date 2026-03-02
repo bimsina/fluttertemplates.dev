@@ -5,7 +5,9 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import { render } from "astro:content";
 import fs from "fs/promises";
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
+import { getPrevNext } from "@/utils/get_widget_page_sequence";
 import WidgetsSidebar from "@/components/WidgetsSidebar.astro";
+import WidgetsPrevNext from "@/components/WidgetsPrevNext.astro";
 import Footer from "@/components/Footer.astro";
 
 export async function getStaticPaths() {
@@ -65,6 +67,7 @@ const code = await Promise.all(
 const { Content } = await render(widget);
 
 const groupedWidgets = await getGroupedWidgets();
+const { prev, next } = await getPrevNext(widget.id);
 ---
 
 <BaseHtml title={widget.data.title} description={widget.data.description}>
@@ -99,6 +102,7 @@ const groupedWidgets = await getGroupedWidgets();
             )
           }
         </main>
+        <WidgetsPrevNext prev={prev} next={next} />
       </div>
 
       <Footer />

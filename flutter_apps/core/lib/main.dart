@@ -144,6 +144,24 @@ import 'gallery/photo_grid.dart';
 import 'gallery/image_carousel.dart';
 import 'gallery/image_viewer.dart';
 import 'gallery/photo_album.dart';
+import 'communication/video_call.dart';
+import 'communication/voice_call.dart';
+import 'communication/audio_message_player.dart';
+import 'communication/video_message_player.dart';
+import 'communication/conference_call.dart';
+import 'communication/call_history.dart';
+import 'profile/profile_settings.dart';
+import 'profile/account_settings.dart';
+import 'profile/edit_profile.dart';
+import 'profile/profile_preview.dart';
+import 'profile/privacy_settings.dart';
+import 'profile/security_settings.dart';
+import 'utilities/weather_dashboard.dart';
+import 'utilities/unit_converter.dart';
+import 'utilities/calculator.dart';
+import 'utilities/notes_app.dart';
+import 'utilities/stopwatch.dart';
+import 'utilities/world_clock.dart';
 
 void main() {
   runApp(const MyApp());
@@ -164,7 +182,8 @@ final routes = <String, Widget Function()>{
   "/forms/sign_in/sign_in_page2": () => const SignInPage2(),
   "/must_haves/onboarding_page/concentric_animation_onboarding": () =>
       const ConcentricAnimationOnboarding(),
-  "/must_haves/onboarding_page/onboarding_page_1": () => const OnboardingPage1(),
+  "/must_haves/onboarding_page/onboarding_page_1": () =>
+      const OnboardingPage1(),
   "/must_haves/content_feed/news_feed_1": () => const NewsFeedPage1(),
   "/must_haves/content_feed/news_feed_2": () => const NewsFeedPage2(),
   "/must_haves/dropdowns/auto_complete_dropdown": () =>
@@ -296,6 +315,24 @@ final routes = <String, Widget Function()>{
   "/gallery/image_carousel": () => const ImageCarousel(),
   "/gallery/image_viewer": () => const ImageViewer(),
   "/gallery/photo_album": () => const PhotoAlbum(),
+  "/communication/video_call": () => const VideoCallScreen(),
+  "/communication/voice_call": () => const VoiceCallScreen(),
+  "/communication/audio_message_player": () => const AudioMessagePlayer(),
+  "/communication/video_message_player": () => const VideoMessagePlayer(),
+  "/communication/conference_call": () => const ConferenceCall(),
+  "/communication/call_history": () => const CallHistory(),
+  "/profile/profile_settings": () => const ProfileSettings(),
+  "/profile/account_settings": () => const AccountSettings(),
+  "/profile/edit_profile": () => const EditProfile(),
+  "/profile/profile_preview": () => const ProfilePreview(),
+  "/profile/privacy_settings": () => const PrivacySettings(),
+  "/profile/security_settings": () => const SecuritySettings(),
+  "/utilities/weather_dashboard": () => const WeatherDashboard(),
+  "/utilities/unit_converter": () => const UnitConverter(),
+  "/utilities/calculator": () => const Calculator(),
+  "/utilities/notes_app": () => const NotesApp(),
+  "/utilities/stopwatch": () => const StopwatchScreen(),
+  "/utilities/world_clock": () => const WorldClock(),
 };
 
 class MyApp extends StatefulWidget {

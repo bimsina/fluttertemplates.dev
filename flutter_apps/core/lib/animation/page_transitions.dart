@@ -15,8 +15,8 @@ class PageTransitions extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (_, __, ___) => const _DemoPage(title: 'Fade'),
-                transitionsBuilder: (_, animation, __, child) =>
+                pageBuilder: (_, _, _) => const _DemoPage(title: 'Fade'),
+                transitionsBuilder: (_, animation, _, child) =>
                     FadeTransition(opacity: animation, child: child),
               ),
             ),
@@ -26,9 +26,8 @@ class PageTransitions extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (_, __, ___) => const _DemoPage(title: 'Slide'),
-                transitionsBuilder: (_, animation, __, child) =>
-                    SlideTransition(
+                pageBuilder: (_, _, _) => const _DemoPage(title: 'Slide'),
+                transitionsBuilder: (_, animation, _, child) => SlideTransition(
                   position: Tween<Offset>(
                     begin: const Offset(1, 0),
                     end: Offset.zero,
@@ -43,12 +42,9 @@ class PageTransitions extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (_, __, ___) => const _DemoPage(title: 'Scale'),
-                transitionsBuilder: (_, animation, __, child) =>
-                    ScaleTransition(
-                  scale: animation,
-                  child: child,
-                ),
+                pageBuilder: (_, _, _) => const _DemoPage(title: 'Scale'),
+                transitionsBuilder: (_, animation, _, child) =>
+                    ScaleTransition(scale: animation, child: child),
               ),
             ),
           ),
@@ -57,13 +53,9 @@ class PageTransitions extends StatelessWidget {
             onTap: () => Navigator.push(
               context,
               PageRouteBuilder(
-                pageBuilder: (_, __, ___) =>
-                    const _DemoPage(title: 'Rotation'),
-                transitionsBuilder: (_, animation, __, child) =>
-                    RotationTransition(
-                  turns: animation,
-                  child: child,
-                ),
+                pageBuilder: (_, _, _) => const _DemoPage(title: 'Rotation'),
+                transitionsBuilder: (_, animation, _, child) =>
+                    RotationTransition(turns: animation, child: child),
               ),
             ),
           ),
@@ -83,10 +75,7 @@ class _TransitionButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
-      child: FilledButton(
-        onPressed: onTap,
-        child: Text(label),
-      ),
+      child: FilledButton(onPressed: onTap, child: Text(label)),
     );
   }
 }
@@ -104,10 +93,7 @@ class _DemoPage extends StatelessWidget {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(
-              title,
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
+            Text(title, style: Theme.of(context).textTheme.headlineMedium),
             const SizedBox(height: 16),
             FilledButton(
               onPressed: () => Navigator.pop(context),
