@@ -3,18 +3,19 @@ import HeaderLink from "./HeaderLink.astro";
 import Logo from "./Logo.astro";
 import ThemeToggle from "./ThemeToggle.astro";
 import { Icon } from "astro-icon/components";
+import { GITHUB_URL } from "../consts";
 
 const links: { href: string; label: string }[] = [
   { href: "/widgets", label: "Widgets" },
   { href: "/templates", label: "Templates" },
-  { href: "/search", label: "Search" },
 ];
 ---
 
-<header class="fixed inset-x-0 top-0 z-50">
+<header class="fixed inset-x-0 top-0 isolate z-80">
   <div class="section-shell pt-3">
     <nav
-      class="surface flex h-14 items-center justify-between px-3 md:px-8"
+      class="surface bg-card/95 flex h-14 items-center justify-between px-3 backdrop-blur-none md:px-8"
+      style="backdrop-filter: none;"
       aria-label="Global"
     >
       <Logo />
@@ -27,13 +28,26 @@ const links: { href: string; label: string }[] = [
         }
       </div>
 
-      <div class="hidden lg:block">
+      <div class="hidden lg:flex lg:items-center lg:gap-2">
+        <HeaderLink href="/search" aria-label="Search">
+          <Icon name="mdi:magnify" class="h-5 w-5" />
+          <span class="sr-only">Search</span>
+        </HeaderLink>
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-foreground hover:bg-muted inline-flex items-center justify-center rounded-2xl p-2 transition-colors"
+          aria-label="Open GitHub repository"
+        >
+          <Icon name="mdi:github" class="h-5 w-5" />
+        </a>
         <ThemeToggle />
       </div>
 
       <button
         type="button"
-        class="border-border bg-card text-foreground inline-flex items-center justify-center rounded-xl border p-2 lg:hidden"
+        class="bg-card text-foreground inline-flex items-center justify-center p-2 lg:hidden"
         aria-controls="mobile-menu"
         aria-expanded="false"
         id="mobile-menu-button"
@@ -85,6 +99,25 @@ const links: { href: string; label: string }[] = [
             </a>
           ))
         }
+        <a
+          href="/search"
+          class="text-foreground/85 hover:bg-muted flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold"
+          data-nav-link
+          data-nav-path="/search"
+          data-mobile-nav-link
+        >
+          <Icon name="mdi:magnify" class="h-4 w-4" />
+          <span>Search</span>
+        </a>
+        <a
+          href={GITHUB_URL}
+          target="_blank"
+          rel="noopener noreferrer"
+          class="text-foreground/85 hover:bg-muted flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold"
+        >
+          <Icon name="mdi:github" class="h-4 w-4" />
+          <span>GitHub</span>
+        </a>
       </div>
 
       <div class="border-border mt-4 border-t pt-4">

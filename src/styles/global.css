@@ -92,17 +92,6 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image:
-      radial-gradient(
-        circle at 10% -10%,
-        rgb(2 132 199 / 0.12),
-        transparent 36%
-      ),
-      radial-gradient(
-        circle at 100% 0%,
-        rgb(34 211 238 / 0.12),
-        transparent 42%
-      );
   }
 
   h1,
@@ -235,6 +224,78 @@ html.is-leaving .transition-page {
 .pagefind-ui__search-input:focus,
 .pagefind-ui__form-input:focus {
   border-color: var(--ring) !important;
+}
+
+.pagefind-ui {
+  --pagefind-ui-scale: 1;
+  --pagefind-ui-background: color-mix(
+    in oklab,
+    var(--card) 92%,
+    transparent
+  ) !important;
+  --pagefind-ui-primary: var(--primary) !important;
+  --pagefind-ui-text: var(--foreground) !important;
+  --pagefind-ui-border: var(--border) !important;
+  --pagefind-ui-tag: color-mix(in oklab, var(--accent) 75%, transparent) !important;
+  --pagefind-ui-border-width: 1px;
+  --pagefind-ui-border-radius: 0.9rem;
+  --pagefind-ui-font: var(--font-sans);
+}
+
+.pagefind-ui__drawer,
+.pagefind-ui__results,
+.pagefind-ui__message,
+.pagefind-ui__filters,
+.pagefind-ui__result,
+.pagefind-ui__button {
+  background: transparent !important;
+  color: var(--foreground) !important;
+}
+
+.pagefind-ui__result {
+  border: 1px solid color-mix(in oklab, var(--border) 92%, transparent) !important;
+  border-radius: 0.9rem !important;
+  padding: 0.9rem !important;
+  margin-bottom: 0.7rem !important;
+  background: color-mix(in oklab, var(--card) 94%, transparent) !important;
+}
+
+.pagefind-ui__result:hover {
+  border-color: color-mix(in oklab, var(--primary) 26%, var(--border)) !important;
+}
+
+.pagefind-ui__result-link,
+.pagefind-ui__result-title,
+.pagefind-ui__result-link:visited {
+  color: var(--foreground) !important;
+}
+
+.pagefind-ui__result-link:hover {
+  color: var(--primary) !important;
+}
+
+.pagefind-ui__result-excerpt,
+.pagefind-ui__message,
+.pagefind-ui__result-nested,
+.pagefind-ui__result-tags,
+.pagefind-ui__search-clear {
+  color: var(--muted-foreground) !important;
+}
+
+.pagefind-ui mark {
+  background: color-mix(in oklab, var(--accent) 85%, transparent) !important;
+  color: var(--foreground) !important;
+  border-radius: 0.35rem;
+  padding: 0 0.2rem;
+}
+
+.pagefind-ui__button {
+  border: 1px solid var(--border) !important;
+  border-radius: 0.8rem !important;
+}
+
+.pagefind-ui__button:hover {
+  background: color-mix(in oklab, var(--muted) 78%, transparent) !important;
 }
 
 /* Widgets sidebar */

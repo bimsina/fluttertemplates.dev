@@ -4,8 +4,9 @@ import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 
 export async function GET(context) {
   const widgets = await getCollection("widgets");
-  const blogs = await getCollection("blog");
-  const items = [...widgets, ...blogs]
+  // const blogs = await getCollection("blog");
+  const items = [...widgets]
+    // ...blogs]
     .map((item) => ({
       ...item.data,
       link: `/${item.collection}/${item.id}/`,
