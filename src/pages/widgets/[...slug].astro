@@ -5,7 +5,7 @@ import { type CollectionEntry, getCollection } from "astro:content";
 import { render } from "astro:content";
 import fs from "fs/promises";
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
-import WidgetsNavSidebar from "@/components/WidgetsNavSidebar.astro";
+import WidgetsSidebar from "@/components/WidgetsSidebar.astro";
 import Footer from "@/components/Footer.astro";
 
 export async function getStaticPaths() {
@@ -28,7 +28,7 @@ const childrenColponents = isGroup
       (c) =>
         c.id.startsWith(widget.id) &&
         c.id !== widget.id &&
-        (c.data.path ?? "").trim().length > 0
+        (c.data.path ?? "").trim().length > 0,
     )
   : [];
 
@@ -37,7 +37,7 @@ const childrenCode = await Promise.all(
     return {
       id: c.id,
       code_files: await Promise.all(
-        c.data.code_files.map(async (file) => {
+        c.data.code_files.map(async (file: string) => {
           const filePath = "flutter_apps/" + c.data.app + "/lib/" + file;
           const fileContent = await fs.readFile(filePath, "utf8");
           return {
@@ -45,21 +45,21 @@ const childrenCode = await Promise.all(
             id: c.id,
             content: fileContent,
           };
-        })
+        }),
       ),
     };
-  })
+  }),
 );
 
 const code = await Promise.all(
-  widget.data.code_files.map(async (file) => {
+  widget.data.code_files.map(async (file: string) => {
     const filePath = "flutter_apps/" + widget.data.app + "/lib/" + file;
     const fileContent = await fs.readFile(filePath, "utf8");
     return {
       file,
       content: fileContent,
     };
-  })
+  }),
 );
 
 const { Content } = await render(widget);
@@ -69,9 +69,7 @@ const groupedWidgets = await getGroupedWidgets();
 
 <BaseHtml title={widget.data.title} description={widget.data.description}>
   <div class="flex flex-row w-full h-[calc(100vh-4rem)]">
-    <aside class="w-64 shrink-0 border-r overflow-y-scroll">
-      {groupedWidgets.map((group) => <WidgetsNavSidebar group={group} />)}
-    </aside>
+    <WidgetsSidebar groups={groupedWidgets} currentPath={widget.id} />
     <div class="flex-1 w-full h-full overflow-y-scroll">
       <div class="max-w-6xl mx-auto px-4 py-8">
         <main>
