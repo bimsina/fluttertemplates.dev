@@ -5,17 +5,39 @@ import sitemap from "@astrojs/sitemap";
 import tailwindcss from "@tailwindcss/vite";
 import pagefind from "astro-pagefind";
 import icon from "astro-icon";
-
+import swup from "@swup/astro";
 import react from "@astrojs/react";
 
-// https://astro.build/config
 export default defineConfig({
-  build: {
-    format: "file",
-  },
   site: "https://fluttertemplates.dev",
-  integrations: [mdx(), sitemap(), icon(), react(), pagefind()],
-
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: "hover",
+  },
+  integrations: [
+    mdx(),
+    sitemap(),
+    icon(),
+    react(),
+    pagefind(),
+    swup({
+      theme: false,
+      animationClass: "transition-",
+      native: true,
+      preload: {
+        hover: true,
+        visible: true,
+      },
+      containers: ["main"],
+      fragments: [
+        {
+          from: "/widgets/:slug*",
+          to: "/widgets/:slug*",
+          containers: ["#widgets-content"],
+        },
+      ],
+    }),
+  ],
   vite: {
     plugins: [tailwindcss()],
   },

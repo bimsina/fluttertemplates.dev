@@ -1,0 +1,145 @@
+---
+import { Icon } from "astro-icon/components";
+---
+
+<button
+  id="theme-toggle"
+  class="group text-muted-foreground hover:text-foreground relative flex items-center justify-center p-2 transition-colors"
+  aria-label="Toggle theme"
+  title="Toggle theme"
+>
+  <Icon
+    id="light-icon"
+    name="ph:sun-bold"
+    class="h-4 w-4 transition-all duration-300 group-hover:rotate-12"
+  />
+
+  <Icon
+    id="dark-icon"
+    name="ph:moon-bold"
+    class="absolute inset-0 m-auto h-4 w-4 opacity-0 transition-all duration-300 group-hover:-rotate-45"
+  />
+
+  <Icon
+    id="system-icon"
+    name="mdi:monitor"
+    class="absolute inset-0 m-auto h-4 w-4 scale-75 opacity-0 transition-all duration-300 group-hover:scale-90"
+  />
+</button>
+
+<style>
+  #theme-toggle[data-theme="light"] #light-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  #theme-toggle[data-theme="light"] #dark-icon {
+    opacity: 0;
+    transform: rotate(-90deg);
+  }
+
+  #theme-toggle[data-theme="light"] #system-icon {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+
+  #theme-toggle[data-theme="dark"] #light-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  #theme-toggle[data-theme="dark"] #dark-icon {
+    opacity: 1;
+    transform: rotate(0deg);
+  }
+
+  #theme-toggle[data-theme="dark"] #system-icon {
+    opacity: 0;
+    transform: scale(0.75);
+  }
+
+  #theme-toggle[data-theme="system"] #light-icon {
+    opacity: 0;
+    transform: rotate(180deg);
+  }
+
+  #theme-toggle[data-theme="system"] #dark-icon {
+    opacity: 0;
+    transform: rotate(90deg);
+  }
+
+  #theme-toggle[data-theme="system"] #system-icon {
+    opacity: 1;
+    transform: scale(1);
+  }
+</style>
+
+<script is:inline>
+  (function () {
+    // Only initialize once (component persists across Swup navigations)
+    if (window.__themeToggleInitialized) return;
+    window.__themeToggleInitialized = true;
+
+    const themeToggle = document.getElementById("theme-toggle");
+
+    function setTheme(theme) {
+      const isDark =
+        theme === "dark" ||
+        (theme === "system" &&
+          window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+      document.documentElement.classList[isDark ? "add" : "remove"]("dark");
+
+      const codeTheme = isDark ? "github-dark-dimmed" : "github-light";
+      document.documentElement.setAttribute("data-theme", codeTheme);
+
+      // Update toggle button state to show the selected theme preference
+      if (themeToggle) {
+        themeToggle.setAttribute("data-theme", theme);
+      }
+    }
+
+    function getNextTheme(currentTheme) {
+      if (currentTheme === "light") return "dark";
+      if (currentTheme === "dark") return "system";
+      return "light"; // system -> light
+    }
+
+    function getCurrentTheme() {
+      const stored = localStorage.getItem("theme");
+      if (stored && ["light", "dark", "system"].includes(stored)) {
+        return stored;
+      }
+
+      // Default to system preference
+      return window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    }
+
+    if (themeToggle) {
+      // Initialize theme
+      const initialTheme = localStorage.getItem("theme") || "system";
+      setTheme(initialTheme);
+
+      // Handle toggle click
+      themeToggle.addEventListener("click", () => {
+        const currentTheme = getCurrentTheme();
+        const nextTheme = getNextTheme(currentTheme);
+
+        setTheme(nextTheme);
+        localStorage.setItem("theme", nextTheme);
+      });
+
+      // Listen for system theme changes when system preference is active
+      window
+        .matchMedia("(prefers-color-scheme: dark)")
+        .addEventListener("change", () => {
+          const storedTheme = localStorage.getItem("theme");
+          if (storedTheme === "system") {
+            setTheme("system");
+          }
+        });
+    }
+  })();
+</script>

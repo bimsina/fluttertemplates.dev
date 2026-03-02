@@ -11,9 +11,30 @@ const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
 
 <a
   href={href}
-  class:list={[className, { active: isActive }]}
+  class:list={["nav-link", className, { active: isActive }]}
+  data-nav-link
+  data-nav-path={href}
   {...props}
-  class={`text-foreground hover:text-primary text-sm ${className}`}
 >
   <slot />
 </a>
+
+<style>
+  .nav-link {
+    padding: 0.45rem 0.8rem;
+    border-radius: 0.7rem;
+    color: var(--muted-foreground);
+    font-size: 0.92rem;
+    font-weight: 600;
+  }
+
+  .nav-link:hover {
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--muted) 72%, transparent);
+  }
+
+  .nav-link.active {
+    color: var(--foreground);
+    background: color-mix(in oklab, var(--accent) 75%, transparent);
+  }
+</style>

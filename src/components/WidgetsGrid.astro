@@ -7,26 +7,25 @@ const widgets = (await getCollection("widgets"))
   .sort((a, b) => a.data.order - b.data.order);
 ---
 
-<div
-  class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto py-8"
->
+<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
   {
-    widgets.map((widget) => (
+    widgets.map((widget, index) => (
       <a
         href={`/widgets/${widget.id}/`}
-        class="border-8 border-muted bg-card rounded-lg hover:bg-muted hover:text-primary hover:border-primary/10 flex flex-col items-center transition-all text-muted-foreground overflow-clip group"
+        class="surface interactive-card group p-5"
+        style={`--delay:${Math.min(index * 30, 240)}ms`}
+        data-reveal
+        data-swup-preload
       >
-        {widget.data.icon && (
-          <div class="p-8 bg-muted w-full flex items-center justify-center">
-            <Icon
-              name={widget.data.icon}
-              class="size-16 text-muted-foreground group-hover:text-primary"
-            />
-          </div>
-        )}
-        <div class="text-sm font-medium bg-transparent group-hover:bg-primary/10 group-hover:text-primary w-full p-2 text-center transition-all">
-          {widget.data.title}
+        <div class="bg-muted/70 text-muted-foreground group-hover:bg-muted group-hover:text-foreground mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl transition-colors">
+          {widget.data.icon && <Icon name={widget.data.icon} class="size-5" />}
         </div>
+        <h3 class="group-hover:text-foreground text-base font-semibold tracking-tight">
+          {widget.data.title}
+        </h3>
+        <p class="text-muted-foreground mt-2 text-sm">
+          Reusable Flutter patterns and UI building blocks.
+        </p>
       </a>
     ))
   }

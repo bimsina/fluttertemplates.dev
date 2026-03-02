@@ -5,7 +5,15 @@ import WidgetsGrid from "@/components/WidgetsGrid.astro";
 ---
 
 <BaseHtml title="Widgets">
-  <section class="px-8 min-h-[90vh]">
+  <section class="transition-page section-shell min-h-screen pt-28 pb-6">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold tracking-tight md:text-4xl">
+        Flutter Widgets
+      </h1>
+      <p class="text-muted-foreground mt-2">
+        Browse widget groups and drill down into runnable snippets.
+      </p>
+    </div>
     <WidgetsGrid />
   </section>
   <Footer />

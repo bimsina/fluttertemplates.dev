@@ -1,7 +1,7 @@
 ---
 import HeaderLink from "./HeaderLink.astro";
 import Logo from "./Logo.astro";
-import ThemeChanger from "./ThemeChanger.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 import { Icon } from "astro-icon/components";
 
 const links: { href: string; label: string }[] = [
@@ -11,97 +11,118 @@ const links: { href: string; label: string }[] = [
 ];
 ---
 
-<div class="relative">
-  <header class="fixed top-0 z-50 backdrop-blur-xl bg-transparent w-full">
-    <nav class="mx-auto max-w-7xl px-6 lg:px-8" aria-label="Global">
-      <div class="flex h-16 items-center justify-between">
-        <div class="flex items-center">
-          <Logo />
-        </div>
+<header class="fixed inset-x-0 top-0 z-50">
+  <div class="section-shell pt-3">
+    <nav
+      class="surface flex h-14 items-center justify-between px-3 md:px-8"
+      aria-label="Global"
+    >
+      <Logo />
 
-        <!-- Mobile menu button -->
-        <div class="flex lg:hidden">
-          <button
-            type="button"
-            class="inline-flex items-center justify-center rounded-md p-2 text-foreground hover:bg-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
-            aria-controls="mobile-menu"
-            aria-expanded="false"
-            id="mobile-menu-button"
-          >
-            <span class="sr-only">Open main menu</span>
-            <Icon name="mdi:menu" class="h-6 w-6" id="menu-icon" />
-            <Icon name="mdi:close" class="hidden h-6 w-6" id="close-icon" />
-          </button>
-        </div>
-
-        <!-- Desktop menu -->
-        <div class="hidden lg:flex lg:items-center lg:space-x-4">
-          {
-            links.map((link) => (
-              <HeaderLink href={link.href}>{link.label}</HeaderLink>
-            ))
-          }
-          <div class="flex items-center space-x-4">
-            <ThemeChanger />
-          </div>
-        </div>
+      <div class="hidden lg:flex lg:items-center lg:gap-1">
+        {
+          links.map((link) => (
+            <HeaderLink href={link.href}>{link.label}</HeaderLink>
+          ))
+        }
       </div>
-    </nav>
-  </header>
 
-  <!-- Mobile menu -->
+      <div class="hidden lg:block">
+        <ThemeToggle />
+      </div>
+
+      <button
+        type="button"
+        class="border-border bg-card text-foreground inline-flex items-center justify-center rounded-xl border p-2 lg:hidden"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+        id="mobile-menu-button"
+      >
+        <span class="sr-only">Open main menu</span>
+        <Icon name="mdi:menu" class="h-5 w-5" id="menu-icon" />
+        <Icon name="mdi:close" class="hidden h-5 w-5" id="close-icon" />
+      </button>
+    </nav>
+  </div>
+
   <div
-    class="hidden lg:hidden fixed inset-0 z-[100]"
+    class="fixed inset-0 z-100 hidden lg:hidden"
     id="mobile-menu"
     role="dialog"
     aria-modal="true"
   >
-    <!-- Background overlay -->
     <div
-      class="fixed inset-0 bg-background/80 backdrop-blur-sm"
+      class="bg-background/70 fixed inset-0 backdrop-blur-sm"
       aria-hidden="true"
     >
     </div>
-
-    <!-- Menu panel -->
     <div
-      class="fixed inset-y-0 right-0 w-full overflow-y-auto bg-background px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-border"
+      class="surface absolute top-3 right-3 w-[calc(100%-1.5rem)] max-w-sm p-4"
     >
-      <div class="flex items-center justify-between">
+      <div class="mb-4 flex items-center justify-between">
         <Logo />
         <button
           type="button"
-          class="rounded-md p-2 text-foreground hover:bg-muted hover:text-primary focus:outline-none focus:ring-2 focus:ring-inset focus:ring-primary"
+          class="border-border bg-card rounded-xl border p-2"
           id="mobile-menu-close"
         >
           <span class="sr-only">Close menu</span>
-          <Icon name="mdi:close" class="h-6 w-6" />
+          <Icon name="mdi:close" class="h-5 w-5" />
         </button>
       </div>
-      <div class="mt-6 flow-root">
-        <div class="-my-6 divide-y divide-border">
-          <div class="space-y-2 py-6">
-            {
-              links.map((link) => (
-                <a
-                  href={link.href}
-                  class="block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-foreground hover:bg-muted hover:text-primary"
-                >
-                  {link.label}
-                </a>
-              ))
-            }
-          </div>
-          <div class="py-6">
-            <ThemeChanger />
-          </div>
-        </div>
+
+      <div class="space-y-1" data-swup-preload-all>
+        {
+          links.map((link) => (
+            <a
+              href={link.href}
+              class="text-foreground/85 hover:bg-muted block rounded-xl px-3 py-2 text-sm font-semibold"
+              data-nav-link
+              data-nav-path={link.href}
+              data-mobile-nav-link
+            >
+              {link.label}
+            </a>
+          ))
+        }
+      </div>
+
+      <div class="border-border mt-4 border-t pt-4">
+        <ThemeToggle />
       </div>
     </div>
   </div>
-</div>
+</header>
 
 <script>
+  const normalizePath = (path: string) => {
+    if (!path) return "/";
+    return path.length > 1 && path.endsWith("/") ? path.slice(0, -1) : path;
+  };
+
+  const isPathActive = (currentPath: string, linkPath: string) => {
+    const current = normalizePath(currentPath);
+    const target = normalizePath(linkPath);
+    if (target === "/") return current === "/";
+    return current === target || current.startsWith(target + "/");
+  };
+
+  function updateActiveNavLinks() {
+    const currentPath = window.location.pathname;
+    const links = document.querySelectorAll<HTMLElement>("[data-nav-path]");
+
+    links.forEach((linkEl) => {
+      const linkPath = linkEl.getAttribute("data-nav-path") || "/";
+      const isActive = isPathActive(currentPath, linkPath);
+      linkEl.classList.toggle("active", isActive);
+
+      if (linkEl.hasAttribute("data-mobile-nav-link")) {
+        linkEl.classList.toggle("bg-muted", isActive);
+        linkEl.classList.toggle("text-foreground", isActive);
+      }
+    });
+  }
+
   const mobileMenuButton = document.getElementById("mobile-menu-button");
   const mobileMenu = document.getElementById("mobile-menu");
   const mobileMenuClose = document.getElementById("mobile-menu-close");
@@ -120,7 +141,6 @@ const links: { href: string; label: string }[] = [
   mobileMenuButton?.addEventListener("click", toggleMenu);
   mobileMenuClose?.addEventListener("click", toggleMenu);
 
-  // Close mobile menu when clicking outside
   document.addEventListener("click", (event) => {
     const isClickInside = mobileMenu?.contains(event.target as Node);
     const isClickOnButton = mobileMenuButton?.contains(event.target as Node);
@@ -133,4 +153,8 @@ const links: { href: string; label: string }[] = [
       toggleMenu();
     }
   });
+
+  updateActiveNavLinks();
+  document.addEventListener("swup:page:view", updateActiveNavLinks);
+  window.addEventListener("popstate", updateActiveNavLinks);
 </script>

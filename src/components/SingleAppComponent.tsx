@@ -13,10 +13,7 @@ import FlutterAppIframe from "./FlutterAppIframe";
 import { useState } from "react";
 import { useTheme } from "@/hooks/useTheme";
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import {
-  oneDark,
-  oneLight,
-} from "react-syntax-highlighter/dist/cjs/styles/prism";
+import { okaidia, prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import type { previewSizeEnum } from "@/types";
 
 export default function SingleAppComponent({
@@ -53,8 +50,8 @@ export default function SingleAppComponent({
   };
 
   return (
-    <Tabs className="flex flex-col w-full" defaultValue="preview">
-      <div className="border rounded-md h-14 flex items-center justify-between px-4">
+    <Tabs className="flex w-full flex-col" defaultValue="preview">
+      <div className="flex h-14 items-center justify-between rounded-md border px-4">
         <h1 className="text-base font-semibold">{widget.title}</h1>
         <TabsList className="flex items-center gap-2">
           <TabsTrigger value="preview">
@@ -91,7 +88,7 @@ export default function SingleAppComponent({
           </Tabs>
           <div className={`${getPreviewWidth()} transition-all duration-300`}>
             <FlutterAppIframe
-              className="h-[700px] aspect-[9/16] w-full"
+              className="aspect-9/16 h-[700px] w-full"
               path={widget.path}
             />
           </div>
@@ -99,33 +96,44 @@ export default function SingleAppComponent({
       </TabsContent>
       <TabsContent value="code">
         <Tabs defaultValue={code[0].file}>
-          <TabsList className="flex items-center gap-2">
-            {code.map((file) => (
-              <TabsTrigger key={file.file} value={file.file}>
-                {file.file}
-              </TabsTrigger>
-            ))}
-          </TabsList>
+          {code.length > 1 && (
+            <TabsList className="flex items-center gap-2">
+              {code.map((file) => (
+                <TabsTrigger key={file.file} value={file.file}>
+                  {file.file}
+                </TabsTrigger>
+              ))}
+            </TabsList>
+          )}
 
           {code.map((file) => (
             <TabsContent key={file.file} value={file.file}>
               <div className="relative h-[700px]">
                 <button
                   onClick={() => handleCopy(file.content)}
-                  className="absolute top-2 right-2 p-2 rounded-md bg-muted hover:bg-primary hover:text-primary-foreground flex items-center gap-2 w-[130px] justify-center transition-all cursor-pointer"
+                  className="bg-muted hover:bg-primary hover:text-primary-foreground absolute top-2 right-2 flex w-[130px] cursor-pointer items-center justify-center gap-2 rounded-md px-1 py-1 text-sm transition-all"
                 >
                   {copied ? (
-                    <Check className="w-4 h-4" />
+                    <Check className="size-3" />
                   ) : (
-                    <Copy className="w-4 h-4" />
+                    <Copy className="size-3" />
                   )}
 
                   {copied ? "Copied" : "Copy code"}
                 </button>
-                <div className="rounded-md h-full overflow-auto">
+                <div className="border-border h-full overflow-auto rounded-md border">
                   <SyntaxHighlighter
                     language="dart"
-                    style={theme === "dark" ? oneDark : oneLight}
+                    style={theme === "dark" ? okaidia : prism}
+                    customStyle={{
+                      margin: 0,
+                      height: "100%",
+                      borderRadius: "0.5rem",
+                      background: "transparent",
+                    }}
+                    codeTagProps={{
+                      style: { fontFamily: "var(--font-mono)" },
+                    }}
                   >
                     {file.content}
                   </SyntaxHighlighter>

@@ -8,23 +8,40 @@ const templates = await getCollection("templates");
 ---
 
 <BaseHtml title="Templates">
-  <section class="px-8 min-h-[90vh] max-w-6xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+  <section class="transition-page section-shell min-h-screen pt-28 pb-6">
+    <div class="mb-6">
+      <h1 class="text-3xl font-bold tracking-tight md:text-4xl">
+        App Templates
+      </h1>
+      <p class="text-muted-foreground mt-2">
+        Full Flutter templates with runnable demos and source snippets.
+      </p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {
-        templates.map((template) => (
+        templates.map((template, index) => (
           <a
             href={`/templates/${template.id}/`}
-            class="border-8 border-muted bg-card rounded-lg hover:bg-muted hover:text-primary hover:border-primary/10 flex flex-col items-center transition-all text-muted-foreground overflow-clip group"
+            class="surface interactive-card group overflow-hidden"
+            style={`--delay:${Math.min(index * 35, 260)}ms`}
+            data-reveal
+            data-swup-preload
           >
             {template.data.heroImage && (
               <Image
-                class="h-48 w-full object-cover rounded-md"
+                class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
                 src={template.data.heroImage}
                 alt={template.data.title}
               />
             )}
-            <div class="text-sm font-medium bg-transparent group-hover:bg-primary/10 group-hover:text-primary w-full p-2 text-center transition-all">
-              {template.data.title}
+            <div class="p-4">
+              <h2 class="group-hover:text-primary text-lg font-semibold tracking-tight">
+                {template.data.title}
+              </h2>
+              <p class="text-muted-foreground mt-2 line-clamp-2 text-sm">
+                {template.data.description}
+              </p>
             </div>
           </a>
         ))

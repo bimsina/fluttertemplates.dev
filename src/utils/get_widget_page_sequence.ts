@@ -55,7 +55,7 @@ export async function getWidgetPageSequence(): Promise<PageEntry[]> {
 }
 
 export async function getPrevNext(
-  currentId: string
+  currentId: string,
 ): Promise<{ prev?: PageEntry; next?: PageEntry }> {
   const sequence = await getWidgetPageSequence();
   const index = sequence.findIndex((entry) => entry.id === currentId);

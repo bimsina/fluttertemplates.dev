@@ -96,7 +96,7 @@ function groupWidgetsByPath(widgets: WidgetEntry[]): WidgetGroup[] {
       (otherGroup) =>
         otherGroup !== group &&
         otherGroup.path !== "" &&
-        group.path.startsWith(otherGroup.path + "/")
+        group.path.startsWith(otherGroup.path + "/"),
     );
   });
 
@@ -148,7 +148,7 @@ export async function getGroupedWidgets(): Promise<WidgetGroup[]> {
 
   // Only return true top-level groups (not root, not nested)
   const topLevelGroups = allGroups.filter(
-    (group) => group.path && !group.path.includes("/")
+    (group) => group.path && !group.path.includes("/"),
   );
 
   // Recursively filter out empty groups and sort items
@@ -163,7 +163,7 @@ export async function getGroupedWidgets(): Promise<WidgetGroup[]> {
         (group) =>
           group.items.length > 0 ||
           (group.children && group.children.length > 0) ||
-          group.indexFile !== null
+          group.indexFile !== null,
       )
       .sort((a, b) => a.order - b.order);
   }

@@ -20,11 +20,10 @@ const { title, description, image = "/og.png" } = Astro.props;
       image={image}
     />
   </head>
-  <body class="bg-background">
+  <body>
     <Header />
-    <main class="w-full pt-16">
+    <main id="swup">
       <slot />
     </main>
-    <!-- <Footer /> -->
   </body>
 </html>

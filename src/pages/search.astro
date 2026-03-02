@@ -6,12 +6,22 @@ import SearchComponent from "astro-pagefind/components/Search";
 ---
 
 <BaseHtml title={"Search " + SITE_TITLE} description={SITE_DESCRIPTION}>
-  <section class="max-w-6xl mx-auto px-4 py-8 min-h-screen">
-    <SearchComponent
-      id="search"
-      className="pagefind-ui"
-      uiOptions={{ showImages: false }}
-    />
+  <section class="transition-page section-shell min-h-screen pt-28 pb-6">
+    <div class="surface p-6 md:p-8">
+      <h1 class="text-3xl font-bold tracking-tight">
+        Search Widgets & Templates
+      </h1>
+      <p class="text-muted-foreground mt-2 text-sm">
+        Find screens, components, and flows by keyword.
+      </p>
+      <div class="mt-6">
+        <SearchComponent
+          id="search"
+          className="pagefind-ui"
+          uiOptions={{ showImages: false }}
+        />
+      </div>
+    </div>
   </section>
   <Footer />
 </BaseHtml>

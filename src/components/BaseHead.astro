@@ -18,7 +18,6 @@ const canonicalURL = cleanPathname
 const { title, description, image = "/og.png" } = Astro.props;
 ---
 
-<!-- Global Metadata -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -31,18 +30,19 @@ const { title, description, image = "/og.png" } = Astro.props;
 />
 <meta name="generator" content={Astro.generator} />
 
-<!-- Font preloads -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Roboto+Mono:ital,wght@0,100..700;1,100..700&family=Roboto:ital,wght@0,100..900;1,100..900&family=Sour+Gummy:ital,wght@0,100..900;1,100..900&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  rel="stylesheet"
+/>
+<link
+  href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&display=swap"
   rel="stylesheet"
 />
 
-<!-- Canonical URL -->
 <link rel="canonical" href={canonicalURL} />
 
-<!-- Primary Meta Tags -->
 <title>{title}</title>
 <meta name="title" content={title} />
 <meta name="description" content={description} />
@@ -53,7 +53,6 @@ const { title, description, image = "/og.png" } = Astro.props;
   content="Flutter, Flutter templates, Flutter UI, Flutter snippets, open source, production ready, mobile app development, Flutter components"
 />
 
-<!-- Open Graph / Facebook -->
 <meta property="og:type" content="website" />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={title} />
@@ -65,7 +64,6 @@ const { title, description, image = "/og.png" } = Astro.props;
 <meta property="og:image:width" content="1200" />
 <meta property="og:image:height" content="630" />
 
-<!-- Twitter -->
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:site" content={SITE_TITLE} />
 <meta name="twitter:creator" content={SITE_TITLE} />
@@ -75,76 +73,48 @@ const { title, description, image = "/og.png" } = Astro.props;
 <meta name="twitter:image:alt" content={title} />
 
 <script is:inline>
-  // Theme management system
   const THEME_KEY = "theme";
-  const THEME_ATTRIBUTE = "data-theme";
   const THEME_DARK = "dark";
   const THEME_LIGHT = "light";
+  const THEME_SYSTEM = "system";
 
-  // Get system preference
-  const getSystemPreference = () => {
-    return window.matchMedia("(prefers-color-scheme: dark)").matches
+  const getSystemPreference = () =>
+    window.matchMedia("(prefers-color-scheme: dark)").matches
       ? THEME_DARK
       : THEME_LIGHT;
-  };
 
-  // Get stored theme or system preference
-  const getStoredTheme = () => {
-    if (typeof localStorage === "undefined") return THEME_LIGHT;
-    return localStorage.getItem(THEME_KEY) || getSystemPreference();
-  };
+  const getStoredTheme = () => localStorage.getItem(THEME_KEY) || THEME_SYSTEM;
 
-  // Apply theme to document
-  const applyTheme = (theme) => {
-    document.documentElement.setAttribute(THEME_ATTRIBUTE, theme);
+  const resolveTheme = (theme) =>
+    theme === THEME_SYSTEM ? getSystemPreference() : theme;
+
+  const applyTheme = (themeChoice) => {
+    const theme = resolveTheme(themeChoice);
     document.documentElement.classList.toggle("dark", theme === THEME_DARK);
+    document.documentElement.setAttribute("data-theme", themeChoice);
   };
 
-  // Initialize theme
   const initializeTheme = () => {
-    const theme = getStoredTheme();
-    applyTheme(theme);
+    applyTheme(getStoredTheme());
   };
 
-  // Listen for system theme changes
   const setupThemeListener = () => {
     const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-
-    const handleChange = (e) => {
-      if (!localStorage.getItem(THEME_KEY)) {
-        applyTheme(e.matches ? THEME_DARK : THEME_LIGHT);
+    const handleChange = () => {
+      if ((localStorage.getItem(THEME_KEY) || THEME_SYSTEM) === THEME_SYSTEM) {
+        applyTheme(THEME_SYSTEM);
       }
     };
 
     if (mediaQuery.addEventListener) {
       mediaQuery.addEventListener("change", handleChange);
     } else {
-      // For older browsers
       mediaQuery.addListener(handleChange);
     }
   };
 
-  // Setup theme persistence
-  const setupThemePersistence = () => {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (mutation.attributeName === "class") {
-          const isDark = document.documentElement.classList.contains("dark");
-          localStorage.setItem(THEME_KEY, isDark ? THEME_DARK : THEME_LIGHT);
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class"],
-    });
-  };
-
-  // Initialize everything
   if (typeof document !== "undefined") {
     initializeTheme();
     setupThemeListener();
-    setupThemePersistence();
   }
 </script>

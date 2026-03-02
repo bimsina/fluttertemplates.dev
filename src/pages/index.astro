@@ -8,9 +8,22 @@ import WidgetsGrid from "@/components/WidgetsGrid.astro";
 
 <BaseHtml title={SITE_TITLE} description={SITE_DESCRIPTION}>
   <Hero />
-  <section class="max-w-6xl mx-auto px-4 py-8">
-    <h2 class="text-2xl font-bold">Browse Free Flutter Widgets</h2>
-    <WidgetsGrid />
+
+  <section class="transition-page section-shell pb-6">
+    <div class="surface p-6 md:p-8">
+      <div class="mb-6 flex items-end justify-between gap-4">
+        <div>
+          <h2 class="text-2xl font-bold tracking-tight md:text-3xl">
+            Widget Library
+          </h2>
+          <p class="text-muted-foreground mt-2 text-sm">
+            Curated categories designed for production apps.
+          </p>
+        </div>
+      </div>
+      <WidgetsGrid />
+    </div>
   </section>
+
   <Footer />
 </BaseHtml>

@@ -1,12 +1,12 @@
 ---
 import BaseHtml from "@/components/BaseHtml.astro";
 import SingleAppComponent from "@/components/SingleAppComponent";
+import WidgetsSidebar from "@/components/WidgetsSidebar";
 import { type CollectionEntry, getCollection } from "astro:content";
-import { render } from "astro:content";
 import fs from "fs/promises";
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
 import { getPrevNext } from "@/utils/get_widget_page_sequence";
-import WidgetsSidebar from "@/components/WidgetsSidebar.astro";
+import { serializeWidgetGroupsForSidebar } from "@/utils/serialize_widget_groups";
 import WidgetsPrevNext from "@/components/WidgetsPrevNext.astro";
 import Footer from "@/components/Footer.astro";
 
@@ -64,48 +64,59 @@ const code = await Promise.all(
   }),
 );
 
-const { Content } = await render(widget);
-
 const groupedWidgets = await getGroupedWidgets();
+const sidebarGroups = serializeWidgetGroupsForSidebar(groupedWidgets);
 const { prev, next } = await getPrevNext(widget.id);
 ---
 
 <BaseHtml title={widget.data.title} description={widget.data.description}>
-  <div class="flex flex-row w-full h-[calc(100vh-4rem)]">
-    <WidgetsSidebar groups={groupedWidgets} currentPath={widget.id} />
-    <div class="flex-1 w-full h-full overflow-y-scroll">
-      <div class="max-w-6xl mx-auto px-4 py-8">
-        <main>
-          {
-            isGroup ? (
-              <div class="flex flex-col gap-4">
-                {childrenColponents.map((c) => (
-                  <div id={c.id} class="scroll-mt-10">
+  <div class="section-shell pt-24 pb-6">
+    <div class="surface overflow-hidden">
+      <div class="flex min-h-[calc(100vh-9rem)] w-full flex-col lg:flex-row">
+        <WidgetsSidebar
+          groups={sidebarGroups}
+          currentPath={widget.id}
+          client:only="react"
+        />
+        <div
+          id="widgets-content"
+          class="transition-page max-h-[calc(100vh-9rem)] w-full flex-1 overflow-y-auto"
+        >
+          <div class="mx-auto max-w-6xl px-4 py-6">
+            <main>
+              {
+                isGroup ? (
+                  <div class="flex flex-col gap-4">
+                    {childrenColponents.map((c) => (
+                      <div id={c.id} class="scroll-mt-24">
+                        <SingleAppComponent
+                          widget={c.data}
+                          code={
+                            childrenCode.find((cc) => cc.id === c.id)
+                              ?.code_files
+                          }
+                          client:only="react"
+                        />
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <div id={widget.id} class="scroll-mt-24">
                     <SingleAppComponent
-                      widget={c.data}
-                      code={
-                        childrenCode.find((cc) => cc.id === c.id)?.code_files
-                      }
-                      client:load
+                      widget={widget.data}
+                      code={code}
+                      client:only="react"
                     />
                   </div>
-                ))}
-              </div>
-            ) : (
-              <div id={widget.id} class="scroll-mt-10">
-                <SingleAppComponent
-                  widget={widget.data}
-                  code={code}
-                  client:load
-                />
-              </div>
-            )
-          }
-        </main>
-        <WidgetsPrevNext prev={prev} next={next} />
+                )
+              }
+            </main>
+            <WidgetsPrevNext prev={prev} next={next} />
+          </div>
+        </div>
       </div>
-
-      <Footer />
     </div>
   </div>
+
+  <Footer />
 </BaseHtml>

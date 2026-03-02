@@ -23,7 +23,7 @@ export default function FlutterAppIframe({
 
   useEffect(() => {
     setIsIOS(
-      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream
+      /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream,
     );
   }, []);
 
@@ -37,8 +37,8 @@ export default function FlutterAppIframe({
   const url = skipUrlFormatting
     ? path
     : import.meta.env.DEV
-    ? `http://localhost:8989/?${queryParams.toString()}`
-    : `/flutter_apps/${app}/index.html?${queryParams.toString()}`;
+      ? `http://localhost:8989/?${queryParams.toString()}`
+      : `/flutter_apps/${app}/index.html?${queryParams.toString()}`;
 
   const requestFullscreen = () => {
     const element = iframeRef.current;
@@ -74,7 +74,7 @@ export default function FlutterAppIframe({
   };
 
   return (
-    <div className="flex flex-col gap-2 items-center justify-center">
+    <div className="flex flex-col items-center justify-center gap-2">
       <div className={className}>
         <iframe
           src={url}
@@ -87,7 +87,7 @@ export default function FlutterAppIframe({
       </div>
       {enableShowFullScreenButton && (
         <button
-          className="border border-primary text-primary px-4 py-2 rounded-md flex items-center gap-2 text-sm hover:bg-primary hover:text-primary-foreground transition-all duration-300 cursor-pointer"
+          className="border-primary text-primary hover:bg-primary hover:text-primary-foreground flex cursor-pointer items-center gap-2 rounded-md border px-4 py-2 text-sm transition-all duration-300"
           onClick={requestFullscreen}
         >
           <Fullscreen />
