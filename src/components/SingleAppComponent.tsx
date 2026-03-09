@@ -16,6 +16,12 @@ import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { okaidia, prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import type { previewSizeEnum } from "@/types";
 
+const PREVIEW_DIMENSIONS = {
+  mobile: { width: 375, height: 700 },
+  tablet: { width: 768, height: 700 },
+  desktop: { width: 1024, height: 700 },
+} as const;
+
 export default function SingleAppComponent({
   widget,
   code = [],
@@ -38,16 +44,7 @@ export default function SingleAppComponent({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const getPreviewWidth = () => {
-    switch (previewSize) {
-      case "mobile":
-        return "w-[375px]";
-      case "tablet":
-        return "w-[768px]";
-      case "desktop":
-        return "w-[1024px]";
-    }
-  };
+  const previewDimensions = PREVIEW_DIMENSIONS[previewSize];
 
   return (
     <Tabs className="flex w-full flex-col" defaultValue="preview">
@@ -86,10 +83,15 @@ export default function SingleAppComponent({
               </TabsTrigger>
             </TabsList>
           </Tabs>
-          <div className={`${getPreviewWidth()} transition-all duration-300`}>
+          <div
+            className="mx-auto min-h-[700px] max-w-full transition-[width] duration-300"
+            style={{ width: `min(100%, ${previewDimensions.width}px)` }}
+          >
             <FlutterAppIframe
-              className="aspect-9/16 h-[700px] w-full"
+              className="h-[700px] w-full"
               path={widget.path}
+              enableShowFullScreenButton
+              fullScreenButtonLabel="Open in full screen"
             />
           </div>
         </div>

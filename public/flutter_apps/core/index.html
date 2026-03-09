@@ -33,6 +33,42 @@
   <link rel="manifest" href="manifest.json">
 </head>
 <body>
+  <script>
+    (() => {
+      if (window.parent === window) return;
+
+      let sent = false;
+      let observer;
+
+      const notifyReady = () => {
+        if (sent) return;
+        sent = true;
+        window.parent.postMessage({ type: "flutter-preview-ready" }, "*");
+        observer?.disconnect();
+      };
+
+      const checkIfRendered = () => {
+        const renderedNode = document.querySelector(
+          "flt-glass-pane, flutter-view, flt-scene-host, canvas",
+        );
+
+        if (!renderedNode) return;
+
+        requestAnimationFrame(() => {
+          requestAnimationFrame(notifyReady);
+        });
+      };
+
+      observer = new MutationObserver(checkIfRendered);
+      observer.observe(document.documentElement, {
+        childList: true,
+        subtree: true,
+      });
+
+      window.addEventListener("load", checkIfRendered, { once: true });
+      checkIfRendered();
+    })();
+  </script>
   <script src="flutter_bootstrap.js" async></script>
 </body>
 </html>

@@ -99,7 +99,7 @@ const { prev, next } = await getPrevNext(widget.id);
                             childrenCode.find((cc) => cc.id === c.id)
                               ?.code_files
                           }
-                          client:only="react"
+                          client:load
                         />
                       </div>
                     ))}
@@ -109,7 +109,7 @@ const { prev, next } = await getPrevNext(widget.id);
                     <SingleAppComponent
                       widget={widget.data}
                       code={code}
-                      client:only="react"
+                      client:load
                     />
                   </div>
                 )
