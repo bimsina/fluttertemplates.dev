@@ -163,6 +163,71 @@ import 'utilities/notes_app.dart';
 import 'utilities/stopwatch.dart';
 import 'utilities/world_clock.dart';
 
+import 'auth/welcome.dart';
+import 'auth/login_hero.dart';
+import 'auth/social_login.dart';
+import 'auth/signup_terms.dart';
+import 'auth/magic_link.dart';
+import 'auth/two_factor.dart';
+import 'auth/biometric_unlock.dart';
+import 'auth/pin_lock.dart';
+import 'auth/reset_password.dart';
+import 'auth/email_verification.dart';
+import 'ai/ai_chat.dart';
+import 'ai/chatbot.dart';
+import 'ai/prompt_composer.dart';
+import 'ai/rich_response.dart';
+import 'ai/image_generation.dart';
+import 'ai/voice_assistant.dart';
+import 'ai/model_picker.dart';
+import 'ai/chat_history.dart';
+import 'admin/dashboard_shell.dart';
+import 'admin/users_table.dart';
+import 'admin/edit_form.dart';
+import 'admin/roles_permissions.dart';
+import 'admin/activity_log.dart';
+import 'admin/settings_panel.dart';
+import 'navigation/sliver_app_bar.dart';
+import 'navigation/app_bar_variants.dart';
+import 'navigation/expandable_sidebar.dart';
+import 'navigation/nav_drawer.dart';
+import 'navigation/tab_bars.dart';
+import 'must_haves/onboarding_page/illustration_onboarding.dart';
+import 'must_haves/onboarding_page/feature_carousel.dart';
+import 'must_haves/onboarding_page/permissions_onboarding.dart';
+import 'must_haves/onboarding_page/value_prop.dart';
+import 'maps/map_view.dart';
+import 'maps/location_picker.dart';
+import 'maps/ride_tracking.dart';
+import 'maps/delivery_tracking.dart';
+import 'maps/place_detail.dart';
+import 'maps/directions.dart';
+import 'iot/smart_home.dart';
+import 'iot/device_controls.dart';
+import 'iot/thermostat.dart';
+import 'iot/energy_usage.dart';
+import 'iot/light_control.dart';
+import 'saas/usage_dashboard.dart';
+import 'saas/team_members.dart';
+import 'saas/api_keys.dart';
+import 'saas/integrations.dart';
+import 'crm/contacts_list.dart';
+import 'crm/deal_pipeline.dart';
+import 'crm/lead_detail.dart';
+import 'crm/activity_timeline.dart';
+import 'events/event_list.dart';
+import 'events/event_detail.dart';
+import 'events/ticket.dart';
+import 'events/schedule.dart';
+import 'marketplace/listings_grid.dart';
+import 'marketplace/listing_detail.dart';
+import 'marketplace/seller_profile.dart';
+import 'marketplace/create_listing.dart';
+import 'productivity/todo_list.dart';
+import 'productivity/reminders.dart';
+import 'core/sliders.dart';
+import 'core/cards.dart';
+import 'animation/marquee_text.dart';
 void main() {
   runApp(const MyApp());
 }
@@ -333,6 +398,71 @@ final routes = <String, Widget Function()>{
   "/utilities/notes_app": () => const NotesApp(),
   "/utilities/stopwatch": () => const StopwatchScreen(),
   "/utilities/world_clock": () => const WorldClock(),
+  "/auth/welcome": () => const Welcome(),
+  "/auth/login_hero": () => const LoginHero(),
+  "/auth/social_login": () => const SocialLogin(),
+  "/auth/signup_terms": () => const SignupTerms(),
+  "/auth/magic_link": () => const MagicLink(),
+  "/auth/two_factor": () => const TwoFactor(),
+  "/auth/biometric_unlock": () => const BiometricUnlock(),
+  "/auth/pin_lock": () => const PinLock(),
+  "/auth/reset_password": () => const ResetPassword(),
+  "/auth/email_verification": () => const EmailVerification(),
+  "/ai/ai_chat": () => const AiChat(),
+  "/ai/chatbot": () => const Chatbot(),
+  "/ai/prompt_composer": () => const PromptComposer(),
+  "/ai/rich_response": () => const RichResponse(),
+  "/ai/image_generation": () => const ImageGeneration(),
+  "/ai/voice_assistant": () => const VoiceAssistant(),
+  "/ai/model_picker": () => const ModelPicker(),
+  "/ai/chat_history": () => const ChatHistory(),
+  "/admin/dashboard_shell": () => const DashboardShell(),
+  "/admin/users_table": () => const UsersTable(),
+  "/admin/edit_form": () => const EditForm(),
+  "/admin/roles_permissions": () => const RolesPermissions(),
+  "/admin/activity_log": () => const ActivityLog(),
+  "/admin/settings_panel": () => const SettingsPanel(),
+  "/navigation/sliver_app_bar": () => const CollapsingAppBar(),
+  "/navigation/app_bar_variants": () => const AppBarVariants(),
+  "/navigation/expandable_sidebar": () => const ExpandableSidebar(),
+  "/navigation/nav_drawer": () => const NavDrawer(),
+  "/navigation/tab_bars": () => const TabBars(),
+  "/must_haves/onboarding_page/illustration_onboarding": () => const IllustrationOnboarding(),
+  "/must_haves/onboarding_page/feature_carousel": () => const FeatureCarousel(),
+  "/must_haves/onboarding_page/permissions_onboarding": () => const PermissionsOnboarding(),
+  "/must_haves/onboarding_page/value_prop": () => const ValueProp(),
+  "/maps/map_view": () => const MapView(),
+  "/maps/location_picker": () => const LocationPicker(),
+  "/maps/ride_tracking": () => const RideTracking(),
+  "/maps/delivery_tracking": () => const CourierTracking(),
+  "/maps/place_detail": () => const PlaceDetail(),
+  "/maps/directions": () => const Directions(),
+  "/iot/smart_home": () => const SmartHome(),
+  "/iot/device_controls": () => const DeviceControls(),
+  "/iot/thermostat": () => const Thermostat(),
+  "/iot/energy_usage": () => const EnergyUsage(),
+  "/iot/light_control": () => const LightControl(),
+  "/saas/usage_dashboard": () => const UsageDashboard(),
+  "/saas/team_members": () => const TeamMembers(),
+  "/saas/api_keys": () => const ApiKeys(),
+  "/saas/integrations": () => const Integrations(),
+  "/crm/contacts_list": () => const ContactsList(),
+  "/crm/deal_pipeline": () => const DealPipeline(),
+  "/crm/lead_detail": () => const LeadDetail(),
+  "/crm/activity_timeline": () => const ActivityTimeline(),
+  "/events/event_list": () => const EventsList(),
+  "/events/event_detail": () => const EventDetail(),
+  "/events/ticket": () => const Ticket(),
+  "/events/schedule": () => const Schedule(),
+  "/marketplace/listings_grid": () => const ListingsGrid(),
+  "/marketplace/listing_detail": () => const ListingDetail(),
+  "/marketplace/seller_profile": () => const SellerProfile(),
+  "/marketplace/create_listing": () => const CreateListing(),
+  "/productivity/todo_list": () => const TodoList(),
+  "/productivity/reminders": () => const Reminders(),
+  "/core/sliders": () => const Sliders(),
+  "/core/cards": () => const Cards(),
+  "/animation/marquee_text": () => const MarqueeText(),
 };
 
 class MyApp extends StatefulWidget {

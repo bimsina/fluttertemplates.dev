@@ -1,0 +1,130 @@
+{
+  "categories": {
+    "auth": {
+      "title": "Authentication",
+      "description": "Flutter authentication UI — login, signup, OTP, social sign-in, biometric and PIN lock screens.",
+      "order": 4,
+      "icon": "mdi:lock"
+    },
+    "ai": {
+      "title": "AI",
+      "description": "Flutter AI chat and chatbot UI — streaming assistant messages, prompt composers, and voice assistant screens.",
+      "order": 8,
+      "icon": "mdi:robot-outline"
+    },
+    "admin": {
+      "title": "Admin",
+      "description": "Flutter admin dashboard UI — data tables, user management, roles, and settings panels.",
+      "order": 9,
+      "icon": "mdi:shield-account"
+    },
+    "maps": {
+      "title": "Maps & Location",
+      "description": "Flutter maps and location UI — map views, location pickers, ride and delivery tracking, and directions.",
+      "order": 15,
+      "icon": "mdi:map"
+    },
+    "iot": {
+      "title": "IoT & Smart Home",
+      "description": "Flutter IoT and smart home UI — device dashboards, controls, thermostats, and energy monitoring.",
+      "order": 16,
+      "icon": "mdi:home-automation"
+    },
+    "saas": {
+      "title": "SaaS",
+      "description": "Flutter SaaS app UI — usage dashboards, team seats, API keys, and integrations.",
+      "order": 22,
+      "icon": "mdi:cloud-outline"
+    },
+    "crm": {
+      "title": "CRM",
+      "description": "Flutter CRM UI — contact lists, deal pipelines, lead details, and activity timelines.",
+      "order": 23,
+      "icon": "mdi:account-group"
+    },
+    "events": {
+      "title": "Events",
+      "description": "Flutter events app UI — event discovery, detail pages, tickets, and schedules.",
+      "order": 24,
+      "icon": "mdi:calendar-star"
+    },
+    "marketplace": {
+      "title": "Marketplace",
+      "description": "Flutter marketplace UI — listing grids, product details, seller profiles, and create-listing forms.",
+      "order": 25,
+      "icon": "mdi:storefront"
+    }
+  },
+  "widgets": [
+    { "category": "auth", "name": "welcome", "title": "Welcome", "description": "A Flutter welcome screen with a brand hero, tagline, and get-started and sign-in call-to-action buttons." },
+    { "category": "auth", "name": "login_hero", "title": "Login Screen", "description": "A Flutter login screen with a hero illustration, email and password fields, remember-me, and a sign-in button." },
+    { "category": "auth", "name": "social_login", "title": "Social Login", "description": "A Flutter social login screen with Google, Apple, and email sign-in buttons and an or-divider." },
+    { "category": "auth", "name": "signup_terms", "title": "Sign Up", "description": "A Flutter sign up screen with a live password-strength meter and a terms-and-conditions checkbox." },
+    { "category": "auth", "name": "magic_link", "title": "Magic Link Login", "description": "A Flutter passwordless login screen that emails a magic sign-in link, with a sent-confirmation state." },
+    { "category": "auth", "name": "two_factor", "title": "Two-Factor Auth", "description": "A Flutter two-factor authentication screen with a six-digit code entry and a resend-code timer." },
+    { "category": "auth", "name": "biometric_unlock", "title": "Biometric Unlock", "description": "A Flutter biometric unlock screen with Face ID and fingerprint prompts and a passcode fallback." },
+    { "category": "auth", "name": "pin_lock", "title": "PIN Lock", "description": "A Flutter PIN lock screen with a numeric keypad and animated dot indicators." },
+    { "category": "auth", "name": "reset_password", "title": "Reset Password", "description": "A Flutter reset password screen with new-password and confirm-password fields and inline validation." },
+    { "category": "auth", "name": "email_verification", "title": "Email Verification", "description": "A Flutter email verification screen with a confirmation illustration and a resend-email option." },
+
+    { "category": "ai", "name": "ai_chat", "title": "AI Chat", "description": "A Flutter AI chat UI with streaming assistant replies, user and bot bubbles, and an input bar." },
+    { "category": "ai", "name": "chatbot", "title": "Chatbot", "description": "A Flutter chatbot UI with a typing indicator, quick-reply chips, and message bubbles." },
+    { "category": "ai", "name": "prompt_composer", "title": "Prompt Composer", "description": "A Flutter AI prompt composer with an expanding input, attachment and voice buttons, and a send action." },
+    { "category": "ai", "name": "rich_response", "title": "AI Response", "description": "A Flutter AI response view rendering markdown text, a syntax-highlighted code block, and a copy button." },
+    { "category": "ai", "name": "image_generation", "title": "AI Image Generation", "description": "A Flutter AI image generation UI with a prompt field, style chips, and a grid of generated results." },
+    { "category": "ai", "name": "voice_assistant", "title": "Voice Assistant", "description": "A Flutter voice assistant UI with an animated waveform, a listening state, and a transcript." },
+    { "category": "ai", "name": "model_picker", "title": "Model Picker", "description": "A Flutter AI model picker sheet to choose the model and adjust temperature and response length." },
+    { "category": "ai", "name": "chat_history", "title": "Chat History", "description": "A Flutter AI chat history list of past conversations with search, pinning, and timestamps." },
+
+    { "category": "admin", "name": "dashboard_shell", "title": "Admin Dashboard", "description": "A Flutter admin dashboard layout with a side navigation rail, top bar, metric cards, and a chart.", "size": "desktop" },
+    { "category": "admin", "name": "users_table", "title": "Users Table", "description": "A Flutter admin users table with search, status badges, row actions, and pagination.", "size": "desktop" },
+    { "category": "admin", "name": "edit_form", "title": "Edit Record", "description": "A Flutter admin edit form with grouped fields, switches, and save and cancel actions." },
+    { "category": "admin", "name": "roles_permissions", "title": "Roles & Permissions", "description": "A Flutter roles and permissions matrix with toggleable access per role.", "size": "tablet" },
+    { "category": "admin", "name": "activity_log", "title": "Activity Log", "description": "A Flutter admin activity log with a timeline of user actions, actors, and timestamps." },
+    { "category": "admin", "name": "settings_panel", "title": "Settings Panel", "description": "A Flutter admin settings panel with tabbed sections for general, security, and billing." },
+
+    { "category": "navigation", "name": "sliver_app_bar", "cls": "CollapsingAppBar", "title": "Collapsing App Bar", "description": "A Flutter collapsing sliver app bar that shrinks a hero header into a toolbar on scroll." },
+    { "category": "navigation", "name": "app_bar_variants", "title": "App Bar Variants", "description": "A Flutter gallery of app bar variants — with search, actions, gradients, and a bottom tab bar." },
+    { "category": "navigation", "name": "expandable_sidebar", "title": "Expandable Sidebar", "description": "A Flutter expandable side navigation that collapses from labelled items to icon-only.", "size": "tablet" },
+    { "category": "navigation", "name": "nav_drawer", "title": "Navigation Drawer", "description": "A Flutter navigation drawer with a profile header, grouped destinations, and a footer." },
+    { "category": "navigation", "name": "tab_bars", "cls": "TabBars", "title": "Tab Bar", "description": "A Flutter tab bar with swipeable views plus a scrollable and a segmented-control variant." },
+
+    { "category": "must_haves/onboarding_page", "name": "illustration_onboarding", "title": "Illustration Onboarding", "description": "A Flutter onboarding flow with illustrated slides, page dots, and skip and next controls." },
+    { "category": "must_haves/onboarding_page", "name": "feature_carousel", "title": "Feature Carousel", "description": "A Flutter onboarding feature carousel highlighting app benefits with auto-advancing slides." },
+    { "category": "must_haves/onboarding_page", "name": "permissions_onboarding", "title": "Permissions Onboarding", "description": "A Flutter onboarding screen requesting notifications, location, and camera permissions with rationale." },
+    { "category": "must_haves/onboarding_page", "name": "value_prop", "title": "Value Prop Onboarding", "description": "A Flutter onboarding value-proposition screen with benefit rows and a get-started button." },
+
+    { "category": "maps", "name": "map_view", "title": "Map View", "description": "A Flutter map view UI with location markers, a floating search bar, and a recenter button." },
+    { "category": "maps", "name": "location_picker", "title": "Location Picker", "description": "A Flutter location picker with a center pin, draggable map, and a confirm-address sheet." },
+    { "category": "maps", "name": "ride_tracking", "title": "Ride Tracking", "description": "A Flutter ride tracking screen with the driver en route, live ETA, and a trip details sheet." },
+    { "category": "maps", "name": "delivery_tracking", "cls": "CourierTracking", "title": "Delivery Tracking", "description": "A Flutter delivery tracking map with the courier path and step-by-step order status." },
+    { "category": "maps", "name": "place_detail", "title": "Place Detail", "description": "A Flutter place detail sheet with photos, rating, hours, and directions and call actions." },
+    { "category": "maps", "name": "directions", "title": "Directions", "description": "A Flutter turn-by-turn directions screen with a route summary and a step-by-step list." },
+
+    { "category": "iot", "name": "smart_home", "title": "Smart Home", "description": "A Flutter smart home dashboard with rooms, device cards, and quick scene controls." },
+    { "category": "iot", "name": "device_controls", "title": "Device Controls", "description": "A Flutter IoT device controls screen with toggle cards for lights, plugs, and sensors." },
+    { "category": "iot", "name": "thermostat", "title": "Thermostat", "description": "A Flutter thermostat control with a circular temperature dial and a mode selector." },
+    { "category": "iot", "name": "energy_usage", "title": "Energy Usage", "description": "A Flutter energy usage dashboard with a consumption chart and a per-device breakdown." },
+    { "category": "iot", "name": "light_control", "title": "Smart Light Control", "description": "A Flutter smart light control with a brightness slider and a color picker." },
+
+    { "category": "saas", "name": "usage_dashboard", "title": "Usage Dashboard", "description": "A Flutter SaaS usage dashboard with plan limits, metered usage bars, and an upgrade prompt." },
+    { "category": "saas", "name": "team_members", "title": "Team Members", "description": "A Flutter SaaS team members screen with seat usage, roles, and invite actions." },
+    { "category": "saas", "name": "api_keys", "title": "API Keys", "description": "A Flutter API keys screen to create, reveal, copy, and revoke keys." },
+    { "category": "saas", "name": "integrations", "title": "Integrations", "description": "A Flutter integrations grid to connect and manage third-party services." },
+
+    { "category": "crm", "name": "contacts_list", "title": "Contacts List", "description": "A Flutter CRM contacts list with search, avatars, and alphabetical sections." },
+    { "category": "crm", "name": "deal_pipeline", "title": "Deal Pipeline", "description": "A Flutter CRM deal pipeline with horizontal stage columns and deal cards.", "size": "tablet" },
+    { "category": "crm", "name": "lead_detail", "title": "Lead Detail", "description": "A Flutter CRM lead detail with contact info, deal value, and an activity feed." },
+    { "category": "crm", "name": "activity_timeline", "title": "Activity Timeline", "description": "A Flutter CRM activity timeline of calls, emails, and notes with timestamps." },
+
+    { "category": "events", "name": "event_list", "cls": "EventsList", "title": "Event List", "description": "A Flutter events discovery list with category filters and date and location metadata." },
+    { "category": "events", "name": "event_detail", "title": "Event Detail", "description": "A Flutter event detail screen with a hero image, agenda, location, and an RSVP button." },
+    { "category": "events", "name": "ticket", "title": "Event Ticket", "description": "A Flutter event ticket with a QR-style code, seat details, and a perforated pass design." },
+    { "category": "events", "name": "schedule", "title": "Event Schedule", "description": "A Flutter event schedule with a day selector and a timeline of sessions." },
+
+    { "category": "marketplace", "name": "listings_grid", "title": "Listings Grid", "description": "A Flutter marketplace listings grid with category filters, prices, and favourite buttons." },
+    { "category": "marketplace", "name": "listing_detail", "title": "Listing Detail", "description": "A Flutter marketplace listing detail with an image gallery, seller card, and a buy button." },
+    { "category": "marketplace", "name": "seller_profile", "title": "Seller Profile", "description": "A Flutter marketplace seller profile with ratings, stats, and a grid of items." },
+    { "category": "marketplace", "name": "create_listing", "title": "Create Listing", "description": "A Flutter create-listing form with photo upload, category, price, and description fields." }
+  ]
+}

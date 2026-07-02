@@ -1,0 +1,17 @@
+{
+  "categories": {
+    "productivity": {
+      "title": "Productivity",
+      "description": "Flutter productivity app UI — to-do lists, checklists, reminders, and task management screens.",
+      "order": 26,
+      "icon": "mdi:checkbox-marked-circle-outline"
+    }
+  },
+  "widgets": [
+    { "category": "productivity", "name": "todo_list", "title": "Todo List", "description": "A Flutter to-do list with add, check-off, swipe-to-delete, and remaining-count." },
+    { "category": "productivity", "name": "reminders", "title": "Reminders", "description": "A Flutter reminders screen with scheduled tasks grouped by day and toggle switches." },
+    { "category": "core", "name": "sliders", "title": "Sliders", "description": "A Flutter slider showcase with a value slider, a range slider, and a stepped slider." },
+    { "category": "core", "name": "cards", "title": "Cards", "description": "A Flutter cards gallery with elevated, outlined, gradient, and interactive card styles." },
+    { "category": "animation", "name": "marquee_text", "title": "Marquee Text", "description": "A Flutter marquee that auto-scrolls long text horizontally in a continuous loop." }
+  ]
+}

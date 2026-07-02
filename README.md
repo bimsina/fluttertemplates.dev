@@ -8,7 +8,7 @@ Stop rebuilding the same login form, product grid, or onboarding flow on every a
 
 ## What you can do here
 
-- **Browse by category** — 160+ widgets across 27 categories (forms, chat, e-commerce, dashboard, navigation, and more).
+- **Browse by category** — 220+ widgets across 35+ categories (auth, AI, admin, forms, chat, e-commerce, dashboard, navigation, maps, IoT, and more).
 - **Preview live** — every widget runs as a real Flutter app in an in-browser preview, not a screenshot.
 - **Flip to the source** — switch between the running preview and its Dart code, and copy it.
 - **Explore full templates** — complete app examples with live demos, screenshots, and source links.
