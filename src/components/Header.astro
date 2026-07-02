@@ -11,13 +11,11 @@ const links: { href: string; label: string }[] = [
 ];
 ---
 
-<header class="fixed inset-x-0 top-0 isolate z-80">
-  <div class="section-shell pt-3">
-    <nav
-      class="surface bg-card/95 flex h-14 items-center justify-between px-3 backdrop-blur-none md:px-8"
-      style="backdrop-filter: none;"
-      aria-label="Global"
-    >
+<header
+  class="bg-background/80 fixed inset-x-0 top-0 isolate z-80 backdrop-blur"
+>
+  <div class="section-shell">
+    <nav class="flex h-16 items-center justify-between" aria-label="Global">
       <Logo />
 
       <div class="hidden lg:flex lg:items-center lg:gap-1">

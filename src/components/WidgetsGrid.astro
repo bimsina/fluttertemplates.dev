@@ -1,32 +1,96 @@
 ---
-import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
+import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
+import CategoryPreview from "./CategoryPreview.astro";
 
-const widgets = (await getCollection("widgets"))
-  .filter((cmp) => cmp.filePath?.endsWith("index.md") && !cmp.id.includes("/"))
-  .sort((a, b) => a.data.order - b.data.order);
+interface Group {
+  title: string;
+  path: string;
+  items: unknown[];
+  indexFile: {
+    id: string;
+    data: { description?: string; icon?: string };
+  } | null;
+  children?: Group[];
+}
+
+const groups = (await getGroupedWidgets()) as unknown as Group[];
+
+// Short one-line taglines for the cards. The full (longer) descriptions live in
+// each category's frontmatter and are used on the category pages themselves.
+const TAGLINES: Record<string, string> = {
+  animation: "Motion, transitions, and micro-interactions",
+  calendar: "Month views, events, and booking slots",
+  chat: "Bubbles, typing, and threaded replies",
+  communication: "Voice, video, and call screens",
+  core: "Buttons, loaders, and the essentials",
+  dashboard: "Metrics, tables, and charts",
+  ecommerce: "Product grids, carts, and checkout",
+  education: "Courses, lessons, and quizzes",
+  finance: "Wallets, charts, and transactions",
+  food: "Restaurants, menus, and order tracking",
+  forms: "Inputs, validation, and wizards",
+  gallery: "Photo grids, carousels, and viewers",
+  health: "Activity rings and fitness tracking",
+  info: "About, contact, and FAQ pages",
+  layouts: "Responsive grids and layout patterns",
+  media: "Music, podcasts, and video players",
+  must_haves: "Onboarding, feeds, and settings",
+  navigation: "Tab bars, rails, and drawers",
+  notifications: "Inboxes, banners, and alerts",
+  overlays: "Sheets, dialogs, and snackbars",
+  pricing: "Plans, paywalls, and comparisons",
+  profile: "Profiles, settings, and privacy",
+  search: "Search, results, and suggestions",
+  social: "Stories, feeds, and profiles",
+  states: "Empty, error, and loading states",
+  travel: "Destinations, flights, and hotels",
+  utilities: "Weather, calculators, and tools",
+};
+
+function countWidgets(group: Group): number {
+  const own = group.items?.length ?? 0;
+  const nested =
+    group.children?.reduce((sum, child) => sum + countWidgets(child), 0) ?? 0;
+  return own + nested;
+}
 ---
 
-<div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+<div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
   {
-    widgets.map((widget, index) => (
-      <a
-        href={`/widgets/${widget.id}/`}
-        class="surface interactive-card group p-5"
-        style={`--delay:${Math.min(index * 30, 240)}ms`}
-        data-reveal
-        data-swup-preload
-      >
-        <div class="bg-muted/70 text-muted-foreground group-hover:bg-muted group-hover:text-foreground mb-4 inline-flex h-11 w-11 items-center justify-center rounded-xl transition-colors">
-          {widget.data.icon && <Icon name={widget.data.icon} class="size-5" />}
-        </div>
-        <h3 class="group-hover:text-foreground text-base font-semibold tracking-tight">
-          {widget.data.title}
-        </h3>
-        <p class="text-muted-foreground mt-2 text-sm">
-          Reusable Flutter patterns and UI building blocks.
-        </p>
-      </a>
-    ))
+    groups.map((group, index) => {
+      const href = `/widgets/${group.indexFile?.id ?? group.path}/`;
+      const count = countWidgets(group);
+      return (
+        <a
+          href={href}
+          class="border-border bg-card interactive-card group block overflow-hidden rounded-2xl border"
+          style={`--delay:${Math.min(index * 26, 260)}ms`}
+          data-reveal
+          data-swup-preload
+        >
+          <CategoryPreview
+            slug={group.path}
+            icon={group.indexFile?.data.icon}
+          />
+          <div class="p-5">
+            <div class="flex items-center justify-between gap-3">
+              <h3 class="group-hover:text-primary text-base font-semibold tracking-tight transition-colors">
+                {group.title}
+              </h3>
+              {count > 0 && (
+                <span class="text-muted-foreground font-mono text-[0.68rem]">
+                  {count} {count === 1 ? "widget" : "widgets"}
+                </span>
+              )}
+            </div>
+            <p class="text-muted-foreground mt-1.5 truncate text-sm">
+              {TAGLINES[group.path] ??
+                group.indexFile?.data.description ??
+                "Reusable Flutter patterns and building blocks."}
+            </p>
+          </div>
+        </a>
+      );
+    })
   }
 </div>

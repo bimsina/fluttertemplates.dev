@@ -16,7 +16,7 @@ class _ReorderableListPageState extends State<ReorderableListPage> {
       appBar: AppBar(title: const Text('Reorderable List')),
       body: ReorderableListView.builder(
         itemCount: _items.length,
-        onReorder: (oldIndex, newIndex) {
+        onReorderItem: (oldIndex, newIndex) {
           setState(() {
             if (newIndex > oldIndex) newIndex--;
             final item = _items.removeAt(oldIndex);

@@ -1,39 +1,39 @@
 # Flutter Templates
 
-Flutter Templates is a curated library of Flutter UI patterns that you can browse, run, and learn from.
+**Production-ready Flutter UI you can preview live and copy.**
 
-It is built for developers who want to move faster when building mobile apps: instead of starting every screen from scratch, you can explore ready-made widgets and full template ideas, then adapt the code to your own project.
+[Flutter Templates](https://fluttertemplates.dev/) is an open-source library of real Flutter screens — from single widgets to full apps. Every component runs live in your browser, so you can interact with it, read the source, and copy it straight into your project.
 
-Live website: [fluttertemplates.dev](https://fluttertemplates.dev/)
+Stop rebuilding the same login form, product grid, or onboarding flow on every app. Find it, try it, ship it.
 
-## What You Can Do Here
+## What you can do here
 
-- Browse Flutter widgets by category (forms, ecommerce, dashboard, navigation, and more)
-- Open each widget page and view a runnable preview
-- Switch between preview and source code
-- Explore full app templates with screenshots and source/demo links
-- Use search to find components quickly
+- **Browse by category** — 160+ widgets across 27 categories (forms, chat, e-commerce, dashboard, navigation, and more).
+- **Preview live** — every widget runs as a real Flutter app in an in-browser preview, not a screenshot.
+- **Flip to the source** — switch between the running preview and its Dart code, and copy it.
+- **Explore full templates** — complete app examples with live demos, screenshots, and source links.
+- **Search** — jump straight to any widget or template by keyword.
 
-## Project Overview
+## How it works
 
-This repository contains two connected parts:
+The repo has two connected parts:
 
-- Website and content app (Astro): `src/`
-- Flutter source app for previews: `flutter_apps/core/`
+- **Website + content (Astro):** `src/`
+- **Flutter source app for previews:** `flutter_apps/core/`
 
-In simple terms:
+In short:
 
 1. The website renders content from Markdown.
 2. Widget pages embed the Flutter web app in an iframe.
-3. The iframe gets a `path` query parameter and loads the matching Flutter screen.
+3. The iframe receives a `path` query parameter and loads the matching Flutter screen.
 
-## Quick Start
+## Quick start
 
 ### Prerequisites
 
 - Node.js (LTS recommended)
 - `pnpm` (this repo uses `pnpm@10`)
-- Flutter SDK (required for running/building widget previews)
+- Flutter SDK (required to run or build widget previews)
 
 ### Install
 
@@ -46,35 +46,30 @@ pnpm install
 Run these in two terminals:
 
 ```bash
-pnpm dev
+pnpm dev        # Astro site
 ```
 
 ```bash
-pnpm run-apps
+pnpm run-apps   # Flutter web app on port 8989, for live iframe previews
 ```
 
-- `pnpm dev` starts the Astro site.
-- `pnpm run-apps` starts the Flutter web app on port `8989` for live iframe previews.
+If you run only `pnpm dev`, pages still load, but the widget previews won't work in dev mode.
 
-If you run only `pnpm dev`, pages still load, but widget previews will not work in dev mode.
+## Commands
 
-## Technical Details
+- `pnpm dev` — start the Astro dev server
+- `pnpm run-apps` — run the Flutter core app in the browser (`--web-port 8989`)
+- `pnpm build` — build the Astro site
+- `pnpm build-apps` — build the Flutter web app(s) and copy output to `public/flutter_apps/*`
+- `pnpm preview` — preview the built Astro output
+- `pnpm deploy` — build and deploy with Wrangler
+- `pnpm format` — format `src/` with Prettier
 
-### Main Commands
+## Content model
 
-- `pnpm dev`: start Astro dev server
-- `pnpm run-apps`: run Flutter core app in browser (`--web-port 8989`)
-- `pnpm build`: build Astro site
-- `pnpm build-apps`: build Flutter web app(s) and copy output to `public/flutter_apps/*`
-- `pnpm preview`: preview built Astro output
-- `pnpm deploy`: build + deploy with Wrangler
-- `pnpm format`: format `src/` with Prettier
+Content is powered by Astro collections defined in `src/content.config.ts`.
 
-### Content Model
-
-Content is powered by Astro collections in `src/content.config.ts`.
-
-#### Widgets
+### Widgets
 
 Location: `src/content/widgets/**`
 
@@ -83,10 +78,10 @@ Common frontmatter fields:
 - `title`
 - `description`
 - `app` (currently `core`)
-- `path` (Flutter route used by iframe, e.g. `/ecommerce/product_grid`)
+- `path` (Flutter route used by the iframe, e.g. `/ecommerce/product_grid`)
 - `previewSize` (`mobile`, `tablet`, `desktop`)
 - `code_files` (paths relative to `flutter_apps/core/lib/`)
-- `order`, `icon` (for grouping/navigation)
+- `order`, `icon` (for grouping and navigation)
 
 Example:
 
@@ -101,9 +96,9 @@ previewSize: mobile
 ---
 ```
 
-Validation rules for `code_files` are enforced (no absolute paths, `..`, wildcards, or trailing slash).
+Validation rules for `code_files` are enforced (no absolute paths, `..`, wildcards, or trailing slashes).
 
-#### Templates
+### Templates
 
 Location: `src/content/templates/**`
 
@@ -116,54 +111,47 @@ Common frontmatter fields:
 - `githubUrl`, `demoUrl`, `youtubeVideoId`
 - `tags`
 
-### How Widget Previews Work
+### How widget previews work
 
 - Widget pages are generated from `src/pages/widgets/[...slug].astro`.
-- The page loads source code from `flutter_apps/<app>/lib/*` based on `code_files`.
+- The page loads source from `flutter_apps/<app>/lib/*` based on `code_files`.
 - The preview iframe points to:
   - dev: `http://localhost:8989/?path=<widget-path>&theme=<theme>`
   - production: `/flutter_apps/<app>/index.html?path=<widget-path>&theme=<theme>`
-- Flutter route mapping lives in `flutter_apps/core/lib/main.dart` (`routes` map).
+- Flutter route mapping lives in `flutter_apps/core/lib/main.dart` (the `routes` map).
 
-When adding a new widget, make sure:
+## Project structure
 
-1. You add the Dart screen file.
-2. You register its `path` in `flutter_apps/core/lib/main.dart`.
-3. You create/update the widget markdown entry with matching `path` and `code_files`.
+- `src/pages/` — Astro routes (home, widgets, templates, search, OG image routes)
+- `src/components/` — Astro/React UI (header, sidebar, preview tabs, iframe, search)
+- `src/content/widgets/` — widget metadata and content
+- `src/content/templates/` — template metadata and content
+- `src/styles/global.css` — theme tokens and global styles
+- `flutter_apps/core/lib/` — Flutter widget/template screens and the route map
+- `public/flutter_apps/core/` — built Flutter web output (generated)
+- `scripts/build.js` — builds all Flutter apps and copies artifacts to `public/flutter_apps/`
 
-## Project Structure
+## Contributing
 
-- `src/pages/`: Astro routes (home, widgets, templates, search, OG image routes)
-- `src/components/`: Astro/React UI components (header, sidebar, preview tabs, iframe)
-- `src/content/widgets/`: widget metadata/content
-- `src/content/templates/`: template metadata/content
-- `src/styles/global.css`: global theme and component styles
-- `flutter_apps/core/lib/`: Flutter widget/template screens and route map
-- `public/flutter_apps/core/`: built Flutter web output (generated)
-- `scripts/build.js`: builds all Flutter apps and copies artifacts to `public/flutter_apps/`
+### Add a widget
 
-## Contributing Workflow
+1. Create the Dart screen in `flutter_apps/core/lib/<category>/...`.
+2. Register its route in `flutter_apps/core/lib/main.dart`.
+3. Add a Markdown entry in `src/content/widgets/<category>/<widget>.md` with matching `path` and `code_files`.
+4. For a new category, add `src/content/widgets/<category>/index.md`.
 
-### Add a new widget
-
-1. Create Dart file(s) in `flutter_apps/core/lib/<category>/...`.
-2. Register route in `flutter_apps/core/lib/main.dart`.
-3. Create markdown entry in `src/content/widgets/<category>/<widget>.md`.
-4. If new category, add `src/content/widgets/<category>/index.md`.
-
-### Add a new template
+### Add a template
 
 1. Create `src/content/templates/<template>.md`.
-2. Add image assets in `src/assets/template_images/` when needed.
-3. Fill template frontmatter (`title`, `description`, `heroImage`, links, tags, etc.).
+2. Add image assets to `src/assets/template_images/` as needed.
+3. Fill in the frontmatter (`title`, `description`, `heroImage`, links, tags, etc.).
 
 ### Before opening a PR
 
-- Ensure Markdown entries and Dart files match.
-- Verify each `code_files` path exists.
+- Make sure Markdown entries and Dart files match, and every `code_files` path exists.
 - Run `pnpm format`.
 - Run `pnpm build`.
-- If Flutter screens changed, run `pnpm build-apps` and include generated updates when appropriate.
+- If Flutter screens changed, run `pnpm build-apps` and include the generated updates when appropriate.
 
 ## License
 

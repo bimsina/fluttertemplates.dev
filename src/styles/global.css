@@ -5,51 +5,51 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background: oklch(0.98 0.008 236);
-  --foreground: oklch(0.25 0.03 250);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.25 0.03 250);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.25 0.03 250);
-  --primary: oklch(0.64 0.18 247);
-  --primary-foreground: oklch(0.99 0.004 110);
-  --secondary: oklch(0.92 0.035 224);
-  --secondary-foreground: oklch(0.32 0.06 245);
-  --muted: oklch(0.95 0.015 230);
-  --muted-foreground: oklch(0.5 0.04 246);
-  --accent: oklch(0.9 0.075 210);
-  --accent-foreground: oklch(0.28 0.06 228);
-  --destructive: oklch(0.64 0.22 25);
+  --background: oklch(0.966 0.004 250);
+  --foreground: oklch(0.24 0.01 258);
+  --card: oklch(0.995 0.002 250);
+  --card-foreground: oklch(0.24 0.01 258);
+  --popover: oklch(0.995 0.002 250);
+  --popover-foreground: oklch(0.24 0.01 258);
+  --primary: oklch(0.505 0.125 259);
+  --primary-foreground: oklch(0.99 0.008 259);
+  --secondary: oklch(0.925 0.03 259);
+  --secondary-foreground: oklch(0.4 0.08 259);
+  --muted: oklch(0.945 0.005 259);
+  --muted-foreground: oklch(0.5 0.018 259);
+  --accent: oklch(0.925 0.035 259);
+  --accent-foreground: oklch(0.4 0.08 259);
+  --destructive: oklch(0.58 0.19 27);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.88 0.02 236);
-  --input: oklch(0.88 0.02 236);
-  --ring: oklch(0.64 0.18 247);
-  --font-sans: "Inter", sans-serif;
+  --border: oklch(0.9 0.007 259);
+  --input: oklch(0.9 0.007 259);
+  --ring: oklch(0.505 0.125 259);
+  --font-sans: "Plus Jakarta Sans", "Inter", sans-serif;
   --font-mono: "JetBrains Mono", monospace;
-  --font-display: "Inter", sans-serif;
+  --font-display: "Plus Jakarta Sans", "Inter", sans-serif;
   --radius: 1rem;
 }
 
 .dark {
-  --background: oklch(0.2 0.02 252);
-  --foreground: oklch(0.95 0.012 228);
-  --card: oklch(0.24 0.024 248);
-  --card-foreground: oklch(0.95 0.012 228);
-  --popover: oklch(0.24 0.024 248);
-  --popover-foreground: oklch(0.95 0.012 228);
-  --primary: oklch(0.74 0.16 235);
-  --primary-foreground: oklch(0.18 0.02 252);
-  --secondary: oklch(0.3 0.04 244);
-  --secondary-foreground: oklch(0.9 0.02 226);
-  --muted: oklch(0.28 0.024 248);
-  --muted-foreground: oklch(0.73 0.024 228);
-  --accent: oklch(0.34 0.07 214);
-  --accent-foreground: oklch(0.93 0.03 220);
-  --destructive: oklch(0.66 0.2 25);
+  --background: oklch(0.2 0.014 258);
+  --foreground: oklch(0.93 0.008 250);
+  --card: oklch(0.238 0.016 258);
+  --card-foreground: oklch(0.93 0.008 250);
+  --popover: oklch(0.238 0.016 258);
+  --popover-foreground: oklch(0.93 0.008 250);
+  --primary: oklch(0.68 0.11 261);
+  --primary-foreground: oklch(0.17 0.03 261);
+  --secondary: oklch(0.32 0.035 261);
+  --secondary-foreground: oklch(0.9 0.025 259);
+  --muted: oklch(0.26 0.014 261);
+  --muted-foreground: oklch(0.72 0.018 259);
+  --accent: oklch(0.34 0.045 261);
+  --accent-foreground: oklch(0.9 0.03 259);
+  --destructive: oklch(0.62 0.19 27);
   --destructive-foreground: oklch(1 0 0);
-  --border: oklch(0.36 0.03 246);
-  --input: oklch(0.36 0.03 246);
-  --ring: oklch(0.74 0.16 235);
+  --border: oklch(0.33 0.015 261);
+  --input: oklch(0.33 0.015 261);
+  --ring: oklch(0.68 0.11 261);
 }
 
 @theme inline {
@@ -126,23 +126,18 @@
 }
 
 .surface {
-  @apply border-border/80 bg-card/80 rounded-3xl border shadow-sm backdrop-blur;
+  @apply border-border bg-card rounded-3xl border;
 }
 
 .interactive-card {
   transition:
-    transform 130ms ease,
-    box-shadow 160ms ease,
     border-color 160ms ease,
     background-color 160ms ease;
-  will-change: transform;
 }
 
 .interactive-card:hover {
-  transform: translateY(-2px);
-  border-color: color-mix(in oklab, var(--primary) 24%, var(--border));
-  box-shadow: 0 10px 24px -16px
-    color-mix(in oklab, var(--foreground) 30%, transparent);
+  border-color: color-mix(in oklab, var(--primary) 42%, var(--border));
+  background-color: color-mix(in oklab, var(--accent) 22%, var(--card));
 }
 
 .interactive-button {
@@ -236,7 +231,11 @@ html.is-leaving .transition-page {
   --pagefind-ui-primary: var(--primary) !important;
   --pagefind-ui-text: var(--foreground) !important;
   --pagefind-ui-border: var(--border) !important;
-  --pagefind-ui-tag: color-mix(in oklab, var(--accent) 75%, transparent) !important;
+  --pagefind-ui-tag: color-mix(
+    in oklab,
+    var(--accent) 75%,
+    transparent
+  ) !important;
   --pagefind-ui-border-width: 1px;
   --pagefind-ui-border-radius: 0.9rem;
   --pagefind-ui-font: var(--font-sans);
@@ -261,7 +260,11 @@ html.is-leaving .transition-page {
 }
 
 .pagefind-ui__result:hover {
-  border-color: color-mix(in oklab, var(--primary) 26%, var(--border)) !important;
+  border-color: color-mix(
+    in oklab,
+    var(--primary) 26%,
+    var(--border)
+  ) !important;
 }
 
 .pagefind-ui__result-link,

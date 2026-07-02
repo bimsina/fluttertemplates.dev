@@ -3,49 +3,94 @@ import BaseHtml from "@/components/BaseHtml.astro";
 import Footer from "@/components/Footer.astro";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
+import { Icon } from "astro-icon/components";
 
 const templates = await getCollection("templates");
 ---
 
 <BaseHtml title="Templates" image="/og/templates.png">
-  <section class="transition-page section-shell min-h-screen pt-28 pb-6">
-    <div class="mb-6">
-      <h1 class="text-3xl font-bold tracking-tight md:text-4xl">
-        App Templates
-      </h1>
-      <p class="text-muted-foreground mt-2">
-        Full Flutter templates with runnable demos and source snippets.
+  <section class="transition-page section-shell min-h-screen pt-28 pb-16">
+    <header class="mb-9" data-reveal>
+      <p
+        class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
+      >
+        Templates &amp; starter kits
       </p>
-    </div>
+      <h1 class="mt-3 text-3xl font-bold tracking-tight md:text-5xl">
+        Full apps, ready to ship.
+      </h1>
+      <p class="text-muted-foreground mt-3 max-w-2xl md:text-lg">
+        Complete Flutter apps with live demos and full source. Try the whole
+        thing running in your browser before you commit a line.
+      </p>
+    </header>
 
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-3">
       {
         templates.map((template, index) => (
           <a
             href={`/templates/${template.id}/`}
-            class="surface interactive-card group overflow-hidden"
+            class="border-border bg-card interactive-card group flex flex-col overflow-hidden rounded-2xl border"
             style={`--delay:${Math.min(index * 35, 260)}ms`}
             data-reveal
             data-swup-preload
           >
-            {template.data.heroImage && (
-              <Image
-                class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
-                src={template.data.heroImage}
-                alt={template.data.title}
-              />
-            )}
-            <div class="p-4">
-              <h2 class="group-hover:text-primary text-lg font-semibold tracking-tight">
+            <div class="bg-background relative aspect-[16/10] overflow-hidden">
+              {template.data.heroImage && (
+                <Image
+                  class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+                  src={template.data.heroImage}
+                  alt={template.data.title}
+                />
+              )}
+              <span class="bg-card/90 text-foreground absolute top-3 left-3 rounded-full px-2.5 py-1 text-[0.62rem] font-semibold tracking-wide uppercase backdrop-blur">
+                Free · MIT
+              </span>
+            </div>
+            <div class="flex flex-1 flex-col p-5">
+              <h2 class="group-hover:text-primary text-lg font-semibold tracking-tight transition-colors">
                 {template.data.title}
               </h2>
-              <p class="text-muted-foreground mt-2 line-clamp-2 text-sm">
+              <p class="text-muted-foreground mt-1.5 line-clamp-2 text-sm">
                 {template.data.description}
               </p>
+              {template.data.tags && (
+                <div class="mt-4 flex flex-wrap gap-1.5">
+                  {template.data.tags.slice(0, 3).map((tag) => (
+                    <span class="border-border text-muted-foreground rounded-md border px-2 py-0.5 font-mono text-[0.6rem]">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
             </div>
           </a>
         ))
       }
+
+      <div
+        class="border-border text-muted-foreground flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed p-8 text-center"
+        data-reveal
+      >
+        <span
+          class="bg-accent text-accent-foreground flex h-12 w-12 items-center justify-center rounded-2xl"
+        >
+          <Icon name="mdi:flash" class="h-6 w-6" />
+        </span>
+        <div>
+          <p class="text-foreground font-semibold">Premium kits landing soon</p>
+          <p class="mx-auto mt-1.5 max-w-[26ch] text-sm">
+            Production starter kits — auth, payments, and backend already wired.
+          </p>
+        </div>
+        <a
+          href="/templates"
+          class="text-primary inline-flex items-center gap-1 text-sm font-semibold"
+        >
+          Get notified
+          <Icon name="mdi:arrow-right" class="h-4 w-4" />
+        </a>
+      </div>
     </div>
   </section>
   <Footer />

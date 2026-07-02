@@ -1,34 +1,39 @@
 ---
 import { Icon } from "astro-icon/components";
-import { GITHUB_URL } from "@/consts";
+
+const txns = [
+  {
+    i: "SK",
+    name: "Saffron Kitchen",
+    sub: "Dining",
+    amt: "−$24.00",
+    in: false,
+  },
+  { i: "FL", name: "Figma", sub: "Subscription", amt: "−$12.00", in: false },
+  { i: "AC", name: "Acme Payroll", sub: "Income", amt: "+$3,200", in: true },
+];
 ---
 
-<section class="transition-page section-shell pt-28 pb-8 md:pt-26 md:pb-12">
-  <div class="surface relative overflow-hidden p-7 md:p-12" data-reveal>
-    <div class="relative max-w-3xl">
-      <span
-        class="border-border bg-background/70 text-muted-foreground inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-semibold"
-      >
-        <Icon name="mdi:flash" class="text-primary h-3.5 w-3.5" />
-        Open-source UI kits for Flutter
-      </span>
-
+<section class="transition-page section-shell pt-28 pb-10 md:pt-32 md:pb-16">
+  <div class="grid items-center gap-10 md:grid-cols-2 md:gap-14">
+    <div class="max-w-xl">
       <h1
-        class="mt-5 text-4xl leading-tight font-bold md:text-6xl"
-        style="--delay: 80ms"
+        class="text-4xl leading-[1.05] font-bold tracking-tight md:text-6xl"
+        style="--delay: 40ms"
         data-reveal
       >
-        Modern Flutter UI,
-        <span class="text-gradient">without the boilerplate.</span>
+        Production Flutter UI,
+        <span class="text-gradient">ready to copy.</span>
       </h1>
 
       <p
-        class="text-muted-foreground mt-5 max-w-2xl text-base md:text-lg"
+        class="text-muted-foreground mt-5 max-w-lg text-base md:text-lg"
         style="--delay: 150ms"
         data-reveal
       >
-        Explore polished widgets and full templates you can ship with. Minimal,
-        production-focused, and ready to customize.
+        A living library of real Flutter screens — from buttons to full apps.
+        Preview each one live in your browser, flip to the source, and drop it
+        into your project.
       </p>
 
       <div
@@ -38,21 +43,159 @@ import { GITHUB_URL } from "@/consts";
       >
         <a
           href="/widgets"
-          class="interactive-button bg-primary text-primary-foreground inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-90"
+          class="interactive-button bg-primary text-primary-foreground inline-flex items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-95"
           data-swup-preload
         >
-          Browse Widgets
+          Browse the library
           <Icon name="mdi:arrow-right" class="interactive-icon-shift h-4 w-4" />
         </a>
         <a
-          href={GITHUB_URL}
+          href="/templates"
           class="interactive-button border-border bg-card text-foreground hover:bg-muted inline-flex items-center justify-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold"
-          target="_blank"
-          rel="noreferrer noopener"
+          data-swup-preload
         >
-          <Icon name="mdi:github" class="h-4 w-4" />
-          View Repository
+          <Icon name="mdi:view-dashboard-outline" class="h-4 w-4" />
+          Full templates
         </a>
+      </div>
+
+      <div
+        class="text-muted-foreground mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-sm"
+        style="--delay: 300ms"
+        data-reveal
+      >
+        <span class="flex items-center gap-1.5">
+          <Icon name="mdi:github" class="text-foreground/70 h-4 w-4" />
+          Open source
+        </span>
+        <span class="flex items-center gap-1.5">
+          <Icon name="mdi:scale-balance" class="text-foreground/70 h-4 w-4" />
+          MIT licensed
+        </span>
+        <span class="flex items-center gap-1.5">
+          <Icon name="mdi:widgets-outline" class="text-foreground/70 h-4 w-4" />
+          160+ widgets
+        </span>
+      </div>
+    </div>
+
+    <div
+      class="relative flex justify-center md:justify-end"
+      style="--delay: 260ms"
+      data-reveal
+    >
+      <div class="relative">
+        <div
+          class="border-border bg-card absolute -top-4 left-1/2 z-30 flex -translate-x-1/2 gap-1 rounded-full border p-1 text-xs font-semibold"
+        >
+          <span
+            class="bg-primary text-primary-foreground rounded-full px-3.5 py-1"
+            >Preview</span
+          >
+          <span class="text-muted-foreground px-3.5 py-1">Code</span>
+        </div>
+
+        <div
+          class="border-border bg-card text-muted-foreground absolute -bottom-5 -left-5 z-30 w-40 rounded-2xl border p-3 font-mono text-[0.6rem] leading-relaxed xl:-left-16"
+          aria-hidden="true"
+        >
+          <div class="text-muted-foreground/70 mb-1.5 text-[0.56rem]">
+            wallet_screen.dart
+          </div>
+          <pre
+            class="break-words whitespace-pre-wrap"><span class="text-primary font-semibold">class</span> WalletScreen
+<span class="text-primary font-semibold">extends</span> StatelessWidget &#123; … &#125;</pre>
+        </div>
+
+        <div class="relative z-20 w-[268px] rounded-[2.8rem] bg-[#14161c] p-3">
+          <div
+            class="bg-card relative flex h-[520px] flex-col overflow-hidden rounded-[2.3rem]"
+          >
+            <div
+              class="absolute top-2.5 left-1/2 z-10 h-4 w-16 -translate-x-1/2 rounded-full bg-[#14161c]"
+            >
+            </div>
+
+            <div
+              class="text-muted-foreground flex items-center justify-between px-6 pt-4 pb-2 font-mono text-[0.6rem]"
+            >
+              <span>9:41</span>
+              <span class="flex items-center gap-1">
+                <Icon name="mdi:signal" class="size-3" />
+                <Icon name="mdi:wifi" class="size-3" />
+                <Icon name="mdi:battery" class="size-3" />
+              </span>
+            </div>
+
+            <div class="flex flex-1 flex-col px-5">
+              <p class="text-muted-foreground pt-1 text-xs">
+                Good morning, Jane
+              </p>
+
+              <div
+                class="bg-primary text-primary-foreground mt-3 rounded-3xl p-5"
+              >
+                <div class="text-[0.62rem] opacity-80">Total balance</div>
+                <div
+                  class="mt-1.5 text-[1.7rem] leading-none font-bold tracking-tight tabular-nums"
+                >
+                  $12,840
+                </div>
+                <div class="mt-4 flex gap-2 text-[0.6rem] font-semibold">
+                  <span
+                    class="bg-primary-foreground text-primary rounded-full px-3 py-1.5"
+                    >Overview</span
+                  >
+                  <span class="rounded-full bg-white/15 px-3 py-1.5">Cards</span
+                  >
+                </div>
+              </div>
+
+              <div class="mt-6 flex flex-col gap-4">
+                {
+                  txns.map((t) => (
+                    <div class="flex items-center gap-3">
+                      <span class="bg-accent text-accent-foreground flex h-9 w-9 flex-none items-center justify-center rounded-full text-[0.62rem] font-bold">
+                        {t.i}
+                      </span>
+                      <div class="min-w-0 flex-1">
+                        <div class="truncate text-[0.8rem] font-semibold">
+                          {t.name}
+                        </div>
+                        <div class="text-muted-foreground text-[0.66rem]">
+                          {t.sub}
+                        </div>
+                      </div>
+                      <span
+                        class:list={[
+                          "font-mono text-[0.74rem] font-semibold",
+                          t.in ? "text-primary" : "text-foreground",
+                        ]}
+                      >
+                        {t.amt}
+                      </span>
+                    </div>
+                  ))
+                }
+              </div>
+
+              <button
+                class="bg-primary text-primary-foreground mt-auto mb-4 rounded-2xl py-3 text-[0.82rem] font-semibold"
+              >
+                Send money
+              </button>
+            </div>
+
+            <div
+              class="text-muted-foreground flex items-center justify-around px-3 pt-1 pb-5"
+            >
+              <Icon name="mdi:home" class="text-primary size-[18px]" />
+              <Icon name="mdi:chart-box-outline" class="size-[18px]" />
+              <Icon name="mdi:wallet-outline" class="size-[18px]" />
+              <Icon name="mdi:account-outline" class="size-[18px]" />
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

@@ -82,7 +82,7 @@ function WidgetsNavGroup({
       <li
         data-group-id={group.id}
         data-group-title={group.title}
-        className={`${!isNested ? "border-border mb-2 border-b pb-2" : ""} ${isGroupActive ? "sidebar-group-active" : ""}`}
+        className={`${!isNested ? "mb-1" : ""} ${isGroupActive ? "sidebar-group-active" : ""}`}
       >
         <div className="group-header">
           <div className="flex w-full items-center justify-between">
@@ -179,10 +179,10 @@ export default function WidgetsSidebar({
   return (
     <aside
       id="widgets-sidebar"
-      className="border-border/80 flex max-h-72 w-full shrink-0 flex-col border-b lg:max-h-[calc(100vh-9rem)] lg:w-72 lg:border-r lg:border-b-0"
+      className="flex max-h-[70vh] w-full shrink-0 flex-col lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:w-60"
       data-current-path={currentPath}
     >
-      <div className="border-border/80 bg-card sticky top-0 z-10 shrink-0 border-b p-3">
+      <div className="bg-background sticky top-0 z-10 shrink-0 pb-3">
         <div className="relative">
           <Icon
             icon="mdi:magnify"
@@ -192,7 +192,7 @@ export default function WidgetsSidebar({
             type="search"
             id="widgets-sidebar-search"
             placeholder="Search widgets..."
-            className="border-input bg-background placeholder:text-muted-foreground focus:ring-ring w-full rounded-lg border py-2 pr-3 pl-9 text-sm focus:ring-2 focus:outline-none"
+            className="bg-muted placeholder:text-muted-foreground focus:ring-ring w-full rounded-xl border-0 py-2.5 pr-3 pl-9 text-sm focus:ring-2 focus:outline-none"
             autoComplete="off"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}

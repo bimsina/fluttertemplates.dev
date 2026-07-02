@@ -25,12 +25,14 @@ const PREVIEW_DIMENSIONS = {
 export default function SingleAppComponent({
   widget,
   code = [],
+  hideTitle = false,
 }: {
   widget: InferEntrySchema<"widgets">;
   code?: {
     file: string;
     content: string;
   }[];
+  hideTitle?: boolean;
 }) {
   const theme = useTheme();
   const [previewSize, setPreviewSize] = useState<
@@ -48,8 +50,14 @@ export default function SingleAppComponent({
 
   return (
     <Tabs className="flex w-full flex-col" defaultValue="preview">
-      <div className="flex h-14 items-center justify-between rounded-md border px-4">
-        <h1 className="text-base font-semibold">{widget.title}</h1>
+      <div
+        className={`mb-5 flex items-center gap-4 ${hideTitle ? "justify-end" : "justify-between"}`}
+      >
+        {!hideTitle && (
+          <h2 className="text-lg font-semibold tracking-tight">
+            {widget.title}
+          </h2>
+        )}
         <TabsList className="flex items-center gap-2">
           <TabsTrigger value="preview">
             <Eye />
@@ -113,7 +121,7 @@ export default function SingleAppComponent({
               <div className="relative h-[700px]">
                 <button
                   onClick={() => handleCopy(file.content)}
-                  className="bg-muted hover:bg-primary hover:text-primary-foreground absolute top-2 right-2 flex w-[130px] cursor-pointer items-center justify-center gap-2 rounded-md px-1 py-1 text-sm transition-all"
+                  className="bg-background hover:bg-primary hover:text-primary-foreground absolute top-3 right-3 z-10 flex w-[130px] cursor-pointer items-center justify-center gap-2 rounded-lg px-1 py-1.5 text-sm transition-colors"
                 >
                   {copied ? (
                     <Check className="size-3" />
@@ -123,7 +131,7 @@ export default function SingleAppComponent({
 
                   {copied ? "Copied" : "Copy code"}
                 </button>
-                <div className="border-border h-full overflow-auto rounded-md border">
+                <div className="bg-muted/50 h-full overflow-auto rounded-xl">
                   <SyntaxHighlighter
                     language="dart"
                     style={theme === "dark" ? okaidia : prism}

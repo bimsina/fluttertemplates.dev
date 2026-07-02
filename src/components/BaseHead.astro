@@ -1,11 +1,11 @@
 ---
 import { SEO } from "astro-seo";
 import "../styles/global.css";
-import { SITE_TITLE } from "../consts";
+import { SITE_TITLE, SITE_DESCRIPTION } from "../consts";
 
 interface Props {
   title: string;
-  description: string;
+  description?: string;
   image?: string;
 }
 
@@ -17,6 +17,39 @@ const canonicalURL = cleanPathname
   : Astro.site!.href.replace(/\/$/, "");
 const { title, description, image = "/og.png" } = Astro.props;
 const imageURL = new URL(image, Astro.url).toString();
+
+const isHome = !title || title === SITE_TITLE;
+const pageTitle = isHome
+  ? "Flutter Templates — production Flutter UI, live previews and code"
+  : `${title} — ${SITE_TITLE}`;
+const metaDescription = description || SITE_DESCRIPTION;
+
+const siteBase = (Astro.site?.href ?? "https://fluttertemplates.dev/").replace(
+  /\/$/,
+  "",
+);
+const websiteSchema = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE_TITLE,
+  url: siteBase + "/",
+  description: SITE_DESCRIPTION,
+  potentialAction: {
+    "@type": "SearchAction",
+    target: {
+      "@type": "EntryPoint",
+      urlTemplate: `${siteBase}/search?q={search_term_string}`,
+    },
+    "query-input": "required name=search_term_string",
+  },
+};
+const orgSchema = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: SITE_TITLE,
+  url: siteBase + "/",
+  logo: `${siteBase}/favicon.svg`,
+};
 ---
 
 <meta charset="utf-8" />
@@ -34,7 +67,7 @@ const imageURL = new URL(image, Astro.url).toString();
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link
-  href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+  href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
   rel="stylesheet"
 />
 <link
@@ -43,24 +76,24 @@ const imageURL = new URL(image, Astro.url).toString();
 />
 
 <SEO
-  title={title}
-  description={description}
+  title={pageTitle}
+  description={metaDescription}
   canonical={canonicalURL}
   openGraph={{
     basic: {
-      title,
+      title: pageTitle,
       type: "website",
       image: imageURL,
       url: Astro.url.toString(),
     },
     optional: {
-      description,
+      description: metaDescription,
       siteName: SITE_TITLE,
       locale: "en_US",
     },
     image: {
       url: imageURL,
-      alt: title,
+      alt: pageTitle,
       width: 1200,
       height: 630,
     },
@@ -69,8 +102,8 @@ const imageURL = new URL(image, Astro.url).toString();
     card: "summary_large_image",
     site: SITE_TITLE,
     creator: SITE_TITLE,
-    title,
-    description,
+    title: pageTitle,
+    description: metaDescription,
     image: imageURL,
   }}
   extend={{
@@ -90,11 +123,11 @@ const imageURL = new URL(image, Astro.url).toString();
       },
       {
         name: "twitter:image:alt",
-        content: title,
+        content: pageTitle,
       },
       {
         property: "og:image:alt",
-        content: title,
+        content: pageTitle,
       },
       {
         property: "og:image:width",
@@ -106,6 +139,17 @@ const imageURL = new URL(image, Astro.url).toString();
       },
     ],
   }}
+/>
+
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(websiteSchema)}
+/>
+<script
+  type="application/ld+json"
+  is:inline
+  set:html={JSON.stringify(orgSchema)}
 />
 
 <script is:inline>

@@ -19,49 +19,112 @@ const {
   githubUrl,
   appImages,
   youtubeVideoId,
+  tags,
   ogImage,
 } = Astro.props;
+
+const siteBase = (Astro.site?.href ?? "https://fluttertemplates.dev/").replace(
+  /\/$/,
+  "",
+);
+const breadcrumb = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: siteBase + "/" },
+    {
+      "@type": "ListItem",
+      position: 2,
+      name: "Templates",
+      item: `${siteBase}/templates/`,
+    },
+    { "@type": "ListItem", position: 3, name: title, item: Astro.url.href },
+  ],
+};
 ---
 
 <BaseHtml
-  title={title}
+  title={`Flutter ${title}`}
   description={description}
   image={ogImage ?? heroImage?.src}
 >
-  <section class="transition-page section-shell pt-28 pb-6">
-    <div class="grid gap-4 lg:grid-cols-[1.15fr_0.85fr]">
-      <div class="surface p-6 md:p-8">
-        <h1 class="text-3xl font-bold tracking-tight">{title}</h1>
-        <p class="text-muted-foreground mt-3 text-sm md:text-base">
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(breadcrumb)}
+  />
+
+  <section class="transition-page section-shell pt-28 pb-8">
+    <a
+      href="/templates"
+      class="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
+      data-swup-preload
+    >
+      <Icon name="mdi:chevron-left" class="h-4 w-4" />
+      All templates
+    </a>
+
+    <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
+      <div>
+        <div class="flex flex-wrap items-center gap-2">
+          <span
+            class="bg-accent text-accent-foreground rounded-full px-2.5 py-1 text-[0.62rem] font-semibold tracking-wide uppercase"
+          >
+            Free · MIT
+          </span>
+          {
+            tags
+              ?.slice(0, 4)
+              .map((tag) => (
+                <span class="border-border text-muted-foreground rounded-md border px-2 py-0.5 font-mono text-[0.62rem]">
+                  {tag}
+                </span>
+              ))
+          }
+        </div>
+
+        <h1 class="mt-4 text-3xl font-bold tracking-tight md:text-4xl">
+          {title}
+        </h1>
+        <p class="text-muted-foreground mt-3 text-base leading-relaxed">
           {description}
         </p>
 
-        {
-          githubUrl && (
-            <a
-              href={githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              class="interactive-button bg-primary text-primary-foreground mt-4 inline-flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold hover:opacity-90"
-            >
-              <Icon name="mdi:code-tags" class="h-4 w-4" />
-              View Source
-            </a>
-          )
-        }
+        <div class="mt-6 flex flex-wrap gap-3">
+          {
+            githubUrl && (
+              <a
+                href={githubUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="interactive-button bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-95"
+              >
+                <Icon name="mdi:code-tags" class="h-4 w-4" />
+                Get the source
+              </a>
+            )
+          }
+          <a
+            href="#live-preview"
+            class="interactive-button border-border bg-card text-foreground hover:bg-muted inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold lg:hidden"
+          >
+            <Icon name="mdi:cellphone-play" class="h-4 w-4" />
+            Live preview
+          </a>
+        </div>
 
         {
           appImages && (
             <>
-              <h2 class="mt-8 text-xl font-semibold tracking-tight">
+              <h2 class="mt-10 text-lg font-semibold tracking-tight">
                 Screenshots
               </h2>
-              <div class="mt-3 grid grid-cols-2 gap-3">
+              <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {appImages.map((image) => (
                   <Image
                     src={image}
                     alt={title}
-                    class="border-border h-full w-auto rounded-xl border object-cover transition-transform duration-300 hover:scale-[1.02]"
+                    class="w-full rounded-xl object-cover"
                     width={320}
                     height={180}
                     loading="lazy"
@@ -75,8 +138,8 @@ const {
         {
           youtubeVideoId && (
             <>
-              <h2 class="mt-8 text-xl font-semibold tracking-tight">Demo</h2>
-              <div class="border-border mt-3 overflow-hidden rounded-xl border">
+              <h2 class="mt-10 text-lg font-semibold tracking-tight">Demo</h2>
+              <div class="mt-4 overflow-hidden rounded-xl">
                 <YouTube id={youtubeVideoId} class="w-full" />
               </div>
             </>
@@ -84,21 +147,25 @@ const {
         }
 
         <article
-          class="prose prose-headings:font-semibold prose-headings:tracking-tight dark:prose-invert mt-8 max-w-none"
+          class="prose prose-headings:font-semibold prose-headings:tracking-tight dark:prose-invert mt-10 max-w-none"
         >
           <slot />
         </article>
       </div>
 
-      <div class="surface p-4 md:p-6">
-        <div class="mx-auto w-[280px] md:w-[320px]">
-          <FlutterAppIframe
-            path={demoUrl}
-            client:load
-            skipUrlFormatting
-            className="bg-card border-border h-[600px] w-full overflow-clip rounded-4xl border md:h-[680px]"
-            enableShowFullScreenButton
-          />
+      <div id="live-preview" class="scroll-mt-24">
+        <div
+          class="bg-muted/40 dark:bg-card/50 flex justify-center rounded-3xl p-6 lg:sticky lg:top-24"
+        >
+          <div class="w-[260px] md:w-[300px]">
+            <FlutterAppIframe
+              path={demoUrl}
+              client:load
+              skipUrlFormatting
+              className="bg-background h-[560px] w-full overflow-clip rounded-[2.2rem] md:h-[640px]"
+              enableShowFullScreenButton
+            />
+          </div>
         </div>
       </div>
     </div>

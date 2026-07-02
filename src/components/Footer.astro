@@ -1,23 +1,38 @@
 ---
 import { Icon } from "astro-icon/components";
 import { SITE_TITLE, GITHUB_URL, LINKEDIN_URL, TWITTER_URL } from "@/consts";
+import Logo from "./Logo.astro";
 
 const currentYear = new Date().getFullYear();
+
+const columns = [
+  {
+    heading: "Library",
+    links: [
+      { label: "Widgets", href: "/widgets" },
+      { label: "Templates", href: "/templates" },
+      { label: "Search", href: "/search" },
+    ],
+  },
+  {
+    heading: "Project",
+    links: [
+      { label: "GitHub", href: GITHUB_URL, external: true },
+      { label: "RSS", href: "/rss.xml" },
+    ],
+  },
+];
 ---
 
-<footer class="section-shell py-10">
-  <div class="surface p-6 md:p-8">
-    <div
-      class="flex flex-col gap-8 md:flex-row md:items-center md:justify-between"
-    >
-      <div>
-        <p class="text-lg font-bold tracking-tight">{SITE_TITLE}</p>
-        <p class="text-muted-foreground mt-2 text-sm">
-          Curated Flutter templates and widgets for production teams.
-        </p>
-      </div>
-
-      <div class="flex items-center gap-2">
+<footer class="border-border section-shell mt-8 border-t py-12">
+  <div class="flex flex-col gap-10 md:flex-row md:justify-between">
+    <div class="max-w-sm">
+      <Logo />
+      <p class="text-muted-foreground mt-4 text-sm leading-relaxed">
+        An open-source library of production Flutter UI — preview it live, copy
+        the source, ship faster.
+      </p>
+      <div class="mt-5 flex items-center gap-2">
         <a
           href={GITHUB_URL}
           target="_blank"
@@ -48,11 +63,38 @@ const currentYear = new Date().getFullYear();
       </div>
     </div>
 
-    <div
-      class="border-border text-muted-foreground mt-8 flex flex-col gap-2 border-t pt-5 text-xs md:flex-row md:items-center md:justify-between"
-    >
-      <p>© {currentYear} {SITE_TITLE}</p>
-      <p>MIT Licensed • Built for fast iteration</p>
+    <div class="flex gap-16">
+      {
+        columns.map((col) => (
+          <div>
+            <p class="text-xs font-semibold tracking-widest uppercase">
+              {col.heading}
+            </p>
+            <ul class="mt-4 space-y-2.5">
+              {col.links.map((link) => (
+                <li>
+                  <a
+                    href={link.href}
+                    class="text-muted-foreground hover:text-foreground text-sm transition-colors"
+                    {...(link.external
+                      ? { target: "_blank", rel: "noopener noreferrer" }
+                      : {})}
+                  >
+                    {link.label}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))
+      }
     </div>
+  </div>
+
+  <div
+    class="border-border text-muted-foreground mt-10 flex flex-col gap-2 border-t pt-6 text-xs md:flex-row md:items-center md:justify-between"
+  >
+    <p>© {currentYear} {SITE_TITLE}</p>
+    <p>MIT Licensed • Built for fast iteration</p>
   </div>
 </footer>
