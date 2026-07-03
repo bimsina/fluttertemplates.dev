@@ -18,28 +18,38 @@ const groups = (await getGroupedWidgets()) as unknown as Group[];
 // Short one-line taglines for the cards. The full (longer) descriptions live in
 // each category's frontmatter and are used on the category pages themselves.
 const TAGLINES: Record<string, string> = {
+  admin: "User management, roles, and settings panels",
+  ai: "Assistant chats, prompts, and streaming states",
   animation: "Motion, transitions, and micro-interactions",
+  auth: "Login, signup, OTP, and lock screens",
   calendar: "Month views, events, and booking slots",
   chat: "Bubbles, typing, and threaded replies",
   communication: "Voice, video, and call screens",
   core: "Buttons, loaders, and the essentials",
+  crm: "Contacts, pipelines, and activity timelines",
   dashboard: "Metrics, tables, and charts",
   ecommerce: "Product grids, carts, and checkout",
   education: "Courses, lessons, and quizzes",
+  events: "Discovery, schedules, tickets, and details",
   finance: "Wallets, charts, and transactions",
   food: "Restaurants, menus, and order tracking",
   forms: "Inputs, validation, and wizards",
   gallery: "Photo grids, carousels, and viewers",
   health: "Activity rings and fitness tracking",
   info: "About, contact, and FAQ pages",
+  iot: "Smart devices, controls, and monitoring",
   layouts: "Responsive grids and layout patterns",
+  maps: "Location pickers, routes, and tracking",
+  marketplace: "Listings, sellers, and product detail",
   media: "Music, podcasts, and video players",
   must_haves: "Onboarding, feeds, and settings",
   navigation: "Tab bars, rails, and drawers",
   notifications: "Inboxes, banners, and alerts",
   overlays: "Sheets, dialogs, and snackbars",
   pricing: "Plans, paywalls, and comparisons",
+  productivity: "Tasks, reminders, and checklists",
   profile: "Profiles, settings, and privacy",
+  saas: "Teams, usage, billing, and integrations",
   search: "Search, results, and suggestions",
   social: "Stories, feeds, and profiles",
   states: "Empty, error, and loading states",
@@ -71,19 +81,21 @@ function countWidgets(group: Group): number {
           <CategoryPreview
             slug={group.path}
             icon={group.indexFile?.data.icon}
+            title={group.title}
+            count={count}
           />
-          <div class="p-5">
-            <div class="flex items-center justify-between gap-3">
-              <h3 class="group-hover:text-primary text-base font-semibold tracking-tight transition-colors">
+          <div class="border-border/70 border-t p-5">
+            <div class="flex items-start justify-between gap-3">
+              <h3 class="group-hover:text-primary min-w-0 text-base leading-tight font-semibold tracking-tight transition-colors">
                 {group.title}
               </h3>
               {count > 0 && (
-                <span class="text-muted-foreground font-mono text-[0.68rem]">
+                <span class="bg-muted text-muted-foreground shrink-0 rounded-full px-2.5 py-1 font-mono text-[0.62rem]">
                   {count} {count === 1 ? "widget" : "widgets"}
                 </span>
               )}
             </div>
-            <p class="text-muted-foreground mt-1.5 truncate text-sm">
+            <p class="text-muted-foreground mt-2 line-clamp-2 text-sm leading-relaxed">
               {TAGLINES[group.path] ??
                 group.indexFile?.data.description ??
                 "Reusable Flutter patterns and building blocks."}

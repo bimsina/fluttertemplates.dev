@@ -83,9 +83,7 @@ export default function WidgetSearch({
           type="search"
           value={query}
           placeholder={
-            count
-              ? `Search ${count} widgets — try “otp”, “chart”, “onboarding”…`
-              : "Search widgets and categories…"
+            count ? "Search widgets..." : "Search widgets and categories…"
           }
           onChange={(e) => {
             setQuery(e.target.value);

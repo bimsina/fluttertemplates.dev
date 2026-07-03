@@ -4,6 +4,7 @@ import Footer from "@/components/Footer.astro";
 import WidgetsGrid from "@/components/WidgetsGrid.astro";
 import WidgetSearch, { type WidgetSearchItem } from "@/components/WidgetSearch";
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
+import { getWidgetStats } from "@/utils/get_widget_stats";
 
 interface Group {
   title: string;
@@ -40,7 +41,7 @@ function walk(group: Group) {
 }
 groups.forEach(walk);
 
-const widgetCount = searchItems.filter((i) => i.kind === "widget").length;
+const { widgetCount, categoryCount } = await getWidgetStats();
 ---
 
 <BaseHtml title="Widgets" image="/og/widgets.png">
@@ -55,9 +56,9 @@ const widgetCount = searchItems.filter((i) => i.kind === "widget").length;
         Flutter widgets
       </h1>
       <p class="text-muted-foreground mt-3 max-w-2xl md:text-lg">
-        Over 160 production-ready screens across 27 categories. Preview each one
-        live, flip to the source, and copy what you need — free and
-        MIT-licensed.
+        Over {widgetCount} production-ready screens across {categoryCount}{" "}
+        categories. Preview each one live, flip to the source, and copy what you need
+        — free and MIT-licensed.
       </p>
     </header>
 

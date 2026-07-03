@@ -4,636 +4,952 @@ import { Icon } from "astro-icon/components";
 interface Props {
   slug: string;
   icon?: string;
+  title?: string;
+  count?: number;
 }
 
-const { slug, icon } = Astro.props;
+const { slug, icon, title, count } = Astro.props;
 const bars = [42, 62, 48, 80, 60, 92, 78];
+const shortTitle = title ?? slug.replaceAll("_", " ");
 const known = [
-  "core",
+  "admin",
+  "ai",
+  "animation",
+  "auth",
+  "calendar",
   "chat",
   "communication",
-  "animation",
-  "layouts",
-  "forms",
-  "overlays",
-  "states",
+  "core",
+  "crm",
+  "dashboard",
   "ecommerce",
-  "social",
-  "search",
+  "education",
+  "events",
   "finance",
   "food",
-  "health",
-  "education",
-  "travel",
-  "media",
-  "dashboard",
+  "forms",
   "gallery",
-  "calendar",
-  "notifications",
-  "pricing",
-  "profile",
-  "must_haves",
+  "health",
   "info",
-  "utilities",
+  "iot",
+  "layouts",
+  "maps",
+  "marketplace",
+  "media",
+  "must_haves",
   "navigation",
+  "notifications",
+  "overlays",
+  "pricing",
+  "productivity",
+  "profile",
+  "saas",
+  "search",
+  "social",
+  "states",
+  "travel",
+  "utilities",
 ];
 ---
 
-<div class="bg-background relative h-40 overflow-hidden p-4">
-  {
-    slug === "core" && (
-      <div class="flex h-full flex-col justify-center gap-3">
-        <div class="flex items-center gap-2.5">
-          <span class="bg-primary text-primary-foreground rounded-lg px-3 py-1.5 text-[0.68rem] font-semibold">
-            Button
-          </span>
-          <span class="bg-primary flex h-5 w-9 items-center rounded-full px-0.5">
-            <span class="bg-primary-foreground h-4 w-4 rounded-full transition-transform duration-300 ease-out motion-safe:group-hover:translate-x-4" />
-          </span>
-          <span class="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded">
-            <Icon name="mdi:check" class="size-3.5" />
-          </span>
-        </div>
-        <div class="bg-muted relative h-1.5 w-full rounded-full">
-          <div class="bg-primary h-1.5 w-2/5 rounded-full transition-[width] duration-500 ease-out motion-safe:group-hover:w-3/5" />
-          <span class="border-background bg-primary absolute top-1/2 left-2/5 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-[left] duration-500 ease-out motion-safe:group-hover:left-3/5" />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "chat" && (
-      <div class="flex h-full flex-col justify-center gap-2">
-        <div class="bg-secondary text-secondary-foreground max-w-[78%] rounded-2xl rounded-bl-md px-3 py-2 text-[0.72rem]">
-          Is the design system ready?
-        </div>
-        <div class="bg-primary text-primary-foreground ml-auto max-w-[78%] rounded-2xl rounded-br-md px-3 py-2 text-[0.72rem]">
-          Shipping it now
-        </div>
-        <div class="bg-muted text-muted-foreground mt-1 flex items-center justify-between rounded-full px-3 py-1.5 font-mono text-[0.66rem]">
-          Message…
-          <Icon
-            name="mdi:send"
-            class="text-muted-foreground motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
-          />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "communication" && (
-      <div class="flex h-full flex-col items-center justify-center gap-2.5">
-        <span class="bg-accent h-12 w-12 rounded-full" />
-        <div class="bg-muted h-1.5 w-16 rounded-full" />
-        <div class="flex gap-2.5">
-          <span class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full transition duration-300 motion-safe:group-hover:brightness-110">
-            <Icon name="mdi:phone" class="size-4" />
-          </span>
-          <span class="bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full">
-            <Icon name="mdi:microphone-off" class="size-4" />
-          </span>
-          <span class="bg-destructive text-destructive-foreground flex h-8 w-8 items-center justify-center rounded-full">
-            <Icon name="mdi:phone-hangup" class="size-4" />
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "animation" && (
-      <div class="relative flex h-full items-center justify-center">
-        <span
-          class="ft-ripple border-primary absolute inset-0 m-auto h-10 w-10 rounded-full border-2"
-          style="animation-delay:0s"
-        />
-        <span
-          class="ft-ripple border-primary absolute inset-0 m-auto h-10 w-10 rounded-full border-2"
-          style="animation-delay:0.8s"
-        />
-        <span
-          class="ft-ripple border-primary absolute inset-0 m-auto h-10 w-10 rounded-full border-2"
-          style="animation-delay:1.6s"
-        />
-        <span class="ft-core bg-primary text-primary-foreground relative z-10 flex h-11 w-11 items-center justify-center rounded-full">
-          <Icon name="mdi:play" class="size-5" />
-        </span>
-      </div>
-    )
-  }
-
-  {
-    slug === "layouts" && (
-      <div class="grid h-full grid-cols-3 grid-rows-2 gap-2">
-        <span class="bg-accent row-span-2 rounded-lg" />
-        <span class="bg-muted motion-safe:group-hover:bg-secondary rounded-lg transition-colors duration-300" />
-        <span class="bg-secondary rounded-lg" />
-        <span class="bg-muted motion-safe:group-hover:bg-secondary col-span-2 rounded-lg transition-colors delay-75 duration-300" />
-      </div>
-    )
-  }
-
-  {
-    slug === "forms" && (
-      <div class="flex h-full flex-col justify-center gap-2">
-        <div class="bg-muted text-muted-foreground rounded-lg px-2.5 py-2 font-mono text-[0.64rem]">
-          Full name
-        </div>
-        <div
-          class="border-primary bg-card rounded-lg border px-2.5 py-2 font-mono text-[0.64rem]"
-          style="box-shadow:0 0 0 3px var(--accent)"
-        >
-          jane@studio.dev
-        </div>
-        <div class="bg-primary text-primary-foreground rounded-lg py-2 text-center text-[0.66rem] font-semibold transition duration-300 motion-safe:group-hover:brightness-110">
-          Create account
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "overlays" && (
-      <div class="bg-muted relative h-full overflow-hidden rounded-lg">
-        <div class="bg-card absolute inset-x-2 bottom-0 rounded-t-2xl p-3 transition-transform duration-300 ease-out motion-safe:translate-y-2 motion-safe:group-hover:translate-y-0">
-          <div class="bg-muted-foreground/30 mx-auto h-1 w-8 rounded-full" />
-          <div class="bg-muted mt-2.5 h-2 w-2/3 rounded" />
-          <div class="bg-muted mt-1.5 h-1.5 w-1/2 rounded opacity-70" />
-          <div class="bg-primary text-primary-foreground mt-2.5 rounded-lg py-1.5 text-center text-[0.64rem] font-semibold">
-            Confirm
+<div class="bg-background relative h-40 overflow-hidden p-3">
+  <div
+    class="border-border/80 bg-card/55 relative h-full overflow-hidden rounded-xl border p-3 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5"
+  >
+    {
+      slug === "admin" && (
+        <div class="relative grid h-full grid-cols-[0.34fr_1fr] gap-2.5">
+          <div class="bg-muted flex flex-col gap-1.5 rounded-lg p-2">
+            {["Users", "Roles", "Logs"].map((label, i) => (
+              <span
+                class:list={[
+                  "rounded-lg px-2 py-1 text-[0.56rem] font-semibold",
+                  i === 0
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground",
+                ]}
+              >
+                {label}
+              </span>
+            ))}
           </div>
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "states" && (
-      <div class="flex h-full flex-col items-center justify-center gap-2 text-center">
-        <div class="bg-accent text-accent-foreground motion-safe:group-hover:bg-primary motion-safe:group-hover:text-primary-foreground flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300">
-          <Icon name="mdi:inbox-outline" class="size-5" />
-        </div>
-        <div class="bg-muted h-2 w-28 rounded" />
-        <div class="bg-muted h-1.5 w-20 rounded opacity-70" />
-      </div>
-    )
-  }
-
-  {
-    slug === "ecommerce" && (
-      <div class="grid h-full grid-cols-2 content-center gap-2.5">
-        <div class="bg-card overflow-hidden rounded-xl">
-          <div
-            class="h-12 transition-transform duration-500 ease-out motion-safe:group-hover:scale-105"
-            style="background:#E0654B"
-          />
-          <div class="p-2">
-            <div class="bg-muted h-1.5 w-3/4 rounded" />
-            <div class="mt-1.5 flex items-center justify-between">
-              <span class="font-mono text-[0.62rem] font-semibold">$48</span>
-              <span class="bg-primary h-3.5 w-3.5 rounded" />
+          <div class="flex flex-col gap-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[0.66rem] font-semibold">Team access</span>
+              <Icon
+                name="mdi:shield-check-outline"
+                class="text-primary size-4"
+              />
             </div>
-          </div>
-        </div>
-        <div class="bg-card overflow-hidden rounded-xl">
-          <div class="bg-primary h-12 transition-transform delay-75 duration-500 ease-out motion-safe:group-hover:scale-105" />
-          <div class="p-2">
-            <div class="bg-muted h-1.5 w-2/3 rounded" />
-            <div class="mt-1.5 flex items-center justify-between">
-              <span class="font-mono text-[0.62rem] font-semibold">$92</span>
-              <span class="bg-primary h-3.5 w-3.5 rounded" />
-            </div>
-          </div>
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "social" && (
-      <div class="bg-card flex h-full flex-col justify-center rounded-xl p-3">
-        <div class="flex items-center gap-2">
-          <span class="bg-accent h-6 w-6 rounded-full" />
-          <div class="bg-muted h-1.5 w-16 rounded" />
-        </div>
-        <div class="mt-2 h-12 rounded-lg" style="background:#4A73C4" />
-        <div class="text-muted-foreground mt-2 flex gap-3">
-          <Icon
-            name="mdi:heart-outline"
-            class="motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
-          />
-          <Icon name="mdi:comment-outline" class="size-3.5" />
-          <Icon name="mdi:share-outline" class="size-3.5" />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "search" && (
-      <div class="flex h-full flex-col justify-center gap-2">
-        <div class="bg-muted text-muted-foreground flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[0.66rem]">
-          <Icon
-            name="mdi:magnify"
-            class="motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
-          />
-          Search widgets…
-        </div>
-        {[70, 52].map((w) => (
-          <div class="flex items-center gap-2.5 px-1">
-            <Icon name="mdi:history" class="text-muted-foreground size-3.5" />
-            <div class="bg-muted h-1.5 rounded" style={`width:${w}%`} />
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  {
-    slug === "finance" && (
-      <div class="flex h-full flex-col justify-center">
-        <div class="text-muted-foreground text-[0.58rem] font-semibold uppercase">
-          Total balance
-        </div>
-        <div class="text-xl font-bold tabular-nums">$12,840</div>
-        <div class="mt-3 flex h-10 items-end gap-1.5">
-          {bars.map((h, i) => (
-            <span
-              class={`flex-1 rounded-t transition-colors duration-300 ease-out ${i === 3 ? "bg-primary" : "bg-muted motion-safe:group-hover:bg-primary/40"}`}
-              style={`height:${h}%;transition-delay:${i * 40}ms`}
-            />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "food" && (
-      <div class="flex h-full flex-col justify-center gap-3">
-        {[
-          { c: "#EAB94D", n: "Saffron Kitchen", s: "★ 4.8 · 25 min · $$" },
-          { c: "#2F9E6E", n: "Green Bowl", s: "★ 4.6 · 18 min · $" },
-        ].map((r) => (
-          <div class="flex items-center gap-2.5">
-            <span
-              class="h-10 w-10 flex-none rounded-xl transition duration-300 motion-safe:group-hover:brightness-105"
-              style={`background:${r.c}`}
-            />
-            <div>
-              <div class="text-[0.78rem] font-semibold">{r.n}</div>
-              <div class="text-muted-foreground mt-0.5 font-mono text-[0.6rem]">
-                {r.s}
+            {[72, 58, 66].map((w, i) => (
+              <div class="bg-background flex items-center gap-2 rounded-md px-2 py-1.5 transition-transform duration-200 ease-out motion-safe:group-hover:translate-x-0.5">
+                <span class="bg-muted size-5 rounded-full" />
+                <span class="bg-muted h-1.5 rounded" style={`width:${w}%`} />
+                {i === 0 && <span class="bg-primary size-1.5 rounded-full" />}
               </div>
-            </div>
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  {
-    slug === "health" && (
-      <div class="flex h-full items-center justify-center gap-4">
-        <div
-          class="relative h-20 w-20 rounded-full"
-          style="background:conic-gradient(var(--primary) 72%, var(--muted) 0)"
-        >
-          <div class="bg-background absolute inset-[7px] flex items-center justify-center rounded-full text-[0.72rem] font-bold">
-            72%
+            ))}
           </div>
         </div>
-        <div class="flex flex-col gap-1.5">
-          <span class="bg-accent text-accent-foreground motion-safe:group-hover:bg-primary motion-safe:group-hover:text-primary-foreground rounded-md px-2 py-1 text-[0.6rem] font-semibold transition-colors duration-300">
-            8,240 steps
-          </span>
-          <span class="bg-secondary text-secondary-foreground rounded-md px-2 py-1 text-[0.6rem] font-semibold">
-            62 bpm
-          </span>
-        </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  {
-    slug === "education" && (
-      <div class="flex h-full flex-col justify-center gap-3">
-        <div class="flex items-center gap-2.5">
-          <span class="bg-accent text-accent-foreground motion-safe:group-hover:bg-primary motion-safe:group-hover:text-primary-foreground flex h-9 w-9 flex-none items-center justify-center rounded-lg transition-colors duration-300">
-            <Icon name="mdi:play" class="size-4" />
-          </span>
-          <div class="flex-1">
-            <div class="bg-muted h-2 w-2/3 rounded" />
-            <div class="bg-muted mt-1.5 h-1.5 w-full overflow-hidden rounded-full">
-              <div class="bg-primary h-1.5 w-3/5 rounded-full transition-[width] duration-500 ease-out motion-safe:group-hover:w-[85%]" />
-            </div>
+    {
+      slug === "ai" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-background flex max-w-[82%] items-start gap-2 rounded-2xl px-3 py-2 text-[0.66rem]">
+            <Icon name="mdi:robot-outline" class="text-primary mt-0.5 size-4" />
+            Generate a calm empty state
           </div>
-          <span class="text-muted-foreground font-mono text-[0.6rem]">3/5</span>
-        </div>
-        <div class="flex gap-2">
-          <span class="bg-secondary text-secondary-foreground rounded-md px-2 py-1 text-[0.58rem] font-semibold">
-            Quiz
-          </span>
-          <span class="bg-accent text-accent-foreground rounded-md px-2 py-1 text-[0.58rem] font-semibold">
-            Flashcards
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "travel" && (
-      <div class="flex h-full flex-col justify-center">
-        <div class="relative overflow-hidden rounded-xl">
-          <div
-            class="h-24 transition-transform duration-500 ease-out motion-safe:group-hover:scale-105"
-            style="background:#39A7C4"
-          />
-          <span class="bg-card/90 absolute top-2 left-2 rounded-full px-2 py-0.5 text-[0.58rem] font-semibold">
-            ★ 4.9
-          </span>
-          <span class="absolute bottom-2 left-2 text-[0.72rem] font-bold text-white">
-            Kyoto, Japan
-          </span>
-          <span class="bg-primary text-primary-foreground absolute right-2 bottom-2 rounded-full px-2 py-0.5 text-[0.58rem] font-semibold">
-            $1,240
-          </span>
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "media" && (
-      <div class="bg-card flex h-full items-center gap-2.5 rounded-xl p-3">
-        <span
-          class="h-12 w-12 flex-none rounded-lg"
-          style="background:#8B5BEF"
-        />
-        <div class="flex-1">
-          <div class="bg-muted h-2 w-2/3 rounded" />
-          <div class="bg-muted mt-1 h-1.5 w-1/3 rounded opacity-70" />
-          <div class="bg-muted mt-2 h-1 w-full overflow-hidden rounded">
-            <div class="bg-primary h-1 w-1/2 rounded transition-[width] duration-500 ease-out motion-safe:group-hover:w-4/5" />
+          <div class="bg-primary text-primary-foreground ml-auto rounded-2xl rounded-br-md px-3 py-2 text-[0.66rem] transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5">
+            Done. 3 variants.
           </div>
-        </div>
-        <span class="bg-primary text-primary-foreground flex h-7 w-7 flex-none items-center justify-center rounded-full transition duration-300 motion-safe:group-hover:brightness-110">
-          <Icon name="mdi:play" class="size-3.5" />
-        </span>
-      </div>
-    )
-  }
-
-  {
-    slug === "dashboard" && (
-      <div class="grid h-full grid-cols-2 content-center gap-2">
-        <div class="bg-card rounded-xl p-2.5">
-          <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
-            MRR
-          </div>
-          <div class="mt-0.5 text-base font-bold tabular-nums">$8.4k</div>
-        </div>
-        <div class="bg-card rounded-xl p-2.5">
-          <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
-            Active
-          </div>
-          <div class="mt-0.5 text-base font-bold tabular-nums">1,204</div>
-        </div>
-        <div class="col-span-2 flex h-8 items-end gap-1.5">
-          {bars.map((h, i) => (
-            <span
-              class="bg-primary flex-1 rounded-t opacity-70 transition-opacity duration-300 ease-out motion-safe:group-hover:opacity-100"
-              style={`height:${h}%;transition-delay:${i * 40}ms`}
-            />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "gallery" && (
-      <div class="grid h-full grid-cols-3 grid-rows-2 gap-1.5">
-        {["#E0654B", "#2F9E6E", "#4A73C4", "#EAB94D", "#8B5BEF", "#39A7C4"].map(
-          (c, i) => (
-            <span
-              class="rounded-md opacity-90 transition-opacity duration-300 ease-out motion-safe:group-hover:opacity-100"
-              style={`background:${c};transition-delay:${i * 30}ms`}
-            />
-          ),
-        )}
-      </div>
-    )
-  }
-
-  {
-    slug === "calendar" && (
-      <div class="bg-card flex h-full flex-col justify-center rounded-xl p-3">
-        <div class="mb-2 flex items-baseline justify-between">
-          <span class="text-[0.7rem] font-semibold">July</span>
-          <span class="text-muted-foreground font-mono text-[0.58rem]">
-            2026
-          </span>
-        </div>
-        <div class="grid grid-cols-7 justify-items-center gap-1.5">
-          {Array.from({ length: 35 }).map((_, i) => (
-            <span
-              class={`h-2.5 w-2.5 rounded-[3px] transition-colors duration-300 ${i === 16 ? "bg-primary" : "bg-muted motion-safe:group-hover:bg-secondary"}`}
-            />
-          ))}
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "notifications" && (
-      <div class="flex h-full flex-col justify-center gap-2">
-        {[true, false, false].map((unread) => (
-          <div class="bg-card flex items-center gap-2.5 rounded-xl px-2.5 py-2">
-            <span
-              class={`flex h-7 w-7 flex-none items-center justify-center rounded-lg transition-colors duration-300 ${unread ? "bg-accent text-accent-foreground motion-safe:group-hover:bg-primary motion-safe:group-hover:text-primary-foreground" : "bg-accent text-accent-foreground"}`}
-            >
-              <Icon name="mdi:bell-outline" class="size-3.5" />
-            </span>
-            <div class="flex-1">
-              <div class="bg-muted h-1.5 w-3/4 rounded" />
-              <div class="bg-muted mt-1 h-1.5 w-1/2 rounded opacity-70" />
-            </div>
-            {unread && (
-              <span class="bg-primary h-2 w-2 flex-none rounded-full" />
-            )}
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  {
-    slug === "pricing" && (
-      <div class="grid h-full grid-cols-2 content-center gap-2.5">
-        <div class="bg-card rounded-xl p-2.5">
-          <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
-            Starter
-          </div>
-          <div class="mt-0.5 text-sm font-bold tabular-nums">$9</div>
-          <div class="bg-muted mt-2 h-1.5 w-full rounded" />
-          <div class="bg-muted mt-1.5 h-1.5 w-2/3 rounded opacity-70" />
-        </div>
-        <div class="border-primary bg-card rounded-xl border-2 p-2.5">
-          <div class="text-primary text-[0.56rem] font-semibold uppercase">
-            Pro
-          </div>
-          <div class="mt-0.5 text-sm font-bold tabular-nums">$29</div>
-          <div class="bg-muted mt-2 h-1.5 w-full rounded" />
-          <div class="bg-primary mt-1.5 h-1.5 w-3/4 rounded transition-[width] duration-500 ease-out motion-safe:group-hover:w-full" />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    slug === "profile" && (
-      <div class="flex h-full flex-col justify-center gap-3">
-        <div class="flex items-center gap-2.5">
-          <span class="bg-accent h-10 w-10 flex-none rounded-full" />
-          <div>
-            <div class="bg-muted h-2 w-20 rounded" />
-            <div class="bg-muted mt-1.5 h-1.5 w-14 rounded opacity-70" />
-          </div>
-        </div>
-        {[0, 1].map(() => (
-          <div class="bg-card flex items-center justify-between rounded-lg px-2.5 py-2">
-            <span class="bg-muted h-1.5 w-16 rounded" />
+          <div class="bg-muted flex items-center gap-2 rounded-full px-3 py-1.5">
+            <span class="bg-primary h-1.5 w-8 rounded-full" />
+            <span class="bg-muted-foreground/20 h-1.5 flex-1 rounded-full" />
             <Icon
-              name="mdi:chevron-right"
-              class="text-muted-foreground motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
-            />
-          </div>
-        ))}
-      </div>
-    )
-  }
-
-  {
-    slug === "must_haves" && (
-      <div class="flex h-full flex-col items-center justify-center gap-2.5 text-center">
-        <div class="bg-accent text-accent-foreground motion-safe:group-hover:bg-primary motion-safe:group-hover:text-primary-foreground flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300">
-          <Icon name="mdi:rocket-launch-outline" class="size-6" />
-        </div>
-        <div class="flex gap-1">
-          <span class="bg-primary h-1.5 w-4 rounded-full" />
-          <span class="bg-muted motion-safe:group-hover:bg-primary/50 h-1.5 w-1.5 rounded-full transition-colors duration-300" />
-          <span class="bg-muted h-1.5 w-1.5 rounded-full" />
-        </div>
-        <span class="bg-primary text-primary-foreground rounded-full px-4 py-1.5 text-[0.64rem] font-semibold transition duration-300 motion-safe:group-hover:brightness-110">
-          Get started
-        </span>
-      </div>
-    )
-  }
-
-  {
-    slug === "info" && (
-      <div class="flex h-full flex-col justify-center gap-2">
-        <div class="bg-card rounded-xl p-2.5">
-          <div class="flex items-center justify-between">
-            <div class="bg-muted h-2 w-2/3 rounded" />
-            <Icon
-              name="mdi:chevron-up"
+              name="mdi:microphone-outline"
               class="text-muted-foreground size-3.5"
             />
           </div>
-          <div class="bg-muted mt-2 h-1.5 w-full rounded opacity-70" />
-          <div class="bg-muted mt-1 h-1.5 w-4/5 rounded opacity-70" />
         </div>
-        <div class="bg-card flex items-center justify-between rounded-xl p-2.5">
-          <div class="bg-muted h-2 w-1/2 rounded" />
-          <Icon
-            name="mdi:chevron-down"
-            class="text-muted-foreground size-3.5 transition-transform duration-300 ease-out motion-safe:group-hover:rotate-180"
-          />
-        </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  {
-    slug === "utilities" && (
-      <div class="grid h-full grid-cols-2 content-center gap-2">
-        <div class="bg-card flex items-center gap-2 rounded-xl p-2.5">
-          <Icon name="mdi:weather-partly-cloudy" class="text-primary size-5" />
-          <span class="text-sm font-bold tabular-nums">24°</span>
+    {
+      slug === "auth" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="flex items-center justify-between">
+            <span class="text-[0.68rem] font-semibold">Sign in</span>
+            <Icon name="mdi:fingerprint" class="text-primary size-5" />
+          </div>
+          <div class="bg-muted h-8 rounded-lg" />
+          <div class="border-primary/35 bg-background h-8 rounded-lg border" />
+          <div class="bg-primary text-primary-foreground rounded-lg py-2 text-center text-[0.64rem] font-semibold transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5">
+            Continue
+          </div>
         </div>
-        <div class="bg-card flex items-center gap-2 rounded-xl p-2.5">
-          <Icon
-            name="mdi:calculator-variant-outline"
-            class="text-primary size-5"
-          />
-          <span class="bg-muted h-1.5 w-10 rounded" />
-        </div>
-        <div class="bg-card flex items-center gap-2 rounded-xl p-2.5">
-          <Icon name="mdi:clock-outline" class="text-primary size-5" />
-          <span class="font-mono text-[0.66rem] font-semibold">09:41</span>
-        </div>
-        <div class="bg-card flex items-center gap-2 rounded-xl p-2.5">
-          <Icon name="mdi:note-outline" class="text-primary size-5" />
-          <span class="bg-muted h-1.5 w-10 rounded" />
-        </div>
-      </div>
-    )
-  }
+      )
+    }
 
-  {
-    slug === "navigation" && (
-      <div class="flex h-full flex-col justify-center gap-2">
-        <div class="bg-card flex-1 rounded-xl p-2.5">
-          <div class="bg-muted h-2 w-1/2 rounded" />
-          <div class="bg-muted mt-2 h-1.5 w-3/4 rounded opacity-70" />
-          <div class="bg-muted mt-1.5 h-1.5 w-2/3 rounded opacity-70" />
-        </div>
-        <div class="bg-card flex items-center justify-around rounded-xl py-2.5">
-          <Icon name="mdi:home" class="text-primary size-4" />
-          <Icon
-            name="mdi:magnify"
-            class="text-muted-foreground motion-safe:group-hover:text-foreground size-4 transition-colors duration-300"
-          />
-          <Icon
-            name="mdi:bell-outline"
-            class="text-muted-foreground motion-safe:group-hover:text-foreground size-4 transition-colors delay-75 duration-300"
-          />
-          <Icon
-            name="mdi:account-outline"
-            class="text-muted-foreground motion-safe:group-hover:text-foreground size-4 transition-colors delay-100 duration-300"
-          />
-        </div>
-      </div>
-    )
-  }
-
-  {
-    !known.includes(slug) && (
-      <div class="flex h-full flex-col justify-center gap-2.5">
-        {[70, 56, 62].map((w, i) => (
+    {
+      slug === "core" && (
+        <div class="relative flex h-full flex-col justify-center gap-3">
           <div class="flex items-center gap-2.5">
-            <span class="bg-accent text-accent-foreground flex h-8 w-8 flex-none items-center justify-center rounded-lg">
-              {icon && <Icon name={icon} class="size-4" />}
+            <span class="bg-primary text-primary-foreground rounded-lg px-3 py-1.5 text-[0.68rem] font-semibold">
+              Button
+            </span>
+            <span class="bg-primary flex h-5 w-9 items-center rounded-full px-0.5">
+              <span class="bg-primary-foreground h-4 w-4 rounded-full transition-transform duration-300 ease-out motion-safe:group-hover:translate-x-4" />
+            </span>
+            <span class="bg-primary text-primary-foreground flex h-5 w-5 items-center justify-center rounded">
+              <Icon name="mdi:check" class="size-3.5" />
+            </span>
+          </div>
+          <div class="bg-muted relative h-1.5 w-full rounded-full">
+            <div class="bg-primary h-1.5 w-2/5 rounded-full transition-[width] duration-500 ease-out motion-safe:group-hover:w-3/5" />
+            <span class="border-card bg-primary absolute top-1/2 left-2/5 h-3.5 w-3.5 -translate-x-1/2 -translate-y-1/2 rounded-full border-2 transition-[left] duration-500 ease-out motion-safe:group-hover:left-3/5" />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "chat" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-muted text-foreground max-w-[78%] rounded-2xl rounded-bl-md px-3 py-2 text-[0.72rem]">
+            Is the design system ready?
+          </div>
+          <div class="bg-primary text-primary-foreground ml-auto max-w-[78%] rounded-2xl rounded-br-md px-3 py-2 text-[0.72rem]">
+            Shipping it now
+          </div>
+          <div class="bg-muted text-muted-foreground mt-1 flex items-center justify-between rounded-full px-3 py-1.5 font-mono text-[0.66rem]">
+            Message...
+            <Icon
+              name="mdi:send"
+              class="text-muted-foreground motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
+            />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "communication" && (
+        <div class="relative flex h-full flex-col items-center justify-center gap-2.5">
+          <span class="bg-muted h-12 w-12 rounded-full" />
+          <div class="bg-muted/80 h-1.5 w-16 rounded-full" />
+          <div class="flex gap-2.5">
+            <span class="bg-primary text-primary-foreground flex h-8 w-8 items-center justify-center rounded-full transition duration-300 motion-safe:group-hover:brightness-110">
+              <Icon name="mdi:phone" class="size-4" />
+            </span>
+            <span class="bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full">
+              <Icon name="mdi:microphone-off" class="size-4" />
+            </span>
+            <span class="bg-muted text-muted-foreground flex h-8 w-8 items-center justify-center rounded-full">
+              <Icon name="mdi:video-outline" class="size-4" />
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "animation" && (
+        <div class="relative flex h-full items-center justify-center">
+          <span class="ft-ripple border-primary/25 absolute inset-0 m-auto h-10 w-10 rounded-full border-2" />
+          <span
+            class="ft-ripple border-primary/25 absolute inset-0 m-auto h-10 w-10 rounded-full border-2"
+            style="animation-delay:0.8s"
+          />
+          <span
+            class="ft-ripple border-primary/25 absolute inset-0 m-auto h-10 w-10 rounded-full border-2"
+            style="animation-delay:1.6s"
+          />
+          <span class="ft-core bg-primary/90 text-primary-foreground relative z-10 flex h-11 w-11 items-center justify-center rounded-full">
+            <Icon name="mdi:play" class="size-5" />
+          </span>
+        </div>
+      )
+    }
+
+    {
+      slug === "layouts" && (
+        <div class="relative grid h-full grid-cols-3 grid-rows-2 gap-2">
+          <span class="bg-secondary row-span-2 rounded-lg" />
+          <span class="bg-muted rounded-lg" />
+          <span class="bg-muted/80 rounded-lg" />
+          <span class="bg-primary/10 motion-safe:group-hover:bg-primary/15 col-span-2 rounded-lg transition-colors duration-300" />
+        </div>
+      )
+    }
+
+    {
+      slug === "forms" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-muted text-muted-foreground rounded-lg px-2.5 py-2 font-mono text-[0.64rem]">
+            Full name
+          </div>
+          <div class="border-primary/40 bg-background ring-primary/10 rounded-lg border px-2.5 py-2 font-mono text-[0.64rem] ring-2">
+            jane@studio.dev
+          </div>
+          <div class="bg-primary text-primary-foreground rounded-lg py-2 text-center text-[0.66rem] font-semibold transition duration-300 motion-safe:group-hover:brightness-110">
+            Create account
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "overlays" && (
+        <div class="bg-muted relative h-full overflow-hidden rounded-lg">
+          <div class="bg-card absolute inset-x-2 bottom-0 rounded-t-lg p-3 transition-transform duration-300 ease-out motion-safe:translate-y-2 motion-safe:group-hover:translate-y-0">
+            <div class="bg-muted-foreground/30 mx-auto h-1 w-8 rounded-full" />
+            <div class="bg-muted mt-2.5 h-2 w-2/3 rounded" />
+            <div class="bg-muted mt-1.5 h-1.5 w-1/2 rounded opacity-70" />
+            <div class="bg-primary text-primary-foreground mt-2.5 rounded-lg py-1.5 text-center text-[0.64rem] font-semibold">
+              Confirm
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "states" && (
+        <div class="relative flex h-full flex-col items-center justify-center gap-2 text-center">
+          <div class="bg-muted text-muted-foreground motion-safe:group-hover:bg-primary/10 motion-safe:group-hover:text-primary flex h-11 w-11 items-center justify-center rounded-full transition-colors duration-300">
+            <Icon name="mdi:inbox-outline" class="size-5" />
+          </div>
+          <div class="bg-muted h-2 w-28 rounded" />
+          <div class="bg-muted h-1.5 w-20 rounded opacity-70" />
+        </div>
+      )
+    }
+
+    {
+      slug === "ecommerce" && (
+        <div class="relative grid h-full grid-cols-2 content-center gap-2.5">
+          {[
+            ["$48", "bg-muted"],
+            ["$92", "bg-secondary"],
+          ].map((item) => (
+            <div class="bg-background overflow-hidden rounded-lg">
+              <div
+                class={`h-12 transition-transform duration-500 ease-out motion-safe:group-hover:scale-105 ${item[1]}`}
+              />
+              <div class="p-2">
+                <div class="bg-muted-foreground/15 h-1.5 w-3/4 rounded" />
+                <div class="mt-1.5 flex items-center justify-between">
+                  <span class="font-mono text-[0.62rem] font-semibold">
+                    {item[0]}
+                  </span>
+                  <span class="bg-primary/20 h-3.5 w-3.5 rounded" />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "social" && (
+        <div class="bg-background relative flex h-full flex-col justify-center rounded-lg p-3">
+          <div class="flex items-center gap-2">
+            <span class="bg-muted h-6 w-6 rounded-full" />
+            <div class="bg-muted-foreground/15 h-1.5 w-16 rounded" />
+          </div>
+          <div class="bg-muted mt-2 h-12 rounded-lg" />
+          <div class="text-muted-foreground mt-2 flex gap-3">
+            <Icon
+              name="mdi:heart-outline"
+              class="motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
+            />
+            <Icon name="mdi:comment-outline" class="size-3.5" />
+            <Icon name="mdi:share-outline" class="size-3.5" />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "search" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-muted text-muted-foreground flex items-center gap-2 rounded-full px-3 py-2 font-mono text-[0.66rem]">
+            <Icon
+              name="mdi:magnify"
+              class="motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
+            />
+            Search widgets...
+          </div>
+          {[70, 52].map((w) => (
+            <div class="flex items-center gap-2.5 px-1">
+              <Icon name="mdi:history" class="text-muted-foreground size-3.5" />
+              <div class="bg-muted h-1.5 rounded" style={`width:${w}%`} />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "finance" && (
+        <div class="relative flex h-full flex-col justify-center">
+          <div class="text-muted-foreground text-[0.58rem] font-semibold uppercase">
+            Total balance
+          </div>
+          <div class="text-xl font-bold tabular-nums">$12,840</div>
+          <div class="mt-3 flex h-10 items-end gap-1.5">
+            {bars.map((h, i) => (
+              <span
+                class={`flex-1 rounded-t transition-colors duration-300 ease-out ${i === 3 ? "bg-primary/50" : "bg-muted motion-safe:group-hover:bg-primary/20"}`}
+                style={`height:${h}%;transition-delay:${i * 40}ms`}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "food" && (
+        <div class="relative flex h-full flex-col justify-center gap-3">
+          {[
+            { n: "Saffron Kitchen", s: "4.8 / 25 min / $$" },
+            { n: "Green Bowl", s: "4.6 / 18 min / $" },
+          ].map((r, i) => (
+            <div class="flex items-center gap-2.5">
+              <span
+                class:list={[
+                  "h-10 w-10 flex-none rounded-lg transition duration-300 motion-safe:group-hover:brightness-105",
+                  i === 0 ? "bg-muted" : "bg-secondary",
+                ]}
+              />
+              <div>
+                <div class="text-[0.78rem] font-semibold">{r.n}</div>
+                <div class="text-muted-foreground mt-0.5 font-mono text-[0.6rem]">
+                  {r.s}
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "health" && (
+        <div class="relative flex h-full items-center justify-center gap-4">
+          <div
+            class="relative h-20 w-20 rounded-full"
+            style="background:conic-gradient(var(--primary) 72%, var(--muted) 0)"
+          >
+            <div class="bg-card absolute inset-[7px] flex items-center justify-center rounded-full text-[0.72rem] font-bold">
+              72%
+            </div>
+          </div>
+          <div class="flex flex-col gap-1.5">
+            <span class="bg-muted text-foreground rounded-md px-2 py-1 text-[0.6rem] font-semibold">
+              8,240 steps
+            </span>
+            <span class="bg-muted text-muted-foreground rounded-md px-2 py-1 text-[0.6rem] font-semibold">
+              62 bpm
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "education" && (
+        <div class="relative flex h-full flex-col justify-center gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="bg-muted text-muted-foreground motion-safe:group-hover:bg-primary/10 motion-safe:group-hover:text-primary flex h-9 w-9 flex-none items-center justify-center rounded-lg transition-colors duration-300">
+              <Icon name="mdi:play" class="size-4" />
             </span>
             <div class="flex-1">
-              <div class="bg-muted h-2 rounded" style={`width:${w}%`} />
-              <div class="bg-muted mt-1.5 h-1.5 w-2/5 rounded opacity-70" />
+              <div class="bg-muted h-2 w-2/3 rounded" />
+              <div class="bg-muted mt-1.5 h-1.5 w-full overflow-hidden rounded-full">
+                <div class="bg-primary h-1.5 w-3/5 rounded-full transition-[width] duration-500 ease-out motion-safe:group-hover:w-[85%]" />
+              </div>
             </div>
-            {i === 0 && (
-              <span class="bg-primary h-2 w-2 flex-none rounded-full" />
+            <span class="text-muted-foreground font-mono text-[0.6rem]">
+              3/5
+            </span>
+          </div>
+          <div class="flex gap-2">
+            <span class="bg-muted text-muted-foreground rounded-md px-2 py-1 text-[0.58rem] font-semibold">
+              Quiz
+            </span>
+            <span class="bg-muted text-muted-foreground rounded-md px-2 py-1 text-[0.58rem] font-semibold">
+              Flashcards
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "events" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-background rounded-lg p-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[0.68rem] font-semibold">Design Conf</span>
+              <span class="bg-primary/10 text-primary rounded-full px-2 py-0.5 font-mono text-[0.56rem] font-semibold">
+                JUL 12
+              </span>
+            </div>
+            <div class="bg-muted mt-2 h-2 w-2/3 rounded" />
+            <div class="mt-3 flex items-center gap-2">
+              <span class="bg-muted size-5 rounded-full" />
+              <span class="bg-muted size-5 rounded-full" />
+              <span class="bg-primary text-primary-foreground rounded-full px-2 py-0.5 text-[0.56rem] font-semibold">
+                Ticket
+              </span>
+            </div>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "travel" && (
+        <div class="relative flex h-full flex-col justify-center">
+          <div class="relative overflow-hidden rounded-lg">
+            <div class="bg-muted h-24 transition-transform duration-500 ease-out motion-safe:group-hover:scale-105" />
+            <span class="bg-card/90 text-foreground absolute top-2 left-2 rounded-full px-2 py-0.5 text-[0.58rem] font-semibold">
+              4.9
+            </span>
+            <span class="text-foreground absolute bottom-2 left-2 text-[0.72rem] font-bold">
+              Kyoto, Japan
+            </span>
+            <span class="bg-card/90 text-foreground absolute right-2 bottom-2 rounded-full px-2 py-0.5 font-mono text-[0.58rem] font-semibold">
+              $1,240
+            </span>
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "media" && (
+        <div class="bg-background relative flex h-full items-center gap-2.5 rounded-lg p-3">
+          <span class="bg-muted h-12 w-12 flex-none rounded-lg" />
+          <div class="flex-1">
+            <div class="bg-muted h-2 w-2/3 rounded" />
+            <div class="bg-muted mt-1 h-1.5 w-1/3 rounded opacity-70" />
+            <div class="bg-muted mt-2 h-1 w-full overflow-hidden rounded">
+              <div class="bg-primary h-1 w-1/2 rounded transition-[width] duration-500 ease-out motion-safe:group-hover:w-4/5" />
+            </div>
+          </div>
+          <span class="bg-primary text-primary-foreground flex h-7 w-7 flex-none items-center justify-center rounded-full transition duration-300 motion-safe:group-hover:brightness-110">
+            <Icon name="mdi:play" class="size-3.5" />
+          </span>
+        </div>
+      )
+    }
+
+    {
+      slug === "dashboard" && (
+        <div class="relative grid h-full grid-cols-2 content-center gap-2">
+          <div class="bg-background rounded-lg p-2.5">
+            <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
+              MRR
+            </div>
+            <div class="mt-0.5 text-base font-bold tabular-nums">$8.4k</div>
+          </div>
+          <div class="bg-background rounded-lg p-2.5">
+            <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
+              Active
+            </div>
+            <div class="mt-0.5 text-base font-bold tabular-nums">1,204</div>
+          </div>
+          <div class="col-span-2 flex h-8 items-end gap-1.5">
+            {bars.map((h, i) => (
+              <span
+                class={`flex-1 rounded-t transition-colors duration-300 ease-out ${i === 3 ? "bg-primary/50" : "bg-muted motion-safe:group-hover:bg-primary/20"}`}
+                style={`height:${h}%;transition-delay:${i * 40}ms`}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "crm" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          {["Lead", "Qualified", "Won"].map((stage, i) => (
+            <div class="bg-background flex items-center gap-2 rounded-lg p-2">
+              <span
+                class:list={[
+                  "h-7 w-1 rounded-full",
+                  i === 1 ? "bg-primary" : "bg-muted",
+                ]}
+              />
+              <div class="flex-1">
+                <div class="flex items-center justify-between">
+                  <span class="text-[0.62rem] font-semibold">{stage}</span>
+                  <span class="text-muted-foreground font-mono text-[0.56rem]">
+                    {i + 2}
+                  </span>
+                </div>
+                <div class="bg-muted mt-1 h-1.5 w-2/3 rounded" />
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "gallery" && (
+        <div class="relative grid h-full grid-cols-3 grid-rows-2 gap-1.5">
+          {[
+            "bg-muted",
+            "bg-secondary",
+            "bg-muted/80",
+            "bg-foreground/6",
+            "bg-primary/10",
+            "bg-secondary/80",
+          ].map((tone, i) => (
+            <span
+              class:list={[
+                "rounded-md transition-opacity duration-300 ease-out motion-safe:group-hover:opacity-100",
+                tone,
+              ]}
+              style={`transition-delay:${i * 30}ms`}
+            />
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "calendar" && (
+        <div class="bg-background relative flex h-full flex-col justify-center rounded-lg p-3">
+          <div class="mb-2 flex items-baseline justify-between">
+            <span class="text-[0.7rem] font-semibold">July</span>
+            <span class="text-muted-foreground font-mono text-[0.58rem]">
+              2026
+            </span>
+          </div>
+          <div class="grid grid-cols-7 justify-items-center gap-1.5">
+            {Array.from({ length: 35 }).map((_, i) => (
+              <span
+                class={`h-2.5 w-2.5 rounded-[3px] transition-colors duration-300 ${i === 16 ? "bg-primary/60" : "bg-muted"}`}
+              />
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "notifications" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          {[true, false, false].map((unread) => (
+            <div class="bg-background flex items-center gap-2.5 rounded-lg px-2.5 py-2">
+              <span
+                class={`bg-muted text-muted-foreground flex h-7 w-7 flex-none items-center justify-center rounded-lg transition-colors duration-300 ${unread ? "motion-safe:group-hover:bg-primary/10 motion-safe:group-hover:text-primary" : ""}`}
+              >
+                <Icon name="mdi:bell-outline" class="size-3.5" />
+              </span>
+              <div class="flex-1">
+                <div class="bg-muted h-1.5 w-3/4 rounded" />
+                <div class="bg-muted mt-1 h-1.5 w-1/2 rounded opacity-70" />
+              </div>
+              {unread && (
+                <span class="bg-primary h-2 w-2 flex-none rounded-full" />
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "iot" && (
+        <div class="relative grid h-full grid-cols-2 content-center gap-2">
+          {[
+            ["mdi:thermometer", "22", "deg"],
+            ["mdi:lightbulb-outline", "68", "%"],
+            ["mdi:lock-outline", "on", ""],
+            ["mdi:flash-outline", "1.8", "kw"],
+          ].map((item, i) => (
+            <div class="bg-background rounded-lg p-2.5">
+              <Icon
+                name={item[0]}
+                class:list={[
+                  "size-4",
+                  i === 1 ? "text-primary" : "text-muted-foreground",
+                ]}
+              />
+              <div class="mt-1 font-mono text-[0.72rem] font-semibold">
+                {item[1]}
+                <span class="text-muted-foreground text-[0.52rem]">
+                  {item[2]}
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "maps" && (
+        <div class="bg-muted relative h-full overflow-hidden rounded-lg">
+          <svg
+            class="absolute inset-0 h-full w-full"
+            viewBox="0 0 320 128"
+            aria-hidden="true"
+          >
+            <g
+              fill="none"
+              stroke="color-mix(in oklab, var(--muted-foreground) 24%, transparent)"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+            >
+              <path d="M-8 82 L48 60 L94 70 L128 42 L178 44 L222 28 L328 38" />
+              <path d="M10 42 L70 44 L104 22 L154 30 L196 16 L238 24 L318 10" />
+              <path d="M20 110 L70 92 L112 104 L158 78 L208 82 L252 62 L330 76" />
+              <path d="M54 8 L42 60 L52 122" />
+              <path d="M110 0 L104 22 L112 104" />
+              <path d="M168 -8 L154 30 L158 78 L146 138" />
+              <path d="M226 -4 L222 28 L208 82 L218 136" />
+              <path d="M274 4 L264 48 L252 62 L260 126" />
+              <path d="M80 44 L94 70 L70 92" />
+              <path d="M178 44 L158 78" />
+              <path d="M238 24 L264 48 L318 58" />
+            </g>
+
+            <path
+              d="M60 34 C78 58 86 76 112 76 C142 76 150 54 176 56 C205 58 216 86 252 72"
+              fill="none"
+              stroke="var(--primary)"
+              stroke-dasharray="2.5 5"
+              stroke-linecap="round"
+              stroke-width="1.5"
+              class="transition-[stroke-dashoffset] duration-500 ease-out motion-safe:group-hover:[stroke-dashoffset:-12]"
+            />
+          </svg>
+
+          <span class="text-primary absolute top-5 left-11 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5">
+            <Icon name="mdi:map-marker" class="size-6 drop-shadow-sm" />
+          </span>
+          <span class="text-primary absolute top-[3.55rem] left-[45%] transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-1">
+            <Icon name="mdi:map-marker" class="size-8 drop-shadow-sm" />
+          </span>
+          <span class="text-primary absolute top-7 right-12 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5">
+            <Icon name="mdi:map-marker" class="size-6 drop-shadow-sm" />
+          </span>
+        </div>
+      )
+    }
+
+    {
+      slug === "marketplace" && (
+        <div class="relative grid h-full grid-cols-2 content-center gap-2">
+          {[0, 1].map((i) => (
+            <div class="bg-background overflow-hidden rounded-lg">
+              <div
+                class:list={["h-12", i === 0 ? "bg-muted" : "bg-secondary"]}
+              />
+              <div class="p-2">
+                <div class="bg-muted h-1.5 w-3/4 rounded" />
+                <div class="mt-1.5 flex justify-between">
+                  <span class="font-mono text-[0.58rem] font-semibold">
+                    {i === 0 ? "$120" : "$84"}
+                  </span>
+                  <Icon
+                    name="mdi:storefront-outline"
+                    class="text-muted-foreground size-3.5"
+                  />
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "pricing" && (
+        <div class="relative grid h-full grid-cols-2 content-center gap-2.5">
+          <div class="bg-background rounded-lg p-2.5">
+            <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
+              Starter
+            </div>
+            <div class="mt-0.5 text-sm font-bold tabular-nums">$9</div>
+            <div class="bg-muted mt-2 h-1.5 w-full rounded" />
+            <div class="bg-muted mt-1.5 h-1.5 w-2/3 rounded opacity-70" />
+          </div>
+          <div class="border-primary/30 bg-background rounded-lg border p-2.5">
+            <div class="text-muted-foreground text-[0.56rem] font-semibold uppercase">
+              Pro
+            </div>
+            <div class="mt-0.5 text-sm font-bold tabular-nums">$29</div>
+            <div class="bg-muted mt-2 h-1.5 w-full rounded" />
+            <div class="bg-primary/30 mt-1.5 h-1.5 w-3/4 rounded transition-[width] duration-500 ease-out motion-safe:group-hover:w-full" />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "profile" && (
+        <div class="relative flex h-full flex-col justify-center gap-3">
+          <div class="flex items-center gap-2.5">
+            <span class="bg-muted h-10 w-10 flex-none rounded-full" />
+            <div>
+              <div class="bg-muted h-2 w-20 rounded" />
+              <div class="bg-muted mt-1.5 h-1.5 w-14 rounded opacity-70" />
+            </div>
+          </div>
+          {[0, 1].map(() => (
+            <div class="bg-background flex items-center justify-between rounded-lg px-2.5 py-2">
+              <span class="bg-muted h-1.5 w-16 rounded" />
+              <Icon
+                name="mdi:chevron-right"
+                class="text-muted-foreground motion-safe:group-hover:text-primary size-3.5 transition-colors duration-300"
+              />
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "must_haves" && (
+        <div class="relative flex h-full flex-col items-center justify-center gap-2.5 text-center">
+          <div class="bg-muted text-muted-foreground motion-safe:group-hover:bg-primary/10 motion-safe:group-hover:text-primary flex h-14 w-14 items-center justify-center rounded-2xl transition-colors duration-300">
+            <Icon name="mdi:rocket-launch-outline" class="size-6" />
+          </div>
+          <div class="flex gap-1">
+            <span class="bg-primary h-1.5 w-4 rounded-full" />
+            <span class="bg-muted motion-safe:group-hover:bg-primary/50 h-1.5 w-1.5 rounded-full transition-colors duration-300" />
+            <span class="bg-muted h-1.5 w-1.5 rounded-full" />
+          </div>
+          <span class="bg-primary text-primary-foreground rounded-full px-4 py-1.5 text-[0.64rem] font-semibold transition duration-300 motion-safe:group-hover:brightness-110">
+            Get started
+          </span>
+        </div>
+      )
+    }
+
+    {
+      slug === "info" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-background rounded-lg p-2.5">
+            <div class="flex items-center justify-between">
+              <div class="bg-muted h-2 w-2/3 rounded" />
+              <Icon
+                name="mdi:chevron-up"
+                class="text-muted-foreground size-3.5"
+              />
+            </div>
+            <div class="bg-muted mt-2 h-1.5 w-full rounded opacity-70" />
+            <div class="bg-muted mt-1 h-1.5 w-4/5 rounded opacity-70" />
+          </div>
+          <div class="bg-background flex items-center justify-between rounded-lg p-2.5">
+            <div class="bg-muted h-2 w-1/2 rounded" />
+            <Icon
+              name="mdi:chevron-down"
+              class="text-muted-foreground size-3.5 transition-transform duration-300 ease-out motion-safe:group-hover:rotate-180"
+            />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "productivity" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          {["Design card grid", "Review source", "Publish"].map((task, i) => (
+            <div class="bg-background flex items-center gap-2 rounded-lg px-2.5 py-2">
+              <span
+                class:list={[
+                  "flex size-5 items-center justify-center rounded-md",
+                  i < 2
+                    ? "bg-primary text-primary-foreground"
+                    : "bg-muted text-muted-foreground",
+                ]}
+              >
+                {i < 2 && <Icon name="mdi:check" class="size-3.5" />}
+              </span>
+              <span class="truncate text-[0.66rem] font-semibold">{task}</span>
+            </div>
+          ))}
+        </div>
+      )
+    }
+
+    {
+      slug === "saas" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="grid grid-cols-2 gap-2">
+            <div class="bg-background rounded-lg p-2.5">
+              <div class="text-muted-foreground text-[0.55rem] font-semibold uppercase">
+                seats
+              </div>
+              <div class="font-mono text-sm font-bold">18/24</div>
+            </div>
+            <div class="bg-background rounded-lg p-2.5">
+              <div class="text-muted-foreground text-[0.55rem] font-semibold uppercase">
+                usage
+              </div>
+              <div class="font-mono text-sm font-bold">72%</div>
+            </div>
+          </div>
+          <div class="bg-muted h-2 overflow-hidden rounded-full">
+            <div class="bg-primary h-2 w-[72%] rounded-full transition-[width] duration-500 motion-safe:group-hover:w-[86%]" />
+          </div>
+          <div class="flex gap-1.5">
+            {["API", "Billing", "Team"].map((tag) => (
+              <span class="bg-muted text-muted-foreground rounded-md px-2 py-1 text-[0.56rem] font-semibold">
+                {tag}
+              </span>
+            ))}
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "utilities" && (
+        <div class="relative grid h-full grid-cols-2 content-center gap-2">
+          <div class="bg-background flex items-center gap-2 rounded-lg p-2.5">
+            <Icon
+              name="mdi:weather-partly-cloudy"
+              class="text-muted-foreground motion-safe:group-hover:text-primary size-5 transition-colors duration-300"
+            />
+            <span class="text-sm font-bold tabular-nums">24</span>
+          </div>
+          <div class="bg-background flex items-center gap-2 rounded-lg p-2.5">
+            <Icon
+              name="mdi:calculator-variant-outline"
+              class="text-muted-foreground motion-safe:group-hover:text-primary size-5 transition-colors duration-300"
+            />
+            <span class="bg-muted h-1.5 w-10 rounded" />
+          </div>
+          <div class="bg-background flex items-center gap-2 rounded-lg p-2.5">
+            <Icon
+              name="mdi:clock-outline"
+              class="text-muted-foreground motion-safe:group-hover:text-primary size-5 transition-colors duration-300"
+            />
+            <span class="font-mono text-[0.66rem] font-semibold">09:41</span>
+          </div>
+          <div class="bg-background flex items-center gap-2 rounded-lg p-2.5">
+            <Icon
+              name="mdi:note-outline"
+              class="text-muted-foreground motion-safe:group-hover:text-primary size-5 transition-colors duration-300"
+            />
+            <span class="bg-muted h-1.5 w-10 rounded" />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      slug === "navigation" && (
+        <div class="relative flex h-full flex-col justify-center gap-2">
+          <div class="bg-background flex-1 rounded-lg p-2.5">
+            <div class="bg-muted h-2 w-1/2 rounded" />
+            <div class="bg-muted mt-2 h-1.5 w-3/4 rounded opacity-70" />
+            <div class="bg-muted mt-1.5 h-1.5 w-2/3 rounded opacity-70" />
+          </div>
+          <div class="bg-background flex items-center justify-around rounded-lg py-2.5">
+            <Icon
+              name="mdi:home"
+              class="text-muted-foreground motion-safe:group-hover:text-primary size-4 transition-colors duration-300"
+            />
+            <Icon name="mdi:magnify" class="text-muted-foreground size-4" />
+            <Icon
+              name="mdi:bell-outline"
+              class="text-muted-foreground size-4"
+            />
+            <Icon
+              name="mdi:account-outline"
+              class="text-muted-foreground size-4"
+            />
+          </div>
+        </div>
+      )
+    }
+
+    {
+      !known.includes(slug) && (
+        <div class="relative flex h-full flex-col justify-center gap-2.5">
+          <div class="mb-1 flex items-center justify-between">
+            <span class="text-[0.66rem] font-semibold capitalize">
+              {shortTitle}
+            </span>
+            {count != null && (
+              <span class="text-muted-foreground font-mono text-[0.56rem]">
+                {count}
+              </span>
             )}
           </div>
-        ))}
-      </div>
-    )
-  }
+          {[70, 56, 62].map((w, i) => (
+            <div class="flex items-center gap-2.5">
+              <span class="bg-muted text-muted-foreground flex h-8 w-8 flex-none items-center justify-center rounded-lg">
+                {icon && <Icon name={icon} class="size-4" />}
+              </span>
+              <div class="flex-1">
+                <div class="bg-muted h-2 rounded" style={`width:${w}%`} />
+                <div class="bg-muted mt-1.5 h-1.5 w-2/5 rounded opacity-70" />
+              </div>
+              {i === 0 && (
+                <span class="bg-primary h-2 w-2 flex-none rounded-full" />
+              )}
+            </div>
+          ))}
+        </div>
+      )
+    }
+  </div>
 </div>
 
 <style>
