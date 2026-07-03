@@ -21,20 +21,19 @@ const isActive = href === pathname || href === "/" + (subpath?.[0] || "");
 
 <style>
   .nav-link {
+    position: relative;
     padding: 0.45rem 0.8rem;
-    border-radius: 0.7rem;
     color: var(--muted-foreground);
     font-size: 0.92rem;
     font-weight: 600;
+    transition: color 160ms ease;
   }
 
   .nav-link:hover {
     color: var(--foreground);
-    background: color-mix(in oklab, var(--muted) 72%, transparent);
   }
 
   .nav-link.active {
     color: var(--foreground);
-    background: color-mix(in oklab, var(--accent) 75%, transparent);
   }
 </style>

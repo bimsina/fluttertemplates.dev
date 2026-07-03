@@ -6,9 +6,10 @@ interface Props {
   icon?: string;
   title?: string;
   count?: number;
+  className?: string;
 }
 
-const { slug, icon, title, count } = Astro.props;
+const { slug, icon, title, count, className } = Astro.props;
 const bars = [42, 62, 48, 80, 60, 92, 78];
 const shortTitle = title ?? slug.replaceAll("_", " ");
 const known = [
@@ -52,7 +53,9 @@ const known = [
 ];
 ---
 
-<div class="bg-background relative h-40 overflow-hidden p-3">
+<div
+  class:list={["bg-background relative h-40 overflow-hidden p-3", className]}
+>
   <div
     class="border-border/80 bg-card/55 relative h-full overflow-hidden rounded-xl border p-3 transition-transform duration-200 ease-out motion-safe:group-hover:-translate-y-0.5"
   >

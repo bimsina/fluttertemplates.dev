@@ -166,6 +166,24 @@
   color: var(--primary);
 }
 
+.nav-indicator {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--primary);
+  transition:
+    transform 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    width 220ms cubic-bezier(0.22, 1, 0.36, 1),
+    opacity 160ms ease;
+  pointer-events: none;
+}
+
+.nav-indicator.is-hidden {
+  opacity: 0;
+}
+
 /* Custom Swup transitions */
 html.is-changing .transition-page {
   transition:

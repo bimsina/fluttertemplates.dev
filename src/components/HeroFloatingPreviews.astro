@@ -1,0 +1,161 @@
+---
+import CategoryPreview from "./CategoryPreview.astro";
+
+interface PhoneCard {
+  slug: string;
+  label: string;
+  position: string;
+  rotation: string;
+  scale?: string;
+  side: "left" | "right";
+}
+
+const phoneCards: PhoneCard[] = [
+  {
+    slug: "auth",
+    label: "Auth",
+    position: "top-[17%] left-[5%] xl:left-[1%]",
+    rotation: "-rotate-[5deg]",
+    scale: "scale-[0.94]",
+    side: "left",
+  },
+  {
+    slug: "chat",
+    label: "Chat",
+    position: "top-[43%] left-[10%] xl:left-[8%]",
+    rotation: "rotate-[3deg]",
+    scale: "scale-[0.96]",
+    side: "left",
+  },
+  {
+    slug: "ecommerce",
+    label: "E-commerce",
+    position: "bottom-[4%] left-[19%] xl:left-[18%]",
+    rotation: "-rotate-[3deg]",
+    scale: "scale-[0.92]",
+    side: "left",
+  },
+  {
+    slug: "dashboard",
+    label: "Dashboard",
+    position: "top-[17%] right-[5%] xl:right-[1%]",
+    rotation: "rotate-[4deg]",
+    scale: "scale-[0.98]",
+    side: "right",
+  },
+  {
+    slug: "social",
+    label: "Social",
+    position: "top-[43%] right-[10%] xl:right-[8%]",
+    rotation: "-rotate-[4deg]",
+    scale: "scale-[0.92]",
+    side: "right",
+  },
+  {
+    slug: "finance",
+    label: "Finance",
+    position: "bottom-[4%] right-[20%] xl:right-[18%]",
+    rotation: "rotate-[2deg]",
+    scale: "scale-[0.9]",
+    side: "right",
+  },
+];
+---
+
+<div
+  class="hero-floats pointer-events-none absolute inset-0 z-0 hidden select-none lg:block"
+  aria-hidden="true"
+>
+  {
+    phoneCards.map((card, index) => (
+      <div
+        class:list={[
+          "absolute w-[300px]",
+          card.position,
+          card.rotation,
+          card.scale,
+        ]}
+      >
+        <div
+          class:list={[
+            "hero-float-card",
+            card.side === "left" && "hero-float-card--left",
+          ]}
+          style={`--delay: ${60 + index * 70}ms; --drift-duration: ${5.5 + index * 0.6}s`}
+        >
+          <div class="border-border/55 bg-background relative rounded-[1.75rem] border backdrop-blur-md">
+            <span class="border-border/70 bg-background absolute -top-2.5 left-5 z-10 rounded-full border px-2.5 py-0.5 text-[0.62rem] font-bold">
+              {card.label}
+            </span>
+            <div class="h-40 overflow-hidden rounded-xl pt-1">
+              <CategoryPreview
+                slug={card.slug}
+                className="h-full bg-transparent"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    ))
+  }
+</div>
+
+<style>
+  .hero-floats {
+    opacity: 0;
+    animation: hero-floats-fade 0.5s ease forwards;
+  }
+
+  .hero-float-card {
+    opacity: 0;
+    will-change: transform, opacity;
+    animation:
+      hero-float-in 0.72s cubic-bezier(0.22, 1, 0.36, 1) forwards,
+      hero-float-drift var(--drift-duration, 6s) ease-in-out infinite;
+    animation-delay: var(--delay, 0ms), calc(var(--delay, 0ms) + 720ms);
+  }
+
+  .hero-float-card--left {
+    transform: translate(-18px, 22px) scale(0.94);
+  }
+
+  .hero-float-card:not(.hero-float-card--left) {
+    transform: translate(18px, 22px) scale(0.94);
+  }
+
+  @keyframes hero-floats-fade {
+    to {
+      opacity: 0.85;
+    }
+  }
+
+  @keyframes hero-float-in {
+    to {
+      opacity: 1;
+      transform: translate(0, 0) scale(1);
+    }
+  }
+
+  @keyframes hero-float-drift {
+    0%,
+    100% {
+      transform: translate(0, 0);
+    }
+    50% {
+      transform: translate(0, -10px);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero-floats {
+      opacity: 0.85;
+      animation: none;
+    }
+
+    .hero-float-card {
+      opacity: 1;
+      transform: none;
+      animation: none;
+    }
+  }
+</style>

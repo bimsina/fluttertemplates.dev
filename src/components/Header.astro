@@ -18,7 +18,14 @@ const links: { href: string; label: string }[] = [
     <nav class="flex h-16 items-center justify-between" aria-label="Global">
       <Logo />
 
-      <div class="hidden lg:flex lg:items-center lg:gap-1">
+      <div
+        class="relative hidden lg:flex lg:items-center lg:gap-1"
+        id="desktop-primary-nav"
+      >
+        <span
+          id="nav-indicator"
+          class="nav-indicator is-hidden"
+          aria-hidden="true"></span>
         {
           links.map((link) => (
             <HeaderLink href={link.href}>{link.label}</HeaderLink>
@@ -88,7 +95,7 @@ const links: { href: string; label: string }[] = [
           links.map((link) => (
             <a
               href={link.href}
-              class="text-foreground/85 hover:bg-muted block rounded-xl px-3 py-2 text-sm font-semibold"
+              class="text-foreground/85 hover:bg-muted block rounded-xl border-l-2 border-transparent py-2 pr-3 pl-[calc(0.75rem-2px)] text-sm font-semibold"
               data-nav-link
               data-nav-path={link.href}
               data-mobile-nav-link
@@ -99,7 +106,7 @@ const links: { href: string; label: string }[] = [
         }
         <a
           href="/search"
-          class="text-foreground/85 hover:bg-muted flex items-center gap-2 rounded-xl px-3 py-2 text-sm font-semibold"
+          class="text-foreground/85 hover:bg-muted flex items-center gap-2 rounded-xl border-l-2 border-transparent py-2 pr-3 pl-[calc(0.75rem-2px)] text-sm font-semibold"
           data-nav-link
           data-nav-path="/search"
           data-mobile-nav-link
@@ -138,6 +145,28 @@ const links: { href: string; label: string }[] = [
     return current === target || current.startsWith(target + "/");
   };
 
+  function updateNavIndicator() {
+    const navContainer = document.getElementById("desktop-primary-nav");
+    const indicator = document.getElementById("nav-indicator");
+    if (!navContainer || !indicator) return;
+
+    const activeLink = navContainer.querySelector<HTMLElement>(
+      "[data-nav-path].active",
+    );
+
+    if (!activeLink) {
+      indicator.classList.add("is-hidden");
+      return;
+    }
+
+    const navRect = navContainer.getBoundingClientRect();
+    const linkRect = activeLink.getBoundingClientRect();
+
+    indicator.style.width = `${linkRect.width}px`;
+    indicator.style.transform = `translateX(${linkRect.left - navRect.left}px)`;
+    indicator.classList.remove("is-hidden");
+  }
+
   function updateActiveNavLinks() {
     const currentPath = window.location.pathname;
     const links = document.querySelectorAll<HTMLElement>("[data-nav-path]");
@@ -148,10 +177,13 @@ const links: { href: string; label: string }[] = [
       linkEl.classList.toggle("active", isActive);
 
       if (linkEl.hasAttribute("data-mobile-nav-link")) {
-        linkEl.classList.toggle("bg-muted", isActive);
+        linkEl.classList.toggle("border-primary", isActive);
         linkEl.classList.toggle("text-foreground", isActive);
+        linkEl.classList.toggle("border-transparent", !isActive);
       }
     });
+
+    updateNavIndicator();
   }
 
   const mobileMenuButton = document.getElementById("mobile-menu-button");
@@ -188,4 +220,5 @@ const links: { href: string; label: string }[] = [
   updateActiveNavLinks();
   document.addEventListener("swup:page:view", updateActiveNavLinks);
   window.addEventListener("popstate", updateActiveNavLinks);
+  window.addEventListener("resize", updateNavIndicator);
 </script>
