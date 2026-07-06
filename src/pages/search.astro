@@ -2,7 +2,7 @@
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
 import BaseHtml from "@/components/BaseHtml.astro";
 import Footer from "@/components/Footer.astro";
-import SearchComponent from "astro-pagefind/components/Search";
+import SearchComponent from "astro-pagefind/components/Search.astro";
 ---
 
 <BaseHtml title={"Search " + SITE_TITLE} description={SITE_DESCRIPTION}>
@@ -23,9 +23,8 @@ import SearchComponent from "astro-pagefind/components/Search";
 
     <div class="mx-auto mt-8 max-w-2xl">
       <SearchComponent
-        id="search"
         className="pagefind-ui"
-        uiOptions={{ showImages: false }}
+        searchboxOptions={{ placeholder: "Search widgets and templates" }}
       />
     </div>
   </section>

@@ -10,11 +10,11 @@ import {
   Check,
 } from "lucide-react";
 import FlutterAppIframe from "./FlutterAppIframe";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { useTheme } from "@/hooks/useTheme";
-import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
-import { okaidia, prism } from "react-syntax-highlighter/dist/cjs/styles/prism";
 import type { previewSizeEnum } from "@/types";
+
+const CodeHighlighter = lazy(() => import("./CodeHighlighter"));
 
 const PREVIEW_DIMENSIONS = {
   mobile: { width: 375, height: 700 },
@@ -104,55 +104,51 @@ export default function SingleAppComponent({
           </div>
         </div>
       </TabsContent>
-      <TabsContent value="code">
-        <Tabs defaultValue={code[0].file}>
-          {code.length > 1 && (
-            <TabsList className="flex items-center gap-2">
-              {code.map((file) => (
-                <TabsTrigger key={file.file} value={file.file}>
-                  {file.file}
-                </TabsTrigger>
-              ))}
-            </TabsList>
-          )}
+      {code.length > 0 && (
+        <TabsContent value="code">
+          <Tabs defaultValue={code[0].file}>
+            {code.length > 1 && (
+              <TabsList className="flex items-center gap-2">
+                {code.map((file) => (
+                  <TabsTrigger key={file.file} value={file.file}>
+                    {file.file}
+                  </TabsTrigger>
+                ))}
+              </TabsList>
+            )}
 
-          {code.map((file) => (
-            <TabsContent key={file.file} value={file.file}>
-              <div className="relative h-[700px]">
-                <button
-                  onClick={() => handleCopy(file.content)}
-                  className="bg-background hover:bg-primary hover:text-primary-foreground absolute top-3 right-3 z-10 flex w-[130px] cursor-pointer items-center justify-center gap-2 rounded-lg px-1 py-1.5 text-sm transition-colors"
-                >
-                  {copied ? (
-                    <Check className="size-3" />
-                  ) : (
-                    <Copy className="size-3" />
-                  )}
-
-                  {copied ? "Copied" : "Copy code"}
-                </button>
-                <div className="bg-muted/50 h-full overflow-auto rounded-xl">
-                  <SyntaxHighlighter
-                    language="dart"
-                    style={theme === "dark" ? okaidia : prism}
-                    customStyle={{
-                      margin: 0,
-                      height: "100%",
-                      borderRadius: "0.5rem",
-                      background: "transparent",
-                    }}
-                    codeTagProps={{
-                      style: { fontFamily: "var(--font-mono)" },
-                    }}
+            {code.map((file) => (
+              <TabsContent key={file.file} value={file.file}>
+                <div className="relative h-[700px]">
+                  <button
+                    onClick={() => handleCopy(file.content)}
+                    className="bg-background hover:bg-primary hover:text-primary-foreground absolute top-3 right-3 z-10 flex w-[130px] cursor-pointer items-center justify-center gap-2 rounded-lg px-1 py-1.5 text-sm transition-colors"
                   >
-                    {file.content}
-                  </SyntaxHighlighter>
+                    {copied ? (
+                      <Check className="size-3" />
+                    ) : (
+                      <Copy className="size-3" />
+                    )}
+
+                    {copied ? "Copied" : "Copy code"}
+                  </button>
+                  <div className="bg-muted/50 h-full overflow-auto rounded-xl">
+                    <Suspense
+                      fallback={
+                        <pre className="text-muted-foreground h-full overflow-auto p-4 font-mono text-sm">
+                          Loading code...
+                        </pre>
+                      }
+                    >
+                      <CodeHighlighter content={file.content} theme={theme} />
+                    </Suspense>
+                  </div>
                 </div>
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
-      </TabsContent>
+              </TabsContent>
+            ))}
+          </Tabs>
+        </TabsContent>
+      )}
     </Tabs>
   );
 }

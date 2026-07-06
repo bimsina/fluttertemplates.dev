@@ -217,106 +217,111 @@ html.is-leaving .transition-page {
   }
 }
 
-.pagefind-ui,
-.pagefind-ui * {
-  font-family: var(--font-sans) !important;
-  box-shadow: none !important;
-}
-
-.pagefind-ui__search-input,
-.pagefind-ui__form-input {
-  width: 100% !important;
-  padding: 0.8rem 1rem !important;
-  padding-left: 2.6rem !important;
-  border-radius: 0.9rem !important;
-  border: 1px solid var(--input) !important;
-  background: var(--card) !important;
-  color: var(--foreground) !important;
-}
-
-.pagefind-ui__search-input:focus,
-.pagefind-ui__form-input:focus {
-  border-color: var(--ring) !important;
-}
-
 .pagefind-ui {
-  --pagefind-ui-scale: 1;
-  --pagefind-ui-background: color-mix(
-    in oklab,
-    var(--card) 92%,
-    transparent
-  ) !important;
-  --pagefind-ui-primary: var(--primary) !important;
-  --pagefind-ui-text: var(--foreground) !important;
-  --pagefind-ui-border: var(--border) !important;
-  --pagefind-ui-tag: color-mix(
-    in oklab,
-    var(--accent) 75%,
-    transparent
-  ) !important;
-  --pagefind-ui-border-width: 1px;
-  --pagefind-ui-border-radius: 0.9rem;
-  --pagefind-ui-font: var(--font-sans);
+  --pf-text: var(--foreground);
+  --pf-text-secondary: var(--muted-foreground);
+  --pf-text-muted: color-mix(in oklab, var(--muted-foreground) 82%, white);
+  --pf-background: var(--card);
+  --pf-border: var(--border);
+  --pf-border-focus: color-mix(in oklab, var(--primary) 45%, var(--border));
+  --pf-hover: color-mix(in oklab, var(--accent) 48%, transparent);
+  --pf-mark: var(--primary);
+  --pf-outline-focus: var(--ring);
+  --pf-shadow-md: 0 20px 50px
+    color-mix(in oklab, var(--foreground) 10%, transparent);
+  --pf-font: var(--font-sans);
+  --pf-input-height: 3rem;
+  --pf-input-font-size: 0.95rem;
+  --pf-result-title-font-size: 0.9rem;
+  --pf-result-excerpt-font-size: 0.82rem;
+  --pf-searchbox-max-width: 100%;
+  --pf-searchbox-dropdown-max-height: 24rem;
+  --pf-border-radius: 0.875rem;
+  width: 100%;
+  color: var(--foreground);
+  font-family: var(--font-sans);
 }
 
-.pagefind-ui__drawer,
-.pagefind-ui__results,
-.pagefind-ui__message,
-.pagefind-ui__filters,
-.pagefind-ui__result,
-.pagefind-ui__button {
-  background: transparent !important;
-  color: var(--foreground) !important;
+.dark .pagefind-ui {
+  --pf-text-muted: color-mix(in oklab, var(--muted-foreground) 78%, black);
+  --pf-scroll-shadow: color-mix(in oklab, var(--foreground) 10%, transparent);
+  --pf-shadow-md: 0 20px 50px color-mix(in oklab, black 35%, transparent);
 }
 
-.pagefind-ui__result {
-  border: 1px solid color-mix(in oklab, var(--border) 92%, transparent) !important;
-  border-radius: 0.9rem !important;
-  padding: 0.9rem !important;
-  margin-bottom: 0.7rem !important;
-  background: color-mix(in oklab, var(--card) 94%, transparent) !important;
+.pagefind-ui .pf-searchbox {
+  display: block;
 }
 
-.pagefind-ui__result:hover {
-  border-color: color-mix(
-    in oklab,
-    var(--primary) 26%,
-    var(--border)
-  ) !important;
+.pagefind-ui .pf-searchbox-input {
+  border-color: var(--input);
+  transition:
+    border-color 150ms ease,
+    box-shadow 150ms ease,
+    background-color 150ms ease;
 }
 
-.pagefind-ui__result-link,
-.pagefind-ui__result-title,
-.pagefind-ui__result-link:visited {
-  color: var(--foreground) !important;
+.pagefind-ui .pf-searchbox-input:focus,
+.pagefind-ui .pf-searchbox-input:focus-visible {
+  border-color: var(--ring);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ring) 18%, transparent);
 }
 
-.pagefind-ui__result-link:hover {
-  color: var(--primary) !important;
+.pagefind-ui .pf-searchbox.open .pf-searchbox-input {
+  border-color: var(--ring);
 }
 
-.pagefind-ui__result-excerpt,
-.pagefind-ui__message,
-.pagefind-ui__result-nested,
-.pagefind-ui__result-tags,
-.pagefind-ui__search-clear {
-  color: var(--muted-foreground) !important;
+.pagefind-ui .pf-searchbox-dropdown {
+  overflow: hidden;
+  border-color: var(--border);
+  box-shadow: var(--pf-shadow-md);
+}
+
+.pagefind-ui .pf-searchbox-results {
+  padding: 0.375rem;
+}
+
+.pagefind-ui .pf-searchbox-result {
+  min-height: auto;
+  border-radius: 0.625rem;
+  padding: 0.7rem 0.8rem;
+}
+
+.pagefind-ui .pf-searchbox-result:hover,
+.pagefind-ui .pf-searchbox-result[data-pf-selected] {
+  background: var(--pf-hover);
+  outline: none;
+}
+
+.pagefind-ui .pf-searchbox-result-title {
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.pagefind-ui .pf-searchbox-result-excerpt {
+  margin-top: 0.2rem;
+  white-space: normal;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.pagefind-ui .pf-searchbox-footer {
+  background: color-mix(in oklab, var(--muted) 48%, transparent);
+  border-color: var(--border);
+}
+
+.pagefind-ui .pf-key,
+.pagefind-ui .pf-trigger-key,
+.pagefind-ui .pf-searchbox-footer-key {
+  border-color: var(--border);
+  background: var(--muted);
+  color: var(--muted-foreground);
 }
 
 .pagefind-ui mark {
-  background: color-mix(in oklab, var(--accent) 85%, transparent) !important;
-  color: var(--foreground) !important;
-  border-radius: 0.35rem;
-  padding: 0 0.2rem;
-}
-
-.pagefind-ui__button {
-  border: 1px solid var(--border) !important;
-  border-radius: 0.8rem !important;
-}
-
-.pagefind-ui__button:hover {
-  background: color-mix(in oklab, var(--muted) 78%, transparent) !important;
+  border-radius: 0.25rem;
+  background: color-mix(in oklab, var(--primary) 12%, transparent);
+  color: var(--primary);
 }
 
 /* Widgets sidebar */
