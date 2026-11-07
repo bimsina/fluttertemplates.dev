@@ -1,0 +1,167 @@
+---
+title: "Getting started: add your first screen"
+description: How to get a screen from fluttertemplates.dev into your Flutter project, show it, and connect it to your own code. Written for developers who are new to Flutter.
+order: 1
+---
+
+import LivePreview from "@/components/LivePreview";
+
+Every entry on this site is plain Dart source, not a package. You copy the file into your project and it becomes your code. There's nothing to initialize, no runtime dependency on this site, and you can change anything.
+
+This guide adds the [Login Screen](/widgets/auth/login_hero/) to an app. The steps are the same for any screen.
+
+<LivePreview client:visible path="/auth/login_hero" />
+
+## What you need
+
+Flutter installed, with `flutter doctor` passing for at least one platform. The screens use current Material 3 APIs, so use a recent stable release of Flutter.
+
+If you don't have a project yet, create one:
+
+```bash
+flutter create my_app
+cd my_app
+```
+
+Flutter apps keep their Dart code in `lib/`, and `lib/main.dart` is the entry point. Packages are listed in `pubspec.yaml`, which is the equivalent of `package.json`.
+
+## Step 1: Get the file
+
+There are two ways.
+
+**With the CLI**, which is quickest if you add screens often:
+
+```bash
+dart pub global activate fluttertemplates
+fluttertemplates add auth/login_hero
+```
+
+This writes the file to `lib/fluttertemplates/auth/login_hero.dart`. See [Using the CLI](/guides/cli/) for the details.
+
+**By hand:**
+
+1. Open the [Login Screen page](/widgets/auth/login_hero/).
+2. Switch to the **Code** tab and copy the source.
+3. Create `lib/fluttertemplates/auth/login_hero.dart` and paste it in.
+
+The folder name is only a convention. Put the file anywhere under `lib/`, such as `lib/screens/login_screen.dart`, and rename the class if you like.
+
+## Step 2: Check its dependencies
+
+Nearly every screen imports only `package:flutter/material.dart`, which comes with Flutter. A few use a third-party package, and those are listed on the widget's page. The CLI installs them for you. If you copied the file by hand, add them with `flutter pub add`:
+
+```bash
+flutter pub add salomon_bottom_bar
+```
+
+If an import is underlined in red in your editor, or `flutter run` says `Couldn't resolve the package`, this is the step you missed.
+
+## Step 3: Show the screen
+
+Open the file you copied and find the public class. Classes starting with `_` are private to the file, and the one to use is the one without an underscore. In this file it's `LoginHero`.
+
+### In a new project
+
+Replace everything in `lib/main.dart`:
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+
+import 'fluttertemplates/auth/login_hero.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'My App',
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.indigo),
+      ),
+      home: const LoginHero(),
+    );
+  }
+}
+```
+
+`MaterialApp` provides the theme, navigation, and text direction that the screen relies on. `home` is the first screen. Run it:
+
+```bash
+flutter run
+```
+
+Save a change while it's running and press `r` in the terminal for a hot reload, which applies it in about a second and keeps the app's state. Most editors do this on save.
+
+### In an existing project
+
+You already have a `MaterialApp`, so don't add another one. Each screen is a widget, so open it from wherever you need it. With Flutter's built-in navigator:
+
+```dart
+Navigator.of(context).push(
+  MaterialPageRoute<void>(builder: (context) => const LoginHero()),
+);
+```
+
+With [go_router](/guides/go-router-auth/), add a route:
+
+```dart
+GoRoute(
+  path: '/login',
+  builder: (context, state) => const LoginHero(),
+),
+```
+
+Screens that have their own `Scaffold` take over the whole page. Use them as routes, not as children inside another screen's layout.
+
+## Step 4: Connect it to your code
+
+The screen renders, validates its fields, and responds to input, but it isn't connected to your app. Until you connect it, its buttons show a snackbar ending in `(demo)`, and demo data is hard-coded in the file.
+
+Most screens take optional callbacks for this, which keeps your app's logic out of the screen. You don't edit the file, you only pass them. `LoginHero` has three:
+
+| Callback | Runs when |
+| --- | --- |
+| `onSignIn` | **Sign in** is tapped and both fields are valid. It receives the trimmed email and the password |
+| `onForgotPassword` | **Forgot password?** is tapped |
+| `onSignUp` | **Sign up** is tapped |
+
+Each one is optional, and a callback you leave out keeps its demo snackbar. Pass them where you show the screen:
+
+```dart
+home: LoginHero(
+  onSignIn: (email, password) => debugPrint('Sign in as $email'),
+  onForgotPassword: () => debugPrint('Forgot password'),
+  onSignUp: () => debugPrint('Sign up'),
+),
+```
+
+`const` comes off the `LoginHero(...)` call, because a closure isn't a compile-time constant.
+
+Other screens work the same way, for example `PaymentForm(onSubmit: ...)`, `OtpVerification(onVerify: ...)`, and `ResetPassword(onReset: ...)`. To see what a screen offers, read its constructor. To find actions that have no callback yet, search the file for `(demo)`, and add a callback in the same style.
+
+## Step 5: Make it yours
+
+- **Colors and fonts** come from your app's theme, so most screens follow it automatically. See [Theme any screen with your brand](/guides/theming/).
+- **Real authentication:** see [Supabase](/guides/supabase-auth/) or [Firebase](/guides/firebase-auth/). If you need the whole login flow, the [Login and Auth Flow](/templates/auth-flow/) template already connects every screen behind an `AuthRepository`.
+- **Loading and error states:** see the [Riverpod](/guides/riverpod-forms/) or [Bloc](/guides/bloc-forms/) form guides.
+- **Larger screens:** see [Make a screen responsive](/guides/responsive/).
+
+## Common mistakes
+
+**`No Material widget found` or `No MediaQuery widget ancestor found`.** The screen isn't under a `MaterialApp`. Make sure your `runApp` call starts from one.
+
+**Pasting into `main.dart`.** It works for one screen, then becomes a mess. Keep one screen per file, and keep the file's own `import` lines at the top.
+
+**Two classes with the same name.** If you add two screens that both declare a public class with the same name, the import is ambiguous. Rename one, or import with a prefix: `import 'x.dart' as x;`.
+
+**Wrapping a screen in another `Scaffold`.** You get doubled app bars and odd padding. A screen with a `Scaffold` is already a full page.
+
+**Expecting updates.** A copied file doesn't change when this site does. That's the point: you own it. To get a newer version, copy it again and merge your edits.
+
+**Demo images failing.** Some screens load placeholder images from the network. Replace those URLs with your own images before you ship.
+
+**`The method 'withValues' isn't defined` or similar.** Your Flutter version is too old for the screen. Run `flutter upgrade`.

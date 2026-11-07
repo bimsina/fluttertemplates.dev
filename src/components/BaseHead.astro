@@ -9,18 +9,18 @@ interface Props {
   image?: string;
 }
 
+// Pages are served from directories, so the trailing slash is the real URL. It
+// also matches the sitemap and every internal link.
 const cleanPathname = Astro.url.pathname
   .replace(/\.html$/, "")
-  .replace(/\/$/, "");
-const canonicalURL = cleanPathname
-  ? new URL(cleanPathname, Astro.site!).href
-  : Astro.site!.href.replace(/\/$/, "");
+  .replace(/\/?$/, "/");
+const canonicalURL = new URL(cleanPathname, Astro.site!).href;
 const { title, description, image = "/og.png" } = Astro.props;
 const imageURL = new URL(image, Astro.url).toString();
 
 const isHome = !title || title === SITE_TITLE;
 const pageTitle = isHome
-  ? "Flutter Templates — production Flutter UI, live previews and code"
+  ? "Flutter Templates — Flutter UI with live previews and source code"
   : `${title} — ${SITE_TITLE}`;
 const metaDescription = description || SITE_DESCRIPTION;
 
@@ -119,7 +119,7 @@ const orgSchema = {
       {
         name: "keywords",
         content:
-          "Flutter, Flutter templates, Flutter UI, Flutter snippets, open source, production ready, mobile app development, Flutter components",
+          "Flutter, Flutter templates, Flutter UI, Flutter snippets, open source, mobile app development, Flutter components",
       },
       {
         name: "twitter:image:alt",
@@ -153,6 +153,10 @@ const orgSchema = {
 />
 
 <script is:inline>
+  // Swup runs this again on each page change.
+  if (!window.__themeReady) {
+    window.__themeReady = true;
+
   const THEME_KEY = "theme";
   const THEME_DARK = "dark";
   const THEME_LIGHT = "light";
@@ -196,5 +200,6 @@ const orgSchema = {
   if (typeof document !== "undefined") {
     initializeTheme();
     setupThemeListener();
+  }
   }
 </script>

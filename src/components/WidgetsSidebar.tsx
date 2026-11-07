@@ -164,6 +164,8 @@ export default function WidgetsSidebar({
 }: WidgetsSidebarProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [currentPath, setCurrentPath] = useState(initialPath);
+  // Below the lg breakpoint the list is collapsed, so the preview comes first.
+  const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
     const updateFromUrl = () => setCurrentPath(getWidgetPathFromUrl());
@@ -182,7 +184,22 @@ export default function WidgetsSidebar({
       className="flex max-h-[70vh] w-full shrink-0 flex-col lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:w-60"
       data-current-path={currentPath}
     >
-      <div className="bg-background sticky top-0 z-10 shrink-0 pb-3">
+      <button
+        type="button"
+        className="bg-muted flex w-full items-center justify-between rounded-xl px-4 py-2.5 text-sm font-medium lg:hidden"
+        aria-expanded={isOpen}
+        aria-controls="widgets-nav"
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        Browse widgets
+        <Icon
+          icon="mdi:chevron-down"
+          className={`size-4 transition-transform ${isOpen ? "rotate-180" : ""}`}
+        />
+      </button>
+      <div
+        className={`bg-background sticky top-0 z-10 shrink-0 pt-3 pb-3 lg:block lg:pt-0 ${isOpen ? "block" : "hidden"}`}
+      >
         <div className="relative">
           <Icon
             icon="mdi:magnify"
@@ -201,7 +218,7 @@ export default function WidgetsSidebar({
       </div>
 
       <nav
-        className="flex-1 overflow-y-auto overscroll-contain py-2"
+        className={`flex-1 overflow-y-auto overscroll-contain py-2 lg:block ${isOpen ? "block" : "hidden"}`}
         id="widgets-nav"
       >
         {groups.map((group) => (

@@ -1,0 +1,313 @@
+---
+title: Using the CLI
+description: Find screens from the terminal, copy them into your project with their packages, and give AI coding agents access to the library through the MCP server.
+order: 2
+---
+
+import LivePreview from "@/components/LivePreview";
+
+The `fluttertemplates` command finds screens in the library and copies their source into your project. It also runs an MCP server, so that AI coding agents can search the library, read the source, and add screens to your project.
+
+As on the website, you get plain Dart files that you own and can edit. The CLI isn't a runtime dependency of your app.
+
+## Install
+
+```bash
+dart pub global activate fluttertemplates
+```
+
+If your shell can't find the command afterwards, add the pub cache's `bin` folder to your `PATH`. `dart pub global activate` prints the exact line when it's needed. On macOS and Linux that's usually:
+
+```bash
+export PATH="$PATH":"$HOME/.pub-cache/bin"
+```
+
+Check that it works:
+
+```bash
+fluttertemplates --version
+```
+
+Run `fluttertemplates help` to see every command, and `fluttertemplates help add` for one command's options.
+
+## Find a screen
+
+List everything, or one category:
+
+```bash
+fluttertemplates list
+fluttertemplates list --category auth
+```
+
+```text
+Authentication (10)
+  auth/biometric_unlock    Biometric Unlock
+  auth/email_verification  Email Verification
+  auth/login_hero          Login Screen
+  auth/magic_link          Magic Link Login
+  ...
+```
+
+The first column is the widget's id, which is what every other command takes. `-c` is short for `--category`.
+
+Search by title, description, category, or the Flutter widgets a screen uses. Everything after `search` is one query, so you don't need quotes.
+
+```bash
+fluttertemplates search login form
+fluttertemplates search NavigationRail --limit 5
+```
+
+Results are ranked, best first, and limited to 20. `--limit` or `-n` changes that. A search with no matches isn't an error: it prints a message and exits with 0.
+
+Look at one screen before adding it:
+
+```bash
+fluttertemplates info auth/login_hero
+```
+
+```text
+Login Screen
+A Flutter login screen with a hero illustration, email and password fields, remember-me, and a sign-in button.
+
+Id:       auth/login_hero
+Category: Authentication (auth)
+Preview:  https://fluttertemplates.dev/widgets/auth/login_hero/
+Lines:    101
+Widget:   LoginHero
+Uses:     Checkbox, FilledButton, IconButton, ListView, SafeArea, TextButton, TextField
+Packages: none
+License:  MIT (https://fluttertemplates.dev/r/LICENSE)
+Files:
+  auth/login_hero.dart
+
+Add it: fluttertemplates add auth/login_hero
+```
+
+`Preview` is a link to the running screen. `Widget` is the class you'll use, `Packages` lists what `add` would install, and `License` is the license the code comes under.
+
+<LivePreview client:visible path="/auth/login_hero" />
+
+## Add a screen
+
+Run this from anywhere inside a Flutter project. The CLI walks up to the nearest `pubspec.yaml`.
+
+```bash
+fluttertemplates add auth/login_hero
+```
+
+```text
+created: lib/fluttertemplates/auth/login_hero.dart
+created: lib/fluttertemplates/LICENSE
+
+Use LoginHero from auth/login_hero:
+  import 'package:my_app/fluttertemplates/auth/login_hero.dart';
+
+  home: const LoginHero(),
+```
+
+The output gives you the import, using your real package name, and the expression to use. See [Getting started](/guides/getting-started/) for what to do next.
+
+Add several at once:
+
+```bash
+fluttertemplates add auth/login_hero forms/sign_up forms/forgot_password
+```
+
+### Packages
+
+If a screen needs a package that isn't under `dependencies:` in your `pubspec.yaml`, `add` installs it with `flutter pub add`, as a caret constraint on the version the library was tested with:
+
+```bash
+fluttertemplates add navigation/bottom_navigation/google_bottom_bar
+```
+
+```text
+created: lib/fluttertemplates/navigation/bottom_nav/google_bottom_bar.dart
+created: lib/fluttertemplates/LICENSE
+ran: flutter pub add salomon_bottom_bar:^3.3.2
+```
+
+A package you already depend on is left alone, whatever its version. The `flutter` command has to be on your `PATH` for this step.
+
+### Where files go
+
+Files go under `lib/fluttertemplates` and keep their path from the library. Note that this path doesn't always match the id: above, the id says `bottom_navigation` and the file goes in `bottom_nav`. Use the path that `add` prints.
+
+To put them elsewhere, use `--dir`, which is relative to the project root and must stay inside it:
+
+```bash
+fluttertemplates add forms/sign_up --dir lib/screens
+```
+
+```text
+created: lib/screens/forms/sign_up/sign_up_page.dart
+created: lib/screens/LICENSE
+```
+
+`--dir` isn't remembered, so pass it every time if you use it.
+
+### License
+
+The library is under the MIT license, which asks that its notice stays with copies of the code. So `add` also writes a `LICENSE` file at the top of the target directory, once per directory, fetched from the registry. Keep it there.
+
+A `LICENSE` file that's already identical is left alone. One that's different counts as a conflict, like any other file, so `add` stops and changes nothing. `--force` replaces it, so be careful with `--dir .`, where the file in question is your project's own license. Use a subfolder instead.
+
+If the registry declares a license but its `LICENSE` file can't be fetched, `add` fails without changing anything. A [different registry](#use-a-different-registry) that declares no license gets a warning and no `LICENSE` file.
+
+### Preview first
+
+`--dry-run`, or `-n`, reports what would happen, including which packages it would install, and changes nothing:
+
+```bash
+fluttertemplates add auth/login_hero --dry-run
+```
+
+```text
+Dry run: nothing was changed.
+
+would create: lib/fluttertemplates/auth/login_hero.dart
+would create: lib/fluttertemplates/LICENSE
+```
+
+### Running it again
+
+Running `add` twice is safe. A file that's already identical is reported as `unchanged`.
+
+If you've edited the file, `add` stops and changes nothing:
+
+```text
+These files already exist with different content:
+  lib/fluttertemplates/auth/login_hero.dart
+Error: Nothing was changed. Use --force to overwrite, or --dir to install somewhere else.
+```
+
+`--force`, or `-f`, overwrites the file and your edits with it, so commit first. To compare your version with the current one, add it to a different folder with `--dir` and diff the two.
+
+There's no `update` command, because the files are yours. Nothing changes unless you run `add` again.
+
+### All or nothing
+
+`add` checks everything before it writes, so an unknown id or a conflict stops it before anything changes.
+
+Failures after that point are undone. If `flutter pub add` fails, or a file can't be written, `add` puts `pubspec.yaml`, `pubspec.lock`, and any file it had created or overwritten back as they were, and removes the folders it created. A failed `add` exits with 1, and the error says what happened. If something can't be put back, the error lists it and says where your originals are.
+
+There are two limits. `flutter pub add` can also update files that Flutter generates, such as `.dart_tool` and the plugin registrants, and those aren't restored. `flutter pub get` brings them back in line with your `pubspec.yaml`. And if the process is killed outright, nothing can be undone, and a `.fluttertemplates-` folder may be left in the project root. It's safe to delete it once you've checked your files.
+
+A mistyped id gets suggestions:
+
+```text
+Error: Unknown widget "auth/login_herp".
+Did you mean:
+  auth/login_hero
+  forms/sign_up
+  productivity/reminders
+```
+
+## Use it with AI coding agents
+
+`fluttertemplates mcp` is a [Model Context Protocol](https://modelcontextprotocol.io) server that talks over standard input and output. An editor or agent starts it for you, so you never run it by hand. It has four tools:
+
+| Tool | What it does |
+| --- | --- |
+| `search_widgets` | Searches the library. Takes `query`, and optionally `category` and `limit` (10 by default) |
+| `get_widget` | Returns one widget's full source, packages, license, public class, and `add` command. Takes `id` |
+| `list_categories` | Lists categories with their widget counts |
+| `add_widget` | Copies widgets into your project, like `add`. Takes `ids`, and optionally `project`, `dir`, `force` and `dryRun` |
+
+This means an agent can start from a real, working screen, not one written from memory. `add_widget` is the only tool that changes your project, so your agent will usually ask before running it. It works like `add`: all or nothing, and it won't replace a file that differs unless `force` is set. It uses the folder the server runs in, or the Flutter project at `project` if the agent passes one. The agent can also run the `addCommand` that `get_widget` returns, which includes `--registry` when the server reads from a different registry. Source copied by hand has to keep the notice at `licenseUrl`, which `add_widget` and `addCommand` take care of for you.
+
+The server keeps the catalogue in memory for five minutes, so a newly published widget can take that long to show up. Restart the server to see it sooner.
+
+### Claude Code
+
+```bash
+claude mcp add fluttertemplates -- fluttertemplates mcp
+```
+
+### Cursor
+
+Add this to `.cursor/mcp.json` in your project, or `~/.cursor/mcp.json` for all projects:
+
+```json
+{
+  "mcpServers": {
+    "fluttertemplates": {
+      "command": "fluttertemplates",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+Most MCP clients use this same shape, so check your client's docs for where the file goes.
+
+### VS Code
+
+VS Code uses a different key. Add this to `.vscode/mcp.json`:
+
+```json
+{
+  "servers": {
+    "fluttertemplates": {
+      "type": "stdio",
+      "command": "fluttertemplates",
+      "args": ["mcp"]
+    }
+  }
+}
+```
+
+### Using it
+
+Be specific, and name the library so the agent reaches for the tools:
+
+> Use fluttertemplates to find a sign-up screen with a terms checkbox. Add it to this project, then connect it to the `AuthRepository` in `lib/data`.
+
+> Search fluttertemplates for a settings page and add the closest match under `lib/screens`, keeping our theme.
+
+Check what the agent wrote the same way you'd review any code, in particular anything it wired to your backend.
+
+## Use a different registry
+
+Every command reads from `https://fluttertemplates.dev/r` by default. To read from somewhere else, pass `--registry`, which takes a URL or a local directory and works before or after the command name:
+
+```bash
+fluttertemplates --registry ./public/r list
+fluttertemplates list --registry https://example.com/r
+```
+
+Or set an environment variable:
+
+```bash
+export FLUTTERTEMPLATES_REGISTRY=https://example.com/r
+```
+
+`--registry` wins over the variable. For the MCP server, pass it in the arguments, as in `"args": ["mcp", "--registry", "/path/to/r"]`.
+
+If your registry declares a `license`, serve a `LICENSE` file next to `index.json`, because `add` reads it from there and not from `licenseUrl`.
+
+## Exit codes
+
+For scripts and CI:
+
+| Code | Meaning |
+| --- | --- |
+| 0 | Success, including a search with no results |
+| 1 | Failure: unknown id, conflict, network or registry problem, or a failed install |
+| 64 | Wrong usage |
+
+## Common mistakes
+
+**`command not found: fluttertemplates`.** The pub cache's `bin` folder isn't on your `PATH`. See [Install](#install).
+
+**An MCP client can't start the server, but the command works in your terminal.** GUI apps often don't load your shell profile, so they don't see the same `PATH`. Use the full path as `command`, such as `/Users/you/.pub-cache/bin/fluttertemplates`.
+
+**`No pubspec.yaml found`.** `add` has to run inside a Flutter project. `list`, `search`, and `info` work anywhere.
+
+**`is not a Flutter project`.** The nearest `pubspec.yaml` doesn't depend on the Flutter SDK. In a monorepo, `cd` into the app first.
+
+**Using `--force` to pick up changes.** It replaces your edits. Commit first, or install to another `--dir` and merge by hand.
+
+**Guessing an id from the file path.** Ids and paths can differ. Copy the id from `list` or `search`, or from the widget's page.
+
+**Adding the package as a dependency.** `fluttertemplates` is a command-line tool. It doesn't go in your `pubspec.yaml`.

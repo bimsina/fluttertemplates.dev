@@ -10,6 +10,12 @@ import react from "@astrojs/react";
 
 export default defineConfig({
   site: "https://fluttertemplates.dev",
+  markdown: {
+    shikiConfig: {
+      themes: { light: "github-light", dark: "github-dark-dimmed" },
+      defaultColor: false,
+    },
+  },
   prefetch: {
     prefetchAll: true,
     defaultStrategy: "hover",

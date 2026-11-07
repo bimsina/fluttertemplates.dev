@@ -7,8 +7,18 @@ interface Props {
   title?: string;
   description?: string;
   image?: string;
+  // Title shown in site search; lets results say what kind of page they are.
+  searchTitle?: string;
+  // Listing pages are left out of site search.
+  searchable?: boolean;
 }
-const { title, description, image = "/og.png" } = Astro.props;
+const {
+  title,
+  description,
+  image = "/og.png",
+  searchTitle,
+  searchable = true,
+} = Astro.props;
 ---
 
 <!doctype html>
@@ -19,10 +29,11 @@ const { title, description, image = "/og.png" } = Astro.props;
       description={description ?? SITE_DESCRIPTION}
       image={image}
     />
+    {searchTitle && <meta data-pagefind-meta={`title:${searchTitle}`} />}
   </head>
   <body>
     <Header />
-    <main id="swup">
+    <main id="swup" data-pagefind-body={searchable ? "" : undefined}>
       <slot />
     </main>
   </body>

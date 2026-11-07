@@ -1,0 +1,522 @@
+---
+title: Bloc for the same form
+description: Build the Sign Up screen with flutter_bloc. Typed events and states, dropped double submits, server errors on the right field, and tests with bloc_test.
+order: 8
+---
+
+import LivePreview from "@/components/LivePreview";
+
+This guide builds the same behaviour as the [Riverpod form guide](/guides/riverpod-forms/), on the same [Sign Up](/widgets/forms/sign_up/) screen, so you can compare the two directly. It stands on its own, so you don't need to read the other one first.
+
+<LivePreview client:visible path="/forms/sign_up/sign_up_page" />
+
+As shipped, the screen validates its fields and then stops at a `// Call your registration API here.` comment. When you're done it will lock while submitting, drop double taps, show "email already registered" under the email field, show network errors in a snackbar, and move on after success.
+
+## Setup
+
+```bash
+flutter pub add flutter_bloc equatable bloc_concurrency
+flutter pub add dev:bloc_test
+fluttertemplates add forms/sign_up
+```
+
+The last line copies the screen to `lib/fluttertemplates/forms/sign_up/sign_up_page.dart`. Without the [CLI](/guides/cli/), copy the source from the [widget page](/widgets/forms/sign_up/) into that path.
+
+## Bloc or Cubit
+
+A `Cubit` exposes methods. A `Bloc` receives events. This form would work as a Cubit, but a Bloc earns its keep here for one reason: event transformers. `droppable()` from `bloc_concurrency` ignores new submit events while one is being handled, so you get double-submit protection in a single line rather than a hand-written flag.
+
+## The API boundary
+
+The form only talks to an interface. A fake implementation lets you run everything with no backend.
+
+```dart
+// lib/auth_api.dart
+class EmailTakenException implements Exception {
+  const EmailTakenException();
+}
+
+class NetworkException implements Exception {
+  const NetworkException();
+}
+
+abstract interface class AuthApi {
+  Future<void> signUp({required String email, required String password});
+}
+
+/// Stands in for a real backend. Replace it with an implementation that
+/// calls your server and throws the exceptions above.
+class FakeAuthApi implements AuthApi {
+  @override
+  Future<void> signUp({
+    required String email,
+    required String password,
+  }) async {
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (email == 'taken@example.com') throw const EmailTakenException();
+    if (email == 'offline@example.com') throw const NetworkException();
+  }
+}
+```
+
+Map your backend's errors to these types inside the implementation. The [Supabase](/guides/supabase-auth/) and [Firebase](/guides/firebase-auth/) guides list the codes.
+
+## Validators
+
+```dart
+// lib/validators.dart
+String? validateEmail(String? value) {
+  final email = value?.trim() ?? '';
+  if (email.isEmpty) return 'Enter your email';
+  // Deliberately loose. Only the server can tell if an address is real.
+  if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+    return 'Enter a valid email';
+  }
+  return null;
+}
+
+String? validatePassword(String? value) {
+  if (value == null || value.isEmpty) return 'Enter a password';
+  if (value.length < 8) return 'Use at least 8 characters';
+  return null;
+}
+
+String? validateConfirmation(String? value, String password) {
+  if (value == null || value.isEmpty) return 'Repeat your password';
+  if (value != password) return 'Passwords do not match';
+  return null;
+}
+```
+
+Field text stays in `TextEditingController`s and validation stays in Flutter's `Form`. You could send an `EmailChanged` event for every keystroke and hold the text in the bloc, which pays off when other parts of the app react to the draft. For a sign-up form it's a lot of ceremony for no gain.
+
+## The bloc
+
+Two events: the user submitted, or the user edited the email after a server error.
+
+```dart
+// lib/sign_up_bloc.dart
+import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'auth_api.dart';
+
+sealed class SignUpEvent {
+  const SignUpEvent();
+}
+
+final class SignUpSubmitted extends SignUpEvent {
+  const SignUpSubmitted({required this.email, required this.password});
+
+  final String email;
+  final String password;
+}
+
+final class SignUpEmailEdited extends SignUpEvent {
+  const SignUpEmailEdited();
+}
+
+enum SignUpStatus { idle, submitting, success, emailTaken, network, failure }
+
+final class SignUpState extends Equatable {
+  const SignUpState({this.status = SignUpStatus.idle});
+
+  final SignUpStatus status;
+
+  bool get isSubmitting => status == SignUpStatus.submitting;
+
+  @override
+  List<Object> get props => [status];
+}
+
+class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
+  SignUpBloc(this._api) : super(const SignUpState()) {
+    on<SignUpSubmitted>(_onSubmitted, transformer: droppable());
+    on<SignUpEmailEdited>(_onEmailEdited);
+  }
+
+  final AuthApi _api;
+
+  Future<void> _onSubmitted(
+    SignUpSubmitted event,
+    Emitter<SignUpState> emit,
+  ) async {
+    emit(const SignUpState(status: SignUpStatus.submitting));
+    try {
+      await _api.signUp(email: event.email, password: event.password);
+      emit(const SignUpState(status: SignUpStatus.success));
+    } on EmailTakenException {
+      emit(const SignUpState(status: SignUpStatus.emailTaken));
+    } on NetworkException {
+      emit(const SignUpState(status: SignUpStatus.network));
+    } catch (error, stackTrace) {
+      addError(error, stackTrace); // Reaches BlocObserver.onError.
+      emit(const SignUpState(status: SignUpStatus.failure));
+    }
+  }
+
+  void _onEmailEdited(SignUpEmailEdited event, Emitter<SignUpState> emit) {
+    if (state.status == SignUpStatus.emailTaken) {
+      emit(const SignUpState());
+    }
+  }
+}
+```
+
+State equality matters. Bloc skips an `emit` that equals the current state, which is why `SignUpState` extends `Equatable`. It's also why a retry works: the failed status changes to `submitting` and back, so a listener fires for the second failure too.
+
+Awaiting inside the handler also matters. If the handler returned before the request finished, `droppable()` would stop dropping and the `emit` calls after the request would throw.
+
+## The screen
+
+`SignUpPage` provides the bloc and `_SignUpView` holds the form. The split exists because `context.read<SignUpBloc>()` has to run below the `BlocProvider`.
+
+```dart
+// lib/fluttertemplates/forms/sign_up/sign_up_page.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import '../../../auth_api.dart';
+import '../../../sign_up_bloc.dart';
+import '../../../validators.dart';
+
+class SignUpPage extends StatelessWidget {
+  const SignUpPage({super.key, required this.onCreated});
+
+  final VoidCallback onCreated;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => SignUpBloc(context.read<AuthApi>()),
+      child: _SignUpView(onCreated: onCreated),
+    );
+  }
+}
+
+class _SignUpView extends StatefulWidget {
+  const _SignUpView({required this.onCreated});
+
+  final VoidCallback onCreated;
+
+  @override
+  State<_SignUpView> createState() => _SignUpViewState();
+}
+
+class _SignUpViewState extends State<_SignUpView> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  var _obscurePassword = true;
+  var _autovalidate = AutovalidateMode.disabled;
+
+  int _passwordStrength(String password) {
+    var score = 0;
+    if (password.length >= 8) score++;
+    if (RegExp(r'[A-Z]').hasMatch(password)) score++;
+    if (RegExp(r'[0-9]').hasMatch(password)) score++;
+    if (RegExp(r'[^A-Za-z0-9]').hasMatch(password)) score++;
+    return score;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) {
+      // From now on, errors update as the user types.
+      setState(() => _autovalidate = AutovalidateMode.onUserInteraction);
+      return;
+    }
+    context.read<SignUpBloc>().add(
+      SignUpSubmitted(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      ),
+    );
+  }
+
+  void _showMessage(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocConsumer<SignUpBloc, SignUpState>(
+      // One-off effects. Runs once per state change, never during build.
+      listener: (context, state) {
+        switch (state.status) {
+          case SignUpStatus.success:
+            widget.onCreated();
+          case SignUpStatus.network:
+            _showMessage('No connection. Check your network and try again.');
+          case SignUpStatus.failure:
+            _showMessage('Something went wrong. Please try again.');
+          case SignUpStatus.idle ||
+              SignUpStatus.submitting ||
+              SignUpStatus.emailTaken:
+            break;
+        }
+      },
+      builder: (context, state) {
+        final isLoading = state.isSubmitting;
+        return Scaffold(
+          appBar: AppBar(title: const Text('Sign Up')),
+          body: Form(
+            key: _formKey,
+            autovalidateMode: _autovalidate,
+            child: ListView(
+              padding: const EdgeInsets.all(24),
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  enabled: !isLoading,
+                  decoration: const InputDecoration(
+                    labelText: 'Email',
+                    border: OutlineInputBorder(),
+                  ),
+                  keyboardType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
+                  textInputAction: TextInputAction.next,
+                  validator: validateEmail,
+                  forceErrorText: state.status == SignUpStatus.emailTaken
+                      ? 'This email is already registered'
+                      : null,
+                  onChanged: (_) => context.read<SignUpBloc>().add(
+                    const SignUpEmailEdited(),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  controller: _passwordController,
+                  enabled: !isLoading,
+                  decoration: InputDecoration(
+                    labelText: 'Password',
+                    border: const OutlineInputBorder(),
+                    suffixIcon: IconButton(
+                      tooltip: _obscurePassword
+                          ? 'Show password'
+                          : 'Hide password',
+                      icon: Icon(
+                        _obscurePassword
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () =>
+                          setState(() => _obscurePassword = !_obscurePassword),
+                    ),
+                  ),
+                  obscureText: _obscurePassword,
+                  autofillHints: const [AutofillHints.newPassword],
+                  textInputAction: TextInputAction.next,
+                  validator: validatePassword,
+                ),
+                const SizedBox(height: 8),
+                ValueListenableBuilder<TextEditingValue>(
+                  valueListenable: _passwordController,
+                  builder: (context, value, child) {
+                    final strength = _passwordStrength(value.text);
+                    return LinearProgressIndicator(
+                      value: strength / 4,
+                      backgroundColor: Theme.of(
+                        context,
+                      ).colorScheme.surfaceContainerHighest,
+                    );
+                  },
+                ),
+                const SizedBox(height: 16),
+                TextFormField(
+                  enabled: !isLoading,
+                  decoration: const InputDecoration(
+                    labelText: 'Confirm Password',
+                    border: OutlineInputBorder(),
+                  ),
+                  obscureText: true,
+                  textInputAction: TextInputAction.done,
+                  validator: (value) =>
+                      validateConfirmation(value, _passwordController.text),
+                  onFieldSubmitted: (_) => _submit(),
+                ),
+                const SizedBox(height: 24),
+                FilledButton(
+                  onPressed: isLoading ? null : _submit,
+                  child: isLoading
+                      ? const SizedBox.square(
+                          dimension: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : const Text('Create Account'),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+`forceErrorText` puts the server's error on the email field. While it's set, the field's validator doesn't run and `validate()` fails, so the same taken address can't be resubmitted. Editing the field sends `SignUpEmailEdited`, which clears it.
+
+The `switch` in the listener has no `default`. Add a status to the enum later and the compiler points you here.
+
+## Run it
+
+Provide the `AuthApi` above everything that needs it.
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+
+import 'auth_api.dart';
+import 'fluttertemplates/forms/sign_up/sign_up_page.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RepositoryProvider<AuthApi>(
+      create: (_) => FakeAuthApi(),
+      child: MaterialApp(
+        home: Builder(
+          builder: (context) => SignUpPage(
+            onCreated: () => Navigator.of(context).pushReplacement(
+              MaterialPageRoute<void>(builder: (_) => const WelcomePage()),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Account created')));
+  }
+}
+```
+
+Try these inputs:
+
+| Email | Result |
+| --- | --- |
+| `hello` | Field error, no event sent |
+| `taken@example.com` | Spinner, then an error under the email field, which clears when you edit it |
+| `offline@example.com` | Spinner, then a snackbar. The button works again for a retry |
+| `you@example.com` | Spinner, then the welcome screen |
+
+To use a real backend, implement `AuthApi` and change `FakeAuthApi()` in `main.dart`.
+
+## Test the bloc
+
+`blocTest` asserts the exact sequence of states.
+
+```dart
+// test/sign_up_bloc_test.dart
+import 'package:bloc_test/bloc_test.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/auth_api.dart';
+import 'package:my_app/sign_up_bloc.dart';
+
+class StubAuthApi implements AuthApi {
+  StubAuthApi([this.error]);
+
+  final Object? error;
+  var calls = 0;
+
+  @override
+  Future<void> signUp({
+    required String email,
+    required String password,
+  }) async {
+    calls++;
+    await Future<void>.delayed(Duration.zero);
+    if (error case final Object e) throw e;
+  }
+}
+
+const submitted = SignUpSubmitted(email: 'a@b.co', password: 'password');
+
+void main() {
+  blocTest<SignUpBloc, SignUpState>(
+    'emits submitting then success',
+    build: () => SignUpBloc(StubAuthApi()),
+    act: (bloc) => bloc.add(submitted),
+    expect: () => const [
+      SignUpState(status: SignUpStatus.submitting),
+      SignUpState(status: SignUpStatus.success),
+    ],
+  );
+
+  blocTest<SignUpBloc, SignUpState>(
+    'maps a taken email, and editing clears it',
+    build: () => SignUpBloc(StubAuthApi(const EmailTakenException())),
+    act: (bloc) async {
+      bloc.add(submitted);
+      await Future<void>.delayed(const Duration(milliseconds: 10));
+      bloc.add(const SignUpEmailEdited());
+    },
+    expect: () => const [
+      SignUpState(status: SignUpStatus.submitting),
+      SignUpState(status: SignUpStatus.emailTaken),
+      SignUpState(),
+    ],
+  );
+
+  final api = StubAuthApi();
+  blocTest<SignUpBloc, SignUpState>(
+    'drops a second submit while one is running',
+    build: () => SignUpBloc(api),
+    act: (bloc) => bloc
+      ..add(submitted)
+      ..add(submitted),
+    verify: (_) => expect(api.calls, 1),
+  );
+}
+```
+
+Replace `my_app` with the `name` from your `pubspec.yaml`.
+
+## Bloc and Riverpod, side by side
+
+| | Riverpod | Bloc |
+| --- | --- | --- |
+| Request state | `AsyncValue` from `AsyncNotifier` | Your own `SignUpStatus` enum |
+| Double submit | `if (state.isLoading) return;` | `transformer: droppable()` |
+| Error mapping | The UI inspects `state.error` | The bloc maps errors to statuses |
+| One-off effects | `ref.listen` | `BlocListener` or `BlocConsumer` |
+| Dependency injection | Provider and override | `RepositoryProvider` and constructor |
+| Cleanup | `autoDispose` | `BlocProvider` closes the bloc |
+
+Bloc is more code, and the states you can reach are all spelled out. Riverpod is shorter and leans on `AsyncValue`. Either is fine for this form, so use the one your app already has.
+
+## Common mistakes
+
+**Creating a bloc in `build` with `BlocProvider.value`.** `BlocProvider.value` doesn't close the bloc. Use `create` for a bloc the widget owns, and keep `.value` for passing an existing bloc to a new route.
+
+**Calling `context.read` in the same widget that creates the `BlocProvider`.** That context is above the provider, so you get a `ProviderNotFoundException`. That's the reason for the `SignUpPage` and `_SignUpView` split. A `Builder` also works.
+
+**Doing side effects in `builder`.** `builder` can run more often than the state changes. Navigation and snackbars go in `listener`.
+
+**Mutable state, or a state without equality.** Emitting the same instance after changing a field is ignored. Keep state immutable and use `Equatable`.
+
+**Forgetting to `await` in an event handler.** Calling `emit` after the handler has completed throws an assertion error. If you need to consume a stream, use `emit.forEach`.
+
+**Holding a `BuildContext` in the bloc.** Blocs shouldn't know about Flutter widgets. Emit a state and let the listener do the navigation.

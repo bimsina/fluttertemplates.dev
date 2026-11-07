@@ -1,8 +1,13 @@
 ---
 import BaseHtml from "@/components/BaseHtml.astro";
-import SingleAppComponent from "@/components/SingleAppComponent";
+import CopyPromptButton from "@/components/CopyPromptButton";
+import TemplateWorkbench, { type View } from "@/components/TemplateWorkbench";
+import WidgetArt from "@/components/WidgetArt.astro";
 import WidgetsSidebar from "@/components/WidgetsSidebar";
-import { type CollectionEntry, getCollection } from "astro:content";
+import WidgetDetails from "@/components/WidgetDetails.astro";
+import widgetMeta from "@/generated/widget_meta.json";
+import { addPrompt, GITHUB_URL } from "@/consts";
+import { type CollectionEntry, getCollection, render } from "astro:content";
 import fs from "fs/promises";
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
 import { getPrevNext } from "@/utils/get_widget_page_sequence";
@@ -25,7 +30,7 @@ const widget = Astro.props;
 const isGroup = widget.filePath?.endsWith("index.md");
 
 const widgets = await getCollection("widgets");
-const childrenColponents = isGroup
+const children = isGroup
   ? widgets.filter(
       (c) =>
         c.id.startsWith(widget.id) &&
@@ -33,25 +38,6 @@ const childrenColponents = isGroup
         (c.data.path ?? "").trim().length > 0,
     )
   : [];
-
-const childrenCode = await Promise.all(
-  childrenColponents.map(async (c) => {
-    return {
-      id: c.id,
-      code_files: await Promise.all(
-        c.data.code_files.map(async (file: string) => {
-          const filePath = "flutter_apps/" + c.data.app + "/lib/" + file;
-          const fileContent = await fs.readFile(filePath, "utf8");
-          return {
-            file,
-            id: c.id,
-            content: fileContent,
-          };
-        }),
-      ),
-    };
-  }),
-);
 
 const code = await Promise.all(
   widget.data.code_files.map(async (file: string) => {
@@ -63,6 +49,12 @@ const code = await Promise.all(
     };
   }),
 );
+
+const initialView: View =
+  widget.data.previewSize === "mobile"
+    ? "phone"
+    : widget.data.previewSize;
+const sourceUrl = `${GITHUB_URL}/blob/master/flutter_apps/${widget.data.app}/lib/${widget.data.code_files[0]}`;
 
 const groupedWidgets = await getGroupedWidgets();
 const sidebarGroups = serializeWidgetGroupsForSidebar(groupedWidgets);
@@ -83,6 +75,10 @@ const pageDescription =
   (isGroup
     ? `Browse ${widget.data.title} Flutter UI components with live previews and copy-paste source. Free and MIT-licensed.`
     : `Live preview and Dart source for the Flutter ${widget.data.title} widget. Copy it straight into your app — free and MIT-licensed.`);
+
+const meta = (widgetMeta as Record<string, (typeof widgetMeta)[keyof typeof widgetMeta]>)[widget.id];
+const { Content } = await render(widget);
+const hasNotes = (widget.body ?? "").trim().length > 0;
 
 const siteBase = (Astro.site?.href ?? "https://fluttertemplates.dev/").replace(
   /\/$/,
@@ -124,9 +120,21 @@ const breadcrumb = {
         ]),
   ],
 };
+const sourceCode = !isGroup && {
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  name: `Flutter ${widget.data.title}`,
+  description: pageDescription,
+  url: `${siteBase}/widgets/${widget.id}/`,
+  codeRepository: GITHUB_URL,
+  programmingLanguage: "Dart",
+  runtimePlatform: "Flutter",
+  license: "https://opensource.org/licenses/MIT",
+};
 ---
 
 <BaseHtml
+  searchTitle={`${widget.data.title} · ${isGroup ? "Category" : "Widget"}`}
   title={pageTitle}
   description={pageDescription}
   image={`/og/widgets/${widget.id}.png`}
@@ -136,6 +144,15 @@ const breadcrumb = {
     is:inline
     set:html={JSON.stringify(breadcrumb)}
   />
+  {
+    sourceCode && (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(sourceCode)}
+      />
+    )
+  }
 
   <div class="section-shell pt-24 pb-12">
     <div class="flex flex-col gap-6 lg:flex-row lg:gap-10">
@@ -172,39 +189,89 @@ const breadcrumb = {
           <h1 class="text-2xl font-bold tracking-tight md:text-3xl">
             {widget.data.title}
           </h1>
-          <p class="text-muted-foreground mt-2 max-w-2xl text-sm md:text-base">
-            {pageDescription}
-          </p>
-        </header>
-
-        <main>
           {
-            isGroup ? (
-              <div class="flex flex-col gap-12">
-                {childrenColponents.map((c) => (
-                  <div id={c.id} class="scroll-mt-24">
-                    <SingleAppComponent
-                      widget={c.data}
-                      code={
-                        childrenCode.find((cc) => cc.id === c.id)?.code_files
-                      }
-                      client:load
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div id={widget.id} class="scroll-mt-24">
-                <SingleAppComponent
-                  widget={widget.data}
-                  code={code}
-                  hideTitle
-                  client:load
-                />
-              </div>
+            isGroup && (
+              <p class="text-muted-foreground mt-2 max-w-2xl text-sm md:text-base">
+                {pageDescription}
+              </p>
             )
           }
-        </main>
+        </header>
+
+        {
+          isGroup ? (
+            <ul class="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
+              {children.map((child) => (
+                <li>
+                  <a
+                    href={`/widgets/${child.id}/`}
+                    class="border-border bg-card interactive-card group block h-full overflow-hidden rounded-2xl border"
+                    data-swup-preload
+                  >
+                    <WidgetArt id={child.id} icon={widget.data.icon} />
+                    <div class="p-4">
+                      <h2 class="group-hover:text-primary font-semibold tracking-tight transition-colors">
+                        {child.data.title}
+                      </h2>
+                      <p class="text-muted-foreground mt-1 line-clamp-2 text-sm">
+                        {child.data.description}
+                      </p>
+                    </div>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <>
+              <TemplateWorkbench
+                client:load
+                title={widget.data.title}
+                path={widget.data.path}
+                registryUrl={`/r/${widget.id}.json`}
+                files={widget.data.code_files}
+                initialView={initialView}
+                showDesktop
+              />
+              <div class="mt-8 max-w-2xl">
+                <p class="text-muted-foreground md:text-lg">{pageDescription}</p>
+                <div class="mt-5 flex flex-wrap gap-3" data-pagefind-ignore>
+                  <a
+                    href={sourceUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="interactive-button bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold hover:opacity-95"
+                  >
+                    Get the source
+                  </a>
+                  <CopyPromptButton
+                    client:load
+                    prompt={addPrompt(widget.data.title, widget.id)}
+                  />
+                </div>
+              </div>
+              {/* The viewer loads source on demand, so crawlers get it here. */}
+              <div hidden data-pagefind-ignore="all">
+                {code.map((file) => (
+                  <pre><code>{file.content}</code></pre>
+                ))}
+              </div>
+            </>
+          )
+        }
+        {
+          meta && (
+            <div data-template-docs>
+              <WidgetDetails
+                id={widget.id}
+                title={widget.data.title}
+                dependencies={meta.dependencies}
+                related={meta.related}
+              >
+                {hasNotes && <Content />}
+              </WidgetDetails>
+            </div>
+          )
+        }
         <WidgetsPrevNext prev={prev} next={next} />
       </div>
     </div>

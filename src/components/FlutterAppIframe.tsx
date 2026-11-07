@@ -1,9 +1,12 @@
 import { Fullscreen } from "lucide-react";
 import { useTheme } from "../hooks/useTheme";
-import { useRef, useState, useEffect } from "react";
+import { useImperativeHandle, useRef, useState, useEffect } from "react";
+import type { Ref } from "react";
 import { cn } from "@/lib/utils";
 
 const FLUTTER_PREVIEW_READY_EVENT = "flutter-preview-ready";
+
+export type FlutterAppControls = { requestFullscreen: () => void };
 
 export default function FlutterAppIframe({
   app = "core",
@@ -13,6 +16,7 @@ export default function FlutterAppIframe({
   skipUrlFormatting = false,
   enableShowFullScreenButton = false,
   fullScreenButtonLabel = "Open in full screen",
+  controlRef,
 }: {
   app?: string;
   theme?: "light" | "dark";
@@ -21,6 +25,7 @@ export default function FlutterAppIframe({
   skipUrlFormatting?: boolean;
   enableShowFullScreenButton?: boolean;
   fullScreenButtonLabel?: string;
+  controlRef?: Ref<FlutterAppControls>;
 }) {
   const theme = useTheme(initialTheme);
   const [isIOS, setIsIOS] = useState(false);
@@ -117,6 +122,8 @@ export default function FlutterAppIframe({
       }
     }
   };
+
+  useImperativeHandle(controlRef, () => ({ requestFullscreen }));
 
   return (
     <div className="flex flex-col items-center justify-center gap-3">

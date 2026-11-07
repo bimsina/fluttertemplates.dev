@@ -1,89 +1,132 @@
 ---
-import Hero from "@/components/Hero.astro";
-import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
+import { getCollection } from "astro:content";
+import { Image } from "astro:assets";
+import { Icon } from "astro-icon/components";
+import AgentSection from "@/components/AgentSection";
 import BaseHtml from "@/components/BaseHtml.astro";
 import Footer from "@/components/Footer.astro";
+import Hero from "@/components/Hero.astro";
 import WidgetsGrid from "@/components/WidgetsGrid.astro";
-import { Icon } from "astro-icon/components";
+import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
+import { getWidgetStats } from "@/utils/get_widget_stats";
+
+const FEATURED_CATEGORIES = [
+  "auth",
+  "chat",
+  "ecommerce",
+  "dashboard",
+  "forms",
+  "ai",
+  "social",
+  "finance",
+  "navigation",
+];
+const FEATURED_TEMPLATES = ["food-delivery", "banking-wallet", "retail-pos"];
+
+const templates = await getCollection("templates");
+const featured = FEATURED_TEMPLATES.flatMap((id) =>
+  templates.filter((template) => template.id === id),
+);
+const { categoryCount } = await getWidgetStats();
 ---
 
 <BaseHtml
   title={SITE_TITLE}
   description={SITE_DESCRIPTION}
   image="/og/index.png"
+  searchable={false}
 >
   <Hero />
 
-  <section class="transition-page section-shell pt-6 pb-8">
-    <div
-      class="mb-8 flex flex-col gap-4 md:flex-row md:items-end md:justify-between"
-      data-reveal
-    >
+  <section class="transition-page section-shell py-14 md:py-20">
+    <AgentSection client:load />
+  </section>
+
+  <section class="transition-page section-shell py-14 md:py-20">
+    <div class="mb-8 flex items-end justify-between gap-4">
       <div>
-        <p
-          class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-        >
-          Free · open source
-        </p>
-        <h2 class="mt-3 text-2xl font-bold tracking-tight md:text-4xl">
-          Real screens, not screenshots.
+        <h2 class="text-2xl font-bold tracking-tight md:text-4xl">
+          Start from a working app.
         </h2>
-        <p class="text-muted-foreground mt-3 max-w-2xl text-sm md:text-base">
-          Every category is a set of Flutter screens running live in your
-          browser. Tap through them, flip to the code, and copy what you need.
+        <p class="text-muted-foreground mt-3 md:text-lg">
+          Run it in your browser, copy the source, connect your backend.
         </p>
       </div>
       <a
-        href="/widgets"
-        class="interactive-button border-border bg-card text-foreground hover:bg-muted inline-flex shrink-0 items-center gap-2 rounded-xl border px-4 py-2.5 text-sm font-semibold"
+        href="/templates/"
+        class="text-primary hidden shrink-0 items-center gap-1 text-sm font-semibold sm:inline-flex"
         data-swup-preload
       >
-        Browse all categories
-        <Icon name="mdi:arrow-right" class="interactive-icon-shift h-4 w-4" />
+        All templates
+        <Icon name="mdi:arrow-right" class="h-4 w-4" />
       </a>
     </div>
-
-    <WidgetsGrid />
-  </section>
-
-  <section class="transition-page section-shell pb-14">
-    <div
-      class="bg-primary relative overflow-hidden rounded-3xl p-8 text-white md:p-12 dark:bg-[oklch(0.34_0.1_261)]"
-      data-reveal
-    >
-      <div class="relative max-w-2xl">
-        <p class="text-xs font-semibold tracking-widest uppercase opacity-70">
-          Premium · starter kits
-        </p>
-        <h2 class="mt-3 text-2xl font-bold tracking-tight md:text-4xl">
-          Skip the first three weeks.
-        </h2>
-        <p class="mt-4 max-w-xl text-sm opacity-90 md:text-base">
-          Complete, production-wired Flutter apps — auth, payments, and a
-          backend already solved. Rebrand it and ship. Try the whole thing live
-          before you buy.
-        </p>
-        <div class="mt-7 flex flex-col gap-3 sm:flex-row">
+    <div class="grid grid-cols-1 gap-5 md:grid-cols-3">
+      {
+        featured.map((template) => (
           <a
-            href="/templates"
-            class="interactive-button inline-flex items-center justify-center gap-2 rounded-xl bg-white px-5 py-3 text-sm font-semibold text-[oklch(0.42_0.14_261)] hover:opacity-95"
+            href={`/templates/${template.id}/`}
+            class="border-border bg-card interactive-card group flex flex-col overflow-hidden rounded-2xl border"
             data-swup-preload
           >
-            Browse templates
-            <Icon
-              name="mdi:arrow-right"
-              class="interactive-icon-shift h-4 w-4"
-            />
+            <div class="bg-background aspect-[16/10] overflow-hidden">
+              {template.data.heroImage && (
+                <Image
+                  class="h-full w-full object-cover"
+                  src={template.data.heroImage}
+                  alt=""
+                  loading="lazy"
+                />
+              )}
+            </div>
+            <div class="p-5">
+              <h3 class="group-hover:text-primary font-semibold tracking-tight transition-colors">
+                {template.data.title}
+              </h3>
+              <p class="text-muted-foreground mt-1.5 text-sm">
+                {template.data.summary}
+              </p>
+            </div>
           </a>
-          <span
-            class="inline-flex items-center justify-center gap-2 rounded-xl border border-white/25 px-5 py-3 text-sm font-semibold"
-          >
-            <Icon name="mdi:flash" class="h-4 w-4" />
-            New kits landing soon
-          </span>
-        </div>
-      </div>
+        ))
+      }
     </div>
+    <a
+      href="/templates/"
+      class="text-primary mt-5 inline-flex items-center gap-1 text-sm font-semibold sm:hidden"
+    >
+      All templates
+      <Icon name="mdi:arrow-right" class="h-4 w-4" />
+    </a>
+  </section>
+
+  <section class="transition-page section-shell py-14 md:py-20">
+    <div class="mb-8 flex items-end justify-between gap-4">
+      <div>
+        <h2 class="text-2xl font-bold tracking-tight md:text-4xl">
+          Or take just the screen you need.
+        </h2>
+        <p class="text-muted-foreground mt-3 md:text-lg">
+          Every one runs live in your browser.
+        </p>
+      </div>
+      <a
+        href="/widgets/"
+        class="text-primary hidden shrink-0 items-center gap-1 text-sm font-semibold sm:inline-flex"
+        data-swup-preload
+      >
+        All {categoryCount} categories
+        <Icon name="mdi:arrow-right" class="h-4 w-4" />
+      </a>
+    </div>
+    <WidgetsGrid only={FEATURED_CATEGORIES} />
+    <a
+      href="/widgets/"
+      class="text-primary mt-5 inline-flex items-center gap-1 text-sm font-semibold sm:hidden"
+    >
+      All {categoryCount} categories
+      <Icon name="mdi:arrow-right" class="h-4 w-4" />
+    </a>
   </section>
 
   <Footer />

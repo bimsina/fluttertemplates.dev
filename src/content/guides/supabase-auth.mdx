@@ -1,0 +1,579 @@
+---
+title: Supabase email login wired to a login screen
+description: Connect the Login Screen to Supabase Auth. Email sign-in, sign-up with confirmation, password reset by deep link, session persistence, and error handling.
+order: 4
+---
+
+import LivePreview from "@/components/LivePreview";
+
+The [Login Screen](/widgets/auth/login_hero/) validates its fields and hands them to a callback, but nothing calls a backend yet. This guide connects it to Supabase and adds the parts that usually get skipped: confirmation emails, password reset, and useful error messages.
+
+If you want the whole flow already connected, the [Login and Auth Flow](/templates/auth-flow/) template has every screen and its routing behind an `AuthRepository`, so you only write the Supabase adapter.
+
+<LivePreview client:visible path="/auth/login_hero" />
+
+You'll use four library screens:
+
+- [Login Screen](/widgets/auth/login_hero/) for signing in
+- [Sign Up](/widgets/forms/sign_up/) for creating an account
+- [Forgot Password](/widgets/forms/forgot_password/) for requesting a reset email
+- [Reset Password](/widgets/auth/reset_password/) for setting the new password
+
+The code targets `supabase_flutter` 2.18.
+
+## Set up the project
+
+1. Create a project at [supabase.com](https://supabase.com/dashboard).
+2. Open **Authentication**, then **Sign In / Providers**, and check that **Email** is enabled. **Confirm email** is on by default, and this guide assumes it stays on.
+3. Open **Project Settings**, then **API Keys**, and copy the **Publishable key**. It starts with `sb_publishable_`. Copy the project URL too.
+4. Open **Authentication**, then **URL Configuration**, and add `io.mycompany.myapp://login-callback/` under **Redirect URLs**, using your own reverse-domain scheme.
+
+Older projects have an `anon` key, which does the same job. Supabase says legacy `anon` keys work until the end of 2026, so switch to a publishable key now if you're still using one.
+
+Never put the secret key (`sb_secret_...`) or `service_role` key in an app. Anyone can extract it from the binary, and it bypasses row level security. The publishable key is safe to ship, provided your tables have row level security turned on.
+
+## Add the code
+
+```bash
+flutter pub add supabase_flutter
+fluttertemplates add auth/login_hero forms/sign_up forms/forgot_password auth/reset_password
+```
+
+The screens land under `lib/fluttertemplates/`. Without the [CLI](/guides/cli/), copy each file from its widget page into the same path.
+
+Initialize Supabase before `runApp`. Values come from `--dart-define` so that they aren't in your repository.
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'auth_gate.dart';
+import 'session_controller.dart';
+
+const supabaseUrl = String.fromEnvironment('SUPABASE_URL');
+const supabaseKey = String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  assert(supabaseUrl.isNotEmpty, 'Pass SUPABASE_URL with --dart-define');
+  await Supabase.initialize(url: supabaseUrl, publishableKey: supabaseKey);
+  final session = SessionController(Supabase.instance.client.auth);
+  runApp(MyApp(session: session));
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key, required this.session});
+
+  final SessionController session;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(home: AuthGate(session: session));
+  }
+}
+```
+
+Run it with:
+
+```bash
+flutter run \
+  --dart-define=SUPABASE_URL=https://yourproject.supabase.co \
+  --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_xxx
+```
+
+## Choose the screen from the session
+
+`supabase_flutter` saves the session and restores it inside `initialize`, so `currentSession` is ready by the time the first frame builds. The stream's job here is to rebuild the gate when the session starts or ends, and to report a password reset link. That link can be handled before any widget exists, so the listener goes in a small controller that `main` creates before `runApp`.
+
+```dart
+// lib/session_controller.dart
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+/// The app's only listener on Supabase auth. Create one, before runApp.
+class SessionController extends ChangeNotifier {
+  SessionController(this._auth) : _signedIn = _auth.currentSession != null {
+    _subscription = _auth.onAuthStateChange.listen(
+      _onAuthChange,
+      // Network failures and expired or already-used email links arrive here.
+      onError: (Object error) => debugPrint('Auth stream error: $error'),
+    );
+  }
+
+  final GoTrueClient _auth;
+  late final StreamSubscription<AuthState> _subscription;
+  bool _signedIn;
+  bool _recoveryPending = false;
+
+  bool get signedIn => _signedIn;
+
+  /// True when a reset link has been handled and the reset screen isn't open.
+  bool get recoveryPending => _recoveryPending;
+
+  /// Called by the gate as it opens the reset screen.
+  void recoveryShown() => _recoveryPending = false;
+
+  void _onAuthChange(AuthState data) {
+    final signedIn = _auth.currentSession != null;
+    final recoveryPending = switch (data.event) {
+      AuthChangeEvent.passwordRecovery => true,
+      AuthChangeEvent.userUpdated || AuthChangeEvent.signedOut => false,
+      _ => _recoveryPending,
+    };
+    if (signedIn == _signedIn && recoveryPending == _recoveryPending) return;
+    _signedIn = signedIn;
+    _recoveryPending = recoveryPending;
+    notifyListeners();
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+```
+
+`onAuthStateChange` replays only its latest event to a new listener, and that causes two problems for a widget that subscribes late. If anything was emitted after `passwordRecovery`, even `tokenRefreshed`, the widget never hears about the link. If nothing was, it gets `passwordRecovery` again, even when the user has already left the reset screen. Creating the controller right after `initialize` avoids both, because it listens once and keeps the result. So keep this as the only listener, and have everything else read the controller.
+
+`recoveryPending` is a request to open the reset screen. It clears when the gate opens the screen, and also on `userUpdated` or `signedOut`, in case those arrive first.
+
+The gate reads the controller rather than the stream:
+
+```dart
+// lib/auth_gate.dart
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'login_page.dart';
+import 'reset_password_page.dart';
+import 'session_controller.dart';
+
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key, required this.session});
+
+  final SessionController session;
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  late bool _signedIn = widget.session.signedIn;
+
+  @override
+  void initState() {
+    super.initState();
+    widget.session.addListener(_sync);
+    // A reset link can be handled before this gate exists.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) _sync();
+    });
+  }
+
+  void _sync() {
+    final session = widget.session;
+    final signedIn = session.signedIn;
+    final recovering = session.recoveryPending;
+    if (signedIn == _signedIn && !recovering) return;
+
+    // This widget is the bottom route, so changing what it builds can't
+    // uncover anything. Drop the routes above it first.
+    final navigator = Navigator.of(context);
+    navigator.popUntil((route) => route.isFirst);
+    if (recovering) {
+      session.recoveryShown();
+      navigator.push(
+        MaterialPageRoute<void>(builder: (_) => const ResetPasswordPage()),
+      );
+    }
+    setState(() => _signedIn = signedIn);
+  }
+
+  @override
+  void dispose() {
+    widget.session.removeListener(_sync);
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return _signedIn ? const HomePage() : const LoginPage();
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Supabase.instance.client.auth.currentUser;
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+        actions: [
+          IconButton(
+            tooltip: 'Sign out',
+            icon: const Icon(Icons.logout),
+            onPressed: () => Supabase.instance.client.auth.signOut(),
+          ),
+        ],
+      ),
+      body: Center(child: Text('Signed in as ${user?.email}')),
+    );
+  }
+}
+```
+
+`AuthGate` is the `home` of `MaterialApp`, so it's the bottom route of the app's `Navigator`. Swapping what it builds only changes that bottom route. Anything pushed above it, such as **Forgot Password**, stays on top and hides the change. That's why the gate does its own navigation in `_sync`:
+
+- When a session starts or ends, it pops back to itself, so the right screen is showing. A sign-out from a screen deep in your app lands on login.
+- When recovery is pending, it does the same and then pushes the reset screen, so that screen is always on top. It doesn't matter what was open when the link arrived.
+- Other events, such as `tokenRefreshed`, don't notify the gate, so they can't close the reset screen while someone is typing.
+
+The rest of the app never navigates after an auth call. Keep `AuthGate` as `home`, because `route.isFirst` relies on it. The gate sits below the `Navigator`, so it needs no global `navigatorKey`. It also checks the controller after its first frame, so a link that launched the app opens the reset screen too, even if it was handled before the gate existed.
+
+A reset link signs the user in, so `HomePage` is underneath the reset screen. Leaving that screen with the back button keeps them signed in with their old password. The same happens if the app is killed before the password is saved: the session is restored, but `passwordRecovery` isn't emitted again, so the next launch shows home.
+
+If you use go_router, routes come from auth state instead. See [auth guards](/guides/go-router-auth/) and its section on password recovery.
+
+The restored session can already be expired on a cold start. The client refreshes it in the background and emits `signedOut` if the refresh token is no longer valid, and the gate then shows the login screen. Network failures during a refresh arrive as stream errors, so always pass `onError`. Without it they become uncaught exceptions. An error changes nothing on screen, because the gate shows what `currentSession` says and never waits on the stream.
+
+## Turn Supabase errors into messages
+
+`AuthException.code` is the stable field to branch on. `message` is written for developers and can change. Some failures, such as having no connection, have no code at all.
+
+```dart
+// lib/auth_errors.dart
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+String authErrorMessage(AuthException error) {
+  if (error is AuthRetryableFetchException) {
+    return 'Could not reach the server. Check your connection.';
+  }
+  return switch (error.code) {
+    'invalid_credentials' => 'Incorrect email or password.',
+    'email_not_confirmed' => 'Confirm your email first. Check your inbox.',
+    'user_already_exists' => 'An account with this email already exists.',
+    'weak_password' => 'Choose a stronger password.',
+    'same_password' => 'Choose a different password from your current one.',
+    'over_email_send_rate_limit' ||
+    'over_request_rate_limit' => 'Too many attempts. Try again in a while.',
+    'email_address_not_authorized' => 'We could not send email to that address.',
+    _ => 'Something went wrong. Please try again.',
+  };
+}
+```
+
+## Wire up the login screen
+
+`LoginHero` validates its fields, then calls `onSignIn` with the trimmed email and the password. So you don't need to rewrite it. Wrap it in a small page that does the work and passes the callbacks:
+
+```dart
+// lib/login_page.dart
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'auth_errors.dart';
+import 'fluttertemplates/auth/login_hero.dart';
+import 'fluttertemplates/forms/forgot_password/forgot_password.dart';
+import 'fluttertemplates/forms/sign_up/sign_up_page.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool _busy = false;
+
+  Future<void> _signIn(String email, String password) async {
+    if (_busy) return;
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    try {
+      await Supabase.instance.client.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
+      // No navigation here. AuthGate swaps to the home screen.
+    } on AuthException catch (error) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(authErrorMessage(error))));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  void _open(Widget page) {
+    Navigator.of(context).push(MaterialPageRoute<void>(builder: (_) => page));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        AbsorbPointer(
+          absorbing: _busy,
+          child: LoginHero(
+            onSignIn: _signIn,
+            onForgotPassword: () => _open(
+              ForgotPasswordPage(
+                onBackToLogin: () => Navigator.of(context).pop(),
+              ),
+            ),
+            onSignUp: () => _open(const SignUpPage()),
+          ),
+        ),
+        if (_busy)
+          const SafeArea(
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: LinearProgressIndicator(),
+            ),
+          ),
+      ],
+    );
+  }
+}
+```
+
+`AbsorbPointer` blocks taps during the request, and the `_busy` check at the top of `_signIn` also stops a second submit from the keyboard.
+
+The library file needs one edit. `supabase_flutter` always persists the session, so **Remember me** would do nothing, and you shouldn't ship a control that doesn't work. In `lib/fluttertemplates/auth/login_hero.dart`, delete the `_remember` field and the `Row` that holds the checkbox. Then change that `Wrap` to `alignment: WrapAlignment.end`, so that **Forgot password?** stays on the right.
+
+## Deep links
+
+Confirmation and reset emails contain a link. It has to open your app, which needs a custom URL scheme on each platform. Use the scheme you added to **Redirect URLs**.
+
+`supabase_flutter` receives these links through the `app_links` plugin. Flutter also has its own deep link handler, which is on by default and sends the same URL to your app as a route. This app has no such route, so you'd get `Could not find a generator for route` errors. [Flutter's docs](https://docs.flutter.dev/ui/navigation/deep-linking) say to opt out of that handler when a plugin handles your links, so each platform below has two parts: the opt-out, then the URL scheme.
+
+Android, inside the `.MainActivity` `<activity>` in `android/app/src/main/AndroidManifest.xml`:
+
+```xml
+<meta-data android:name="flutter_deeplinking_enabled" android:value="false" />
+<intent-filter>
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="io.mycompany.myapp" android:host="login-callback" />
+</intent-filter>
+```
+
+iOS, inside the top-level `<dict>` in `ios/Runner/Info.plist`:
+
+```xml
+<key>FlutterDeepLinkingEnabled</key>
+<false/>
+<key>CFBundleURLTypes</key>
+<array>
+  <dict>
+    <key>CFBundleTypeRole</key>
+    <string>Editor</string>
+    <key>CFBundleURLSchemes</key>
+    <array>
+      <string>io.mycompany.myapp</string>
+    </array>
+  </dict>
+</array>
+```
+
+On web, pass `null` as the redirect. Supabase then uses your **Site URL**. `supabase_flutter` picks the auth callback up by itself on every platform.
+
+Put the value in one place:
+
+```dart
+// lib/auth_redirect.dart
+import 'package:flutter/foundation.dart';
+
+const _mobileRedirect = 'io.mycompany.myapp://login-callback/';
+
+String? get authRedirectUrl => kIsWeb ? null : _mobileRedirect;
+```
+
+## Sign up
+
+Four edits to `lib/fluttertemplates/forms/sign_up/sign_up_page.dart`. First, the imports:
+
+```dart
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../auth_errors.dart';
+import '../../../auth_redirect.dart';
+```
+
+Add a busy flag next to `_passwordController`:
+
+```dart
+var _busy = false;
+```
+
+Next, replace the `_submit` method:
+
+```dart
+Future<void> _submit() async {
+  if (!(_formKey.currentState?.validate() ?? false)) return;
+  final messenger = ScaffoldMessenger.of(context);
+  final navigator = Navigator.of(context);
+  setState(() => _busy = true);
+  try {
+    final response = await Supabase.instance.client.auth.signUp(
+      email: _emailController.text.trim(),
+      password: _passwordController.text,
+      emailRedirectTo: authRedirectUrl,
+    );
+    // With Confirm email off there is a session, and AuthGate closes this page.
+    if (response.session != null) return;
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+        const SnackBar(
+          content: Text('Check your email to confirm your account.'),
+        ),
+      );
+    navigator.pop();
+  } on AuthException catch (error) {
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(authErrorMessage(error))));
+  } finally {
+    if (mounted) setState(() => _busy = false);
+  }
+}
+```
+
+Finally, point the button at it:
+
+```dart
+FilledButton(
+  onPressed: _busy ? null : _submit,
+  child: const Text('Create Account'),
+),
+```
+
+With **Confirm email** on, `signUp` returns a user with no session. If the address is already registered, Supabase returns the same kind of response and sends no error, so that nobody can test which emails have accounts. Keep your success message neutral, as above.
+
+For a cleaner way to manage the loading state, see [the Riverpod form guide](/guides/riverpod-forms/).
+
+## Password reset
+
+Reset takes two steps, and each has a screen already. **Step one** requests the email. In `lib/fluttertemplates/forms/forgot_password/forgot_password.dart`, add the imports:
+
+```dart
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import '../../../auth_errors.dart';
+import '../../../auth_redirect.dart';
+```
+
+Add a controller, dispose it in a `dispose` override, and replace the `_submit` method:
+
+```dart
+final _email = TextEditingController();
+
+Future<void> _submit() async {
+  if (!(_formKey.currentState?.validate() ?? false)) return;
+  final messenger = ScaffoldMessenger.of(context);
+  try {
+    await Supabase.instance.client.auth.resetPasswordForEmail(
+      _email.text.trim(),
+      redirectTo: authRedirectUrl,
+    );
+    if (mounted) setState(() => _sent = true);
+  } on AuthException catch (error) {
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(authErrorMessage(error))));
+  }
+}
+```
+
+Then set `controller: _email` on the email field. **Back to Login** already works, because `LoginPage` passes `onBackToLogin`.
+
+**Step two** runs when the user taps the link. Supabase signs them in and emits `passwordRecovery`, and `AuthGate` pushes this page on top of whatever is open. `ResetPassword` checks the password rules and calls `onReset`, so the library file needs no edits:
+
+```dart
+// lib/reset_password_page.dart
+import 'package:flutter/material.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+
+import 'auth_errors.dart';
+import 'fluttertemplates/auth/reset_password.dart';
+
+class ResetPasswordPage extends StatefulWidget {
+  const ResetPasswordPage({super.key});
+
+  @override
+  State<ResetPasswordPage> createState() => _ResetPasswordPageState();
+}
+
+class _ResetPasswordPageState extends State<ResetPasswordPage> {
+  bool _busy = false;
+
+  Future<void> _save(String password) async {
+    if (_busy) return;
+    final messenger = ScaffoldMessenger.of(context);
+    final navigator = Navigator.of(context);
+    setState(() => _busy = true);
+    try {
+      await Supabase.instance.client.auth.updateUser(
+        UserAttributes(password: password),
+      );
+      // Back to AuthGate, which already shows the home screen.
+      navigator.popUntil((route) => route.isFirst);
+    } on AuthException catch (error) {
+      messenger
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(authErrorMessage(error))));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AbsorbPointer(
+      absorbing: _busy,
+      child: ResetPassword(onReset: _save),
+    );
+  }
+}
+```
+
+## Check that it works
+
+1. Sign up with a real address. You should get a confirmation email, and signing in before confirming should show the "Confirm your email first" message.
+2. Tap the link on the device. The app opens, signed in.
+3. Restart the app. You should stay signed in.
+4. Sign out, then try a wrong password. You should see "Incorrect email or password."
+5. Request a reset and tap the link while **Forgot Password** is still open. The reset screen appears on top, and saving a new password lands on home.
+6. Request another reset, close the app, and tap the link. The app opens on the reset screen.
+7. Save the new password, then restart the app. It opens on home, not the reset screen.
+
+## Common mistakes
+
+**Swapping the gate for a screen that has to appear on top.** If `AuthGate` only returned `ResetPassword` from `build`, the screen would be created underneath **Forgot Password**, and the user would see nothing happen. Anything that must be visible has to be pushed above the open routes, as `_sync` does.
+
+**Listening to `onAuthStateChange` from a widget.** A new listener gets only the latest event, so it can miss `passwordRecovery`, or receive an old one and reopen the reset screen. Read `SessionController` instead.
+
+**Leaving Flutter's deep link handler on.** It's on by default, and it has to be off when a plugin handles your links. See [Deep links](#deep-links).
+
+**Testing email flows on the built-in email service.** It only sends to your organization's team members, and other addresses fail with `email_address_not_authorized`. It also has a low hourly limit, and hitting it returns `over_email_send_rate_limit`. Set up custom SMTP before launch.
+
+**Leaving the Site URL at `http://localhost:3000`.** Emails fall back to the Site URL when a redirect is missing or not on the allow list, so links open a dead page. The app's URL must be listed under **Redirect URLs**, and the string in your code must match it.
+
+**Using `anonKey` in new code.** It still compiles, but the parameter is deprecated in favour of `publishableKey`.
+
+**Forgetting row level security.** The publishable key is public. Auth protects your data only when RLS policies are on your tables.
+
+**Calling `Supabase.instance` before `initialize`.** That includes top-level `final` variables evaluated early. Make sure `main` awaits `initialize` first.
+
+**Treating the session as secure storage.** The default store is `SharedPreferences`, which is not encrypted. If that matters for your app, pass a custom `localStorage` in `FlutterAuthClientOptions`, backed by something like `flutter_secure_storage`.
+
+**Comparing `error.message`.** Messages change. Use `error.code`.

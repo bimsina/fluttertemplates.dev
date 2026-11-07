@@ -1,0 +1,496 @@
+---
+title: Make a screen responsive for tablet and web
+description: Take phone-first library screens to tablet and desktop. Breakpoints, a bottom bar that becomes a rail, grids that fit any width, two-pane layouts, and web behaviour.
+order: 9
+---
+
+import LivePreview from "@/components/LivePreview";
+
+Most library screens are designed at phone width. Stretched across a desktop browser, they give you one-line form fields a meter wide and a two-column grid of huge cards. This guide turns a small shop into something that works from phone to desktop, using these screens:
+
+- [Material 3 Bottom Navigation](/widgets/navigation/bottom_navigation/material3_bottom/) for navigation
+- [Product Grid](/widgets/ecommerce/product_grid/) for a grid that fits any width
+- [Product List](/widgets/ecommerce/product_list/) for a two-pane list and detail layout
+- [Sign Up](/widgets/forms/sign_up/) for a form that stops growing
+
+<LivePreview client:visible path="/ecommerce/product_grid" />
+
+Use the **tablet** and **desktop** buttons on any widget page to see how it behaves before you commit to it.
+
+## Setup
+
+```bash
+fluttertemplates add navigation/bottom_navigation/material3_bottom ecommerce/product_grid ecommerce/product_list forms/sign_up
+```
+
+The screens land under `lib/fluttertemplates/`. Without the [CLI](/guides/cli/), copy each file from its widget page into the same path.
+
+## Pick breakpoints once
+
+Don't scatter `width > 600` through your code. Material's window size classes are a sensible set to share.
+
+```dart
+// lib/window_size.dart
+import 'package:flutter/widgets.dart';
+
+enum WindowSize {
+  /// Phones in portrait.
+  compact,
+
+  /// Small tablets, and phones in landscape.
+  medium,
+
+  /// Large tablets and desktop.
+  expanded;
+
+  static WindowSize fromWidth(double width) {
+    if (width < 600) return compact;
+    if (width < 840) return medium;
+    return expanded;
+  }
+
+  static WindowSize of(BuildContext context) =>
+      fromWidth(MediaQuery.sizeOf(context).width);
+}
+```
+
+Two rules decide what to measure:
+
+- **Use `MediaQuery.sizeOf(context)` for app-level layout.** `sizeOf` rebuilds only when the size changes. `MediaQuery.of(context).size`, which several library screens use, rebuilds on any change to the media query, including the keyboard appearing.
+- **Use `LayoutBuilder` for a widget that adapts to its own space.** Inside a two-pane layout, the window is 1200 wide but your pane may be 400. The window size is the wrong question there.
+
+Never branch on `Platform.isAndroid` or `kIsWeb` for layout. A phone browser is narrow and an iPad is wide. Decide by available width.
+
+## Navigation: bottom bar to rail
+
+The bottom nav screen holds its selected index and shows a `NavigationBar`. Keep that, and add a `NavigationRail` for wider windows. At `expanded` the rail also shows its labels.
+
+```dart
+// lib/app_shell.dart
+import 'package:flutter/material.dart';
+
+import 'fluttertemplates/ecommerce/product_grid.dart';
+import 'fluttertemplates/forms/sign_up/sign_up_page.dart';
+import 'products_page.dart';
+import 'window_size.dart';
+
+class _Destination {
+  const _Destination(this.label, this.icon, this.selectedIcon);
+
+  final String label;
+  final IconData icon;
+  final IconData selectedIcon;
+}
+
+const _destinations = [
+  _Destination('Home', Icons.home_outlined, Icons.home_rounded),
+  _Destination('Products', Icons.view_list_outlined, Icons.view_list),
+  _Destination('Account', Icons.person_outline_rounded, Icons.person_rounded),
+];
+
+class AppShell extends StatefulWidget {
+  const AppShell({super.key});
+
+  @override
+  State<AppShell> createState() => _AppShellState();
+}
+
+class _AppShellState extends State<AppShell> {
+  int _index = 0;
+
+  void _select(int index) => setState(() => _index = index);
+
+  @override
+  Widget build(BuildContext context) {
+    final size = WindowSize.of(context);
+    final useRail = size != WindowSize.compact;
+
+    return Scaffold(
+      body: Row(
+        children: [
+          if (useRail) ...[
+            SafeArea(
+              right: false,
+              child: NavigationRail(
+                selectedIndex: _index,
+                onDestinationSelected: _select,
+                extended: size == WindowSize.expanded,
+                labelType: size == WindowSize.expanded
+                    ? NavigationRailLabelType.none
+                    : NavigationRailLabelType.all,
+                destinations: [
+                  for (final d in _destinations)
+                    NavigationRailDestination(
+                      icon: Icon(d.icon),
+                      selectedIcon: Icon(d.selectedIcon),
+                      label: Text(d.label),
+                    ),
+                ],
+              ),
+            ),
+            const VerticalDivider(width: 1),
+          ],
+          // IndexedStack keeps each tab's scroll position and state.
+          Expanded(
+            child: IndexedStack(
+              index: _index,
+              children: const [ProductGrid(), ProductsPage(), SignUpPage()],
+            ),
+          ),
+        ],
+      ),
+      bottomNavigationBar: useRail
+          ? null
+          : NavigationBar(
+              selectedIndex: _index,
+              onDestinationSelected: _select,
+              destinations: [
+                for (final d in _destinations)
+                  NavigationDestination(
+                    icon: Icon(d.icon),
+                    selectedIcon: Icon(d.selectedIcon),
+                    label: d.label,
+                  ),
+              ],
+            ),
+    );
+  }
+}
+```
+
+The body stays in the same `Expanded` in every layout, with the rail added beside it. If you returned a different widget tree per breakpoint, such as a `Row` for wide and the bare body for narrow, Flutter would rebuild the body from scratch on resize, and forms would lose their text.
+
+## Grids: size by item, not by count
+
+`product_grid.dart` picks two or three columns from the screen width. At 1600 wide that's three huge cards. It also measures the whole window, so it gets the width wrong once a rail takes some of it.
+
+Replace its `gridDelegate`:
+
+```dart
+gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+  maxCrossAxisExtent: 240,
+  // Grows with the text scale, so large text stays inside the card.
+  mainAxisExtent: 280 * MediaQuery.textScalerOf(context).scale(1),
+  crossAxisSpacing: 16,
+  mainAxisSpacing: 16,
+),
+```
+
+- `maxCrossAxisExtent` sets the largest a card may be. The grid fits as many columns as it can into its own width, so it stays correct next to a rail, with no breakpoints at all.
+- `mainAxisExtent` sets the height. `childAspectRatio` ties the height to the width, which leaves the text short of space on narrow cards and makes wide cards needlessly tall.
+
+## Forms: stop them growing
+
+A text field a meter wide is hard to read and looks broken. Cap the width and center it. `sign_up_page.dart` has a `ListView` directly in its `Form`. Wrap it:
+
+```dart
+body: Center(
+  child: ConstrainedBox(
+    constraints: const BoxConstraints(maxWidth: 480),
+    child: Form(
+```
+
+Close the two new widgets with `),` twice after the `Form`.
+
+Keep the `ListView` inside the constrained box so that it still scrolls when the keyboard is open. `Center` hands the box loose constraints, and the `ListView` still takes the full height because scrollables expand to fill their main axis.
+
+Apply the same cap to long text such as settings pages and articles. Lines over about 80 characters are tiring to read.
+
+The [Responsive Sign In](/widgets/forms/responsive_sign_in/) widget shows a further step: side-by-side logo and form on wide windows.
+
+## List and detail: two panes
+
+On a phone, tapping a list item opens a new page. On a wide window, that wastes space, and the detail should sit next to the list. [Split View](/widgets/layouts/split_view/) demonstrates the pattern, and here it is built on `ProductList`.
+
+First, make the list reusable. In `product_list.dart`, change the class so that it reports selection, shows which item is selected, and has no `Scaffold` of its own. **Add to Cart** moves to the detail pane, so `onAddToCart`, `_add`, and `_showDemo` go too. Then make `_products` public by renaming it to `products`.
+
+```dart
+class ProductList extends StatelessWidget {
+  const ProductList({super.key, required this.selected, required this.onTap});
+
+  final int? selected;
+  final ValueChanged<int> onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView.builder(
+      itemCount: products.length,
+      itemBuilder: (context, i) {
+        final p = products[i];
+        return Card(
+          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+          child: ListTile(
+            selected: selected == i,
+            onTap: () => onTap(i),
+            leading: SizedBox(
+              width: 60,
+              height: 60,
+              child: Container(
+                color: Colors.primaries[i % Colors.primaries.length]
+                    .withValues(alpha: 0.3),
+              ),
+            ),
+            title: Text(p['title'] as String),
+            subtitle: Text(p['price'] as String),
+          ),
+        );
+      },
+    );
+  }
+}
+```
+
+Then a page that chooses the layout from its own width. The selected index lives here, so it survives a resize.
+
+```dart
+// lib/products_page.dart
+import 'package:flutter/material.dart';
+
+import 'fluttertemplates/ecommerce/product_list.dart';
+import 'window_size.dart';
+
+class ProductsPage extends StatefulWidget {
+  /// Called with the product's title. Without it the demo shows a SnackBar.
+  final ValueChanged<String>? onAddToCart;
+
+  const ProductsPage({super.key, this.onAddToCart});
+
+  @override
+  State<ProductsPage> createState() => _ProductsPageState();
+}
+
+class _ProductsPageState extends State<ProductsPage> {
+  int? _selected;
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final twoPane =
+            WindowSize.fromWidth(constraints.maxWidth) == WindowSize.expanded;
+        final selected = _selected;
+
+        if (twoPane) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Products')),
+            body: Row(
+              children: [
+                SizedBox(
+                  width: 360,
+                  child: ProductList(
+                    selected: selected,
+                    onTap: (i) => setState(() => _selected = i),
+                  ),
+                ),
+                const VerticalDivider(width: 1),
+                Expanded(
+                  child: selected == null
+                      ? const Center(child: Text('Select a product'))
+                      : _ProductDetails(
+                          index: selected,
+                          onAddToCart: widget.onAddToCart,
+                        ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        // One pane: the selection decides which page shows, so widening and
+        // narrowing the window never strands the user on a pushed route.
+        if (selected == null) {
+          return Scaffold(
+            appBar: AppBar(title: const Text('Products')),
+            body: ProductList(
+              selected: null,
+              onTap: (i) => setState(() => _selected = i),
+            ),
+          );
+        }
+        return PopScope(
+          canPop: false,
+          onPopInvokedWithResult: (didPop, result) {
+            if (!didPop) setState(() => _selected = null);
+          },
+          child: Scaffold(
+            appBar: AppBar(
+              leading: BackButton(
+                onPressed: () => setState(() => _selected = null),
+              ),
+              title: Text(products[selected]['title'] as String),
+            ),
+            body: _ProductDetails(
+              index: selected,
+              onAddToCart: widget.onAddToCart,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+class _ProductDetails extends StatelessWidget {
+  const _ProductDetails({required this.index, this.onAddToCart});
+
+  final int index;
+  final ValueChanged<String>? onAddToCart;
+
+  void _add(BuildContext context, String title) {
+    final callback = onAddToCart;
+    if (callback != null) {
+      callback(title);
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('$title added to cart (demo)')));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final product = products[index];
+    return Center(
+      child: ConstrainedBox(
+        constraints: const BoxConstraints(maxWidth: 560),
+        child: Padding(
+          padding: const EdgeInsets.all(24),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                product['title'] as String,
+                style: Theme.of(context).textTheme.headlineSmall,
+              ),
+              const SizedBox(height: 8),
+              Text(product['price'] as String),
+              const SizedBox(height: 24),
+              FilledButton(
+                onPressed: () => _add(context, product['title'] as String),
+                child: const Text('Add to Cart'),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+```
+
+The obvious version calls `Navigator.push` on phones. It breaks when a tablet rotates or a browser is resized: the pushed page stays on top even though the wide layout already shows the detail. Deriving the page from `_selected` avoids that, and `PopScope` keeps the system back gesture working. If your app uses [go_router](/guides/go-router-auth/), put the selection in the URL instead, so browser back and deep links work too.
+
+## Run the app
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+
+import 'app_shell.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(home: AppShell());
+  }
+}
+```
+
+`flutter run -d chrome`, then drag the window edge from phone width to full screen. Everything should reflow with no overflow stripes, and the text in the Account tab should survive the resize.
+
+## Web and desktop details
+
+Width is only half of it. Mouse and keyboard users expect a few more things.
+
+**Drag to scroll.** Flutter's default scroll behaviour doesn't scroll on mouse drag, only with the wheel and trackpad. That's normal for the web, so leave it. If you have a horizontal carousel with no scrollbar, mouse users can't reach the rest. Enable it for that widget:
+
+```dart
+class DragScrollBehavior extends MaterialScrollBehavior {
+  const DragScrollBehavior();
+
+  @override
+  Set<PointerDeviceKind> get dragDevices => {
+    ...super.dragDevices,
+    PointerDeviceKind.mouse,
+  };
+}
+```
+
+Wrap the carousel in `ScrollConfiguration(behavior: const DragScrollBehavior(), child: ...)`. `PointerDeviceKind` comes from `dart:ui`.
+
+**Selectable text.** Text isn't selectable by default. Wrap read-only content, such as order details and articles, in `SelectionArea`.
+
+**Tab order and Enter.** Set `textInputAction` and `onFieldSubmitted` on form fields, as in the [form guides](/guides/riverpod-forms/), so that Tab and Enter work.
+
+**Hover.** Material buttons, `InkWell`, and `ListTile` handle hover and the pointer cursor already. A bare `GestureDetector` doesn't. Wrap it in `MouseRegion(cursor: SystemMouseCursors.click, ...)`.
+
+**Browser back and URLs.** A tab index in `setState` doesn't change the URL. If people should be able to link to and reload a page, use a router.
+
+## Test each size
+
+Set the test surface size and check the layout. Overflow errors fail the test, which catches most regressions.
+
+```dart
+// test/app_shell_test.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/app_shell.dart';
+
+void main() {
+  Future<void> pumpAt(WidgetTester tester, Size size) async {
+    tester.view.physicalSize = size;
+    tester.view.devicePixelRatio = 1;
+    addTearDown(tester.view.reset);
+    await tester.pumpWidget(const MaterialApp(home: AppShell()));
+  }
+
+  testWidgets('phone uses a bottom bar', (tester) async {
+    await pumpAt(tester, const Size(390, 844));
+    expect(find.byType(NavigationBar), findsOneWidget);
+    expect(find.byType(NavigationRail), findsNothing);
+  });
+
+  testWidgets('tablet uses a rail', (tester) async {
+    await pumpAt(tester, const Size(768, 1024));
+    expect(find.byType(NavigationRail), findsOneWidget);
+    expect(find.byType(NavigationBar), findsNothing);
+  });
+
+  testWidgets('form text survives a resize', (tester) async {
+    await pumpAt(tester, const Size(390, 844));
+    await tester.tap(find.text('Account'));
+    await tester.pump();
+    await tester.enterText(find.byType(TextFormField).first, 'a@b.co');
+
+    tester.view.physicalSize = const Size(1280, 800);
+    await tester.pump();
+
+    expect(find.text('a@b.co'), findsOneWidget);
+  });
+}
+```
+
+Replace `my_app` with the `name` from your `pubspec.yaml`.
+
+## Common mistakes
+
+**Scaling everything up.** Don't multiply font sizes by the width. Tablets should show more content, not bigger content.
+
+**Using `MediaQuery` width inside a pane.** It reports the window, not your pane. Use `LayoutBuilder`, as `ProductsPage` does.
+
+**Different widget trees per breakpoint.** State is lost on resize. Keep the shared part in the same position, or lift the state above the switch.
+
+**Pushing a route for detail on phones without handling resize.** See the two-pane section.
+
+**`childAspectRatio` with fixed-height text.** The height follows the width, not the content. Use `mainAxisExtent`.
+
+**A `Row` of fixed widths.** `split_view.dart` uses a 250 pixel sidebar next to two flexible panes, which gets tight just above its 600 pixel breakpoint. Give fixed panes a breakpoint that leaves the flexible part enough room.
+
+**Forgetting landscape phones.** A phone in landscape is about 800 wide but only 390 tall. Layouts that fit by width may still need to scroll.
+
+**Testing only by resizing a desktop window.** Also run on a real device or simulator. Safe areas, the keyboard, and the system back gesture don't show up in a browser.

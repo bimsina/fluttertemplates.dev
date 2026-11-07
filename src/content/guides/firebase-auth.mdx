@@ -1,0 +1,601 @@
+---
+title: Firebase Authentication wired to a sign-in screen
+description: Connect the Sign In Form to Firebase Auth. Email sign-in and sign-up, email verification, password reset, a working Remember me on web, and current error codes.
+order: 5
+---
+
+import LivePreview from "@/components/LivePreview";
+
+The [Sign In Form](/widgets/forms/simple_sign_in/) validates its fields, then stops at a `/// do something` comment. This guide finishes it with Firebase Authentication: sign-in, sign-up, email verification, and password reset.
+
+If you want the whole flow already connected, the [Login and Auth Flow](/templates/auth-flow/) template has every screen and its routing behind an `AuthRepository`, so you only write the Firebase adapter.
+
+<LivePreview client:visible path="/forms/sign_in/sign_in_page1" />
+
+You'll use two library screens:
+
+- [Sign In Form](/widgets/forms/simple_sign_in/) for sign-in, sign-up, and the reset request
+- [Email Verification](/widgets/auth/email_verification/) for the screen new users wait on
+
+The code targets `firebase_core` 5 and `firebase_auth` 7. Those versions need Android `minSdk` 24 and iOS 15. New Flutter projects default to `minSdk` 24 already. If your iOS target is lower, raise it in Xcode, and in your `Podfile` if your project has one.
+
+## Set up the project
+
+1. Create a project in the [Firebase console](https://console.firebase.google.com/).
+2. Open **Authentication**, then **Sign-in method**, and enable **Email/Password**.
+3. Install the tools and generate the config:
+
+```bash
+npm install -g firebase-tools
+firebase login
+dart pub global activate flutterfire_cli
+flutterfire configure
+```
+
+`flutterfire configure` registers your apps with the project and writes `lib/firebase_options.dart`. Run it again whenever you add a platform.
+
+## Add the code
+
+```bash
+flutter pub add firebase_core firebase_auth
+fluttertemplates add forms/simple_sign_in auth/email_verification
+```
+
+The screens land under `lib/fluttertemplates/`. Without the [CLI](/guides/cli/), copy each file from its widget page into the same path.
+
+Initialize Firebase before `runApp`:
+
+```dart
+// lib/main.dart
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+
+import 'auth_gate.dart';
+import 'firebase_options.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const MaterialApp(home: AuthGate());
+  }
+}
+```
+
+## Choose the screen from the user
+
+The stream emits the restored user, or `null`, once Firebase has finished loading. Until then, show a spinner, so that a signed-in user doesn't see the sign-in form flash up.
+
+Use `userChanges()` here, not `authStateChanges()`. The second one fires only on sign-in and sign-out, so it would miss `emailVerified` changing after a `reload()`.
+
+```dart
+// lib/auth_gate.dart
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import 'fluttertemplates/auth/email_verification.dart';
+import 'fluttertemplates/forms/sign_in/sign_in_page1.dart';
+
+class AuthGate extends StatefulWidget {
+  const AuthGate({super.key});
+
+  @override
+  State<AuthGate> createState() => _AuthGateState();
+}
+
+class _AuthGateState extends State<AuthGate> {
+  // Created once. A new stream in build would restart the StreamBuilder.
+  final _userChanges = FirebaseAuth.instance.userChanges();
+
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: _userChanges,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Scaffold(
+            body: Center(child: CircularProgressIndicator()),
+          );
+        }
+        // After an error snapshot.data is null, but nobody has signed out.
+        final user = snapshot.hasError
+            ? FirebaseAuth.instance.currentUser
+            : snapshot.data;
+        if (user == null) return const SignInPage1();
+        if (!user.emailVerified) return EmailVerification(user: user);
+        return HomePage(user: user);
+      },
+    );
+  }
+}
+
+class HomePage extends StatelessWidget {
+  const HomePage({super.key, required this.user});
+
+  final User user;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Home'),
+        actions: [
+          IconButton(
+            tooltip: 'Sign out',
+            icon: const Icon(Icons.logout),
+            onPressed: () => FirebaseAuth.instance.signOut(),
+          ),
+        ],
+      ),
+      body: Center(child: Text('Signed in as ${user.email}')),
+    );
+  }
+}
+```
+
+`StreamBuilder` catches stream errors for you, but it clears `data` when one arrives. Reading `snapshot.data` alone would send a signed-in user to the sign-in form on a temporary failure. Falling back to `currentUser` keeps them where they are, and an error before the first event still ends the spinner.
+
+Nothing navigates after sign-in, because every screen in this guide is built by the gate. Swapping works here only because nothing is pushed above it. The gate is the bottom route of the app's `Navigator`, so a screen you push later, such as settings, stays on top after the gate changes underneath it. Pop back before you sign out from a screen like that:
+
+```dart
+Navigator.of(context).popUntil((route) => route.isFirst);
+await FirebaseAuth.instance.signOut();
+```
+
+If a session can end while a pushed screen is open, listen to the stream in `State` and pop there, as the gate in the [Supabase guide](/guides/supabase-auth/) does. Pass `onError` to `listen`, because there's no `StreamBuilder` to catch errors for you. Password reset has no such problem in this guide: the emailed link opens a page hosted by Firebase, not a screen in your app.
+
+If you use go_router, routes come from auth state instead, so none of this applies. See [auth guards](/guides/go-router-auth/).
+
+## Turn error codes into messages
+
+```dart
+// lib/auth_errors.dart
+import 'package:firebase_auth/firebase_auth.dart';
+
+String authErrorMessage(FirebaseAuthException error) {
+  return switch (error.code) {
+    'invalid-credential' ||
+    'wrong-password' ||
+    'user-not-found' => 'Incorrect email or password.',
+    'invalid-email' => 'That email address is not valid.',
+    'user-disabled' => 'This account has been disabled.',
+    'email-already-in-use' => 'An account with this email already exists.',
+    'weak-password' => 'Choose a stronger password.',
+    'too-many-requests' => 'Too many attempts. Try again in a while.',
+    'network-request-failed' => 'No connection. Check your network.',
+    _ => 'Something went wrong. Please try again.',
+  };
+}
+```
+
+New Firebase projects have **email enumeration protection** on by default. With it on, a wrong password and an unknown email both return `invalid-credential`, and `wrong-password` and `user-not-found` no longer appear. Older tutorials branch on those two and show nothing useful. Handling all three, as above, works on both old and new projects.
+
+## Wire up the sign-in screen
+
+Here is the whole file, edited from the library version.
+
+```dart
+// lib/fluttertemplates/forms/sign_in/sign_in_page1.dart
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+
+import '../../../auth_errors.dart';
+
+class SignInPage1 extends StatefulWidget {
+  const SignInPage1({super.key});
+
+  @override
+  State<SignInPage1> createState() => _SignInPage1State();
+}
+
+class _SignInPage1State extends State<SignInPage1> {
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final _email = TextEditingController();
+  final _password = TextEditingController();
+  bool _isPasswordVisible = false;
+  bool _rememberMe = true;
+  bool _busy = false;
+  String? _error;
+
+  FirebaseAuth get _auth => FirebaseAuth.instance;
+
+  @override
+  void dispose() {
+    _email.dispose();
+    _password.dispose();
+    super.dispose();
+  }
+
+  /// Runs a Firebase call with the shared loading and error handling.
+  Future<void> _run(Future<void> Function() action) async {
+    if (!_formKey.currentState!.validate()) return;
+    setState(() {
+      _busy = true;
+      _error = null;
+    });
+    try {
+      await action();
+    } on FirebaseAuthException catch (error) {
+      if (mounted) setState(() => _error = authErrorMessage(error));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _signIn() => _run(() async {
+    if (kIsWeb) {
+      await _auth.setPersistence(
+        _rememberMe ? Persistence.LOCAL : Persistence.SESSION,
+      );
+    }
+    await _auth.signInWithEmailAndPassword(
+      email: _email.text.trim(),
+      password: _password.text,
+    );
+  });
+
+  Future<void> _createAccount() => _run(() async {
+    final credential = await _auth.createUserWithEmailAndPassword(
+      email: _email.text.trim(),
+      password: _password.text,
+    );
+    await credential.user?.sendEmailVerification();
+  });
+
+  Future<void> _resetPassword() async {
+    final email = _email.text.trim();
+    if (email.isEmpty) {
+      setState(() => _error = 'Enter your email first.');
+      return;
+    }
+    final messenger = ScaffoldMessenger.of(context);
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+      messenger.showSnackBar(
+        const SnackBar(
+          content: Text('If that account exists, a reset email is on its way.'),
+        ),
+      );
+    } on FirebaseAuthException catch (error) {
+      if (mounted) setState(() => _error = authErrorMessage(error));
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Scaffold(
+      body: Form(
+        key: _formKey,
+        child: Center(
+          child: Card(
+            elevation: 8,
+            child: Container(
+              padding: const EdgeInsets.all(32.0),
+              constraints: const BoxConstraints(maxWidth: 350),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const FlutterLogo(size: 100),
+                    _gap(),
+                    Text(
+                      'Welcome to Flutter!',
+                      style: theme.textTheme.titleMedium,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'Enter your email and password to continue.',
+                      style: theme.textTheme.bodySmall,
+                      textAlign: TextAlign.center,
+                    ),
+                    _gap(),
+                    TextFormField(
+                      controller: _email,
+                      enabled: !_busy,
+                      keyboardType: TextInputType.emailAddress,
+                      autofillHints: const [AutofillHints.email],
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return 'Enter your email';
+                        }
+                        if (!value.contains('@')) {
+                          return 'Enter a valid email';
+                        }
+                        return null;
+                      },
+                      decoration: const InputDecoration(
+                        labelText: 'Email',
+                        hintText: 'Enter your email',
+                        prefixIcon: Icon(Icons.email_outlined),
+                        border: OutlineInputBorder(),
+                      ),
+                    ),
+                    _gap(),
+                    TextFormField(
+                      controller: _password,
+                      enabled: !_busy,
+                      autofillHints: const [AutofillHints.password],
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Enter your password';
+                        }
+                        if (value.length < 6) {
+                          return 'Password must be at least 6 characters';
+                        }
+                        return null;
+                      },
+                      obscureText: !_isPasswordVisible,
+                      decoration: InputDecoration(
+                        labelText: 'Password',
+                        hintText: 'Enter your password',
+                        prefixIcon: const Icon(Icons.lock_outline_rounded),
+                        border: const OutlineInputBorder(),
+                        suffixIcon: IconButton(
+                          tooltip: _isPasswordVisible
+                              ? 'Hide password'
+                              : 'Show password',
+                          icon: Icon(
+                            _isPasswordVisible
+                                ? Icons.visibility_off
+                                : Icons.visibility,
+                          ),
+                          onPressed: () => setState(
+                            () => _isPasswordVisible = !_isPasswordVisible,
+                          ),
+                        ),
+                      ),
+                    ),
+                    if (kIsWeb) ...[
+                      _gap(),
+                      CheckboxListTile(
+                        value: _rememberMe,
+                        onChanged: (value) {
+                          if (value == null) return;
+                          setState(() => _rememberMe = value);
+                        },
+                        title: const Text('Remember me'),
+                        controlAffinity: ListTileControlAffinity.leading,
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
+                    ],
+                    if (_error != null) ...[
+                      _gap(),
+                      Text(
+                        _error!,
+                        style: TextStyle(color: theme.colorScheme.error),
+                      ),
+                    ],
+                    _gap(),
+                    SizedBox(
+                      width: double.infinity,
+                      child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(4),
+                          ),
+                        ),
+                        onPressed: _busy ? null : _signIn,
+                        child: const Padding(
+                          padding: EdgeInsets.all(10.0),
+                          child: Text(
+                            'Sign in',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    _gap(),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      children: [
+                        TextButton(
+                          onPressed: _busy ? null : _createAccount,
+                          child: const Text('Create account'),
+                        ),
+                        TextButton(
+                          onPressed: _busy ? null : _resetPassword,
+                          child: const Text('Forgot password?'),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _gap() => const SizedBox(height: 16);
+}
+```
+
+Notes on the changes:
+
+- **Remember me only appears on web.** `setPersistence` works only there. On Android and iOS, Firebase always keeps the user signed in, so a checkbox would be a lie. `Persistence.SESSION` clears the login when the tab closes.
+- **The six-character rule stays.** That's Firebase's default minimum. You can set a stricter policy under **Authentication**, **Settings**, **Password policy**.
+- **The reset message is neutral.** With enumeration protection on, the call succeeds for unknown emails too, so the message can't claim that an email was sent.
+
+## The verification screen
+
+The library screen has `onOpenEmailApp` and `onResendEmail` callbacks, but its address is hard-coded and it has nothing for checking the result. So replace `lib/fluttertemplates/auth/email_verification.dart` with this version. It shows the real address, resends the email, and checks for verification.
+
+```dart
+// lib/fluttertemplates/auth/email_verification.dart
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
+
+import '../../auth_errors.dart';
+
+class EmailVerification extends StatefulWidget {
+  const EmailVerification({super.key, required this.user});
+
+  final User user;
+
+  @override
+  State<EmailVerification> createState() => _EmailVerificationState();
+}
+
+class _EmailVerificationState extends State<EmailVerification> {
+  bool _busy = false;
+
+  Future<void> _run(Future<String?> Function() action) async {
+    final messenger = ScaffoldMessenger.of(context);
+    setState(() => _busy = true);
+    try {
+      final message = await action();
+      if (message != null) {
+        messenger.showSnackBar(SnackBar(content: Text(message)));
+      }
+    } on FirebaseAuthException catch (error) {
+      messenger.showSnackBar(SnackBar(content: Text(authErrorMessage(error))));
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<String?> _check() async {
+    await widget.user.reload();
+    final verified = FirebaseAuth.instance.currentUser?.emailVerified ?? false;
+    // If it's verified, the gate is already moving to the home screen.
+    return verified ? null : 'Not verified yet. Check your inbox.';
+  }
+
+  Future<String?> _resend() async {
+    await widget.user.sendEmailVerification();
+    return 'Verification email sent.';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final scheme = theme.colorScheme;
+
+    return Scaffold(
+      appBar: AppBar(
+        actions: [
+          TextButton(
+            onPressed: () => FirebaseAuth.instance.signOut(),
+            child: const Text('Sign out'),
+          ),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const Spacer(),
+            Center(
+              child: Container(
+                width: 120,
+                height: 120,
+                decoration: BoxDecoration(
+                  color: scheme.primaryContainer,
+                  shape: BoxShape.circle,
+                ),
+                child: Icon(
+                  Icons.mark_email_unread_outlined,
+                  size: 60,
+                  color: scheme.onPrimaryContainer,
+                ),
+              ),
+            ),
+            const SizedBox(height: 28),
+            Text(
+              'Verify your email',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            const SizedBox(height: 12),
+            Text(
+              'We sent a verification link to ${widget.user.email}. '
+              'Click the link, then come back here.',
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: scheme.onSurfaceVariant,
+              ),
+            ),
+            const SizedBox(height: 32),
+            SizedBox(
+              height: 52,
+              child: FilledButton(
+                onPressed: _busy ? null : () => _run(_check),
+                child: const Text("I've verified my email"),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Didn't get it?",
+                  style: TextStyle(color: scheme.onSurfaceVariant),
+                ),
+                TextButton(
+                  onPressed: _busy ? null : () => _run(_resend),
+                  child: const Text('Resend email'),
+                ),
+              ],
+            ),
+            const Spacer(),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+The library's **Open email app** button is gone, because opening a mail app needs another package and varies by platform. The new primary button is the one people actually need.
+
+`user.reload()` fetches fresh data from Firebase and pushes it through `userChanges()`, so the gate moves to the home screen without any extra code. `emailVerified` doesn't update by itself, which is why the button is there. Don't poll it in a tight loop, or you'll hit `too-many-requests`.
+
+## Check that it works
+
+1. Create an account. You should land on the verification screen and receive an email. Check spam.
+2. Tap **I've verified my email** before clicking the link. You should see "Not verified yet."
+3. Click the link, then tap the button again. You should reach the home screen.
+4. Restart the app. You should stay signed in, with a brief spinner.
+5. Sign out and try a wrong password. You should see "Incorrect email or password."
+
+To develop without a real project's email, run the Auth emulator with `firebase emulators:start --only auth`, then call this straight after `initializeApp`:
+
+```dart
+await FirebaseAuth.instance.useAuthEmulator('localhost', 9099);
+```
+
+Verification and reset links show up in the emulator's log rather than in a mailbox. On the Android emulator, the plugin maps `localhost` to `10.0.2.2` for you.
+
+## Common mistakes
+
+**Checking `emailVerified` only in the app.** The client check is just a UI gate. Enforce it where it counts, in Firestore or Storage security rules (`request.auth.token.email_verified`) or on your server. After verification the user's ID token also needs a refresh before it carries the new claim, which `user.getIdToken(true)` forces.
+
+**Branching on `user-not-found`.** It doesn't arrive on projects with enumeration protection. See the error section above.
+
+**Calling `FirebaseAuth.instance` before `initializeApp` finishes.** You get a `no-app` error. That includes top-level variables and widgets created before `runApp`.
+
+**Creating the stream in `build`.** A new `userChanges()` on each build resubscribes the `StreamBuilder` and sends it back to `waiting`, so the UI flickers. Keep it in a field.
+
+**Treating `firebase_options.dart` as a secret.** It identifies your project rather than authorizing anything, and it ships inside your app. Your data is protected by security rules, not by hiding this file.
+
+**Skipping the `mounted` check.** The sign-in call completes after the gate may have already removed this screen. That's why `setState` calls after an `await` check `mounted`.

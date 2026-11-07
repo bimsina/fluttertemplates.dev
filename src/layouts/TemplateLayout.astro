@@ -1,27 +1,41 @@
 ---
-import type { CollectionEntry } from "astro:content";
-import Footer from "../components/Footer.astro";
-import BaseHtml from "@/components/BaseHtml.astro";
-import FlutterAppIframe from "@/components/FlutterAppIframe";
-import { Icon } from "astro-icon/components";
+import { getCollection, type CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
 import { YouTube } from "astro-embed";
+import fs from "node:fs";
+import path_ from "node:path";
+import Footer from "../components/Footer.astro";
+import BaseHtml from "@/components/BaseHtml.astro";
+import CopyCommand from "@/components/CopyCommand";
+import CopyPromptButton from "@/components/CopyPromptButton";
+import TemplateWorkbench from "@/components/TemplateWorkbench";
+import { addPrompt, GITHUB_URL } from "@/consts";
 
 type Props = CollectionEntry<"templates">["data"] & {
   ogImage?: string;
+  id?: string;
 };
 
 const {
   title,
   description,
+  summary,
   heroImage,
   demoUrl,
+  path,
+  code_dir,
   githubUrl,
   appImages,
   youtubeVideoId,
-  tags,
   ogImage,
+  id,
 } = Astro.props;
+
+const sourceUrl =
+  githubUrl ??
+  (code_dir
+    ? `${GITHUB_URL}/tree/master/flutter_apps/core/lib/${code_dir}`
+    : undefined);
 
 const siteBase = (Astro.site?.href ?? "https://fluttertemplates.dev/").replace(
   /\/$/,
@@ -41,9 +55,45 @@ const breadcrumb = {
     { "@type": "ListItem", position: 3, name: title, item: Astro.url.href },
   ],
 };
+
+// The registry is built before the site, so this matches what `add` copies.
+type RegistryEntry = {
+  dependencies: { name: string; version: string }[];
+  files: { path: string; content: string }[];
+};
+const registry: RegistryEntry | undefined = code_dir
+  ? JSON.parse(
+      fs.readFileSync(
+        path_.join(process.cwd(), `public/r/templates/${id}.json`),
+        "utf8",
+      ),
+    )
+  : undefined;
+
+const files = (registry?.files ?? []).map((file) =>
+  file.path.slice(`${code_dir}/`.length),
+);
+const packages = registry?.dependencies ?? [];
+const addCommand = `fluttertemplates add templates/${id}`;
+
+const moreTemplates = (await getCollection("templates"))
+  .filter((template) => template.id !== id && template.data.code_dir)
+  .slice(0, 3);
+
+const sourceCode = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareSourceCode",
+  name: title,
+  description,
+  programmingLanguage: "Dart",
+  runtimePlatform: "Flutter",
+  codeRepository: sourceUrl,
+  license: "https://opensource.org/licenses/MIT",
+};
 ---
 
 <BaseHtml
+  searchTitle={`${title} · Template`}
   title={`Flutter ${title}`}
   description={description}
   image={ogImage ?? heroImage?.src}
@@ -53,72 +103,97 @@ const breadcrumb = {
     is:inline
     set:html={JSON.stringify(breadcrumb)}
   />
+  {
+    code_dir && (
+      <script
+        type="application/ld+json"
+        is:inline
+        set:html={JSON.stringify(sourceCode)}
+      />
+    )
+  }
 
-  <section class="transition-page section-shell pt-28 pb-8">
-    <a
-      href="/templates"
-      class="text-muted-foreground hover:text-foreground mb-6 inline-flex items-center gap-1.5 text-sm font-medium transition-colors"
-      data-swup-preload
-    >
-      <Icon name="mdi:chevron-left" class="h-4 w-4" />
-      All templates
-    </a>
+  <div class="transition-page section-shell pt-24 pb-16 md:pt-28">
+    <header class="mx-auto max-w-2xl text-center">
+      <h1
+        class="text-3xl font-bold tracking-tight md:text-[2.75rem] md:leading-[1.1]"
+        data-pagefind-weight="10"
+      >
+        {title}
+      </h1>
+    </header>
 
-    <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr] lg:gap-10">
-      <div>
-        <div class="flex flex-wrap items-center gap-2">
-          <span
-            class="bg-accent text-accent-foreground rounded-full px-2.5 py-1 text-[0.62rem] font-semibold tracking-wide uppercase"
-          >
-            Free · MIT
-          </span>
-          {
-            tags
-              ?.slice(0, 4)
-              .map((tag) => (
-                <span class="border-border text-muted-foreground rounded-md border px-2 py-0.5 font-mono text-[0.62rem]">
-                  {tag}
-                </span>
-              ))
-          }
-        </div>
+    <div class="mt-6 md:mt-8">
+      <TemplateWorkbench
+        client:load
+        title={title}
+        path={path ?? demoUrl}
+        skipUrlFormatting={!path}
+        registryUrl={code_dir ? `/r/templates/${id}.json` : undefined}
+        codeRoot={code_dir}
+        files={files}
+      />
+    </div>
 
-        <h1 class="mt-4 text-3xl font-bold tracking-tight md:text-4xl">
-          {title}
-        </h1>
-        <p class="text-muted-foreground mt-3 text-base leading-relaxed">
-          {description}
-        </p>
+    <div class="mx-auto mt-8 max-w-2xl text-center md:mt-10">
+      <p class="text-muted-foreground text-base md:text-lg">
+        {summary ?? description}
+      </p>
+      <div class="mt-6 flex flex-wrap justify-center gap-3" data-pagefind-ignore>
+        {
+          sourceUrl && (
+            <a
+              href={sourceUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              class="interactive-button bg-primary text-primary-foreground inline-flex h-11 items-center justify-center rounded-xl px-5 text-sm font-semibold hover:opacity-95"
+            >
+              Get the source
+            </a>
+          )
+        }
+        {
+          code_dir && (
+            <CopyPromptButton
+              client:load
+              prompt={addPrompt(title, `templates/${id}`)}
+            />
+          )
+        }
+      </div>
+    </div>
 
-        <div class="mt-6 flex flex-wrap gap-3">
-          {
-            githubUrl && (
-              <a
-                href={githubUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                class="interactive-button bg-primary text-primary-foreground inline-flex items-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-95"
-              >
-                <Icon name="mdi:code-tags" class="h-4 w-4" />
-                Get the source
-              </a>
-            )
-          }
-          <a
-            href="#live-preview"
-            class="interactive-button border-border bg-card text-foreground hover:bg-muted inline-flex items-center gap-2 rounded-xl border px-5 py-3 text-sm font-semibold lg:hidden"
-          >
-            <Icon name="mdi:cellphone-play" class="h-4 w-4" />
-            Live preview
-          </a>
-        </div>
+    <div class="mx-auto mt-14 max-w-2xl md:mt-20">
+      <div data-template-docs>
+        {
+          code_dir && (
+            <section>
+              <h2 class="text-2xl font-semibold tracking-tight">
+                Add it to your project
+              </h2>
+              <p class="text-muted-foreground mt-2">
+                Copies the Dart source into your app, so you own it.
+                {packages.length === 0 && " Flutter SDK only, no extra packages."}
+              </p>
+              <CopyCommand client:load command={addCommand} className="mt-4 w-full" />
+              <p class="text-muted-foreground mt-3 text-sm">
+                First time? Run <code class="font-mono text-xs">dart pub global activate fluttertemplates</code>, or read{" "}
+                <a
+                  class="text-primary underline-offset-4 hover:underline"
+                  href="/guides/cli/"
+                >
+                  the CLI guide
+                </a>
+                .
+              </p>
+            </section>
+          )
+        }
 
         {
           appImages && (
-            <>
-              <h2 class="mt-10 text-lg font-semibold tracking-tight">
-                Screenshots
-              </h2>
+            <section class="mt-12">
+              <h2 class="text-2xl font-semibold tracking-tight">Screenshots</h2>
               <div class="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
                 {appImages.map((image) => (
                   <Image
@@ -131,45 +206,67 @@ const breadcrumb = {
                   />
                 ))}
               </div>
-            </>
+            </section>
           )
         }
 
         {
           youtubeVideoId && (
-            <>
-              <h2 class="mt-10 text-lg font-semibold tracking-tight">Demo</h2>
+            <section class="mt-12">
+              <h2 class="text-2xl font-semibold tracking-tight">Demo</h2>
               <div class="mt-4 overflow-hidden rounded-xl">
                 <YouTube id={youtubeVideoId} class="w-full" />
               </div>
-            </>
+            </section>
           )
         }
 
         <article
-          class="prose prose-headings:font-semibold prose-headings:tracking-tight dark:prose-invert mt-10 max-w-none"
+          class="prose prose-headings:font-semibold prose-headings:tracking-tight prose-h2:mt-12 prose-h2:scroll-mt-24 prose-li:my-2.5 dark:prose-invert mt-12 max-w-none first:mt-0"
         >
           <slot />
         </article>
       </div>
-
-      <div id="live-preview" class="scroll-mt-24">
-        <div
-          class="bg-muted/40 dark:bg-card/50 flex justify-center rounded-3xl p-6 lg:sticky lg:top-24"
-        >
-          <div class="w-[260px] md:w-[300px]">
-            <FlutterAppIframe
-              path={demoUrl}
-              client:load
-              skipUrlFormatting
-              className="bg-background h-[560px] w-full overflow-clip rounded-[2.2rem] md:h-[640px]"
-              enableShowFullScreenButton
-            />
-          </div>
-        </div>
-      </div>
     </div>
-  </section>
+
+    {
+      moreTemplates.length > 0 && (
+        <section class="mt-20" aria-labelledby="more-heading" data-pagefind-ignore>
+          <h2 id="more-heading" class="text-2xl font-semibold tracking-tight">
+            More templates
+          </h2>
+          <div class="mt-5 grid grid-cols-1 gap-5 md:grid-cols-3">
+            {moreTemplates.map((template) => (
+              <a
+                href={`/templates/${template.id}/`}
+                class="border-border bg-card interactive-card group flex flex-col overflow-hidden rounded-2xl border"
+                data-swup-preload
+              >
+                <div class="bg-background aspect-[16/10] overflow-hidden">
+                  {template.data.heroImage && (
+                    <Image
+                      class="h-full w-full object-cover"
+                      src={template.data.heroImage}
+                      alt=""
+                      loading="lazy"
+                    />
+                  )}
+                </div>
+                <div class="p-4">
+                  <h3 class="group-hover:text-primary font-semibold tracking-tight transition-colors">
+                    {template.data.title}
+                  </h3>
+                  <p class="text-muted-foreground mt-1 text-sm">
+                    {template.data.summary}
+                  </p>
+                </div>
+              </a>
+            ))}
+          </div>
+        </section>
+      )
+    }
+  </div>
 
   <Footer />
 </BaseHtml>

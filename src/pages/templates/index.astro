@@ -3,25 +3,23 @@ import BaseHtml from "@/components/BaseHtml.astro";
 import Footer from "@/components/Footer.astro";
 import { Image } from "astro:assets";
 import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
+import { GITHUB_URL } from "@/consts";
 
-const templates = await getCollection("templates");
+// Templates that run in the library come first, the older example last.
+const templates = (await getCollection("templates")).sort(
+  (a, b) => Number(!a.data.code_dir) - Number(!b.data.code_dir),
+);
 ---
 
-<BaseHtml title="Templates" image="/og/templates.png">
+<BaseHtml title="Templates" image="/og/templates.png" searchable={false}>
   <section class="transition-page section-shell min-h-screen pt-28 pb-16">
     <header class="mb-9" data-reveal>
-      <p
-        class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-      >
-        Templates &amp; starter kits
-      </p>
-      <h1 class="mt-3 text-3xl font-bold tracking-tight md:text-5xl">
-        Full apps, ready to ship.
+      <h1 class="text-3xl font-bold tracking-tight md:text-5xl">
+        Apps you can run, then copy.
       </h1>
       <p class="text-muted-foreground mt-3 max-w-2xl md:text-lg">
-        Complete Flutter apps with live demos and full source. Try the whole
-        thing running in your browser before you commit a line.
+        Complete multi-screen Flutter apps. Use each one in your browser, then
+        copy the source and connect your own backend.
       </p>
     </header>
 
@@ -35,7 +33,7 @@ const templates = await getCollection("templates");
             data-reveal
             data-swup-preload
           >
-            <div class="bg-background relative aspect-[16/10] overflow-hidden">
+            <div class="bg-background aspect-[16/10] overflow-hidden">
               {template.data.heroImage && (
                 <Image
                   class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-[1.02]"
@@ -43,55 +41,32 @@ const templates = await getCollection("templates");
                   alt={template.data.title}
                 />
               )}
-              <span class="bg-card/90 text-foreground absolute top-3 left-3 rounded-full px-2.5 py-1 text-[0.62rem] font-semibold tracking-wide uppercase backdrop-blur">
-                Free · MIT
-              </span>
             </div>
-            <div class="flex flex-1 flex-col p-5">
+            <div class="p-5">
               <h2 class="group-hover:text-primary text-lg font-semibold tracking-tight transition-colors">
                 {template.data.title}
               </h2>
-              <p class="text-muted-foreground mt-1.5 line-clamp-2 text-sm">
-                {template.data.description}
+              <p class="text-muted-foreground mt-1.5 text-sm">
+                {template.data.summary}
               </p>
-              {template.data.tags && (
-                <div class="mt-4 flex flex-wrap gap-1.5">
-                  {template.data.tags.slice(0, 3).map((tag) => (
-                    <span class="border-border text-muted-foreground rounded-md border px-2 py-0.5 font-mono text-[0.6rem]">
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-              )}
             </div>
           </a>
         ))
       }
-
-      <div
-        class="border-border text-muted-foreground flex flex-col items-center justify-center gap-4 rounded-2xl border border-dashed p-8 text-center"
-        data-reveal
-      >
-        <span
-          class="bg-accent text-accent-foreground flex h-12 w-12 items-center justify-center rounded-2xl"
-        >
-          <Icon name="mdi:flash" class="h-6 w-6" />
-        </span>
-        <div>
-          <p class="text-foreground font-semibold">Premium kits landing soon</p>
-          <p class="mx-auto mt-1.5 max-w-[26ch] text-sm">
-            Production starter kits — auth, payments, and backend already wired.
-          </p>
-        </div>
-        <a
-          href="/templates"
-          class="text-primary inline-flex items-center gap-1 text-sm font-semibold"
-        >
-          Get notified
-          <Icon name="mdi:arrow-right" class="h-4 w-4" />
-        </a>
-      </div>
     </div>
+
+    <p class="text-muted-foreground mt-10 text-sm">
+      Templates with a real backend, payments and auth connected are in the
+      works.{" "}
+      <a
+        href={GITHUB_URL}
+        target="_blank"
+        rel="noopener noreferrer"
+        class="text-primary font-medium hover:underline"
+      >
+        Watch on GitHub
+      </a>
+    </p>
   </section>
   <Footer />
 </BaseHtml>

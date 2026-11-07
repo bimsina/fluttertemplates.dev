@@ -5,15 +5,14 @@ import Footer from "@/components/Footer.astro";
 import SearchComponent from "astro-pagefind/components/Search.astro";
 ---
 
-<BaseHtml title={"Search " + SITE_TITLE} description={SITE_DESCRIPTION}>
+<BaseHtml
+  title={"Search " + SITE_TITLE}
+  description={SITE_DESCRIPTION}
+  searchable={false}
+>
   <section class="transition-page section-shell min-h-screen pt-28 pb-16">
     <header class="mx-auto max-w-2xl text-center" data-reveal>
-      <p
-        class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-      >
-        Search
-      </p>
-      <h1 class="mt-3 text-3xl font-bold tracking-tight md:text-4xl">
+      <h1 class="text-3xl font-bold tracking-tight md:text-4xl">
         Search the library
       </h1>
       <p class="text-muted-foreground mt-3">
@@ -25,8 +24,30 @@ import SearchComponent from "astro-pagefind/components/Search.astro";
       <SearchComponent
         className="pagefind-ui"
         searchboxOptions={{ placeholder: "Search widgets and templates" }}
+        configOptions={{
+          ranking: JSON.stringify({ termSimilarity: 9, pageLength: 0.2 }),
+        }}
       />
     </div>
   </section>
   <Footer />
 </BaseHtml>
+
+<script>
+  // Runs the search in `?q=`. The site's SearchAction schema points here.
+  function searchFromUrl(attempts = 40) {
+    const query = new URLSearchParams(location.search).get("q");
+    if (!query) return;
+    const input = document.querySelector<HTMLInputElement>(
+      ".pagefind-ui input, input[type='search'], input[type='text']",
+    );
+    if (!input) {
+      if (attempts > 0) setTimeout(() => searchFromUrl(attempts - 1), 50);
+      return;
+    }
+    input.value = query;
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+  }
+  searchFromUrl();
+  document.addEventListener("swup:page:view", () => searchFromUrl());
+</script>

@@ -1,6 +1,7 @@
 ---
 import { Icon } from "astro-icon/components";
 import { getWidgetStats } from "@/utils/get_widget_stats";
+import AgentOnboarding from "./AgentOnboarding";
 import HeroFloatingPreviews from "./HeroFloatingPreviews.astro";
 
 const { widgetCount, categoryCount } = await getWidgetStats();
@@ -19,7 +20,7 @@ const { widgetCount, categoryCount } = await getWidgetStats();
       style="--delay: 40ms"
       data-reveal
     >
-      Production Flutter UI
+      Real Flutter screens
       <br />
       <span class="text-gradient">Ready to copy</span>
     </h1>
@@ -40,7 +41,7 @@ const { widgetCount, categoryCount } = await getWidgetStats();
     >
       <a
         href="/widgets"
-        class="interactive-button bg-primary text-primary-foreground inline-flex min-w-44 items-center justify-center gap-2 rounded-2xl px-5 py-3 text-sm font-semibold hover:opacity-95"
+        class="interactive-button bg-primary text-primary-foreground inline-flex min-w-44 items-center justify-center gap-2 rounded-xl px-5 py-3 text-sm font-semibold hover:opacity-95"
         data-swup-preload
       >
         Browse the library
@@ -52,8 +53,12 @@ const { widgetCount, categoryCount } = await getWidgetStats();
         data-swup-preload
       >
         <Icon name="mdi:view-dashboard-outline" class="h-4 w-4" />
-        Full templates
+        Templates
       </a>
+    </div>
+
+    <div class="mt-4 max-w-full" style="--delay: 260ms" data-reveal>
+      <AgentOnboarding client:load />
     </div>
 
     <p
@@ -61,7 +66,7 @@ const { widgetCount, categoryCount } = await getWidgetStats();
       style="--delay: 300ms"
       data-reveal
     >
-      {widgetCount}+ widgets · {categoryCount}+ categories · MIT
+      {widgetCount} widgets · {categoryCount} categories · MIT
     </p>
   </div>
 </section>

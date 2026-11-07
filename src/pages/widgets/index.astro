@@ -5,6 +5,7 @@ import WidgetsGrid from "@/components/WidgetsGrid.astro";
 import WidgetSearch, { type WidgetSearchItem } from "@/components/WidgetSearch";
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
 import { getWidgetStats } from "@/utils/get_widget_stats";
+import { getCollection } from "astro:content";
 
 interface Group {
   title: string;
@@ -41,24 +42,28 @@ function walk(group: Group) {
 }
 groups.forEach(walk);
 
+for (const template of await getCollection("templates")) {
+  searchItems.push({
+    id: template.id,
+    title: template.data.title,
+    kind: "template",
+    icon: "mdi:cellphone",
+    keywords: (template.data.tags ?? []).join(" "),
+  });
+}
+
 const { widgetCount, categoryCount } = await getWidgetStats();
 ---
 
-<BaseHtml title="Widgets" image="/og/widgets.png">
+<BaseHtml title="Widgets" image="/og/widgets.png" searchable={false}>
   <section class="transition-page section-shell min-h-screen pt-28 pb-16">
     <header class="mb-7" data-reveal>
-      <p
-        class="text-muted-foreground text-xs font-semibold tracking-widest uppercase"
-      >
-        Free · open source
-      </p>
-      <h1 class="mt-3 text-3xl font-bold tracking-tight md:text-5xl">
+      <h1 class="text-3xl font-bold tracking-tight md:text-5xl">
         Flutter widgets
       </h1>
       <p class="text-muted-foreground mt-3 max-w-2xl md:text-lg">
-        Over {widgetCount} production-ready screens across {categoryCount}{" "}
-        categories. Preview each one live, flip to the source, and copy what you need
-        — free and MIT-licensed.
+        {widgetCount} Flutter screens across {categoryCount} categories. Preview each
+        one live, then copy the source. Free and MIT-licensed.
       </p>
     </header>
 

@@ -1,0 +1,90 @@
+---
+import { Icon } from "astro-icon/components";
+import CopyCommand from "./CopyCommand";
+
+interface RelatedWidget {
+  id: string;
+  title: string;
+  category: string;
+}
+
+interface Props {
+  id: string;
+  title: string;
+  dependencies: { name: string; version: string }[];
+  related: RelatedWidget[];
+}
+
+const { id, title, dependencies, related } = Astro.props;
+const hasNotes = Astro.slots.has("default");
+---
+
+<div class="mt-14 flex max-w-2xl flex-col gap-12">
+  <section aria-labelledby="add-heading">
+    <h2 id="add-heading" class="text-2xl font-semibold tracking-tight">
+      Add it to your project
+    </h2>
+    <p class="text-muted-foreground mt-2">
+      Copies the Dart source into your app, so you own it.
+      {
+        dependencies.length > 0
+          ? ` Also adds ${dependencies.map((d) => d.name).join(", ")} to your pubspec.`
+          : " Flutter SDK only, no extra packages."
+      }
+    </p>
+    <CopyCommand
+      client:load
+      command={`fluttertemplates add ${id}`}
+      className="mt-4 w-full"
+    />
+    <p class="text-muted-foreground mt-3 text-sm">
+      First time? Run <code class="font-mono text-xs"
+        >dart pub global activate fluttertemplates</code
+      >, or read <a
+        class="text-primary underline-offset-4 hover:underline"
+        href="/guides/cli/">the CLI guide</a
+      >.
+    </p>
+  </section>
+
+  {
+    hasNotes && (
+      <section class="prose prose-headings:font-semibold prose-headings:tracking-tight dark:prose-invert max-w-none">
+        <slot />
+      </section>
+    )
+  }
+</div>
+
+{
+  related.length > 0 && (
+    <section class="mt-14" aria-labelledby="related-heading">
+      <h2 id="related-heading" class="text-2xl font-semibold tracking-tight">
+        Related widgets
+      </h2>
+      <ul class="mt-4 grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+        {related.map((item) => (
+          <li>
+            <a
+              href={`/widgets/${item.id}/`}
+              class="border-border hover:border-primary/40 group flex items-center justify-between gap-2 rounded-xl border px-3 py-2.5 transition-colors"
+            >
+              <span class="min-w-0">
+                <span class="group-hover:text-primary block truncate text-sm font-medium transition-colors">
+                  {item.title}
+                </span>
+                <span class="text-muted-foreground block truncate text-xs">
+                  {item.category}
+                </span>
+              </span>
+              <Icon
+                name="mdi:chevron-right"
+                class="text-muted-foreground size-4 shrink-0"
+              />
+            </a>
+          </li>
+        ))}
+      </ul>
+    </section>
+  )
+}

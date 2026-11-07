@@ -19,6 +19,9 @@ const templates = defineCollection({
     z.object({
       title: z.string(),
       description: z.string().optional(),
+      // One line for the template page header. `description` stays the long
+      // version for search engines and the overview.
+      summary: z.string().optional(),
       type: templateType.optional(),
       app: appFolder.default("core"),
       heroImage: image().optional(),
@@ -27,7 +30,20 @@ const templates = defineCollection({
       demoUrl: z.string().optional(),
       youtubeVideoId: z.string().optional(),
       tags: z.array(z.string()).optional(),
+      // Route of a template that runs in the core app, and the folder under
+      // lib/ that holds its source.
+      path: z.string().optional(),
+      code_dir: z.string().optional(),
     }),
+});
+
+const guides = defineCollection({
+  loader: glob({ base: "./src/content/guides", pattern: "**/*.{md,mdx}" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    order: z.number().default(0),
+  }),
 });
 
 const widgets = defineCollection({
@@ -71,4 +87,4 @@ const widgets = defineCollection({
   }),
 });
 
-export const collections = { widgets, templates };
+export const collections = { widgets, templates, guides };

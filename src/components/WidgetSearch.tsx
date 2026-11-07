@@ -6,8 +6,14 @@ export interface WidgetSearchItem {
   title: string;
   category?: string;
   icon?: string;
-  kind: "category" | "widget";
+  keywords?: string;
+  kind: "category" | "widget" | "template";
 }
+
+const itemUrl = (item: WidgetSearchItem) =>
+  item.kind === "template"
+    ? `/templates/${item.id}/`
+    : `/widgets/${item.id}/`;
 
 export default function WidgetSearch({
   items,
@@ -24,16 +30,19 @@ export default function WidgetSearch({
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
     if (!q) return [] as WidgetSearchItem[];
+    const words = q.split(/\s+/);
     return items
       .map((it) => {
         const t = it.title.toLowerCase();
-        const c = (it.category ?? "").toLowerCase();
+        const c = `${it.category ?? ""} ${it.keywords ?? ""}`.toLowerCase();
         let score = 0;
         if (t === q) score = 100;
         else if (t.startsWith(q)) score = 80;
         else if (t.includes(q)) score = 60;
         else if (c.includes(q)) score = 30;
-        if (it.kind === "category" && score > 0) score += 6;
+        // "date picker" should find "Date Range Picker".
+        else if (words.every((w) => t.includes(w) || c.includes(w))) score = 45;
+        if (it.kind !== "widget" && score > 0) score += 6;
         return { it, score };
       })
       .filter((s) => s.score > 0)
@@ -54,7 +63,7 @@ export default function WidgetSearch({
 
   const go = (it?: WidgetSearchItem) => {
     const target = it ?? results[active];
-    if (target) window.location.href = `/widgets/${target.id}/`;
+    if (target) window.location.href = itemUrl(target);
   };
 
   const onKey = (e: React.KeyboardEvent) => {
@@ -107,7 +116,7 @@ export default function WidgetSearch({
               {results.map((it, i) => (
                 <li key={it.kind + it.id}>
                   <a
-                    href={`/widgets/${it.id}/`}
+                    href={itemUrl(it)}
                     data-swup-preload
                     onMouseEnter={() => setActive(i)}
                     className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm transition-colors ${
@@ -122,7 +131,11 @@ export default function WidgetSearch({
                         {it.title}
                       </span>
                       <span className="text-muted-foreground block truncate text-xs">
-                        {it.kind === "category" ? "Category" : it.category}
+                        {it.kind === "category"
+                          ? "Category"
+                          : it.kind === "template"
+                            ? "Template"
+                            : it.category}
                       </span>
                     </span>
                     <Icon

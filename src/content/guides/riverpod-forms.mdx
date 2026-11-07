@@ -1,0 +1,494 @@
+---
+title: "Riverpod with a real form: validation, loading, errors"
+description: Turn the Sign Up screen into a working form with Riverpod 3. Field validation, a loading state, double-submit protection, and server errors shown on the right field.
+order: 7
+---
+
+import LivePreview from "@/components/LivePreview";
+
+The [Sign Up](/widgets/forms/sign_up/) screen validates its fields, then stops. Its `_submit` method ends at a `// Call your registration API here.` comment and shows a snackbar. Nothing is sent anywhere, so there's no loading state, no way to show a server error, and nothing stopping a double tap.
+
+<LivePreview client:visible path="/forms/sign_up/sign_up_page" />
+
+By the end of this guide the same screen will:
+
+- validate on submit, then re-validate as the user fixes each field
+- lock the form and show a spinner while the request runs
+- ignore a second tap while a request is in flight
+- show "email already registered" under the email field
+- show network failures in a snackbar
+- hand off to the next screen on success
+
+The code targets `flutter_riverpod` 3.x and uses plain providers, with no code generation.
+
+## Setup
+
+```bash
+flutter pub add flutter_riverpod
+fluttertemplates add forms/sign_up
+```
+
+The second line copies the screen to `lib/fluttertemplates/forms/sign_up/sign_up_page.dart`. If you don't use the [CLI](/guides/cli/), copy the source from the [widget page](/widgets/forms/sign_up/) into that path.
+
+## Decide who owns what
+
+A form has two kinds of state, and mixing them up causes most of the pain.
+
+| State | Where it lives | Why |
+| --- | --- | --- |
+| Text in the fields, password visibility | The widget | Nothing else needs it, and `TextEditingController` must be disposed with the widget |
+| Is a request running, did it fail | A Riverpod notifier | It's async, it outlives a single `build`, and you want to test it without a UI |
+
+Don't copy every keystroke into a provider. It rebuilds more than it needs to and gains nothing, because Flutter's `Form` already validates the controllers' text.
+
+## The API boundary
+
+Put the backend behind an interface. The form then doesn't care whether it's talking to Supabase, Firebase, or your own server, and you can run the whole thing with no backend at all.
+
+```dart
+// lib/auth_api.dart
+class EmailTakenException implements Exception {
+  const EmailTakenException();
+}
+
+class NetworkException implements Exception {
+  const NetworkException();
+}
+
+abstract interface class AuthApi {
+  Future<void> signUp({required String email, required String password});
+}
+
+/// Stands in for a real backend. Replace it with an implementation that
+/// calls your server and throws the exceptions above.
+class FakeAuthApi implements AuthApi {
+  @override
+  Future<void> signUp({
+    required String email,
+    required String password,
+  }) async {
+    await Future<void>.delayed(const Duration(seconds: 1));
+    if (email == 'taken@example.com') throw const EmailTakenException();
+    if (email == 'offline@example.com') throw const NetworkException();
+  }
+}
+```
+
+Translate backend errors into these types inside your `AuthApi` implementation. The UI should never see a `DioException` or an `AuthApiException`. The [Supabase](/guides/supabase-auth/) and [Firebase](/guides/firebase-auth/) guides list the error codes to map.
+
+## Validators
+
+Plain functions, so they're trivial to test and reuse.
+
+```dart
+// lib/validators.dart
+String? validateEmail(String? value) {
+  final email = value?.trim() ?? '';
+  if (email.isEmpty) return 'Enter your email';
+  // Deliberately loose. Only the server can tell if an address is real.
+  if (!RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$').hasMatch(email)) {
+    return 'Enter a valid email';
+  }
+  return null;
+}
+
+String? validatePassword(String? value) {
+  if (value == null || value.isEmpty) return 'Enter a password';
+  if (value.length < 8) return 'Use at least 8 characters';
+  return null;
+}
+
+String? validateConfirmation(String? value, String password) {
+  if (value == null || value.isEmpty) return 'Repeat your password';
+  if (value != password) return 'Passwords do not match';
+  return null;
+}
+```
+
+## The controller
+
+The notifier has one job: run the request and expose its state as an `AsyncValue`. `void` is the right type because a successful sign-up has no value to hold.
+
+```dart
+// lib/sign_up_controller.dart
+import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'auth_api.dart';
+
+final authApiProvider = Provider<AuthApi>((ref) => FakeAuthApi());
+
+final signUpControllerProvider =
+    AsyncNotifierProvider.autoDispose<SignUpController, void>(
+      SignUpController.new,
+    );
+
+class SignUpController extends AsyncNotifier<void> {
+  @override
+  FutureOr<void> build() {
+    // Nothing to load. The form starts idle.
+  }
+
+  Future<void> submit({
+    required String email,
+    required String password,
+  }) async {
+    // A second tap while a request runs does nothing.
+    if (state.isLoading) return;
+
+    state = const AsyncLoading();
+    final result = await AsyncValue.guard(
+      () => ref.read(authApiProvider).signUp(email: email, password: password),
+    );
+
+    // The user may have left the screen while the request ran.
+    if (ref.mounted) state = result;
+  }
+
+  /// Clears a server error once the user edits the field it belongs to.
+  void clearError() {
+    if (state.hasError) state = const AsyncData(null);
+  }
+}
+```
+
+Three details matter here:
+
+- `autoDispose` resets the form state when the screen goes away. Without it, a user who failed once and came back would see the old error.
+- `ref.mounted` guards the write. Setting `state` after an `autoDispose` provider has been disposed throws.
+- `ref.read`, not `ref.watch`, inside the method. `watch` belongs in `build`.
+
+## The screen
+
+Here is the whole file, edited from the library version.
+
+```dart
+// lib/fluttertemplates/forms/sign_up/sign_up_page.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../auth_api.dart';
+import '../../../sign_up_controller.dart';
+import '../../../validators.dart';
+
+class SignUpPage extends ConsumerStatefulWidget {
+  const SignUpPage({super.key, required this.onCreated});
+
+  final VoidCallback onCreated;
+
+  @override
+  ConsumerState<SignUpPage> createState() => _SignUpPageState();
+}
+
+class _SignUpPageState extends ConsumerState<SignUpPage> {
+  final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  var _obscurePassword = true;
+  var _autovalidate = AutovalidateMode.disabled;
+
+  int _passwordStrength(String password) {
+    var score = 0;
+    if (password.length >= 8) score++;
+    if (RegExp(r'[A-Z]').hasMatch(password)) score++;
+    if (RegExp(r'[0-9]').hasMatch(password)) score++;
+    if (RegExp(r'[^A-Za-z0-9]').hasMatch(password)) score++;
+    return score;
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  void _submit() {
+    FocusScope.of(context).unfocus();
+    if (!_formKey.currentState!.validate()) {
+      // From now on, errors update as the user types.
+      setState(() => _autovalidate = AutovalidateMode.onUserInteraction);
+      return;
+    }
+    ref
+        .read(signUpControllerProvider.notifier)
+        .submit(
+          email: _emailController.text.trim(),
+          password: _passwordController.text,
+        );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // One-off effects go in ref.listen, never in the build output.
+    ref.listen(signUpControllerProvider, (previous, next) {
+      if (next.isLoading) return;
+      if (next.hasError) {
+        if (next.error is EmailTakenException) return; // Shown on the field.
+        final message = next.error is NetworkException
+            ? 'No connection. Check your network and try again.'
+            : 'Something went wrong. Please try again.';
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(SnackBar(content: Text(message)));
+      } else if (previous?.isLoading ?? false) {
+        widget.onCreated();
+      }
+    });
+
+    final state = ref.watch(signUpControllerProvider);
+    final isLoading = state.isLoading;
+    final emailError = state.error is EmailTakenException
+        ? 'This email is already registered'
+        : null;
+
+    return Scaffold(
+      appBar: AppBar(title: const Text('Sign Up')),
+      body: Form(
+        key: _formKey,
+        autovalidateMode: _autovalidate,
+        child: ListView(
+          padding: const EdgeInsets.all(24),
+          children: [
+            TextFormField(
+              controller: _emailController,
+              enabled: !isLoading,
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.emailAddress,
+              autofillHints: const [AutofillHints.email],
+              textInputAction: TextInputAction.next,
+              validator: validateEmail,
+              forceErrorText: emailError,
+              onChanged: (_) =>
+                  ref.read(signUpControllerProvider.notifier).clearError(),
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              controller: _passwordController,
+              enabled: !isLoading,
+              decoration: InputDecoration(
+                labelText: 'Password',
+                border: const OutlineInputBorder(),
+                suffixIcon: IconButton(
+                  tooltip: _obscurePassword ? 'Show password' : 'Hide password',
+                  icon: Icon(
+                    _obscurePassword ? Icons.visibility : Icons.visibility_off,
+                  ),
+                  onPressed: () =>
+                      setState(() => _obscurePassword = !_obscurePassword),
+                ),
+              ),
+              obscureText: _obscurePassword,
+              autofillHints: const [AutofillHints.newPassword],
+              textInputAction: TextInputAction.next,
+              validator: validatePassword,
+            ),
+            const SizedBox(height: 8),
+            ValueListenableBuilder<TextEditingValue>(
+              valueListenable: _passwordController,
+              builder: (context, value, child) {
+                final strength = _passwordStrength(value.text);
+                return LinearProgressIndicator(
+                  value: strength / 4,
+                  backgroundColor: Theme.of(
+                    context,
+                  ).colorScheme.surfaceContainerHighest,
+                );
+              },
+            ),
+            const SizedBox(height: 16),
+            TextFormField(
+              enabled: !isLoading,
+              decoration: const InputDecoration(
+                labelText: 'Confirm Password',
+                border: OutlineInputBorder(),
+              ),
+              obscureText: true,
+              textInputAction: TextInputAction.done,
+              validator: (value) =>
+                  validateConfirmation(value, _passwordController.text),
+              onFieldSubmitted: (_) => _submit(),
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: isLoading ? null : _submit,
+              child: isLoading
+                  ? const SizedBox.square(
+                      dimension: 20,
+                      child: CircularProgressIndicator(strokeWidth: 2),
+                    )
+                  : const Text('Create Account'),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+```
+
+What changed from the library version:
+
+- `ConsumerStatefulWidget` gives the state class a `ref`.
+- The email field has a controller, because the request needs its value.
+- Validators moved to `validators.dart`, so that you can test them without a widget.
+- `Colors.grey[300]` became `surfaceContainerHighest`, so the bar works in dark mode.
+- `forceErrorText` shows the server's error on the email field. While it's set, the field's validator doesn't run and `validate()` fails, so the same taken address can't be resubmitted. Editing the field calls `clearError`, which releases it.
+
+## Run it
+
+Wrap the app in `ProviderScope`. Without it, the first `ref` call throws.
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'fluttertemplates/forms/sign_up/sign_up_page.dart';
+
+void main() => runApp(const ProviderScope(child: MyApp()));
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Builder(
+        builder: (context) => SignUpPage(
+          onCreated: () => Navigator.of(context).pushReplacement(
+            MaterialPageRoute<void>(builder: (_) => const WelcomePage()),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class WelcomePage extends StatelessWidget {
+  const WelcomePage({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Scaffold(body: Center(child: Text('Account created')));
+  }
+}
+```
+
+Try these inputs:
+
+| Email | Result |
+| --- | --- |
+| `hello` | Field error, no request sent |
+| `taken@example.com` | Spinner, then an error under the email field, which clears when you edit it |
+| `offline@example.com` | Spinner, then a snackbar. The button works again for a retry |
+| `you@example.com` | Spinner, then the welcome screen |
+
+## Connect a real backend
+
+Implement `AuthApi` and change one line:
+
+```dart
+final authApiProvider = Provider<AuthApi>((ref) => MyServerAuthApi());
+```
+
+Nothing in the screen or the controller changes.
+
+## Test the controller
+
+No widgets needed. `ProviderContainer.test` disposes itself when the test ends, and `overrideWithValue` swaps the backend.
+
+```dart
+// test/sign_up_controller_test.dart
+import 'dart:async';
+
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/auth_api.dart';
+import 'package:my_app/sign_up_controller.dart';
+
+class StubAuthApi implements AuthApi {
+  final completer = Completer<void>();
+  var calls = 0;
+
+  @override
+  Future<void> signUp({required String email, required String password}) {
+    calls++;
+    return completer.future;
+  }
+}
+
+void main() {
+  late StubAuthApi api;
+  late ProviderContainer container;
+
+  setUp(() {
+    api = StubAuthApi();
+    container = ProviderContainer.test(
+      overrides: [authApiProvider.overrideWithValue(api)],
+    );
+    // Keep the autoDispose provider alive for the length of the test.
+    container.listen(signUpControllerProvider, (_, _) {});
+  });
+
+  SignUpController controller() =>
+      container.read(signUpControllerProvider.notifier);
+
+  test('goes from loading to data on success', () async {
+    final future = controller().submit(email: 'a@b.co', password: 'password');
+    expect(container.read(signUpControllerProvider).isLoading, isTrue);
+
+    api.completer.complete();
+    await future;
+
+    final state = container.read(signUpControllerProvider);
+    expect(state.isLoading, isFalse);
+    expect(state.hasError, isFalse);
+  });
+
+  test('ignores a second submit while one is running', () async {
+    final future = controller().submit(email: 'a@b.co', password: 'password');
+    await controller().submit(email: 'a@b.co', password: 'password');
+    api.completer.complete();
+    await future;
+
+    expect(api.calls, 1);
+  });
+
+  test('exposes the error, and clearError removes it', () async {
+    final future = controller().submit(email: 'a@b.co', password: 'password');
+    api.completer.completeError(const EmailTakenException());
+    await future;
+
+    expect(
+      container.read(signUpControllerProvider).error,
+      isA<EmailTakenException>(),
+    );
+
+    controller().clearError();
+    expect(container.read(signUpControllerProvider).hasError, isFalse);
+  });
+}
+```
+
+Replace `my_app` with the `name` from your `pubspec.yaml`.
+
+## Common mistakes
+
+**Showing a snackbar or navigating from `build`.** `build` can run many times for one state change. Use `ref.listen` for anything that should happen once.
+
+**Calling `ref.listen` outside `build`.** In a `ConsumerState`, `ref.listen` belongs in `build`, where Riverpod manages the subscription. In `initState`, use `ref.listenManual`.
+
+**Treating every `AsyncData` as success.** The notifier starts in `AsyncData`, and `clearError` returns to it. That's why the listener above checks that the previous state was loading.
+
+**Storing the `BuildContext` across the await.** The controller doesn't touch the context at all, and the listener only runs while the widget is alive. Keep it that way, rather than moving the `await` into the widget.
+
+**Trusting client-side validation.** Validators exist to give fast feedback. The server still has to check everything, and that is why `EmailTakenException` exists.
+
+**Using `StateNotifier`.** It's legacy in Riverpod 3 and only available from `package:flutter_riverpod/legacy.dart`. New code should use `Notifier` or `AsyncNotifier`.
+
+The same form with Bloc is in [Bloc for the same form](/guides/bloc-forms/).

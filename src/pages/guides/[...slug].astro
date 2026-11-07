@@ -1,0 +1,75 @@
+---
+import BaseHtml from "@/components/BaseHtml.astro";
+import Footer from "@/components/Footer.astro";
+import TableOfContents from "@/components/TableOfContents";
+import { Icon } from "astro-icon/components";
+import { type CollectionEntry, getCollection, render } from "astro:content";
+
+export async function getStaticPaths() {
+  const guides = await getCollection("guides");
+  return guides.map((guide) => ({
+    params: { slug: guide.id },
+    props: guide,
+  }));
+}
+type Props = CollectionEntry<"guides">;
+
+const guide = Astro.props;
+const { Content, headings } = await render(guide);
+const contents = headings.filter((heading) => heading.depth === 2);
+
+const siteBase = (Astro.site?.href ?? "https://fluttertemplates.dev/").replace(
+  /\/$/,
+  "",
+);
+const article = {
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  headline: guide.data.title,
+  description: guide.data.description,
+  url: `${siteBase}/guides/${guide.id}/`,
+};
+---
+
+<BaseHtml
+  searchTitle={`${guide.data.title} · Guide`}
+  title={guide.data.title}
+  description={guide.data.description}
+>
+  <script
+    type="application/ld+json"
+    is:inline
+    set:html={JSON.stringify(article)}
+  />
+  <article class="transition-page section-shell min-h-screen pt-28 pb-16">
+    <a
+      href="/guides/"
+      class="text-muted-foreground hover:text-foreground inline-flex items-center gap-1 text-sm font-medium transition-colors"
+    >
+      <Icon name="mdi:arrow-left" class="h-4 w-4" />
+      All guides
+    </a>
+    <h1 class="mt-4 max-w-3xl text-3xl font-bold tracking-tight md:text-4xl">
+      {guide.data.title}
+    </h1>
+    <p class="text-muted-foreground mt-3 max-w-2xl md:text-lg">
+      {guide.data.description}
+    </p>
+    <div class="mt-10 xl:grid xl:grid-cols-[minmax(0,48rem)_14rem] xl:justify-between xl:gap-12">
+      <div
+        class="prose prose-headings:font-semibold prose-headings:tracking-tight prose-h2:scroll-mt-24 dark:prose-invert max-w-3xl"
+      >
+        <Content />
+      </div>
+      {
+        contents.length > 2 && (
+          <TableOfContents
+            client:load
+            headings={contents.map(({ slug, text }) => ({ slug, text }))}
+          />
+        )
+      }
+    </div>
+  </article>
+  <Footer />
+</BaseHtml>

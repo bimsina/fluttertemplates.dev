@@ -16,6 +16,10 @@ const template = Astro.props;
 const { Content } = await render(template);
 ---
 
-<TemplateLayout {...template.data} ogImage={`/og/templates/${template.id}.png`}>
+<TemplateLayout
+  {...template.data}
+  id={template.id}
+  ogImage={`/og/templates/${template.id}.png`}
+>
   <Content />
 </TemplateLayout>

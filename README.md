@@ -1,6 +1,6 @@
 # Flutter Templates
 
-**Production-ready Flutter UI you can preview live and copy.**
+**Flutter UI you can preview live and copy.**
 
 [Flutter Templates](https://fluttertemplates.dev/) is an open-source library of real Flutter screens — from single widgets to full apps. Every component runs live in your browser, so you can interact with it, read the source, and copy it straight into your project.
 
@@ -8,10 +8,13 @@ Stop rebuilding the same login form, product grid, or onboarding flow on every a
 
 ## What you can do here
 
-- **Browse by category** — 220+ widgets across 35+ categories (auth, AI, admin, forms, chat, e-commerce, dashboard, navigation, maps, IoT, and more).
+- **Browse by category** — 240+ widgets across 35+ categories (auth, AI, admin, forms, chat, e-commerce, dashboard, navigation, maps, IoT, and more).
 - **Preview live** — every widget runs as a real Flutter app in an in-browser preview, not a screenshot.
 - **Flip to the source** — switch between the running preview and its Dart code, and copy it.
-- **Explore full templates** — complete app examples with live demos, screenshots, and source links.
+- **Run full apps** — food delivery, banking, team chat, retail POS, and a login and auth flow, running live with their full source.
+- **Add code with the CLI** — `fluttertemplates add auth/login_hero` copies a screen into your project. See [`cli/`](cli/).
+- **Use it from an AI editor** — `fluttertemplates mcp` serves the library over MCP, and `/llms.txt` and `/r/` expose it to other tools.
+- **Follow the guides** — getting started, theming, Supabase, Firebase, go_router, Riverpod, Bloc, and responsive layouts.
 - **Search** — jump straight to any widget or template by keyword.
 
 ## How it works
@@ -59,7 +62,8 @@ If you run only `pnpm dev`, pages still load, but the widget previews won't work
 
 - `pnpm dev` — start the Astro dev server
 - `pnpm run-apps` — run the Flutter core app in the browser (`--web-port 8989`)
-- `pnpm build` — build the Astro site
+- `pnpm build` — generate the registry, then build the Astro site
+- `pnpm registry` — regenerate `public/r/`, `public/llms.txt`, and `src/generated/`
 - `pnpm build-apps` — build the Flutter web app(s) and copy output to `public/flutter_apps/*`
 - `pnpm preview` — preview the built Astro output
 - `pnpm deploy` — build and deploy with Wrangler
@@ -98,9 +102,21 @@ previewSize: mobile
 
 Validation rules for `code_files` are enforced (no absolute paths, `..`, wildcards, or trailing slashes).
 
+Text after the frontmatter is shown on the widget page as its technical note.
+
+### Generated registry
+
+`scripts/build-registry.mjs` reads the content and Dart source and generates the catalogue used by the widget pages, the CLI, and MCP. Its output is gitignored and rebuilt by `pnpm dev` and `pnpm build`.
+
+### Guides
+
+Location: `src/content/guides/**` (MDX with `title`, `description`, `order`). Embed a running screen with `<LivePreview client:visible path="/auth/signup_terms" />`.
+
 ### Templates
 
 Location: `src/content/templates/**`
+
+Templates that run in the core app set `path` (their route) and `code_dir` (their folder under `flutter_apps/core/lib/`). Their files use relative imports so the folder can be copied into any project.
 
 Common frontmatter fields:
 

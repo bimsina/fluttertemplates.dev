@@ -1,6 +1,5 @@
 ---
-import { Icon } from "astro-icon/components";
-import { SITE_TITLE, GITHUB_URL, LINKEDIN_URL, TWITTER_URL } from "@/consts";
+import { SITE_TITLE, GITHUB_URL } from "@/consts";
 import Logo from "./Logo.astro";
 
 const currentYear = new Date().getFullYear();
@@ -11,6 +10,7 @@ const columns = [
     links: [
       { label: "Widgets", href: "/widgets" },
       { label: "Templates", href: "/templates" },
+      { label: "Guides", href: "/guides" },
       { label: "Search", href: "/search" },
     ],
   },
@@ -32,45 +32,16 @@ const columns = [
     <div class="max-w-sm">
       <Logo />
       <p class="text-muted-foreground mt-4 text-sm leading-relaxed">
-        An open-source library of production Flutter UI — preview it live, copy
-        the source, ship faster.
+        Open-source Flutter screens and templates. Preview them live, then copy
+        the source.
       </p>
-      <div class="mt-5 flex items-center gap-2">
-        <a
-          href={GITHUB_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="interactive-button border-border hover:bg-muted rounded-xl border p-2"
-          aria-label="GitHub"
-        >
-          <Icon name="mdi:github" class="h-5 w-5" />
-        </a>
-        <a
-          href={TWITTER_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="interactive-button border-border hover:bg-muted rounded-xl border p-2"
-          aria-label="Twitter"
-        >
-          <Icon name="mdi:twitter" class="h-5 w-5" />
-        </a>
-        <a
-          href={LINKEDIN_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          class="interactive-button border-border hover:bg-muted rounded-xl border p-2"
-          aria-label="LinkedIn"
-        >
-          <Icon name="mdi:linkedin" class="h-5 w-5" />
-        </a>
-      </div>
     </div>
 
     <div class="flex gap-16">
       {
         columns.map((col) => (
           <div>
-            <p class="text-xs font-semibold tracking-widest uppercase">
+            <p class="text-sm font-semibold">
               {col.heading}
             </p>
             <ul class="mt-4 space-y-2.5">
@@ -98,6 +69,6 @@ const columns = [
     class="border-border text-muted-foreground mt-10 flex flex-col gap-2 border-t pt-6 text-xs md:flex-row md:items-center md:justify-between"
   >
     <p>© {currentYear} {SITE_TITLE}</p>
-    <p>MIT Licensed • Built for fast iteration</p>
+    <p>MIT licensed</p>
   </div>
 </footer>

@@ -1,0 +1,35 @@
+---
+import BaseHtml from "@/components/BaseHtml.astro";
+import Footer from "@/components/Footer.astro";
+---
+
+<BaseHtml
+  searchable={false}
+  title="Page not found"
+  description="This page doesn't exist. Browse Flutter widgets, templates, and guides instead."
+>
+  <section class="transition-page section-shell pt-40 pb-32 text-center">
+    <h1 class="text-3xl font-bold tracking-tight md:text-5xl">
+      This page doesn't exist
+    </h1>
+    <p class="text-muted-foreground mx-auto mt-3 max-w-xl md:text-lg">
+      It may have moved. Search for what you need, or start from one of these.
+    </p>
+    <form action="/search/" class="mx-auto mt-8 max-w-md">
+      <label class="sr-only" for="not-found-search">Search</label>
+      <input
+        id="not-found-search"
+        name="q"
+        type="search"
+        placeholder="Search widgets and templates"
+        class="border-border bg-card focus-visible:ring-ring h-12 w-full rounded-xl border px-4 text-sm outline-none focus-visible:ring-2"
+      />
+    </form>
+    <ul class="mt-6 flex justify-center gap-5 text-sm font-medium">
+      <li><a class="text-primary hover:underline" href="/widgets/">Widgets</a></li>
+      <li><a class="text-primary hover:underline" href="/templates/">Templates</a></li>
+      <li><a class="text-primary hover:underline" href="/guides/">Guides</a></li>
+    </ul>
+  </section>
+  <Footer />
+</BaseHtml>

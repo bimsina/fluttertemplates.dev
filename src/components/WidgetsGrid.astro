@@ -2,6 +2,11 @@
 import { getGroupedWidgets } from "@/utils/get_grouped_widgets";
 import CategoryPreview from "./CategoryPreview.astro";
 
+interface Props {
+  // Category paths to show, in this order. Defaults to all of them.
+  only?: string[];
+}
+
 interface Group {
   title: string;
   path: string;
@@ -13,12 +18,17 @@ interface Group {
   children?: Group[];
 }
 
-const groups = (await getGroupedWidgets()) as unknown as Group[];
+const { only } = Astro.props;
+const allGroups = (await getGroupedWidgets()) as unknown as Group[];
+const groups = only
+  ? only.flatMap((path) => allGroups.filter((g) => g.path === path))
+  : allGroups;
 
 // Short one-line taglines for the cards. The full (longer) descriptions live in
 // each category's frontmatter and are used on the category pages themselves.
 const TAGLINES: Record<string, string> = {
   admin: "User management, roles, and settings panels",
+  analytics: "Charts, funnels, and heatmaps",
   ai: "Assistant chats, prompts, and streaming states",
   animation: "Motion, transitions, and micro-interactions",
   auth: "Login, signup, OTP, and lock screens",
@@ -90,8 +100,8 @@ function countWidgets(group: Group): number {
                 {group.title}
               </h3>
               {count > 0 && (
-                <span class="bg-muted text-muted-foreground shrink-0 rounded-full px-2.5 py-1 font-mono text-[0.62rem]">
-                  {count} {count === 1 ? "widget" : "widgets"}
+                <span class="text-muted-foreground shrink-0 text-xs tabular-nums">
+                  {count}
                 </span>
               )}
             </div>

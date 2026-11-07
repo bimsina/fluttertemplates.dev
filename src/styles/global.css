@@ -28,6 +28,21 @@
   --font-mono: "JetBrains Mono", monospace;
   --font-display: "Plus Jakarta Sans", "Inter", sans-serif;
   --radius: 1rem;
+  --editor-bg: oklch(0.992 0.002 250);
+  --editor-panel: oklch(0.965 0.004 255);
+  --editor-line: oklch(0.91 0.006 258);
+  --editor-selected: oklch(0.91 0.035 255);
+  --editor-fg: oklch(0.3 0.012 258);
+  --editor-muted: oklch(0.55 0.014 258);
+  --editor-dart: oklch(0.55 0.13 238);
+  --code-comment: oklch(0.62 0.012 258);
+  --code-punctuation: oklch(0.58 0.012 258);
+  --code-keyword: oklch(0.5 0.17 305);
+  --code-string: oklch(0.5 0.13 150);
+  --code-number: oklch(0.52 0.13 235);
+  --code-class: oklch(0.55 0.12 65);
+  --code-function: oklch(0.5 0.14 258);
+  --code-metadata: oklch(0.56 0.15 35);
 }
 
 .dark {
@@ -50,6 +65,21 @@
   --border: oklch(0.33 0.015 261);
   --input: oklch(0.33 0.015 261);
   --ring: oklch(0.68 0.11 261);
+  --editor-bg: oklch(0.165 0.006 258);
+  --editor-panel: oklch(0.2 0.008 258);
+  --editor-line: oklch(0.285 0.01 258);
+  --editor-selected: oklch(0.31 0.05 255);
+  --editor-fg: oklch(0.9 0.006 250);
+  --editor-muted: oklch(0.65 0.012 258);
+  --editor-dart: oklch(0.78 0.12 225);
+  --code-comment: oklch(0.58 0.012 258);
+  --code-punctuation: oklch(0.62 0.012 258);
+  --code-keyword: oklch(0.76 0.12 305);
+  --code-string: oklch(0.8 0.14 150);
+  --code-number: oklch(0.8 0.1 220);
+  --code-class: oklch(0.84 0.12 85);
+  --code-function: oklch(0.78 0.11 245);
+  --code-metadata: oklch(0.75 0.13 40);
 }
 
 @theme inline {
@@ -72,6 +102,11 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
+  --color-editor: var(--editor-bg);
+  --color-editor-panel: var(--editor-panel);
+  --color-editor-line: var(--editor-line);
+  --color-editor-fg: var(--editor-fg);
+  --color-editor-muted: var(--editor-muted);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
   --radius-sm: calc(var(--radius) - 6px);
@@ -334,4 +369,78 @@ html.is-leaving .transition-page {
 .sidebar-group-active .group-header-link {
   color: var(--foreground);
   font-weight: 700;
+}
+
+/* Long identifiers, code and tables must not widen the page on phones. */
+.prose {
+  overflow-wrap: anywhere;
+}
+.prose :not(pre) > code::before,
+.prose :not(pre) > code::after {
+  content: none;
+}
+.prose :not(pre) > code {
+  font-weight: 500;
+}
+.prose pre {
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+.prose table {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  overflow-wrap: normal;
+}
+
+/* Anchors land below the fixed header. */
+html {
+  scroll-padding-top: 5.5rem;
+}
+
+/* Template pages: file names in the docs open in the code viewer. */
+.template-file-link {
+  cursor: pointer;
+  border-radius: 0.25rem;
+  text-decoration: underline dotted;
+  text-decoration-color: color-mix(in oklab, var(--primary) 55%, transparent);
+  text-underline-offset: 3px;
+}
+
+.template-file-link code {
+  color: var(--primary);
+}
+
+.template-file-link:hover {
+  text-decoration-style: solid;
+}
+
+/* Code blocks in docs share the editor surface and follow the theme. */
+.astro-code {
+  border: 1px solid var(--editor-line);
+  border-radius: 0.75rem;
+  background: var(--editor-bg) !important;
+}
+.astro-code,
+.astro-code span {
+  color: var(--shiki-light);
+}
+.dark .astro-code,
+.dark .astro-code span {
+  color: var(--shiki-dark);
+}
+
+/* Abstract widget art: its own tones, so shapes stand out on the stage. */
+.ft-art {
+  --background: oklch(0.995 0.002 250);
+  --muted: oklch(0.905 0.012 255);
+  --card: oklch(0.995 0.002 250);
+  background: oklch(0.948 0.01 255);
+}
+.dark .ft-art {
+  --background: oklch(0.3 0.018 258);
+  --muted: oklch(0.355 0.02 258);
+  --card: oklch(0.3 0.018 258);
+  background: oklch(0.24 0.016 258);
 }

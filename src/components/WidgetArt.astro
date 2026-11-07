@@ -1,0 +1,628 @@
+---
+import { Icon } from "astro-icon/components";
+import { widgetArtIcon, widgetArtKind, widgetArtSeed } from "@/utils/widget_art";
+
+interface Props {
+  id: string;
+  icon?: string;
+}
+
+const { id, icon: categoryIcon } = Astro.props;
+const icon = widgetArtIcon(id) ?? categoryIcon;
+const kind = widgetArtKind(id);
+const seed = widgetArtSeed(id);
+
+// Sizes shift a little per widget.
+const pick = (i: number, values: number[]) =>
+  values[(seed + i * 7) % values.length];
+const widths = [0, 1, 2, 3].map((i) => pick(i, [46, 54, 62, 70, 78]));
+const heights = [0, 1, 2, 3, 4, 5, 6].map((i) =>
+  pick(i, [34, 48, 58, 68, 82, 94]),
+);
+const accent = seed % 3;
+// Single-field flows lead with what they're about instead of a title.
+const formIcon = [
+  [/verification|magic/, "mdi:email-outline"],
+  [/forgot|reset/, "mdi:lock-reset"],
+  [/payment|checkout/, "mdi:credit-card-outline"],
+  [/social/, "mdi:account-multiple-outline"],
+].find(([pattern]) => (pattern as RegExp).test(id))?.[1] as string | undefined;
+const linePoints = [0, 1, 2, 3, 4, 5, 6]
+  .map((i) => `${i * 20},${48 - heights[i] * 0.42}`)
+  .join(" ");
+---
+
+<div class="ft-art flex h-36 items-center justify-center overflow-hidden px-6 py-4" aria-hidden="true">
+  {
+    kind === "bars" && (
+      <div class="flex h-full w-full items-end gap-1.5">
+        {heights.map((h, i) => (
+          <span
+            class:list={[
+              "flex-1 rounded-t",
+              i === accent + 2 ? "bg-primary/70" : "bg-muted",
+            ]}
+            style={`height:${h}%`}
+          />
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "line" && (
+      <div class="bg-background w-full rounded-[8px] p-3">
+        <svg viewBox="0 0 120 50" class="h-20 w-full" fill="none">
+          <polyline
+            points={linePoints}
+            class="stroke-primary"
+            stroke-width="2.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </div>
+    )
+  }
+  {
+    kind === "ring" && (
+      <div class="flex items-center gap-4">
+        <svg viewBox="0 0 64 64" class="size-24 -rotate-90" fill="none">
+          <circle cx="32" cy="32" r="26" class="stroke-muted" stroke-width="8" />
+          <circle
+            cx="32"
+            cy="32"
+            r="26"
+            class="stroke-primary"
+            stroke-width="8"
+            stroke-linecap="round"
+            stroke-dasharray={`${widths[0] * 1.63} 200`}
+          />
+        </svg>
+        <div class="flex w-16 flex-col gap-2">
+          <span class="bg-muted h-2 w-full rounded" />
+          <span class="bg-muted h-2 w-2/3 rounded" />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "timer" && (
+      <div class="relative flex size-24 items-center justify-center">
+        <svg viewBox="0 0 64 64" class="absolute inset-0 -rotate-90" fill="none">
+          <circle cx="32" cy="32" r="28" class="stroke-muted" stroke-width="5" />
+          <circle
+            cx="32"
+            cy="32"
+            r="28"
+            class="stroke-primary"
+            stroke-width="5"
+            stroke-linecap="round"
+            stroke-dasharray={`${widths[1] * 1.75} 200`}
+          />
+        </svg>
+        <span class="bg-muted h-2.5 w-10 rounded" />
+      </div>
+    )
+  }
+  {
+    kind === "heat" && (
+      <div class="grid grid-cols-10 gap-1">
+        {Array.from({ length: 40 }, (_, i) => (
+          <span
+            class="bg-primary size-3.5 rounded-[3px]"
+            style={`opacity:${0.12 + ((seed + i * 13) % 8) / 10}`}
+          />
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "kanban" && (
+      <div class="grid h-full w-full grid-cols-3 gap-2">
+        {[3, 2, 1].map((cards, column) => (
+          <div class="bg-muted flex flex-col gap-1.5 rounded-[8px] p-1.5">
+            {Array.from({ length: cards }, (_, i) => (
+              <span
+                class:list={[
+                  "h-5 rounded",
+                  column === 1 && i === 0 ? "bg-primary/70" : "bg-background",
+                ]}
+              />
+            ))}
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "pin" && (
+      <div class="flex flex-col items-center gap-3">
+        <div class="flex gap-2">
+          {[0, 1, 2, 3].map((i) => (
+            <span
+              class:list={[
+                "flex size-9 items-center justify-center rounded-[8px]",
+                i < (seed % 3) + 1 ? "bg-background" : "bg-muted",
+              ]}
+            >
+              {i < (seed % 3) + 1 && (
+                <span class="bg-primary size-2 rounded-full" />
+              )}
+            </span>
+          ))}
+        </div>
+        <span class="bg-muted h-1.5 w-20 rounded" />
+      </div>
+    )
+  }
+  {
+    kind === "calendar" && (
+      <div class="bg-background w-44 rounded-[8px] p-2.5">
+        <div class="grid grid-cols-7 gap-1">
+          {Array.from({ length: 21 }, (_, i) => (
+            <span
+              class:list={[
+                "aspect-square rounded-full",
+                i === (seed % 14) + 3 ? "bg-primary" : "bg-muted",
+              ]}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "map" && (
+      <div class="bg-background relative h-full w-full overflow-hidden rounded-[8px]">
+        <svg viewBox="0 0 200 100" class="h-full w-full" fill="none" preserveAspectRatio="xMidYMid slice">
+          <path d="M-5 30 H210 M-5 72 H210 M58 -5 V110 M142 -5 V110" class="stroke-muted" stroke-width="7" />
+          <path d="M28 82 C60 82 58 30 100 30 S150 62 172 22" class="stroke-primary" stroke-width="3" stroke-linecap="round" stroke-dasharray="1 7" />
+        </svg>
+        <Icon name="mdi:map-marker" class="text-primary absolute top-[12%] right-[11%] size-5" />
+      </div>
+    )
+  }
+  {
+    kind === "card" && (
+      <div class="bg-primary text-primary-foreground flex h-24 w-40 flex-col justify-between rounded-xl p-3">
+        <div class="flex items-center justify-between">
+          <span class="h-3.5 w-5 rounded-sm bg-current opacity-40" />
+          <span class="size-3.5 rounded-full bg-current opacity-50" />
+        </div>
+        <div class="flex flex-col gap-1.5">
+          <span class="h-1.5 w-3/4 rounded bg-current opacity-70" />
+          <span class="h-1.5 w-1/3 rounded bg-current opacity-40" />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "wallet" && (
+      <div class="bg-background flex w-full flex-col gap-3 rounded-[8px] p-3.5">
+        <span class="bg-muted h-2 w-1/3 rounded" />
+        <span class="bg-primary h-4 w-1/2 rounded" />
+        <div class="flex h-7 items-end gap-1">
+          {heights.map((h) => (
+            <span class="bg-muted flex-1 rounded-t-sm" style={`height:${h}%`} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "amount" && (
+      <div class="flex w-40 flex-col items-center gap-3">
+        <span class="bg-primary/70 h-6 w-24 rounded" />
+        <span class="bg-muted h-2 w-16 rounded" />
+        <span class="bg-primary h-7 w-full rounded-[8px]" />
+      </div>
+    )
+  }
+  {
+    kind === "ticket" && (
+      <div class="bg-background relative flex h-24 w-48 items-center gap-3 rounded-[8px] px-4">
+        <div class="flex flex-1 flex-col gap-2">
+          <span class="bg-muted h-2.5 w-4/5 rounded" />
+          <span class="bg-muted h-2 w-1/2 rounded" />
+        </div>
+        <span class="border-muted h-full border-l-2 border-dashed" />
+        <span class="bg-primary/70 size-9 rounded" />
+      </div>
+    )
+  }
+  {
+    kind === "call" && (
+      <div class="flex flex-col items-center gap-3">
+        <span class="bg-background size-14 rounded-full" />
+        <div class="flex gap-3">
+          <span class="bg-muted flex size-9 items-center justify-center rounded-full">
+            <Icon name="mdi:microphone-outline" class="size-4" />
+          </span>
+          <span class="flex size-9 items-center justify-center rounded-full bg-[oklch(0.6_0.19_27)] text-white">
+            <Icon name="mdi:phone-hangup" class="size-4" />
+          </span>
+          <span class="bg-muted flex size-9 items-center justify-center rounded-full">
+            <Icon name="mdi:volume-high" class="size-4" />
+          </span>
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "conference" && (
+      <div class="grid h-full w-full grid-cols-3 grid-rows-2 gap-1.5">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <span
+            class:list={[
+              "flex items-center justify-center rounded-[6px]",
+              i === 1 ? "bg-background ring-primary ring-2" : "bg-background",
+            ]}
+          >
+            <span class="bg-muted size-6 rounded-full" />
+          </span>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "audio" && (
+      <div class="bg-background flex h-14 w-full items-center gap-3 rounded-full px-3">
+        <span class="bg-primary text-primary-foreground flex size-8 shrink-0 items-center justify-center rounded-full">
+          <Icon name="mdi:play" class="size-4" />
+        </span>
+        <div class="flex h-7 flex-1 items-center gap-[3px]">
+          {Array.from({ length: 22 }, (_, i) => (
+            <span
+              class:list={["flex-1 rounded-full", i < 9 ? "bg-primary" : "bg-muted"]}
+              style={`height:${heights[(i + seed) % 7]}%`}
+            />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "video" && (
+      <div class="bg-background relative flex aspect-video h-full items-center justify-center overflow-hidden rounded-[8px]">
+        <span class="bg-primary text-primary-foreground flex size-10 items-center justify-center rounded-full">
+          <Icon name="mdi:play" class="size-5" />
+        </span>
+        <span class="bg-muted absolute inset-x-2.5 bottom-2.5 h-1 rounded-full">
+          <span class="bg-primary block h-full rounded-full" style={`width:${widths[1]}%`} />
+        </span>
+      </div>
+    )
+  }
+  {
+    kind === "swatches" && (
+      <div class="grid grid-cols-6 gap-1.5">
+        {Array.from({ length: 12 }, (_, i) => (
+          <span
+            class="size-7 rounded-full"
+            style={`background:oklch(0.68 0.13 ${i * 30})`}
+          />
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "stars" && (
+      <div class="flex flex-col items-center gap-3">
+        <div class="text-primary flex gap-1">
+          {[0, 1, 2, 3, 4].map((i) => (
+            <Icon
+              name={i < 4 ? "mdi:star" : "mdi:star-outline"}
+              class="size-7"
+            />
+          ))}
+        </div>
+        <span class="bg-muted h-2 w-32 rounded" />
+        <span class="bg-muted h-2 w-20 rounded" />
+      </div>
+    )
+  }
+  {
+    kind === "upload" && (
+      <div class="border-primary/50 text-primary flex h-full w-full flex-col items-center justify-center gap-2 rounded-[8px] border-2 border-dashed">
+        <Icon name="mdi:tray-arrow-up" class="size-7" />
+        <span class="bg-muted h-2 w-24 rounded" />
+      </div>
+    )
+  }
+  {
+    kind === "signature" && (
+      <div class="bg-background flex h-full w-full flex-col justify-end rounded-[8px] px-5 pb-4">
+        <svg viewBox="0 0 160 50" class="w-full" fill="none">
+          <path
+            d="M4 34c14-26 20-26 18-8s8 6 16-8 8 26 20 14 8-12 18-6 12 12 26-2 22-6 42-4"
+            class="stroke-primary"
+            stroke-width="2.5"
+            stroke-linecap="round"
+          />
+        </svg>
+        <span class="bg-muted mt-1 h-px w-full" />
+      </div>
+    )
+  }
+  {
+    kind === "chips" && (
+      <div class="flex w-full flex-wrap justify-center gap-2">
+        {widths.concat(widths).map((w, i) => (
+          <span
+            class:list={["h-7 rounded-full", i === accent ? "bg-primary" : "bg-background"]}
+            style={`width:${w + 8}px`}
+          />
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "steps" && (
+      <div class="flex w-full flex-col gap-4">
+        <div class="flex items-center">
+          {[0, 1, 2].map((i) => (
+            <>
+              <span class:list={["size-6 shrink-0 rounded-full", i <= 1 ? "bg-primary" : "bg-muted"]} />
+              {i < 2 && <span class:list={["h-0.5 flex-1", i === 0 ? "bg-primary" : "bg-muted"]} />}
+            </>
+          ))}
+        </div>
+        <span class="bg-background h-7 rounded-[8px]" />
+        <span class="bg-primary ml-auto h-6 w-20 rounded-[6px]" />
+      </div>
+    )
+  }
+  {
+    kind === "rail" && (
+      <div class="grid h-full w-full grid-cols-[3rem_1fr] gap-2">
+        <div class="bg-background flex flex-col items-center gap-2.5 rounded-[8px] py-3">
+          {[0, 1, 2, 3].map((i) => (
+            <span class:list={["size-4 rounded", i === accent ? "bg-primary" : "bg-muted"]} />
+          ))}
+        </div>
+        <div class="flex flex-col justify-center gap-2 px-1">
+          <span class="bg-muted h-2.5 rounded" style={`width:${widths[0]}%`} />
+          <span class="bg-muted h-2 rounded" style={`width:${widths[1]}%`} />
+          <span class="bg-muted h-2 rounded" style={`width:${widths[2]}%`} />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "tabs" && (
+      <div class="flex h-full w-full flex-col gap-3">
+        <div class="flex gap-4">
+          {[0, 1, 2].map((i) => (
+            <span class="flex flex-1 flex-col gap-1.5">
+              <span class="bg-muted h-2 rounded" />
+              <span class:list={["h-0.5 rounded", i === accent ? "bg-primary" : "bg-transparent"]} />
+            </span>
+          ))}
+        </div>
+        <span class="bg-background flex-1 rounded-[8px]" />
+      </div>
+    )
+  }
+  {
+    kind === "plans" && (
+      <div class="grid w-full grid-cols-2 gap-2">
+        {[0, 1].map((plan) => (
+          <div
+            class:list={[
+              "bg-background flex flex-col gap-1.5 rounded-[8px] p-3",
+              plan === 1 && "ring-primary ring-2",
+            ]}
+          >
+            <span class="bg-muted h-2 w-1/2 rounded" />
+            <span class="bg-muted h-3.5 w-2/3 rounded" />
+            <span class:list={["mt-2 h-4 rounded", plan === 1 ? "bg-primary" : "bg-muted"]} />
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "chat" && (
+      <div class="flex w-full flex-col gap-2">
+        <span class="bg-background h-7 rounded-xl rounded-bl" style={`width:${widths[0]}%`} />
+        <span class="bg-primary ml-auto h-7 rounded-xl rounded-br" style={`width:${widths[1]}%`} />
+        <span class="bg-background h-7 rounded-xl rounded-bl" style={`width:${widths[2]}%`} />
+      </div>
+    )
+  }
+  {
+    kind === "player" && (
+      <div class="flex w-full flex-col items-center gap-3">
+        <span class="bg-primary text-primary-foreground flex size-12 items-center justify-center rounded-full">
+          <Icon name="mdi:play" class="size-6" />
+        </span>
+        <div class="bg-muted h-1.5 w-full rounded-full">
+          <div class="bg-primary h-full rounded-full" style={`width:${widths[0]}%`} />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "search" && (
+      <div class="flex w-full flex-col gap-2">
+        <div class="bg-background flex h-9 items-center gap-2 rounded-[8px] px-3">
+          <Icon name="mdi:magnify" class="text-primary size-4" />
+          <span class="bg-muted h-2 rounded" style={`width:${widths[0]}%`} />
+        </div>
+        {[1, 2].map((i) => (
+          <div class="flex items-center gap-2 px-3">
+            <span class="bg-muted size-3 rounded-full" />
+            <span class="bg-muted h-2 rounded" style={`width:${widths[i]}%`} />
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "product" && (
+      <div class="bg-background flex h-full w-full gap-3 rounded-[8px] p-2.5">
+        <span class="bg-primary/25 w-2/5 rounded-[6px]" />
+        <div class="flex flex-1 flex-col justify-center gap-2">
+          <span class="bg-muted h-2.5 w-4/5 rounded" />
+          <span class="bg-muted h-2 w-1/2 rounded" />
+          <span class="bg-primary mt-1 h-5 w-16 rounded-[6px]" />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "grid" && (
+      <div class="grid h-full w-full grid-cols-3 gap-2">
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <span
+            class:list={[
+              "rounded-[6px]",
+              i === accent + 1 ? "bg-primary/30" : "bg-background",
+            ]}
+          />
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "toggles" && (
+      <div class="flex w-full flex-col gap-2.5">
+        {[0, 1, 2].map((i) => (
+          <div class="flex items-center justify-between gap-3">
+            <span class="bg-muted h-2 rounded" style={`width:${widths[i]}%`} />
+            <span
+              class:list={[
+                "flex h-4.5 w-8 shrink-0 items-center rounded-full p-0.5",
+                i === accent ? "bg-primary justify-end" : "bg-muted",
+              ]}
+            >
+              <span class="bg-background size-3.5 rounded-full" />
+            </span>
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "sheet" && (
+      <div class="bg-muted flex h-full w-full items-end justify-center overflow-hidden rounded-[8px] px-3 pt-3">
+        <div class="bg-background flex w-full flex-col items-center gap-2 rounded-t-[8px] p-3">
+          <span class="bg-muted h-1 w-8 rounded-full" />
+          <span class="bg-muted h-2 w-3/4 rounded" />
+          <span class="bg-primary h-5 w-full rounded-[6px]" />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "nav" && (
+      <div
+        class:list={[
+          "flex h-full w-full gap-2",
+          /app_bar/.test(id) ? "flex-col-reverse" : "flex-col",
+        ]}
+      >
+        <div class="flex flex-1 flex-col justify-center gap-2 px-1">
+          <span class="bg-muted h-2 rounded" style={`width:${widths[0]}%`} />
+          <span class="bg-muted h-2 rounded" style={`width:${widths[1]}%`} />
+        </div>
+        <div class="bg-background flex h-10 items-center justify-around rounded-[8px]">
+          {[0, 1, 2, 3].map((i) => (
+            <span class:list={["size-4 rounded", i === accent ? "bg-primary" : "bg-muted"]} />
+          ))}
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "onboarding" && (
+      <div class="flex flex-col items-center gap-3">
+        <span class="bg-background text-primary flex size-12 items-center justify-center rounded-xl">
+          {icon && <Icon name={icon} class="size-6" />}
+        </span>
+        <div class="flex gap-1">
+          <span class="bg-primary h-1.5 w-4 rounded-full" />
+          <span class="bg-muted size-1.5 rounded-full" />
+          <span class="bg-muted size-1.5 rounded-full" />
+        </div>
+        <span class="bg-primary h-5 w-24 rounded-[6px]" />
+      </div>
+    )
+  }
+  {
+    kind === "empty" && (
+      <div class="flex flex-col items-center gap-2.5">
+        <span class="bg-background text-primary flex size-11 items-center justify-center rounded-full">
+          {icon && <Icon name={icon} class="size-5" />}
+        </span>
+        <span class="bg-muted h-2 w-24 rounded" />
+        <span class="bg-muted h-1.5 w-16 rounded" />
+      </div>
+    )
+  }
+  {
+    kind === "profile" && (
+      <div class="flex w-full items-center gap-3">
+        <span class="bg-primary/30 size-16 shrink-0 rounded-full" />
+        <div class="flex flex-1 flex-col gap-2">
+          <span class="bg-muted h-3 w-3/4 rounded" />
+          <span class="bg-muted h-2 w-1/2 rounded" />
+          <span class="bg-primary mt-1 h-5 w-20 rounded-[6px]" />
+        </div>
+      </div>
+    )
+  }
+  {
+    kind === "form" && (
+      <div class="bg-background flex w-52 flex-col gap-1.5 rounded-[10px] p-2.5 shadow-sm">
+        {formIcon ? (
+          <span class="bg-primary/15 text-primary mx-auto flex size-7 items-center justify-center rounded-full">
+            <Icon name={formIcon} class="size-4" />
+          </span>
+        ) : (
+          <span class="bg-muted mb-0.5 h-2 w-1/2 rounded-full" />
+        )}
+        {!formIcon && (
+          <span class="border-muted flex h-5.5 items-center rounded-[6px] border px-2">
+            <span class="bg-muted h-1.5 w-3/5 rounded-full" />
+          </span>
+        )}
+        <span class="border-primary flex h-5.5 items-center gap-1 rounded-[6px] border px-2">
+          <span class="bg-muted h-1.5 w-2/5 rounded-full" />
+          <span class="bg-primary h-3 w-px" />
+        </span>
+        <span class="bg-primary flex h-5.5 items-center justify-center rounded-[6px]">
+          <span class="bg-primary-foreground/80 h-1.5 w-1/4 rounded-full" />
+        </span>
+      </div>
+    )
+  }
+  {
+    kind === "table" && (
+      <div class="bg-background flex w-full flex-col gap-2 rounded-[8px] p-3">
+        {[0, 1, 2, 3].map((row) => (
+          <div class="grid grid-cols-[1fr_2fr_1fr] gap-3">
+            <span class:list={["h-2 rounded", row === 0 ? "bg-primary/60" : "bg-muted"]} />
+            <span class:list={["h-2 rounded", row === 0 ? "bg-primary/60" : "bg-muted"]} />
+            <span class:list={["h-2 rounded", row === 0 ? "bg-primary/60" : "bg-muted"]} />
+          </div>
+        ))}
+      </div>
+    )
+  }
+  {
+    kind === "list" && (
+      <div class="flex w-full flex-col gap-2.5">
+        {[0, 1, 2].map((i) => (
+          <div class="flex items-center gap-2.5">
+            <span class:list={["size-7 shrink-0 rounded-[8px]", i === accent ? "bg-primary/70" : "bg-background"]} />
+            <div class="flex flex-1 flex-col gap-1.5">
+              <span class="bg-muted h-2 rounded" style={`width:${widths[i]}%`} />
+              <span class="bg-muted h-1.5 w-2/5 rounded opacity-70" />
+            </div>
+          </div>
+        ))}
+      </div>
+    )
+  }
+</div>

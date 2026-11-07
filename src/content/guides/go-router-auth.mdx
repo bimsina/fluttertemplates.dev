@@ -1,0 +1,684 @@
+---
+title: go_router auth guards and deep links
+description: Protect routes with go_router, send people back to the page they asked for after sign-in, handle the cold-start auth check, and set up deep links on Android, iOS, and web.
+order: 6
+---
+
+import LivePreview from "@/components/LivePreview";
+
+The problem: someone taps a link to `/orders/12345` while signed out. They should see the login screen, sign in, and land on order 12345. Cold starts add a second problem: you don't know if they're signed in until the stored session loads, and guessing wrong flashes the login screen at signed-in users.
+
+This guide solves both in a small shop app, built from these library screens:
+
+- [Sign In Form](/widgets/forms/simple_sign_in/) for `/login`
+- [Splash Screen](/widgets/states/splash_screen/) for `/splash`
+- [Product Grid](/widgets/ecommerce/product_grid/) for `/`, which is public
+- [Product Detail](/widgets/ecommerce/product_detail/) for `/products/:id`, also public
+- [Order History](/widgets/ecommerce/order_history/) for `/orders`, which requires sign-in
+- [Simple Profile Page](/widgets/must_haves/profile_page/simple_profile_page/) for `/profile`, which requires sign-in
+- [Material 3 Bottom Navigation](/widgets/navigation/bottom_navigation/material3_bottom/) as the model for the tab bar
+
+<LivePreview client:visible path="/forms/sign_in/sign_in_page1" />
+
+The code targets `go_router` 18, which needs Flutter 3.44 or newer.
+
+## Setup
+
+```bash
+flutter pub add go_router
+fluttertemplates add forms/simple_sign_in states/splash_screen ecommerce/product_grid ecommerce/product_detail ecommerce/order_history must_haves/profile_page/simple_profile_page
+```
+
+The screens land under `lib/fluttertemplates/`. Without the [CLI](/guides/cli/), copy each file from its widget page into the same path.
+
+For web URLs without a `#`, also add this under `dependencies` in `pubspec.yaml`:
+
+```yaml
+dependencies:
+  flutter_web_plugins:
+    sdk: flutter
+```
+
+## Auth state with three values
+
+A signed-in boolean can't describe a cold start. Use three states, and make the class a `Listenable` so go_router can react to it.
+
+```dart
+// lib/auth_controller.dart
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+
+enum AuthStatus { unknown, signedOut, signedIn }
+
+/// Turns any "is someone signed in" stream into a Listenable for go_router.
+class AuthController extends ChangeNotifier {
+  AuthController(Stream<bool> signedInChanges, {this.signedInNow}) {
+    _subscription = signedInChanges.listen(
+      (signedIn) => _set(signedIn ? AuthStatus.signedIn : AuthStatus.signedOut),
+      onError: (Object error) {
+        debugPrint('Auth stream error: $error');
+        _leaveUnknown();
+      },
+      onDone: _leaveUnknown,
+    );
+  }
+
+  /// Reads the session the SDK already holds, for when the stream fails.
+  final bool Function()? signedInNow;
+
+  late final StreamSubscription<bool> _subscription;
+  AuthStatus _status = AuthStatus.unknown;
+
+  AuthStatus get status => _status;
+
+  void _set(AuthStatus next) {
+    if (next == _status) return;
+    _status = next;
+    notifyListeners();
+  }
+
+  /// A check that failed can't hold the app on the splash. A status that's
+  /// already known stays, because a network error doesn't sign anyone out.
+  void _leaveUnknown() {
+    if (_status != AuthStatus.unknown) return;
+    final signedIn = signedInNow?.call() ?? false;
+    _set(signedIn ? AuthStatus.signedIn : AuthStatus.signedOut);
+  }
+
+  @override
+  void dispose() {
+    _subscription.cancel();
+    super.dispose();
+  }
+}
+```
+
+Taking a stream means it works with any backend. Pick the one that matches yours:
+
+```dart
+// Firebase
+final firebaseAuth = AuthController(
+  FirebaseAuth.instance.authStateChanges().map((user) => user != null),
+  signedInNow: () => FirebaseAuth.instance.currentUser != null,
+);
+
+// Supabase
+final supabaseAuth = AuthController(
+  Supabase.instance.client.auth.onAuthStateChange.map(
+    (data) => data.session != null,
+  ),
+  signedInNow: () => Supabase.instance.client.auth.currentSession != null,
+);
+```
+
+Both of those emit once at startup, and that first event is what moves the app out of `unknown`.
+
+Auth streams can also fail. Supabase [sends network errors through its stream](https://supabase.com/docs/reference/dart/auth-onauthstatechange), and `map` passes errors along. Without `onError`, an error is uncaught and the status stays `unknown`, so the app sits on the splash. Here a failed check falls back to `signedInNow`, which reads the session the SDK already holds. With no session, or no `signedInNow`, it counts as signed out: public pages open and guarded pages go to login. The next event from the stream still updates the status.
+
+To run this guide without a backend, use this fake. It pretends the session check takes a second.
+
+```dart
+// lib/fake_auth_backend.dart
+import 'dart:async';
+
+class FakeAuthBackend {
+  final _controller = StreamController<bool>.broadcast();
+
+  Stream<bool> get changes async* {
+    await Future<void>.delayed(const Duration(seconds: 1));
+    yield false; // No stored session.
+    yield* _controller.stream;
+  }
+
+  Future<void> signIn() async {
+    await Future<void>.delayed(const Duration(milliseconds: 300));
+    _controller.add(true);
+  }
+
+  void signOut() => _controller.add(false);
+}
+```
+
+## The redirect
+
+Keep the rules in a plain function. It takes the status and the requested URI, so you can test it without building a widget.
+
+```dart
+// lib/auth_redirect.dart
+import 'auth_controller.dart';
+
+bool _isPublic(String path) =>
+    path == '/' || path == '/login' || path.startsWith('/products/');
+
+/// Only accepts paths inside the app. A link like
+/// /login?from=https://evil.example must not send anyone off-site.
+String? safeFrom(String? from) {
+  if (from == null || !from.startsWith('/')) return null;
+  if (from.startsWith('//') || from.contains(r'\')) return null;
+  return from;
+}
+
+String? authRedirect(AuthStatus status, Uri uri) {
+  final path = uri.path;
+  final from = safeFrom(uri.queryParameters['from']);
+
+  // Hold everything on the splash until the session check finishes.
+  if (status == AuthStatus.unknown) {
+    if (path == '/splash') return null;
+    final target = Uri(path: '/splash', queryParameters: {'from': '$uri'});
+    return target.toString();
+  }
+
+  // The check finished: send the user where they were going.
+  if (path == '/splash') {
+    return (from == null || from.startsWith('/splash')) ? '/' : from;
+  }
+
+  if (status == AuthStatus.signedIn) {
+    return path == '/login' ? (from ?? '/') : null;
+  }
+
+  if (_isPublic(path)) return null;
+  return Uri(path: '/login', queryParameters: {'from': '$uri'}).toString();
+}
+```
+
+Follow the deep link through it:
+
+1. App opens at `/orders/12345`, status `unknown`. Redirect to `/splash?from=/orders/12345`.
+2. The stream says signed out. `/splash` redirects to `/orders/12345`, go_router runs the redirect again, and that lands on `/login?from=/orders/12345`.
+3. The user signs in. `AuthController` notifies, go_router re-runs the redirect for `/login?from=/orders/12345`, and it returns `/orders/12345`.
+
+The login screen never navigates by itself. It signs in and the redirect does the rest.
+
+Every path through the function ends at a location that returns `null`, which is how you avoid redirect loops.
+
+## The router
+
+`refreshListenable` re-runs `redirect` whenever `AuthController` notifies. `StatefulShellRoute.indexedStack` keeps each tab's stack alive.
+
+```dart
+// lib/router.dart
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'auth_controller.dart';
+import 'auth_redirect.dart';
+import 'fake_auth_backend.dart';
+import 'fluttertemplates/ecommerce/order_history.dart';
+import 'fluttertemplates/ecommerce/product_detail.dart';
+import 'fluttertemplates/ecommerce/product_grid.dart';
+import 'fluttertemplates/forms/sign_in/sign_in_page1.dart';
+import 'fluttertemplates/must_haves/profile_page/profile_page_1.dart';
+import 'fluttertemplates/states/splash_screen.dart';
+import 'home_shell.dart';
+import 'order_detail_page.dart';
+
+GoRouter createRouter(AuthController auth, FakeAuthBackend backend) {
+  return GoRouter(
+    initialLocation: '/',
+    refreshListenable: auth,
+    redirect: (context, state) => authRedirect(auth.status, state.uri),
+    routes: [
+      GoRoute(
+        path: '/splash',
+        builder: (context, state) => const SplashScreen(),
+      ),
+      GoRoute(
+        path: '/login',
+        builder: (context, state) => SignInPage1(onSignIn: backend.signIn),
+      ),
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) =>
+            HomeShell(navigationShell: navigationShell),
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/',
+                builder: (context, state) => const ProductGrid(),
+                routes: [
+                  GoRoute(
+                    path: 'products/:id',
+                    builder: (context, state) => ProductDetail(
+                      productId: state.pathParameters['id']!,
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/orders',
+                builder: (context, state) => const OrderHistory(),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (context, state) =>
+                        OrderDetailPage(orderId: state.pathParameters['id']!),
+                  ),
+                ],
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/profile',
+                builder: (context, state) => Scaffold(
+                  body: const ProfilePage1(),
+                  floatingActionButton: FloatingActionButton.extended(
+                    onPressed: backend.signOut,
+                    icon: const Icon(Icons.logout),
+                    label: const Text('Sign out'),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    ],
+  );
+}
+```
+
+The tab bar is the `NavigationBar` from the bottom nav widget, driven by the router instead of `setState`.
+
+```dart
+// lib/home_shell.dart
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class HomeShell extends StatelessWidget {
+  const HomeShell({super.key, required this.navigationShell});
+
+  final StatefulNavigationShell navigationShell;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: navigationShell,
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: navigationShell.currentIndex,
+        onDestinationSelected: (index) => navigationShell.goBranch(
+          index,
+          // Tapping the current tab returns to its root.
+          initialLocation: index == navigationShell.currentIndex,
+        ),
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.storefront_outlined),
+            label: 'Shop',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.receipt_long_outlined),
+            label: 'Orders',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.person_outline_rounded),
+            label: 'Profile',
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+A small page for the guarded deep link target:
+
+```dart
+// lib/order_detail_page.dart
+import 'package:flutter/material.dart';
+
+class OrderDetailPage extends StatelessWidget {
+  const OrderDetailPage({super.key, required this.orderId});
+
+  final String orderId;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text('Order #$orderId')),
+      body: Center(child: Text('Details for order $orderId')),
+    );
+  }
+}
+```
+
+## Edit the screens
+
+**`SignInPage1`** needs a way to report a valid submit. Add a callback and a busy flag. Sign-in errors are covered in the [Firebase](/guides/firebase-auth/) and [Supabase](/guides/supabase-auth/) guides.
+
+```dart
+class SignInPage1 extends StatefulWidget {
+  const SignInPage1({super.key, required this.onSignIn});
+
+  final Future<void> Function() onSignIn;
+
+  @override
+  State<SignInPage1> createState() => _SignInPage1State();
+}
+```
+
+Then replace the `/// do something` comment in the button's `onPressed`:
+
+```dart
+widget.onSignIn();
+```
+
+**`ProductDetail`** needs to know which product it's showing:
+
+```dart
+class ProductDetail extends StatefulWidget {
+  final String productId;
+
+  /// Called with the chosen size and color index. Without it the demo shows
+  /// a SnackBar.
+  final void Function(String size, int colorIndex)? onAddToCart;
+
+  const ProductDetail({super.key, required this.productId, this.onAddToCart});
+
+  @override
+  State<ProductDetail> createState() => _ProductDetailState();
+}
+```
+
+Change the `'Product Name'` text to `'Product ${widget.productId}'`. Use the id to load the real product in your app, because a deep link can arrive with an id that doesn't exist. Handle the not-found case on the page.
+
+**`ProductGrid` and `OrderHistory`** need a way to reach those pages. Import `package:go_router/go_router.dart` in both. In `ProductGrid`, wrap the `Card` in an `InkWell`:
+
+```dart
+return InkWell(
+  onTap: () => context.go('/products/${i + 1}'),
+  child: Card(
+```
+
+Close the `InkWell` with one more `),` after the `Card`.
+
+In `OrderHistory`, add a button under the `'Total: ...'` text:
+
+```dart
+TextButton(
+  onPressed: () => context.go('/orders/${o['id']}'),
+  child: const Text('View order'),
+),
+```
+
+`ProductGrid` and `OrderHistory` each have their own `Scaffold`, which sits inside `HomeShell`'s. That's fine: each page keeps its `AppBar` and the shell adds only the bottom bar.
+
+## Wire up the app
+
+Create the router once. If it's built inside `build`, every rebuild of the widget resets navigation to `initialLocation`.
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+import 'package:flutter_web_plugins/url_strategy.dart';
+import 'package:go_router/go_router.dart';
+
+import 'auth_controller.dart';
+import 'fake_auth_backend.dart';
+import 'router.dart';
+
+void main() {
+  usePathUrlStrategy(); // /orders/1 rather than /#/orders/1 on web.
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  final _backend = FakeAuthBackend();
+  late final AuthController _auth = AuthController(_backend.changes);
+  late final GoRouter _router = createRouter(_auth, _backend);
+
+  @override
+  void dispose() {
+    _router.dispose();
+    _auth.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp.router(routerConfig: _router);
+  }
+}
+```
+
+`usePathUrlStrategy` needs your web server to serve `index.html` for every path. Without that, reloading `/orders/1` gives a 404.
+
+## Password recovery with Supabase
+
+Skip this section if you use Firebase or the fake backend. A Supabase reset link signs the user in, so the `AuthController` above only sees `signedIn`, and the redirect sends them home with no reset screen. Recovery needs its own state, and it has to be checked first:
+
+```dart
+// lib/recovery_redirect.dart
+import 'auth_controller.dart';
+import 'auth_redirect.dart';
+
+String? recoveryRedirect(bool recovering, AuthStatus status, Uri uri) {
+  if (recovering) {
+    return uri.path == '/reset-password' ? null : '/reset-password';
+  }
+  if (uri.path == '/reset-password') return '/';
+  return authRedirect(status, uri);
+}
+```
+
+Set that state from the auth stream. Do this in `main`, right after `Supabase.initialize` and before `runApp`, then pass `recovering` down to `createRouter`. The stream replays only its latest event to a new listener, so a listener added later can miss `passwordRecovery`:
+
+```dart
+final recovering = ValueNotifier(false);
+Supabase.instance.client.auth.onAuthStateChange.listen(
+  (data) {
+    switch (data.event) {
+      case AuthChangeEvent.passwordRecovery:
+        recovering.value = true;
+      case AuthChangeEvent.userUpdated || AuthChangeEvent.signedOut:
+        recovering.value = false;
+      default:
+        break;
+    }
+  },
+  // Network failures and expired or already-used links arrive here.
+  onError: (Object error) => debugPrint('Auth stream error: $error'),
+);
+```
+
+Then change `createRouter` to take `recovering` and listen to both, and add the route. Saving the password emits `userUpdated`, so the screen doesn't navigate by itself. See the [Supabase guide](/guides/supabase-auth/) for catching errors from `updateUser`.
+
+```dart
+refreshListenable: Listenable.merge([auth, recovering]),
+redirect: (context, state) =>
+    recoveryRedirect(recovering.value, auth.status, state.uri),
+```
+
+```dart
+GoRoute(
+  path: '/reset-password',
+  builder: (context, state) => ResetPassword(
+    onReset: (password) => Supabase.instance.client.auth.updateUser(
+      UserAttributes(password: password),
+    ),
+  ),
+),
+```
+
+A redirect replaces the whole stack, so the reset screen appears on top whatever was open. Screens opened with `context.push` go too. This is the advantage over swapping a widget inside `home`, which can't reach routes above it.
+
+## Test the rules
+
+The redirect is a pure function, so the tests need no widgets.
+
+```dart
+// test/auth_redirect_test.dart
+import 'package:flutter_test/flutter_test.dart';
+import 'package:my_app/auth_controller.dart';
+import 'package:my_app/auth_redirect.dart';
+
+void main() {
+  test('holds on the splash while unknown, keeping the target', () {
+    expect(
+      authRedirect(AuthStatus.unknown, Uri.parse('/orders/1')),
+      '/splash?from=%2Forders%2F1',
+    );
+  });
+
+  test('sends signed-out users to login, keeping the target', () {
+    expect(
+      authRedirect(AuthStatus.signedOut, Uri.parse('/orders/1')),
+      '/login?from=%2Forders%2F1',
+    );
+  });
+
+  test('public pages stay open when signed out', () {
+    expect(authRedirect(AuthStatus.signedOut, Uri.parse('/')), isNull);
+    expect(authRedirect(AuthStatus.signedOut, Uri.parse('/products/3')), isNull);
+  });
+
+  test('returns to the target after sign-in', () {
+    final uri = Uri.parse('/login?from=%2Forders%2F1');
+    expect(authRedirect(AuthStatus.signedIn, uri), '/orders/1');
+  });
+
+  test('refuses to redirect off-site', () {
+    for (final from in ['https://evil.example', '//evil.example', r'/\evil']) {
+      final uri = Uri(path: '/login', queryParameters: {'from': from});
+      expect(authRedirect(AuthStatus.signedIn, uri), '/');
+    }
+  });
+}
+```
+
+## Set up deep links
+
+go_router handles the path once a URL reaches the app. Each platform still has to route the URL to you. Since Flutter 3.27, Flutter's deep link handling is on by default, and that handler is what passes the URL to go_router. So with go_router alone, leave out the `flutter_deeplinking_enabled` and `FlutterDeepLinkingEnabled` flags. Setting either one to `false` stops links reaching go_router on that platform. If a plugin also handles links, see [With a link plugin](#with-a-link-plugin).
+
+### Android
+
+Add this inside the `.MainActivity` `<activity>` in `android/app/src/main/AndroidManifest.xml`, using your domain:
+
+```xml
+<intent-filter android:autoVerify="true">
+    <action android:name="android.intent.action.VIEW" />
+    <category android:name="android.intent.category.DEFAULT" />
+    <category android:name="android.intent.category.BROWSABLE" />
+    <data android:scheme="https" android:host="example.com" />
+</intent-filter>
+```
+
+Host this at `https://example.com/.well-known/assetlinks.json`, with your application ID and the SHA-256 fingerprint of your signing key:
+
+```json
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.example.myapp",
+    "sha256_cert_fingerprints": ["FF:2A:CF:..."]
+  }
+}]
+```
+
+If you distribute through Play, use the fingerprint from Play App Signing, not your upload key.
+
+Test the app side:
+
+```bash
+adb shell 'am start -a android.intent.action.VIEW \
+    -c android.intent.category.BROWSABLE \
+    -d "https://example.com/orders/12345"' \
+    com.example.myapp
+```
+
+That command launches the app even if `assetlinks.json` is wrong. To check the whole setup, tap a real link from another app.
+
+### iOS
+
+Add the Associated Domains capability to the Runner target in Xcode, with the entry `applinks:example.com`. This needs a paid developer account, because personal teams don't support it.
+
+Host this at `https://example.com/.well-known/apple-app-site-association`, with no file extension. The app ID is your team ID and bundle ID:
+
+```json
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["TEAMID.com.example.myapp"],
+        "components": [{ "/": "/*" }]
+      }
+    ]
+  }
+}
+```
+
+Test on a simulator:
+
+```bash
+xcrun simctl openurl booted https://example.com/orders/12345
+```
+
+Apple's CDN fetches that file, so a change can take up to 24 hours to reach devices.
+
+### Web
+
+Nothing else is needed. The browser's URL is the deep link. Run with `flutter run -d chrome` and open `/orders/12345` directly.
+
+### With a link plugin
+
+The defaults above change if a plugin such as `app_links` handles links too, and `supabase_flutter` uses `app_links`. [Flutter's docs](https://docs.flutter.dev/ui/navigation/deep-linking) say to opt out of the default handler in that case, so follow the [Supabase guide's deep link setup](/guides/supabase-auth/#deep-links). On Android and iOS, go_router then no longer gets URLs from the platform, so forward your own links to it:
+
+```bash
+flutter pub add app_links
+```
+
+```dart
+// lib/forward_links.dart
+import 'dart:async';
+
+import 'package:app_links/app_links.dart';
+import 'package:go_router/go_router.dart';
+
+StreamSubscription<Uri> forwardLinks(GoRouter router) {
+  return AppLinks().uriLinkStream.listen((uri) {
+    // supabase_flutter handles its own callback, on the custom scheme.
+    if (uri.scheme != 'https') return;
+    router.go(uri.hasQuery ? '${uri.path}?${uri.query}' : uri.path);
+  });
+}
+```
+
+Call it once in `initState` of `_MyAppState`, and cancel the subscription in `dispose`. The stream also delivers the link that launched the app, and the redirect handles it like any other location.
+
+## Common mistakes
+
+**Creating `GoRouter` in `build`.** Navigation resets on each rebuild. Create it once in `State`, or in a top-level or provider-scoped object.
+
+**Reading auth with `context.watch` inside `redirect`.** `redirect` is a callback, not a build method. Use `refreshListenable`.
+
+**A redirect that always returns a path.** go_router stops after `redirectLimit` redirects (5 by default) and shows the error page. Every branch must eventually return `null`.
+
+**Comparing `state.uri.toString()` to a path.** That string includes the query. Compare `uri.path`, as `authRedirect` does.
+
+**Using `state.matchedLocation` to remember the target.** It leaves out the query string. Keep the full `uri`, or `/orders?tab=open` loses `tab`.
+
+**Skipping `safeFrom`.** `from` comes from a URL, so anyone can set it.
+
+**`context.push` where you meant `context.go`.** `go` replaces the stack to match the URL. `push` adds on top, and on web the address bar doesn't update by default. It also weakens the guard: when auth changes, `redirect` sees the location underneath the pushed page. So if you push `/orders` over the public `/`, signing out leaves the orders page on screen. For redirect-driven flows, use `go`.
+
+**Listening to an auth stream without `onError`.** The error goes uncaught, and if it arrives before the first event, the app never leaves the splash.
+
+**Pushing to `/login` from a failed API call.** Sign out instead and let the redirect react, so there's a single rule for who sees what.
+
+**Combining with Supabase auth links.** Turning off Flutter's handler for `supabase_flutter` also turns it off for go_router, so links stop working unless you forward them. See [With a link plugin](#with-a-link-plugin), and test your email links on a real device before you ship.

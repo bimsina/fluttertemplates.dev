@@ -11,13 +11,16 @@
   "author": "Bibek Timsina <timsinabibek960@gmail.com>",
   "packageManager": "pnpm@11.10.0",
   "scripts": {
+    "registry": "node scripts/build-registry.mjs",
+    "predev": "node scripts/build-registry.mjs",
     "dev": "astro dev",
     "run-apps": "cd flutter_apps/core && flutter run -d chrome --web-port 8989 --web-experimental-hot-reload",
+    "prebuild": "node scripts/build-registry.mjs",
     "build": "astro build",
     "build-apps": "node scripts/build.js",
     "preview": "astro preview",
     "astro": "astro",
-    "deploy": "astro build && pnpx wrangler deploy",
+    "deploy": "pnpm build && pnpx wrangler deploy",
     "format": "prettier --write src/"
   },
   "dependencies": {
@@ -29,6 +32,7 @@
     "@fontsource/inter": "5.2.8",
     "@fontsource/jetbrains-mono": "5.2.8",
     "@iconify-json/mdi": "1.2.3",
+    "@pierre/trees": "1.0.0-beta.6",
     "@swup/astro": "1.8.0",
     "@tailwindcss/vite": "4.3.2",
     "@types/react": "19.2.17",

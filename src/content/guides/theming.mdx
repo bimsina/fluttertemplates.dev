@@ -1,0 +1,340 @@
+---
+title: Theme any screen with your brand
+description: Make library screens match your brand from one file. Color schemes, light and dark, fonts, component shapes, custom tokens, and how to fix hard-coded colors.
+order: 3
+---
+
+import LivePreview from "@/components/LivePreview";
+
+Library screens read their colors and text styles from `Theme.of(context)`, so a good `ThemeData` restyles most of them with no edits. The rest have a few hard-coded colors that break in dark mode or clash with your brand. This guide sets up the theme once, then fixes those.
+
+You'll work with two screens that show both cases:
+
+- [Login Screen](/widgets/auth/login_hero/) is fully theme-driven
+- [Sign Up with terms](/widgets/auth/signup_terms/) hard-codes its password strength colors
+
+<LivePreview client:visible path="/auth/signup_terms" />
+
+## Setup
+
+```bash
+fluttertemplates add auth/login_hero auth/signup_terms
+```
+
+The screens land under `lib/fluttertemplates/`. Without the [CLI](/guides/cli/), copy each file from its widget page into the same path.
+
+## Generate the color scheme
+
+`ColorScheme.fromSeed` builds a full palette from one color, with text colors that have enough contrast on each surface. Every library screen uses roles from this scheme, such as `primary`, `onPrimary`, `primaryContainer`, and `surfaceContainerHighest`.
+
+By default, the generated `primary` is a toned-down relative of your seed. If your brand color must appear exactly, use `DynamicSchemeVariant.fidelity`, which stays much closer to the seed, and check the result by eye.
+
+## Add your own tokens
+
+A color scheme has no role for "success" or "warning", and those are exactly the colors the library hard-codes. `ThemeExtension` adds your own tokens to the theme, including dark mode values and animated theme changes.
+
+```dart
+// lib/theme/brand_colors.dart
+import 'package:flutter/material.dart';
+
+@immutable
+class BrandColors extends ThemeExtension<BrandColors> {
+  const BrandColors({
+    required this.success,
+    required this.warning,
+    required this.caution,
+  });
+
+  final Color success;
+  final Color warning;
+  final Color caution;
+
+  static const light = BrandColors(
+    success: Color(0xFF1B7F4B),
+    warning: Color(0xFFB85C00),
+    caution: Color(0xFF8A6D00),
+  );
+
+  static const dark = BrandColors(
+    success: Color(0xFF6FDBA1),
+    warning: Color(0xFFFFB871),
+    caution: Color(0xFFE9C949),
+  );
+
+  @override
+  BrandColors copyWith({Color? success, Color? warning, Color? caution}) {
+    return BrandColors(
+      success: success ?? this.success,
+      warning: warning ?? this.warning,
+      caution: caution ?? this.caution,
+    );
+  }
+
+  @override
+  BrandColors lerp(BrandColors? other, double t) {
+    if (other == null) return this;
+    return BrandColors(
+      success: Color.lerp(success, other.success, t)!,
+      warning: Color.lerp(warning, other.warning, t)!,
+      caution: Color.lerp(caution, other.caution, t)!,
+    );
+  }
+}
+
+extension BrandColorsContext on BuildContext {
+  BrandColors get brandColors => Theme.of(this).extension<BrandColors>()!;
+}
+```
+
+`lerp` matters. Flutter uses it to animate between light and dark, so returning a fixed value makes your tokens jump while everything else fades.
+
+## Build the theme
+
+One function, called for each brightness, keeps light and dark in sync.
+
+```dart
+// lib/theme/app_theme.dart
+import 'package:flutter/material.dart';
+
+import 'brand_colors.dart';
+
+const _brand = Color(0xFF0F766E);
+
+ThemeData _buildTheme(Brightness brightness) {
+  final scheme = ColorScheme.fromSeed(
+    seedColor: _brand,
+    brightness: brightness,
+    dynamicSchemeVariant: DynamicSchemeVariant.fidelity,
+  );
+  final radius = BorderRadius.circular(12);
+
+  return ThemeData(
+    colorScheme: scheme,
+    fontFamily: 'Inter',
+    extensions: [
+      brightness == Brightness.light ? BrandColors.light : BrandColors.dark,
+    ],
+    filledButtonTheme: FilledButtonThemeData(
+      style: FilledButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: radius),
+        minimumSize: const Size(0, 48),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        shape: RoundedRectangleBorder(borderRadius: radius),
+      ),
+    ),
+    cardTheme: CardThemeData(
+      elevation: 0,
+      color: scheme.surfaceContainerLow,
+      shape: RoundedRectangleBorder(borderRadius: radius),
+    ),
+    appBarTheme: const AppBarTheme(centerTitle: false),
+  );
+}
+
+final lightTheme = _buildTheme(Brightness.light);
+final darkTheme = _buildTheme(Brightness.dark);
+```
+
+## Add your font
+
+`fontFamily` needs a font that's bundled with the app. Download the files, for example Inter from [Google Fonts](https://fonts.google.com/specimen/Inter), put them in `assets/fonts/`, and declare them in `pubspec.yaml`. Each `weight` you declare is a real file, so bold text doesn't get faked:
+
+```yaml
+flutter:
+  uses-material-design: true
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700
+```
+
+Bundled fonts work offline and don't flash a fallback font on first launch. Restart the app after changing `pubspec.yaml`, because hot reload doesn't pick up new assets.
+
+## Apply it
+
+`themeMode` picks between the two. `ThemeMode.system` follows the device. The switch below is here to make testing easy, and in a real app you'd save the choice with something like `shared_preferences`.
+
+```dart
+// lib/main.dart
+import 'package:flutter/material.dart';
+
+import 'fluttertemplates/auth/login_hero.dart';
+import 'fluttertemplates/auth/signup_terms.dart';
+import 'theme/app_theme.dart';
+
+void main() => runApp(const MyApp());
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  var _mode = ThemeMode.system;
+
+  void _toggle(bool dark) {
+    setState(() => _mode = dark ? ThemeMode.dark : ThemeMode.light);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      themeMode: _mode,
+      home: DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Text('Theme check'),
+            actions: [Switch(value: _mode == ThemeMode.dark, onChanged: _toggle)],
+            bottom: const TabBar(
+              tabs: [Tab(text: 'Login'), Tab(text: 'Sign up')],
+            ),
+          ),
+          body: const TabBarView(children: [LoginHero(), SignupTerms()]),
+        ),
+      ),
+    );
+  }
+}
+```
+
+`LoginHero` picks up everything with no edits: the new primary color, font, button shape, and dark mode.
+
+## Fix hard-coded colors
+
+Find them in any screen you've added:
+
+```bash
+grep -rn "Colors\." lib/fluttertemplates
+```
+
+Then sort each match:
+
+| What you find | What to do |
+| --- | --- |
+| `Colors.white` or `Colors.black` on a colored surface | Use the matching `on...` role, such as `scheme.onPrimary` |
+| `Colors.grey[300]` for a track or divider | `scheme.surfaceContainerHighest` or `scheme.outlineVariant` |
+| `Colors.grey` for secondary text | `scheme.onSurfaceVariant` |
+| `Colors.red` for errors | `scheme.error` |
+| Green, orange, or amber meaning status | A `BrandColors` token |
+| `Colors.primaries[...]` for placeholder images | Leave it, because it goes away with real images |
+
+`signup_terms.dart` has the status case. Its strength bar uses `Colors.orange`, `Colors.amber`, and `Colors.green`. Import `../../theme/brand_colors.dart`, then change the list in `build`:
+
+```dart
+final brand = context.brandColors;
+final colors = [
+  scheme.error,
+  scheme.error,
+  brand.warning,
+  brand.caution,
+  brand.success,
+];
+```
+
+Now the colors are defined once, tuned for each brightness, and consistent with every other status color in your app.
+
+The [Sign Up](/widgets/forms/sign_up/) screen has the track case, with `backgroundColor: Colors.grey[300]` on its strength bar. In dark mode that's a bright stripe across a dark screen. The fix is one line:
+
+```dart
+backgroundColor: Theme.of(context).colorScheme.surfaceContainerHighest,
+```
+
+## Screens that set their own theme
+
+[Responsive Navigation Bar](/widgets/navigation/nav_bar/responsive_nav_bar/) wraps itself in `Theme(data: ThemeData.dark(), ...)`, so your app theme stops at that widget. Delete the `Theme` wrapper and keep its `child`. Its `Scaffold` then follows your theme, and the `Colors.green` logo text should move to `scheme.primary`.
+
+To theme one section differently on purpose, inherit from the app theme rather than starting over:
+
+```dart
+Theme(
+  data: Theme.of(context).copyWith(
+    colorScheme: Theme.of(context).colorScheme.copyWith(
+      primary: Theme.of(context).colorScheme.tertiary,
+    ),
+  ),
+  child: const LoginHero(),
+);
+```
+
+## If you'd rather use google_fonts
+
+The `google_fonts` package fetches fonts at runtime, which is handy while you're trying out options. Current versions have a catch. Since version 9 it's built on the separate `material_ui` package, and its `TextTheme` isn't the same class as the one in `package:flutter/material.dart`, which is what library screens and new Flutter projects import. So the usual one-liner doesn't compile:
+
+```text
+The argument type 'TextTheme' can't be assigned to the parameter type 'TextTheme?'.
+```
+
+`TextStyle` is shared between the two, so apply the font style by style. Each style keeps its weight, and that's what selects the right font file:
+
+```dart
+// lib/theme/inter_text_theme.dart
+import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
+
+TextTheme interTextTheme(TextTheme base) {
+  TextStyle inter(TextStyle? style) => GoogleFonts.inter(textStyle: style);
+
+  return base.copyWith(
+    displayLarge: inter(base.displayLarge),
+    displayMedium: inter(base.displayMedium),
+    displaySmall: inter(base.displaySmall),
+    headlineLarge: inter(base.headlineLarge),
+    headlineMedium: inter(base.headlineMedium),
+    headlineSmall: inter(base.headlineSmall),
+    titleLarge: inter(base.titleLarge),
+    titleMedium: inter(base.titleMedium),
+    titleSmall: inter(base.titleSmall),
+    bodyLarge: inter(base.bodyLarge),
+    bodyMedium: inter(base.bodyMedium),
+    bodySmall: inter(base.bodySmall),
+    labelLarge: inter(base.labelLarge),
+    labelMedium: inter(base.labelMedium),
+    labelSmall: inter(base.labelSmall),
+  );
+}
+```
+
+Remove `fontFamily` from `_buildTheme`, then apply this to the finished theme. Passing the theme's own `textTheme` keeps the text colors right for each brightness:
+
+```dart
+final theme = _buildTheme(Brightness.light);
+final lightTheme = theme.copyWith(textTheme: interTextTheme(theme.textTheme));
+```
+
+Runtime fetching means a flash of the fallback font on first launch, an external request, and no custom font offline. For production, bundle the font as shown above.
+
+## Check your work
+
+1. Toggle dark mode on every screen you've added. Look for bright patches, invisible text, and icons that vanish.
+2. Run the `grep` again and account for each remaining match.
+3. Check contrast on your primary color. `fromSeed` handles generated pairs, but custom tokens like `BrandColors` are on you. Aim for 4.5:1 for body text.
+
+## Common mistakes
+
+**Calling `Theme.of(context)` where `MaterialApp` is created.** That context is above the theme, so you get the default. Read the theme from widgets below `MaterialApp`.
+
+**Using `ThemeData.dark()` for the dark theme.** It ignores your color scheme. Pass a dark `ColorScheme` as above.
+
+**Setting colors with `copyWith` on a generated scheme.** Overriding `primary` without `onPrimary` can leave you with unreadable button text. Change them in pairs, or change the seed.
+
+**Using the old theme types.** `ThemeData` takes `CardThemeData`, not `CardTheme`, and `DialogThemeData`, not `DialogTheme`. Tutorials from before these changes won't compile against current Flutter.
+
+**Using `Color.withOpacity`.** It's deprecated. Use `color.withValues(alpha: 0.3)`.
+
+**Styling each screen by hand.** If you're writing `style: ...` on every button, that belongs in `filledButtonTheme`. Per-widget styles are for genuine exceptions.
+
+**Setting `scaffoldBackgroundColor` to a fixed color.** It applies to both themes, so one of them looks wrong. If you need a specific background, pass `surface:` to `fromSeed` for each brightness.
