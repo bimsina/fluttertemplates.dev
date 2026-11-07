@@ -1,0 +1,20 @@
+{
+  "id": "broken/absolute",
+  "title": "Absolute",
+  "description": "Tries to write to an absolute path.",
+  "category": "broken",
+  "categoryTitle": "Broken",
+  "url": "https://fluttertemplates.dev/widgets/broken/absolute/",
+  "previewPath": "/broken/absolute",
+  "loc": 2,
+  "flutterWidgets": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "/tmp/fluttertemplates_absolute.dart",
+      "content": "// nope\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

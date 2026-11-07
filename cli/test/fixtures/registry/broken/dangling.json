@@ -1,0 +1,20 @@
+{
+  "id": "broken/dangling",
+  "title": "Dangling",
+  "description": "Imports code it does not ship.",
+  "category": "broken",
+  "categoryTitle": "Broken",
+  "url": "https://fluttertemplates.dev/widgets/broken/dangling/",
+  "previewPath": "/broken/dangling",
+  "loc": 3,
+  "flutterWidgets": [],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "broken/dangling.dart",
+      "content": "import '../shared/helpers.dart';\nimport 'package:core/theme.dart';\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

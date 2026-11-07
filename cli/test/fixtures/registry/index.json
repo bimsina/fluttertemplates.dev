@@ -1,0 +1,165 @@
+{
+  "version": 1,
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE",
+  "widgets": [
+    {
+      "id": "auth/login_screen",
+      "title": "Login Screen",
+      "description": "A Flutter sign in page with email and password fields.",
+      "category": "auth",
+      "categoryTitle": "Authentication",
+      "url": "https://fluttertemplates.dev/widgets/auth/login_screen/",
+      "previewPath": "/auth/login_screen",
+      "loc": 16,
+      "flutterWidgets": [
+        "Scaffold",
+        "TextField"
+      ],
+      "dependencies": [],
+      "files": [
+        "auth/login_screen.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "auth/signup_terms",
+      "title": "Signup With Terms",
+      "description": "A Flutter registration form with a terms checkbox.",
+      "category": "auth",
+      "categoryTitle": "Authentication",
+      "url": "https://fluttertemplates.dev/widgets/auth/signup_terms/",
+      "previewPath": "/auth/signup_terms",
+      "loc": 16,
+      "flutterWidgets": [
+        "CheckboxListTile",
+        "TextField"
+      ],
+      "dependencies": [],
+      "files": [
+        "auth/signup_terms.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "navigation/bottom_navigation/fancy_bar",
+      "title": "Fancy Bar",
+      "description": "A Flutter bottom bar with pill shaped items.",
+      "category": "navigation",
+      "categoryTitle": "Navigation",
+      "url": "https://fluttertemplates.dev/widgets/navigation/bottom_navigation/fancy_bar/",
+      "previewPath": "/navigation/bottom_navigation/fancy_bar",
+      "loc": 20,
+      "flutterWidgets": [
+        "BottomNavigationBar"
+      ],
+      "dependencies": [
+        {
+          "name": "salomon_bottom_bar",
+          "version": "3.3.2"
+        }
+      ],
+      "files": [
+        "navigation/bottom_nav/fancy_bar.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "pricing/price_card",
+      "title": "Price Card",
+      "description": "A Flutter card that shows a price, for login free checkouts.",
+      "category": "pricing",
+      "categoryTitle": "Pricing",
+      "url": "https://fluttertemplates.dev/widgets/pricing/price_card/",
+      "previewPath": "/pricing/price_card",
+      "loc": 20,
+      "flutterWidgets": [
+        "Card"
+      ],
+      "dependencies": [],
+      "files": [
+        "pricing/price_card.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "templates/shop",
+      "title": "Shop",
+      "description": "A full Flutter shop app with several screens.",
+      "category": "templates",
+      "categoryTitle": "Full apps",
+      "url": "https://fluttertemplates.dev/widgets/templates/shop/",
+      "previewPath": "/templates/shop",
+      "loc": 50,
+      "flutterWidgets": [
+        "ListView",
+        "ListTile",
+        "MaterialApp"
+      ],
+      "dependencies": [],
+      "files": [
+        "templates/shop/main.dart",
+        "templates/shop/models/product.dart",
+        "templates/shop/screens/home_screen.dart",
+        "templates/shop/widgets/product_tile.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "broken/escape",
+      "title": "Escape",
+      "description": "Tries to write outside of the install directory.",
+      "category": "broken",
+      "categoryTitle": "Broken",
+      "url": "https://fluttertemplates.dev/widgets/broken/escape/",
+      "previewPath": "/broken/escape",
+      "loc": 2,
+      "flutterWidgets": [],
+      "dependencies": [],
+      "files": [
+        "../../outside.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "broken/absolute",
+      "title": "Absolute",
+      "description": "Tries to write to an absolute path.",
+      "category": "broken",
+      "categoryTitle": "Broken",
+      "url": "https://fluttertemplates.dev/widgets/broken/absolute/",
+      "previewPath": "/broken/absolute",
+      "loc": 2,
+      "flutterWidgets": [],
+      "dependencies": [],
+      "files": [
+        "/tmp/fluttertemplates_absolute.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    },
+    {
+      "id": "broken/dangling",
+      "title": "Dangling",
+      "description": "Imports code it does not ship.",
+      "category": "broken",
+      "categoryTitle": "Broken",
+      "url": "https://fluttertemplates.dev/widgets/broken/dangling/",
+      "previewPath": "/broken/dangling",
+      "loc": 3,
+      "flutterWidgets": [],
+      "dependencies": [],
+      "files": [
+        "broken/dangling.dart"
+      ],
+      "license": "MIT",
+      "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+    }
+  ]
+}

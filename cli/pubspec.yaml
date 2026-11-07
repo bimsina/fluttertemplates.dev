@@ -1,0 +1,31 @@
+name: fluttertemplates
+description: >-
+  Search the fluttertemplates.dev library of Flutter screens and copy them into
+  your project, with an MCP server for AI coding agents.
+version: 0.1.0
+homepage: https://fluttertemplates.dev
+repository: https://github.com/bimsina/fluttertemplates.dev/tree/master/cli
+topics:
+  - flutter
+  - templates
+  - cli
+  - mcp
+
+environment:
+  sdk: ^3.8.0
+
+executables:
+  fluttertemplates:
+
+dependencies:
+  args: ^2.7.0
+  http: ^1.6.0
+  path: ^1.9.1
+  yaml: ^3.1.4
+
+dev_dependencies:
+  # Older versions can't start the Dart compiler in current SDKs, which breaks
+  # `dart test` after `dart pub downgrade`.
+  frontend_server_client: ^4.0.0
+  lints: ^6.1.0
+  test: ^1.33.0

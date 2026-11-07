@@ -1,0 +1,27 @@
+{
+  "id": "navigation/bottom_navigation/fancy_bar",
+  "title": "Fancy Bar",
+  "description": "A Flutter bottom bar with pill shaped items.",
+  "category": "navigation",
+  "categoryTitle": "Navigation",
+  "url": "https://fluttertemplates.dev/widgets/navigation/bottom_navigation/fancy_bar/",
+  "previewPath": "/navigation/bottom_navigation/fancy_bar",
+  "loc": 20,
+  "flutterWidgets": [
+    "BottomNavigationBar"
+  ],
+  "dependencies": [
+    {
+      "name": "salomon_bottom_bar",
+      "version": "3.3.2"
+    }
+  ],
+  "files": [
+    {
+      "path": "navigation/bottom_nav/fancy_bar.dart",
+      "content": "import 'package:flutter/material.dart';\nimport 'package:salomon_bottom_bar/salomon_bottom_bar.dart';\n\nclass FancyBar extends StatefulWidget {\n  FancyBar({super.key});\n\n  @override\n  State<FancyBar> createState() => _FancyBarState();\n}\n\nclass _FancyBarState extends State<FancyBar> {\n  @override\n  Widget build(BuildContext context) => SalomonBottomBar(\n    items: [\n      SalomonBottomBarItem(icon: const Icon(Icons.home), title: const Text('Café')),\n      SalomonBottomBarItem(icon: const Icon(Icons.star), title: const Text('Stars')),\n    ],\n  );\n}\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

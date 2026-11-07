@@ -1,0 +1,23 @@
+{
+  "id": "auth/login_screen",
+  "title": "Login Screen",
+  "description": "A Flutter sign in page with email and password fields.",
+  "category": "auth",
+  "categoryTitle": "Authentication",
+  "url": "https://fluttertemplates.dev/widgets/auth/login_screen/",
+  "previewPath": "/auth/login_screen",
+  "loc": 16,
+  "flutterWidgets": [
+    "Scaffold",
+    "TextField"
+  ],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "auth/login_screen.dart",
+      "content": "import 'package:flutter/material.dart';\n\nclass LoginScreen extends StatelessWidget {\n  const LoginScreen({super.key});\n\n  @override\n  Widget build(BuildContext context) => const Scaffold(body: _Form());\n}\n\nclass _Form extends StatelessWidget {\n  const _Form();\n\n  @override\n  Widget build(BuildContext context) => const TextField();\n}\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

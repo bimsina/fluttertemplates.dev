@@ -1,0 +1,36 @@
+{
+  "id": "templates/shop",
+  "title": "Shop",
+  "description": "A full Flutter shop app with several screens.",
+  "category": "templates",
+  "categoryTitle": "Full apps",
+  "url": "https://fluttertemplates.dev/widgets/templates/shop/",
+  "previewPath": "/templates/shop",
+  "loc": 50,
+  "flutterWidgets": [
+    "ListView",
+    "ListTile",
+    "MaterialApp"
+  ],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "templates/shop/main.dart",
+      "content": "import 'package:flutter/material.dart';\n\nimport 'screens/home_screen.dart';\n\nvoid main() => runApp(const ShopApp());\n\nclass ShopApp extends StatelessWidget {\n  const ShopApp({super.key});\n\n  @override\n  Widget build(BuildContext context) => const MaterialApp(home: HomeScreen());\n}\n"
+    },
+    {
+      "path": "templates/shop/models/product.dart",
+      "content": "class Product {\n  const Product(this.name);\n\n  final String name;\n}\n"
+    },
+    {
+      "path": "templates/shop/screens/home_screen.dart",
+      "content": "import 'package:flutter/material.dart';\n\nimport '../models/product.dart';\nimport '../widgets/product_tile.dart';\n\nclass HomeScreen extends StatelessWidget {\n  const HomeScreen({super.key});\n\n  static const _products = [Product('Mug')];\n\n  @override\n  Widget build(BuildContext context) => Scaffold(\n    body: ListView(\n      children: [for (final item in _products) ProductTile(product: item)],\n    ),\n  );\n}\n"
+    },
+    {
+      "path": "templates/shop/widgets/product_tile.dart",
+      "content": "import 'package:flutter/material.dart';\n\nimport '../models/product.dart';\n\nclass ProductTile extends StatelessWidget {\n  const ProductTile({required this.product, super.key});\n\n  final Product product;\n\n  @override\n  Widget build(BuildContext context) => ListTile(title: Text(product.name));\n}\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

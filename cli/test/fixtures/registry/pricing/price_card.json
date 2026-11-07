@@ -1,0 +1,22 @@
+{
+  "id": "pricing/price_card",
+  "title": "Price Card",
+  "description": "A Flutter card that shows a price, for login free checkouts.",
+  "category": "pricing",
+  "categoryTitle": "Pricing",
+  "url": "https://fluttertemplates.dev/widgets/pricing/price_card/",
+  "previewPath": "/pricing/price_card",
+  "loc": 20,
+  "flutterWidgets": [
+    "Card"
+  ],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "pricing/price_card.dart",
+      "content": "import 'package:flutter/material.dart';\n\nclass Headline extends StatelessWidget {\n  const Headline(this.text, {super.key});\n\n  final String text;\n\n  @override\n  Widget build(BuildContext context) => Text(text);\n}\n\nclass PriceCard extends StatelessWidget {\n  const PriceCard({required this.price, super.key});\n\n  final int price;\n\n  @override\n  Widget build(BuildContext context) => Card(child: Text('$price'));\n}\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

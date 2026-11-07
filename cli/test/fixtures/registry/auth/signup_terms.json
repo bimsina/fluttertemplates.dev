@@ -1,0 +1,23 @@
+{
+  "id": "auth/signup_terms",
+  "title": "Signup With Terms",
+  "description": "A Flutter registration form with a terms checkbox.",
+  "category": "auth",
+  "categoryTitle": "Authentication",
+  "url": "https://fluttertemplates.dev/widgets/auth/signup_terms/",
+  "previewPath": "/auth/signup_terms",
+  "loc": 16,
+  "flutterWidgets": [
+    "CheckboxListTile",
+    "TextField"
+  ],
+  "dependencies": [],
+  "files": [
+    {
+      "path": "auth/signup_terms.dart",
+      "content": "import 'package:flutter/material.dart';\n\nclass SignupTerms extends StatelessWidget {\n  const SignupTerms({super.key});\n\n  @override\n  Widget build(BuildContext context) => const Scaffold(body: _Form());\n}\n\nclass _Form extends StatelessWidget {\n  const _Form();\n\n  @override\n  Widget build(BuildContext context) => const TextField();\n}\n"
+    }
+  ],
+  "license": "MIT",
+  "licenseUrl": "https://fluttertemplates.dev/r/LICENSE"
+}

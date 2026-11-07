@@ -1,0 +1,17 @@
+# Publishes the CLI when a tag like cli-v0.1.1 is pushed. Needs automated
+# publishing turned on for the package on pub.dev, with the tag pattern
+# cli-v{{version}}. The first release has to be published by hand.
+name: Publish CLI
+
+on:
+  push:
+    tags:
+      - "cli-v[0-9]+.[0-9]+.[0-9]+*"
+
+jobs:
+  publish:
+    permissions:
+      id-token: write
+    uses: dart-lang/setup-dart/.github/workflows/publish.yml@v1
+    with:
+      working-directory: cli
