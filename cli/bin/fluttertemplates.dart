@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fluttertemplates/fluttertemplates.dart';
+import 'package:fluttertemplates_dev/fluttertemplates_dev.dart';
 
 Future<void> main(List<String> args) async {
   // Widget sources and MCP payloads are UTF-8 whatever the console default is.

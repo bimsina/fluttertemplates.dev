@@ -34,7 +34,7 @@ const STEPS = [
 ];
 
 // Real output from `fluttertemplates search` and `add`.
-const CLI = `$ dart pub global activate fluttertemplates
+const CLI = `$ dart pub global activate fluttertemplates_dev
 
 $ fluttertemplates search login
 auth/login_hero  Login Screen
@@ -269,7 +269,7 @@ export default function AgentSection() {
               onClick={() =>
                 code.copy(
                   tab === "cli"
-                    ? "dart pub global activate fluttertemplates"
+                    ? "dart pub global activate fluttertemplates_dev"
                     : text,
                 )
               }

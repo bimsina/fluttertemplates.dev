@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:fluttertemplates/src/mcp.dart';
-import 'package:fluttertemplates/src/registry.dart';
+import 'package:fluttertemplates_dev/src/mcp.dart';
+import 'package:fluttertemplates_dev/src/registry.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:path/path.dart' as p;

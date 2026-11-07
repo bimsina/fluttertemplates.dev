@@ -59,7 +59,7 @@ abstract class Registry {
         throw CliException(
           'Registry at $location uses format $version, but this version of '
           'fluttertemplates only reads format $supportedRegistryVersion. '
-          'Update with: dart pub global activate fluttertemplates',
+          'Update with: dart pub global activate fluttertemplates_dev',
         );
       }
       return RegistryIndex(

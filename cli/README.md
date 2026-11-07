@@ -5,7 +5,7 @@ and copy them into your project. You get plain source files that you own and
 can edit, not a package to depend on.
 
 ```sh
-dart pub global activate fluttertemplates
+dart pub global activate fluttertemplates_dev
 ```
 
 ## Usage

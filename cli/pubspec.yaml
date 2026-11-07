@@ -1,4 +1,4 @@
-name: fluttertemplates
+name: fluttertemplates_dev
 description: >-
   Search the fluttertemplates.dev library of Flutter screens and copy them into
   your project, with an MCP server for AI coding agents.

@@ -4,7 +4,7 @@ export const SITE_DESCRIPTION =
 export const GITHUB_URL = "https://github.com/bimsina/fluttertemplates.dev";
 export const AGENT_PROMPT = `Set up Flutter Templates in this project.
 
-1. Run: dart pub global activate fluttertemplates
+1. Run: dart pub global activate fluttertemplates_dev
 2. Add an MCP server named "fluttertemplates" to this tool's config.
    Command: fluttertemplates mcp
 3. Add a short note to this project's agent instructions: check
@@ -22,7 +22,7 @@ export function addPrompt(title: string, id: string) {
   return `Add ${title} from Flutter Templates to this project.
 
 Run: fluttertemplates add ${id}
-If the command is missing, run: dart pub global activate fluttertemplates
+If the command is missing, run: dart pub global activate fluttertemplates_dev
 If that fails, copy the source from https://fluttertemplates.dev/r/${id}.md
 
 Then adapt it to our theme and architecture, connect it to our existing code,

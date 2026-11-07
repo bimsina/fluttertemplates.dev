@@ -3,7 +3,7 @@
 Add a login screen to a new Flutter app.
 
 ```sh
-dart pub global activate fluttertemplates
+dart pub global activate fluttertemplates_dev
 
 flutter create my_app
 cd my_app

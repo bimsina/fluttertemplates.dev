@@ -1,10 +1,10 @@
 import 'dart:io';
 
-import 'package:fluttertemplates/fluttertemplates.dart';
-import 'package:fluttertemplates/src/models.dart';
-import 'package:fluttertemplates/src/public_widget.dart';
-import 'package:fluttertemplates/src/search.dart';
-import 'package:fluttertemplates/src/suggest.dart';
+import 'package:fluttertemplates_dev/fluttertemplates_dev.dart';
+import 'package:fluttertemplates_dev/src/models.dart';
+import 'package:fluttertemplates_dev/src/public_widget.dart';
+import 'package:fluttertemplates_dev/src/search.dart';
+import 'package:fluttertemplates_dev/src/suggest.dart';
 import 'package:test/test.dart';
 import 'package:yaml/yaml.dart';
 

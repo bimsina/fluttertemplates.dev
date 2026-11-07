@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:fluttertemplates/fluttertemplates.dart';
+import 'package:fluttertemplates_dev/fluttertemplates_dev.dart';
 import 'package:path/path.dart' as p;
 import 'package:test/test.dart';
 
