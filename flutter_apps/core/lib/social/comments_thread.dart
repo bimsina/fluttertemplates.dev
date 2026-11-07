@@ -1,12 +1,35 @@
 import 'package:flutter/material.dart';
 
-const _comments = [
+const _sampleComments = [
   {'user': 'Alice', 'text': 'Great post!', 'replies': ['Thanks!']},
   {'user': 'Bob', 'text': 'I agree with this.', 'replies': []},
 ];
 
-class CommentsThread extends StatelessWidget {
+class CommentsThread extends StatefulWidget {
   const CommentsThread({super.key});
+
+  @override
+  State<CommentsThread> createState() => _CommentsThreadState();
+}
+
+class _CommentsThreadState extends State<CommentsThread> {
+  final _controller = TextEditingController();
+  final _comments = [..._sampleComments];
+
+  void _send() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    setState(() {
+      _comments.add({'user': 'You', 'text': text, 'replies': <String>[]});
+      _controller.clear();
+    });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +96,8 @@ class CommentsThread extends StatelessWidget {
                   const SizedBox(width: 8),
                   Expanded(
                     child: TextField(
+                      controller: _controller,
+                      onSubmitted: (_) => _send(),
                       decoration: const InputDecoration(
                         hintText: 'Add a comment...',
                         border: OutlineInputBorder(),
@@ -80,8 +105,9 @@ class CommentsThread extends StatelessWidget {
                     ),
                   ),
                   IconButton(
+                    tooltip: 'Post comment',
                     icon: const Icon(Icons.send),
-                    onPressed: () {},
+                    onPressed: _send,
                   ),
                 ],
               ),

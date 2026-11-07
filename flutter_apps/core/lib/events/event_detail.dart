@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class EventDetail extends StatelessWidget {
+class EventDetail extends StatefulWidget {
   const EventDetail({super.key});
+
+  @override
+  State<EventDetail> createState() => _EventDetailState();
+}
+
+class _EventDetailState extends State<EventDetail> {
+  var _following = false;
 
   @override
   Widget build(BuildContext context) {
@@ -49,19 +56,23 @@ class EventDetail extends StatelessWidget {
                     children: [
                       const CircleAvatar(child: Icon(Icons.person)),
                       const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          const Text('Hosted by Lumen Collective',
-                              style: TextStyle(fontWeight: FontWeight.w600)),
-                          Text('Organizer',
-                              style: TextStyle(
-                                  color: scheme.onSurfaceVariant)),
-                        ],
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const Text('Hosted by Lumen Collective',
+                                style: TextStyle(fontWeight: FontWeight.w600)),
+                            Text('Organizer',
+                                style: TextStyle(
+                                    color: scheme.onSurfaceVariant)),
+                          ],
+                        ),
                       ),
-                      const Spacer(),
+                      const SizedBox(width: 12),
                       OutlinedButton(
-                          onPressed: () {}, child: const Text('Follow')),
+                          onPressed: () =>
+                              setState(() => _following = !_following),
+                          child: Text(_following ? 'Following' : 'Follow')),
                     ],
                   ),
                   const SizedBox(height: 20),
@@ -101,7 +112,7 @@ class EventDetail extends StatelessWidget {
               child: SizedBox(
                 height: 52,
                 child: FilledButton(
-                    onPressed: () {}, child: const Text('Get tickets')),
+                    onPressed: () => _showDemo(context, 'Get tickets (demo)'), child: const Text('Get tickets')),
               ),
             ),
           ],
@@ -117,9 +128,15 @@ class EventDetail extends StatelessWidget {
         children: [
           Icon(icon, size: 18, color: scheme.primary),
           const SizedBox(width: 12),
-          Text(text),
+          Expanded(child: Text(text)),
         ],
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

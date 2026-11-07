@@ -38,10 +38,16 @@ class WorkoutList extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () => _showDemo(context, 'Add Workout (demo)'),
         icon: const Icon(Icons.add),
         label: const Text('Add Workout'),
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

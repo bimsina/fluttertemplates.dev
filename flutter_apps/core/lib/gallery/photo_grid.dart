@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class PhotoGrid extends StatelessWidget {
+class PhotoGrid extends StatefulWidget {
   const PhotoGrid({super.key});
+
+  @override
+  State<PhotoGrid> createState() => _PhotoGridState();
+}
+
+class _PhotoGridState extends State<PhotoGrid> {
+  var _columns = 3;
 
   @override
   Widget build(BuildContext context) {
@@ -9,13 +16,13 @@ class PhotoGrid extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Photos'),
         actions: [
-          IconButton(icon: const Icon(Icons.grid_view), onPressed: () {}),
+          IconButton(tooltip: 'Change layout', icon: const Icon(Icons.grid_view), onPressed: () => setState(() => _columns = _columns == 3 ? 2 : 3)),
         ],
       ),
       body: GridView.builder(
         padding: const EdgeInsets.all(4),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 3,
+          crossAxisCount: _columns,
           crossAxisSpacing: 4,
           mainAxisSpacing: 4,
           childAspectRatio: 1,

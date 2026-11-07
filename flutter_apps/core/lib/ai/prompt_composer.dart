@@ -80,13 +80,16 @@ class _PromptComposerState extends State<PromptComposer> {
                   Row(
                     children: [
                       IconButton(
-                          onPressed: () {},
+                          tooltip: 'Add image',
+                          onPressed: () => _showDemo(context, 'Add image (demo)'),
                           icon: const Icon(Icons.add_photo_alternate_outlined)),
                       IconButton(
-                          onPressed: () {},
+                          tooltip: 'Attach file',
+                          onPressed: () => _showDemo(context, 'Attach file (demo)'),
                           icon: const Icon(Icons.attach_file)),
                       IconButton(
-                          onPressed: () {}, icon: const Icon(Icons.mic_none)),
+                          tooltip: 'Voice input',
+                          onPressed: () => _showDemo(context, 'Voice input (demo)'), icon: const Icon(Icons.mic_none)),
                       const Spacer(),
                       Container(
                         padding: const EdgeInsets.symmetric(
@@ -105,7 +108,8 @@ class _PromptComposerState extends State<PromptComposer> {
                       ),
                       const SizedBox(width: 8),
                       IconButton.filled(
-                          onPressed: () {},
+                          tooltip: 'Send prompt',
+                          onPressed: () => _showDemo(context, 'Send prompt (demo)'),
                           icon: const Icon(Icons.arrow_upward)),
                     ],
                   ),
@@ -117,4 +121,10 @@ class _PromptComposerState extends State<PromptComposer> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ShimmerLoading extends StatefulWidget {
@@ -19,9 +21,7 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
       duration: const Duration(milliseconds: 1500),
       vsync: this,
     )..repeat();
-    _animation = Tween<double>(begin: -2, end: 2).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _animation = _controller.drive(CurveTween(curve: Curves.easeInOut));
   }
 
   @override
@@ -35,20 +35,15 @@ class _ShimmerLoadingState extends State<ShimmerLoading>
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       appBar: AppBar(title: const Text('Shimmer Loading')),
-      body: AnimatedBuilder(
-        animation: _animation,
-        builder: (context, child) {
-          return ListView(
-            padding: const EdgeInsets.all(16),
-            children: List.generate(
-              5,
-              (i) => _ShimmerCard(
-                animation: _animation,
-                isDark: isDark,
-              ),
-            ),
-          );
-        },
+      body: ListView(
+        padding: const EdgeInsets.all(16),
+        children: List.generate(
+          5,
+          (i) => _ShimmerCard(
+            animation: _animation,
+            isDark: isDark,
+          ),
+        ),
       ),
     );
   }
@@ -100,6 +95,8 @@ class _ShimmerCard extends StatelessWidget {
 }
 
 class _ShimmerBox extends StatelessWidget {
+  static const _bandWidth = 240.0;
+
   final double width;
   final double height;
   final Animation<double> animation;
@@ -117,20 +114,33 @@ class _ShimmerBox extends StatelessWidget {
     final baseColor = isDark ? Colors.grey[800]! : Colors.grey[300]!;
     final highlightColor = isDark ? Colors.grey[600]! : Colors.grey[100]!;
 
-    return AnimatedBuilder(
-      animation: animation,
-      builder: (context, child) {
-        return Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(4),
-            gradient: LinearGradient(
-              begin: Alignment(-1 + animation.value, 0),
-              end: Alignment(1 + animation.value, 0),
-              colors: [baseColor, highlightColor, baseColor],
-            ),
-          ),
+    // The band is placed in pixels from the screen width. Every box shares a
+    // left edge, so one band crosses them all at the same speed.
+    final travel = MediaQuery.sizeOf(context).width + _bandWidth;
+
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final boxWidth = min(width, constraints.maxWidth);
+        // Converts a pixel offset within the box to an Alignment x value.
+        double alignX(double pixels) => pixels / boxWidth * 2 - 1;
+
+        return AnimatedBuilder(
+          animation: animation,
+          builder: (context, child) {
+            final bandStart = animation.value * travel - _bandWidth;
+            return Container(
+              width: width,
+              height: height,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(4),
+                gradient: LinearGradient(
+                  begin: Alignment(alignX(bandStart), 0),
+                  end: Alignment(alignX(bandStart + _bandWidth), 0),
+                  colors: [baseColor, highlightColor, baseColor],
+                ),
+              ),
+            );
+          },
         );
       },
     );

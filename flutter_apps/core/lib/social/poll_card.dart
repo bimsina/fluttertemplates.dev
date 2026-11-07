@@ -14,6 +14,13 @@ class _PollCardState extends State<PollCard> {
 
   int get _total => _votes.reduce((a, b) => a + b);
 
+  void _vote(int option) {
+    setState(() {
+      _selected = option;
+      _votes[option]++;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,20 +37,27 @@ class _PollCardState extends State<PollCard> {
                 style: Theme.of(context).textTheme.titleLarge,
               ),
               const SizedBox(height: 16),
-              ...List.generate(3, (i) {
+              ...List.generate(_options.length, (i) {
                 final pct = _total > 0 ? _votes[i] / _total : 0.0;
                 final voted = _selected != null;
+                final isChoice = _selected == i;
                 return Padding(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(_options[i]),
+                      Row(
+                        children: [
+                          Text(_options[i]),
+                          if (isChoice) ...[
+                            const SizedBox(width: 4),
+                            const Icon(Icons.check_circle, size: 16),
+                          ],
+                        ],
+                      ),
                       const SizedBox(height: 4),
                       InkWell(
-                        onTap: _selected == null
-                            ? () => setState(() => _selected = i)
-                            : null,
+                        onTap: voted ? null : () => _vote(i),
                         child: LayoutBuilder(
                           builder: (context, constraints) {
                             return Stack(
@@ -55,26 +69,29 @@ class _PollCardState extends State<PollCard> {
                                     color: Colors.grey.withValues(alpha: 0.2),
                                   ),
                                 ),
-                                if (voted)
-                                  Container(
-                                    width: constraints.maxWidth * pct,
-                                    height: 40,
-                                    decoration: BoxDecoration(
-                                      color: Colors.blue.withValues(alpha: 0.5),
-                                      borderRadius: BorderRadius.circular(8),
+                                AnimatedContainer(
+                                  duration: const Duration(milliseconds: 400),
+                                  curve: Curves.easeOutCubic,
+                                  width: voted ? constraints.maxWidth * pct : 0,
+                                  height: 40,
+                                  decoration: BoxDecoration(
+                                    color: Colors.blue.withValues(
+                                      alpha: isChoice ? 0.7 : 0.35,
                                     ),
+                                    borderRadius: BorderRadius.circular(8),
                                   ),
+                                ),
                               ],
                             );
                           },
                         ),
                       ),
-                      if (voted)
-                        Text('${(_votes[i] / _total * 100).round()}%'),
+                      if (voted) Text('${(pct * 100).round()}%'),
                     ],
                   ),
                 );
               }),
+              if (_selected != null) Text('$_total votes'),
             ],
           ),
         ),

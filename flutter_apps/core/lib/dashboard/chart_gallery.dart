@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 const _barData = [0.6, 0.8, 0.5, 0.9, 0.7, 0.85];
@@ -123,7 +124,8 @@ class _LineChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_LineChartPainter oldDelegate) =>
+      !listEquals(oldDelegate.data, data);
 }
 
 class _DonutChartPainter extends CustomPainter {
@@ -154,5 +156,7 @@ class _DonutChartPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_DonutChartPainter oldDelegate) =>
+      !listEquals(oldDelegate.segments, segments) ||
+      !listEquals(oldDelegate.colors, colors);
 }

@@ -44,6 +44,7 @@ class _ExpandableSidebarState extends State<ExpandableSidebar> {
               children: [
                 const SizedBox(height: 12),
                 IconButton(
+                  tooltip: _expanded ? 'Collapse sidebar' : 'Expand sidebar',
                   onPressed: () => setState(() => _expanded = !_expanded),
                   icon: Icon(_expanded ? Icons.menu_open : Icons.menu),
                 ),
@@ -54,42 +55,65 @@ class _ExpandableSidebarState extends State<ExpandableSidebar> {
                     itemBuilder: (context, i) {
                       final item = _items[i];
                       final active = _selected == i;
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8, vertical: 3),
-                        child: Material(
-                          color: active
-                              ? scheme.primaryContainer
-                              : Colors.transparent,
-                          borderRadius: BorderRadius.circular(12),
-                          child: InkWell(
+                      // The hidden label's name moves to Semantics, and
+                      // MergeSemantics keeps each row a single node.
+                      final row = MergeSemantics(
+                        child: Semantics(
+                          button: true,
+                          selected: active,
+                          label: _expanded ? null : item.label,
+                          child: Material(
+                            color: active
+                                ? scheme.primaryContainer
+                                : Colors.transparent,
                             borderRadius: BorderRadius.circular(12),
-                            onTap: () => setState(() => _selected = i),
-                            child: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 12, vertical: 12),
-                              child: Row(
-                                children: [
-                                  Icon(item.icon,
-                                      color: active
-                                          ? scheme.onPrimaryContainer
-                                          : scheme.onSurfaceVariant),
-                                  if (_expanded) ...[
-                                    const SizedBox(width: 14),
-                                    Expanded(
-                                      child: Text(item.label,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: TextStyle(
-                                              color: active
-                                                  ? scheme.onPrimaryContainer
-                                                  : scheme.onSurface)),
-                                    ),
+                            child: InkWell(
+                              borderRadius: BorderRadius.circular(12),
+                              onTap: () => setState(() => _selected = i),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 12, vertical: 12),
+                                child: Row(
+                                  children: [
+                                    Icon(item.icon,
+                                        color: active
+                                            ? scheme.onPrimaryContainer
+                                            : scheme.onSurfaceVariant),
+                                    if (_expanded)
+                                      // The gap sits inside Expanded because
+                                      // the label appears while the rail is
+                                      // still narrow, and Padding can shrink.
+                                      Expanded(
+                                        child: Padding(
+                                          padding:
+                                              const EdgeInsets.only(left: 14),
+                                          child: Text(item.label,
+                                              maxLines: 1,
+                                              softWrap: false,
+                                              overflow: TextOverflow.ellipsis,
+                                              style: TextStyle(
+                                                  color: active
+                                                      ? scheme.onPrimaryContainer
+                                                      : scheme.onSurface)),
+                                        ),
+                                      ),
                                   ],
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         ),
+                      );
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8, vertical: 3),
+                        child: _expanded
+                            ? row
+                            : Tooltip(
+                                message: item.label,
+                                excludeFromSemantics: true,
+                                child: row,
+                              ),
                       );
                     },
                   ),

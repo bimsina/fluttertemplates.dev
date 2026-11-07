@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class ProfilePreview extends StatelessWidget {
+class ProfilePreview extends StatefulWidget {
   const ProfilePreview({super.key});
+
+  @override
+  State<ProfilePreview> createState() => _ProfilePreviewState();
+}
+
+class _ProfilePreviewState extends State<ProfilePreview> {
+  var _following = false;
 
   @override
   Widget build(BuildContext context) {
@@ -24,68 +31,78 @@ class ProfilePreview extends StatelessWidget {
                   ),
                 ),
                 child: SafeArea(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      Stack(
-                        children: [
-                          const CircleAvatar(
-                            radius: 55,
-                            backgroundColor: Colors.white24,
-                            child: Icon(
-                              Icons.person,
-                              size: 55,
-                              color: Colors.white,
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 0,
-                            right: 0,
-                            child: Container(
-                              padding: const EdgeInsets.all(6),
-                              decoration: BoxDecoration(
-                                color: Colors.green,
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white,
-                                  width: 2,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    child: Center(
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(height: 40),
+                            Stack(
+                              children: [
+                                const CircleAvatar(
+                                  radius: 55,
+                                  backgroundColor: Colors.white24,
+                                  child: Icon(
+                                    Icons.person,
+                                    size: 55,
+                                    color: Colors.white,
+                                  ),
                                 ),
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    padding: const EdgeInsets.all(6),
+                                    decoration: BoxDecoration(
+                                      color: Colors.green,
+                                      shape: BoxShape.circle,
+                                      border: Border.all(
+                                        color: Colors.white,
+                                        width: 2,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'Sarah Johnson',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 16),
-                      const Text(
-                        'Sarah Johnson',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
+                            const SizedBox(height: 4),
+                            Text(
+                              '@sarahjohnson',
+                              style: TextStyle(
+                                color: Colors.white.withValues(alpha: 0.8),
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                      const SizedBox(height: 4),
-                      Text(
-                        '@sarahjohnson',
-                        style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.8),
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
               ),
             ),
             actions: [
               IconButton(
+                tooltip: 'Share',
                 icon: const Icon(Icons.share, color: Colors.white),
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'Share (demo)'),
               ),
               IconButton(
+                tooltip: 'More options',
                 icon: const Icon(Icons.more_vert, color: Colors.white),
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'More options (demo)'),
               ),
             ],
           ),
@@ -112,32 +129,51 @@ class ProfilePreview extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 8),
-                        Row(
+                        Wrap(
+                          spacing: 16,
+                          runSpacing: 4,
                           children: [
-                            Icon(
-                              Icons.location_on,
-                              size: 16,
-                              color: isDark ? Colors.white54 : Colors.grey[600],
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.location_on,
+                                  size: 16,
+                                  color: isDark
+                                      ? Colors.white54
+                                      : Colors.grey[600],
+                                ),
+                                const SizedBox(width: 4),
+                                Flexible(
+                                  child: Text(
+                                    'San Francisco, CA',
+                                    style: TextStyle(
+                                      color: isDark
+                                          ? Colors.white54
+                                          : Colors.grey[600],
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'San Francisco, CA',
-                              style: TextStyle(
-                                color: isDark
-                                    ? Colors.white54
-                                    : Colors.grey[600],
-                              ),
-                            ),
-                            const SizedBox(width: 16),
-                            Icon(
-                              Icons.link,
-                              size: 16,
-                              color: isDark ? Colors.white54 : Colors.grey[600],
-                            ),
-                            const SizedBox(width: 4),
-                            Text(
-                              'sarah.dev',
-                              style: TextStyle(color: Colors.blue),
+                            Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.link,
+                                  size: 16,
+                                  color: isDark
+                                      ? Colors.white54
+                                      : Colors.grey[600],
+                                ),
+                                const SizedBox(width: 4),
+                                const Flexible(
+                                  child: Text(
+                                    'sarah.dev',
+                                    style: TextStyle(color: Colors.blue),
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -146,7 +182,6 @@ class ProfilePreview extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       _buildStat('Posts', '142'),
                       _buildDivider(),
@@ -160,31 +195,37 @@ class ProfilePreview extends StatelessWidget {
                     children: [
                       Expanded(
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () =>
+                              setState(() => _following = !_following),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.blue,
                             foregroundColor: Colors.white,
-                            padding: const EdgeInsets.symmetric(vertical: 12),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 8,
+                            ),
                             shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8),
                             ),
                           ),
-                          child: const Text('Follow'),
+                          child: Text(_following ? 'Following' : 'Follow'),
                         ),
                       ),
                       const SizedBox(width: 12),
-                      OutlinedButton(
-                        onPressed: () {},
-                        style: OutlinedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 12,
-                            horizontal: 24,
+                      Expanded(
+                        child: OutlinedButton(
+                          onPressed: () => _showDemo(context, 'Message (demo)'),
+                          style: OutlinedButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 12,
+                              horizontal: 8,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
                           ),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
+                          child: const Text('Message'),
                         ),
-                        child: const Text('Message'),
                       ),
                     ],
                   ),
@@ -202,15 +243,26 @@ class ProfilePreview extends StatelessWidget {
   }
 
   Widget _buildStat(String label, String value) {
-    return Column(
-      children: [
-        Text(
-          value,
-          style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 4),
-        Text(label, style: TextStyle(color: Colors.grey[600], fontSize: 13)),
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              value,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+          ),
+          const SizedBox(height: 4),
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text(
+              label,
+              style: TextStyle(color: Colors.grey[600], fontSize: 13),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
@@ -284,4 +336,10 @@ class ProfilePreview extends StatelessWidget {
       },
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

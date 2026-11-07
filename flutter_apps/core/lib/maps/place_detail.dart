@@ -67,14 +67,14 @@ class PlaceDetail extends StatelessWidget {
                     children: [
                       Expanded(
                         child: FilledButton.icon(
-                            onPressed: () {},
+                            onPressed: () => _showDemo(context, 'Directions (demo)'),
                             icon: const Icon(Icons.directions),
                             label: const Text('Directions')),
                       ),
                       const SizedBox(width: 12),
                       Expanded(
                         child: OutlinedButton.icon(
-                            onPressed: () {},
+                            onPressed: () => _showDemo(context, 'Call (demo)'),
                             icon: const Icon(Icons.call),
                             label: const Text('Call')),
                       ),
@@ -117,4 +117,10 @@ class PlaceDetail extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

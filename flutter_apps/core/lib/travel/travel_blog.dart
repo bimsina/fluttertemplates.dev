@@ -15,7 +15,7 @@ class TravelBlog extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Travel Blog'),
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          IconButton(tooltip: 'Search', icon: const Icon(Icons.search), onPressed: () => _showDemo(context, 'Search (demo)')),
         ],
       ),
       body: ListView.builder(
@@ -31,7 +31,7 @@ class TravelBlog extends StatelessWidget {
                 Container(
                   height: 180,
                   decoration: BoxDecoration(
-                    color: Colors.primaries[i].withValues(alpha: 0.3),
+                    color: Colors.primaries[i % Colors.primaries.length].withValues(alpha: 0.3),
                     borderRadius: const BorderRadius.vertical(
                       top: Radius.circular(12),
                     ),
@@ -69,4 +69,10 @@ class TravelBlog extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

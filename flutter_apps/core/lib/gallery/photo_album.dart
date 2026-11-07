@@ -18,6 +18,7 @@ class PhotoAlbum extends StatelessWidget {
         itemCount: _albums.length,
         itemBuilder: (context, i) {
           final a = _albums[i];
+          final color = Colors.primaries[i % Colors.primaries.length];
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
@@ -25,19 +26,25 @@ class PhotoAlbum extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: Colors.primaries[i].withValues(alpha: 0.3),
+                  color: color.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
-                child: Icon(Icons.photo_library, color: Colors.primaries[i]),
+                child: Icon(Icons.photo_library, color: color),
               ),
               title: Text(a['name'] as String),
               subtitle: Text('${a['count']} photos'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Open ${a['name']} (demo)'),
             ),
           );
         },
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

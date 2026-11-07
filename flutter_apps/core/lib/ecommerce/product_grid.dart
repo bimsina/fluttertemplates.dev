@@ -20,7 +20,8 @@ class ProductGrid extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-          childAspectRatio: 0.75,
+          // Cells grow with the text scale so large text stays inside the card.
+          childAspectRatio: 0.75 / MediaQuery.textScalerOf(context).scale(1),
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
@@ -40,20 +41,22 @@ class ProductGrid extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(8),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         p['title'] as String,
                         style: Theme.of(context).textTheme.titleSmall,
                       ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
                           Text(
                             p['price'] as String,
                             style: Theme.of(context).textTheme.titleMedium,
                           ),
                           Row(
+                            mainAxisSize: MainAxisSize.min,
                             children: [
                               Icon(Icons.star, size: 14, color: Colors.amber[700]),
                               Text(

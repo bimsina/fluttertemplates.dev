@@ -8,9 +8,26 @@ class EditForm extends StatefulWidget {
 }
 
 class _EditFormState extends State<EditForm> {
+  final _nameController = TextEditingController(text: 'Alex Kim');
+  final _emailController = TextEditingController(text: 'alex@acme.io');
   String _role = 'Editor';
   bool _active = true;
   bool _twoFactor = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    final name = _nameController.text.trim();
+    final email = _emailController.text.trim();
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('Saved $name ($email) as $_role')));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +36,7 @@ class _EditFormState extends State<EditForm> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit user'),
-        actions: [TextButton(onPressed: () {}, child: const Text('Save'))],
+        actions: [TextButton(onPressed: _save, child: const Text('Save'))],
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -44,13 +61,13 @@ class _EditFormState extends State<EditForm> {
           const SizedBox(height: 24),
           _sectionLabel(context, 'Profile'),
           TextFormField(
-            initialValue: 'Alex Kim',
+            controller: _nameController,
             decoration: const InputDecoration(
                 labelText: 'Full name', border: OutlineInputBorder()),
           ),
           const SizedBox(height: 16),
           TextFormField(
-            initialValue: 'alex@acme.io',
+            controller: _emailController,
             decoration: const InputDecoration(
                 labelText: 'Email', border: OutlineInputBorder()),
           ),
@@ -85,12 +102,12 @@ class _EditFormState extends State<EditForm> {
             children: [
               Expanded(
                 child: OutlinedButton(
-                    onPressed: () {}, child: const Text('Cancel')),
+                    onPressed: () => _showDemo(context, 'Cancel (demo)'), child: const Text('Cancel')),
               ),
               const SizedBox(width: 12),
               Expanded(
                 child: FilledButton(
-                    onPressed: () {}, child: const Text('Save changes')),
+                    onPressed: _save, child: const Text('Save changes')),
               ),
             ],
           ),
@@ -108,4 +125,10 @@ class _EditFormState extends State<EditForm> {
               color: Theme.of(context).colorScheme.onSurfaceVariant)),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

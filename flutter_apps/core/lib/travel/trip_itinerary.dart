@@ -24,7 +24,7 @@ class TripItinerary extends StatelessWidget {
                 child: const Icon(Icons.flight),
               ),
               title: const Text('Paris Adventure'),
-              subtitle: const Text('Mar 15 - Mar 19, 2025'),
+              subtitle: const Text('Mar 15 - Mar 18, 2025'),
             ),
           ),
           const SizedBox(height: 16),

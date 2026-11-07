@@ -19,19 +19,36 @@ class _ScheduleState extends State<Schedule> {
   int _day = 0;
   static const _days = ['Thu 11', 'Fri 12', 'Sat 13'];
 
-  static const _sessions = [
-    _Session('09:00', 'Opening keynote', 'Main Hall', keynote: true),
-    _Session('10:30', 'Building for the web with Flutter', 'Room A'),
-    _Session('12:00', 'Lunch break', 'Foyer'),
-    _Session('13:30', 'State management deep dive', 'Room B'),
-    _Session('15:00', 'Designing for accessibility', 'Room A'),
-    _Session('16:30', 'Lightning talks', 'Main Hall'),
+  // One agenda per entry in `_days`.
+  static const _agendas = [
+    [
+      _Session('09:00', 'Opening keynote', 'Main Hall', keynote: true),
+      _Session('10:30', 'Building for the web with Flutter', 'Room A'),
+      _Session('12:00', 'Lunch break', 'Foyer'),
+      _Session('13:30', 'State management deep dive', 'Room B'),
+      _Session('15:00', 'Designing for accessibility', 'Room A'),
+      _Session('16:30', 'Lightning talks', 'Main Hall'),
+    ],
+    [
+      _Session('09:30', 'The future of Dart', 'Main Hall', keynote: true),
+      _Session('11:00', 'Testing widgets with confidence', 'Room B'),
+      _Session('12:30', 'Lunch break', 'Foyer'),
+      _Session('14:00', 'Custom painters in practice', 'Room A'),
+      _Session('16:00', 'Community panel', 'Main Hall'),
+    ],
+    [
+      _Session('10:00', 'Hands-on animation workshop', 'Room A'),
+      _Session('12:00', 'Lunch break', 'Foyer'),
+      _Session('13:30', 'Shipping to every platform', 'Room B'),
+      _Session('15:30', 'Closing keynote', 'Main Hall', keynote: true),
+    ],
   ];
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final sessions = _agendas[_day];
 
     return Scaffold(
       appBar: AppBar(title: const Text('Schedule')),
@@ -57,9 +74,9 @@ class _ScheduleState extends State<Schedule> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: _sessions.length,
+              itemCount: sessions.length,
               itemBuilder: (context, i) {
-                final s = _sessions[i];
+                final s = sessions[i];
                 return IntrinsicHeight(
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -85,7 +102,7 @@ class _ScheduleState extends State<Schedule> {
                                   Border.all(color: scheme.primary, width: 2),
                             ),
                           ),
-                          if (i != _sessions.length - 1)
+                          if (i != sessions.length - 1)
                             Expanded(
                                 child: Container(
                                     width: 2,

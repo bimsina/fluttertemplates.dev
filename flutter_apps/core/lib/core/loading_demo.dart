@@ -8,8 +8,30 @@ class LoadingDemo extends StatefulWidget {
 }
 
 class _LoadingDemoState extends State<LoadingDemo> {
+  /// Shows a dialog that closes itself after two seconds. Holding the route
+  /// means the timer can only ever close this dialog: if the user already
+  /// dismissed it with back, there is nothing left to do.
+  void _showTimedDialog(WidgetBuilder builder) {
+    final navigator = Navigator.of(context, rootNavigator: true);
+    final route = DialogRoute<void>(
+      context: context,
+      barrierDismissible: false,
+      builder: builder,
+    );
+    navigator.push(route);
+    Future.delayed(const Duration(seconds: 2), () {
+      if (route.isCurrent) {
+        navigator.pop();
+      } else if (route.isActive) {
+        navigator.removeRoute(route);
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Loading Indicators')),
       body: SingleChildScrollView(
@@ -63,7 +85,7 @@ class _LoadingDemoState extends State<LoadingDemo> {
                   width: 200,
                   child: LinearProgressIndicator(
                     value: 0.7,
-                    backgroundColor: Colors.grey[200],
+                    backgroundColor: scheme.surfaceContainerHighest,
                     valueColor: AlwaysStoppedAnimation<Color>(Colors.green),
                   ),
                 ),
@@ -100,48 +122,35 @@ class _LoadingDemoState extends State<LoadingDemo> {
               runSpacing: 16,
               children: [
                 ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) =>
-                          const Center(child: CircularProgressIndicator()),
-                    );
-                    Future.delayed(const Duration(seconds: 2), () {
-                      if (context.mounted) Navigator.of(context).pop();
-                    });
-                  },
+                  onPressed: () => _showTimedDialog(
+                    (context) =>
+                        const Center(child: CircularProgressIndicator()),
+                  ),
                   child: const Text('Show Loading Overlay'),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    showDialog(
-                      context: context,
-                      barrierDismissible: false,
-                      builder: (context) => Center(
-                        child: Material(
-                          child: Container(
-                            padding: const EdgeInsets.all(16),
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            child: const Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                CircularProgressIndicator(),
-                                SizedBox(height: 16),
-                                Text('Loading...'),
-                              ],
-                            ),
+                  onPressed: () => _showTimedDialog(
+                    (context) => Center(
+                      child: Material(
+                        color: scheme.surfaceContainerHigh,
+                        borderRadius: BorderRadius.circular(8),
+                        child: Padding(
+                          padding: const EdgeInsets.all(16),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const CircularProgressIndicator(),
+                              const SizedBox(height: 16),
+                              Text(
+                                'Loading...',
+                                style: TextStyle(color: scheme.onSurface),
+                              ),
+                            ],
                           ),
                         ),
                       ),
-                    );
-                    Future.delayed(const Duration(seconds: 2), () {
-                      if (context.mounted) Navigator.of(context).pop();
-                    });
-                  },
+                    ),
+                  ),
                   child: const Text('Show Loading Dialog'),
                 ),
               ],
@@ -155,7 +164,7 @@ class _LoadingDemoState extends State<LoadingDemo> {
             Container(
               padding: const EdgeInsets.all(16),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey),
+                border: Border.all(color: scheme.outlineVariant),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Column(
@@ -164,7 +173,7 @@ class _LoadingDemoState extends State<LoadingDemo> {
                     width: double.infinity,
                     height: 20,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: scheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -173,7 +182,7 @@ class _LoadingDemoState extends State<LoadingDemo> {
                     width: double.infinity,
                     height: 100,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300],
+                      color: scheme.surfaceContainerHighest,
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -184,7 +193,7 @@ class _LoadingDemoState extends State<LoadingDemo> {
                         width: 100,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: scheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -193,7 +202,7 @@ class _LoadingDemoState extends State<LoadingDemo> {
                         width: 100,
                         height: 20,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300],
+                          color: scheme.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),

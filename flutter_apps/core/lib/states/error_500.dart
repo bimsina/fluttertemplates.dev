@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
 
-class Error500 extends StatefulWidget {
+class Error500 extends StatelessWidget {
   const Error500({super.key});
-
-  @override
-  State<Error500> createState() => _Error500State();
-}
-
-class _Error500State extends State<Error500> {
-  var _expanded = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Server Error')),
       body: Center(
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -39,8 +32,6 @@ class _Error500State extends State<Error500> {
               const SizedBox(height: 24),
               ExpansionTile(
                 title: const Text('Error details'),
-                initiallyExpanded: _expanded,
-                onExpansionChanged: (v) => setState(() => _expanded = v),
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(16),
@@ -53,7 +44,7 @@ class _Error500State extends State<Error500> {
               ),
               const SizedBox(height: 16),
               FilledButton.icon(
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'Retry (demo)'),
                 icon: const Icon(Icons.refresh),
                 label: const Text('Retry'),
               ),
@@ -63,4 +54,10 @@ class _Error500State extends State<Error500> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

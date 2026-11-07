@@ -228,11 +228,68 @@ import 'productivity/reminders.dart';
 import 'core/sliders.dart';
 import 'core/cards.dart';
 import 'animation/marquee_text.dart';
+import 'analytics/line_chart.dart';
+import 'analytics/bar_chart.dart';
+import 'analytics/donut_chart.dart';
+import 'analytics/sparkline_stats.dart';
+import 'analytics/conversion_funnel.dart';
+import 'analytics/activity_heatmap.dart';
+import 'chat/message_input.dart';
+import 'chat/typing_indicator.dart';
+import 'chat/message_reactions.dart';
+import 'chat/chat_list.dart';
+import 'productivity/pomodoro_timer.dart';
+import 'productivity/habit_tracker.dart';
+import 'productivity/weekly_planner.dart';
+import 'search/filter_sheet.dart';
+import 'search/recent_searches.dart';
+import 'core/swipe_actions.dart';
+import 'core/stepper.dart';
+import 'forms/tag_input.dart';
+import 'forms/file_upload.dart';
+import 'forms/rating_input.dart';
+import 'forms/signature_pad.dart';
+import 'forms/color_picker.dart';
+import 'templates/food_delivery/app.dart';
+import 'templates/team_chat/app.dart';
+
+import 'templates/banking_wallet/app.dart';
+import 'templates/retail_pos/app.dart';
+
+import 'templates/auth_flow/app.dart';
+
 void main() {
   runApp(const MyApp());
 }
 
 final routes = <String, Widget Function()>{
+  '/templates/auth_flow': () => const AuthFlowApp(),
+  '/templates/retail_pos': () => const RetailPosApp(),
+  '/templates/banking_wallet': () => const BankingWalletApp(),
+  '/templates/team_chat': () => const TeamChatApp(),
+  '/templates/food_delivery': () => const FoodDeliveryApp(),
+  '/forms/color_picker': () => const HsvColorPicker(),
+  '/forms/signature_pad': () => const SignaturePad(),
+  '/forms/rating_input': () => const RatingInput(),
+  '/forms/file_upload': () => const FileUploadDropzone(),
+  '/forms/tag_input': () => const TagInput(),
+  '/core/stepper': () => const ProgressStepper(),
+  '/core/swipe_actions': () => const SwipeActionsList(),
+  '/search/recent_searches': () => const RecentSearches(),
+  '/search/filter_sheet': () => const SearchFilterSheet(),
+  '/productivity/weekly_planner': () => const WeeklyPlanner(),
+  '/productivity/habit_tracker': () => const HabitTracker(),
+  '/productivity/pomodoro_timer': () => const PomodoroTimer(),
+  '/chat/chat_list': () => const ChatList(),
+  '/chat/message_reactions': () => const MessageReactions(),
+  '/chat/typing_indicator': () => const ChatTypingIndicator(),
+  '/chat/message_input': () => const ChatMessageInput(),
+  '/analytics/activity_heatmap': () => const ActivityHeatmap(),
+  '/analytics/conversion_funnel': () => const ConversionFunnel(),
+  '/analytics/sparkline_stats': () => const SparklineStatCards(),
+  '/analytics/donut_chart': () => const AnalyticsDonutChart(),
+  '/analytics/bar_chart': () => const AnalyticsBarChart(),
+  '/analytics/line_chart': () => const AnalyticsLineChart(),
   "/animation/hero_list_view": () => HeroListView(),
   "/core/buttons": () => const ButtonDemo(),
   "/core/loading": () => const LoadingDemo(),
@@ -427,9 +484,11 @@ final routes = <String, Widget Function()>{
   "/navigation/expandable_sidebar": () => const ExpandableSidebar(),
   "/navigation/nav_drawer": () => const NavDrawer(),
   "/navigation/tab_bars": () => const TabBars(),
-  "/must_haves/onboarding_page/illustration_onboarding": () => const IllustrationOnboarding(),
+  "/must_haves/onboarding_page/illustration_onboarding": () =>
+      const IllustrationOnboarding(),
   "/must_haves/onboarding_page/feature_carousel": () => const FeatureCarousel(),
-  "/must_haves/onboarding_page/permissions_onboarding": () => const PermissionsOnboarding(),
+  "/must_haves/onboarding_page/permissions_onboarding": () =>
+      const PermissionsOnboarding(),
   "/must_haves/onboarding_page/value_prop": () => const ValueProp(),
   "/maps/map_view": () => const MapView(),
   "/maps/location_picker": () => const LocationPicker(),

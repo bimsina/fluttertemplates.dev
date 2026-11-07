@@ -10,6 +10,7 @@ class ListingDetail extends StatefulWidget {
 class _ListingDetailState extends State<ListingDetail> {
   final _pageController = PageController();
   int _page = 0;
+  bool _favorite = false;
 
   static const _colors = [
     Color(0xFF8D6E63),
@@ -32,9 +33,14 @@ class _ListingDetailState extends State<ListingDetail> {
       appBar: AppBar(
         actions: [
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.share_outlined)),
+              tooltip: 'Share',
+              onPressed: () => _showDemo(context, 'Share (demo)'), icon: const Icon(Icons.share_outlined)),
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.favorite_border)),
+              tooltip: _favorite ? 'Remove from favorites' : 'Add to favorites',
+              isSelected: _favorite,
+              onPressed: () => setState(() => _favorite = !_favorite),
+              icon: const Icon(Icons.favorite_border),
+              selectedIcon: const Icon(Icons.favorite)),
         ],
       ),
       body: ListView(
@@ -100,7 +106,7 @@ class _ListingDetailState extends State<ListingDetail> {
                     title: const Text('Elena Petrova'),
                     subtitle: const Text('4.9 ★ · 48 sales'),
                     trailing: OutlinedButton(
-                        onPressed: () {}, child: const Text('View')),
+                        onPressed: () => _showDemo(context, 'View (demo)'), child: const Text('View')),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -126,18 +132,24 @@ class _ListingDetailState extends State<ListingDetail> {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Message (demo)'),
                   icon: const Icon(Icons.chat_bubble_outline),
                   label: const Text('Message')),
             ),
             const SizedBox(width: 12),
             Expanded(
               child: FilledButton(
-                  onPressed: () {}, child: const Text('Buy now')),
+                  onPressed: () => _showDemo(context, 'Buy now (demo)'), child: const Text('Buy now')),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -4,9 +4,11 @@ class _Listing {
   final String title;
   final String price;
   final String location;
+  final String category;
   final IconData icon;
   final Color color;
-  const _Listing(this.title, this.price, this.location, this.icon, this.color);
+  const _Listing(this.title, this.price, this.location, this.category,
+      this.icon, this.color);
 }
 
 class ListingsGrid extends StatefulWidget {
@@ -19,16 +21,28 @@ class ListingsGrid extends StatefulWidget {
 class _ListingsGridState extends State<ListingsGrid> {
   int _filter = 0;
   static const _filters = ['All', 'Furniture', 'Electronics', 'Bikes', 'Books'];
-  final _faved = <int>{1};
+  final _faved = <String>{'Road bike'};
 
   static const _items = [
-    _Listing('Vintage armchair', '\$120', '2 mi', Icons.chair, Color(0xFF8D6E63)),
-    _Listing('Road bike', '\$340', '5 mi', Icons.pedal_bike, Color(0xFF42A5F5)),
-    _Listing('Desk lamp', '\$28', '1 mi', Icons.light, Color(0xFFFFB74D)),
-    _Listing('Bookshelf', '\$75', '3 mi', Icons.shelves, Color(0xFF66BB6A)),
-    _Listing('Headphones', '\$90', '4 mi', Icons.headphones, Color(0xFFBA68C8)),
-    _Listing('Coffee table', '\$60', '6 mi', Icons.table_bar, Color(0xFF26A69A)),
+    _Listing('Vintage armchair', '\$120', '2 mi', 'Furniture', Icons.chair,
+        Color(0xFF8D6E63)),
+    _Listing('Road bike', '\$340', '5 mi', 'Bikes', Icons.pedal_bike,
+        Color(0xFF42A5F5)),
+    _Listing('Desk lamp', '\$28', '1 mi', 'Electronics', Icons.light,
+        Color(0xFFFFB74D)),
+    _Listing('Bookshelf', '\$75', '3 mi', 'Furniture', Icons.shelves,
+        Color(0xFF66BB6A)),
+    _Listing('Headphones', '\$90', '4 mi', 'Electronics', Icons.headphones,
+        Color(0xFFBA68C8)),
+    _Listing('Coffee table', '\$60', '6 mi', 'Furniture', Icons.table_bar,
+        Color(0xFF26A69A)),
+    _Listing('Paperback bundle', '\$15', '2 mi', 'Books', Icons.menu_book,
+        Color(0xFFEF5350)),
   ];
+
+  List<_Listing> get _visibleItems => _filter == 0
+      ? _items
+      : _items.where((it) => it.category == _filters[_filter]).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +51,7 @@ class _ListingsGridState extends State<ListingsGrid> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Marketplace'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.search))],
+        actions: [IconButton(tooltip: 'Search', onPressed: () => _showDemo(context, 'Search (demo)'), icon: const Icon(Icons.search))],
       ),
       body: Column(
         children: [
@@ -65,8 +79,7 @@ class _ListingsGridState extends State<ListingsGrid> {
               crossAxisSpacing: 12,
               childAspectRatio: 0.78,
               children: [
-                for (var i = 0; i < _items.length; i++)
-                  _card(context, scheme, i),
+                for (final item in _visibleItems) _card(scheme, item),
               ],
             ),
           ),
@@ -75,9 +88,8 @@ class _ListingsGridState extends State<ListingsGrid> {
     );
   }
 
-  Widget _card(BuildContext context, ColorScheme scheme, int i) {
-    final it = _items[i];
-    final faved = _faved.contains(i);
+  Widget _card(ColorScheme scheme, _Listing it) {
+    final faved = _faved.contains(it.title);
     return Container(
       decoration: BoxDecoration(
         color: scheme.surfaceContainerHigh,
@@ -103,10 +115,11 @@ class _ListingsGridState extends State<ListingsGrid> {
                     radius: 16,
                     backgroundColor: scheme.surface,
                     child: IconButton(
+                      tooltip: faved ? 'Remove from favorites' : 'Add to favorites',
                       iconSize: 16,
                       padding: EdgeInsets.zero,
                       onPressed: () => setState(() =>
-                          faved ? _faved.remove(i) : _faved.add(i)),
+                          faved ? _faved.remove(it.title) : _faved.add(it.title)),
                       icon: Icon(
                           faved ? Icons.favorite : Icons.favorite_border,
                           color: faved ? scheme.error : scheme.onSurfaceVariant),
@@ -136,4 +149,10 @@ class _ListingsGridState extends State<ListingsGrid> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

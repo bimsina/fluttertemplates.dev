@@ -15,7 +15,7 @@ class HotelListing extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Hotels'),
         actions: [
-          IconButton(icon: const Icon(Icons.filter_list), onPressed: () {}),
+          IconButton(tooltip: 'Filter', icon: const Icon(Icons.filter_list), onPressed: () => _showDemo(context, 'Filter (demo)')),
         ],
       ),
       body: ListView.builder(
@@ -31,7 +31,7 @@ class HotelListing extends StatelessWidget {
                 width: 80,
                 height: 80,
                 decoration: BoxDecoration(
-                  color: Colors.primaries[i].withValues(alpha: 0.3),
+                  color: Colors.primaries[i % Colors.primaries.length].withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
@@ -59,11 +59,17 @@ class HotelListing extends StatelessWidget {
                   Text('/ night', style: Theme.of(context).textTheme.bodySmall),
                 ],
               ),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Open ${h['name']} (demo)'),
             ),
           );
         },
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

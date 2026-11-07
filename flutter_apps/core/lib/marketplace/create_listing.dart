@@ -126,7 +126,7 @@ class _CreateListingState extends State<CreateListing> {
           SizedBox(
             height: 52,
             child: FilledButton(
-                onPressed: () {}, child: const Text('Post listing')),
+                onPressed: () => _showDemo(context, 'Post listing (demo)'), child: const Text('Post listing')),
           ),
         ],
       ),
@@ -143,4 +143,10 @@ class _CreateListingState extends State<CreateListing> {
               ?.copyWith(fontWeight: FontWeight.w600)),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

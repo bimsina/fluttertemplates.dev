@@ -42,10 +42,16 @@ class _NotificationSettingsState extends State<NotificationSettings> {
             title: const Text('Quiet Hours'),
             subtitle: const Text('10:00 PM - 8:00 AM'),
             trailing: const Icon(Icons.chevron_right),
-            onTap: () {},
+            onTap: () => _showDemo(context, 'Quiet Hours (demo)'),
           ),
         ],
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

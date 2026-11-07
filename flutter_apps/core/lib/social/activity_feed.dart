@@ -28,7 +28,7 @@ class ActivityFeed extends StatelessWidget {
                       width: 40,
                       height: 40,
                       decoration: BoxDecoration(
-                        color: Colors.primaries[i].withValues(alpha: 0.3),
+                        color: Colors.primaries[i % Colors.primaries.length].withValues(alpha: 0.3),
                         shape: BoxShape.circle,
                       ),
                       child: Icon(a['icon'] as IconData, size: 20),

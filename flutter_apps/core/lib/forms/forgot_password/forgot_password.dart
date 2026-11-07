@@ -1,14 +1,39 @@
 import 'package:flutter/material.dart';
 
+final _emailPattern = RegExp(
+  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$",
+);
+
 class ForgotPasswordPage extends StatefulWidget {
-  const ForgotPasswordPage({super.key});
+  /// Called by 'Back to Login'. Without it the demo shows a SnackBar.
+  final VoidCallback? onBackToLogin;
+
+  const ForgotPasswordPage({super.key, this.onBackToLogin});
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  final _formKey = GlobalKey<FormState>();
   var _sent = false;
+
+  void _backToLogin() {
+    final onBackToLogin = widget.onBackToLogin;
+    if (onBackToLogin != null) {
+      onBackToLogin();
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Back to login (demo)')));
+  }
+
+  void _submit() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    // Await your password-reset request here.
+    setState(() => _sent = true);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,45 +44,55 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   Widget _buildForm() {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          const SizedBox(height: 32),
-          Text(
-            'Enter your email to receive a reset link.',
-            style: Theme.of(context).textTheme.bodyLarge,
-          ),
-          const SizedBox(height: 24),
-          TextField(
-            decoration: const InputDecoration(
-              labelText: 'Email',
-              border: OutlineInputBorder(),
+      child: Form(
+        key: _formKey,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            const SizedBox(height: 32),
+            Text(
+              'Enter your email to receive a reset link.',
+              style: Theme.of(context).textTheme.bodyLarge,
             ),
-            keyboardType: TextInputType.emailAddress,
-          ),
-          const SizedBox(height: 24),
-          FilledButton(
-            onPressed: () => setState(() => _sent = true),
-            child: const Text('Send Reset Link'),
-          ),
-          const SizedBox(height: 16),
-          TextButton(
-            onPressed: () {},
-            child: const Text('Back to Login'),
-          ),
-        ],
+            const SizedBox(height: 24),
+            TextFormField(
+              decoration: const InputDecoration(
+                labelText: 'Email',
+                border: OutlineInputBorder(),
+              ),
+              keyboardType: TextInputType.emailAddress,
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) return 'Required';
+                if (!_emailPattern.hasMatch(v.trim())) {
+                  return 'Enter a valid email';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 24),
+            FilledButton(
+              onPressed: _submit,
+              child: const Text('Send Reset Link'),
+            ),
+            const SizedBox(height: 16),
+            TextButton(
+              onPressed: _backToLogin,
+              child: const Text('Back to Login'),
+            ),
+          ],
+        ),
       ),
     );
   }
 
   Widget _buildSuccessState() {
     return Center(
-      child: Padding(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.all(32),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisSize: MainAxisSize.min,
           children: [
             Icon(
               Icons.check_circle,
@@ -77,7 +112,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () {},
+              onPressed: _backToLogin,
               child: const Text('Back to Login'),
             ),
           ],

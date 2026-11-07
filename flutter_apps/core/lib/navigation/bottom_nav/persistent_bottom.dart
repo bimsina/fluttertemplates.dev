@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
 
-class PersistentBottomNavPage extends StatelessWidget {
+class PersistentBottomNavPage extends StatefulWidget {
+  const PersistentBottomNavPage({super.key});
+
+  @override
+  State<PersistentBottomNavPage> createState() =>
+      _PersistentBottomNavPageState();
+}
+
+class _PersistentBottomNavPageState extends State<PersistentBottomNavPage> {
+  // Held in State so a parent rebuild can't replace them and reset the tabs.
   final _tab1navigatorKey = GlobalKey<NavigatorState>();
   final _tab2navigatorKey = GlobalKey<NavigatorState>();
   final _tab3navigatorKey = GlobalKey<NavigatorState>();
-
-  PersistentBottomNavPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -219,39 +226,53 @@ class _PersistentBottomBarScaffoldState
     extends State<PersistentBottomBarScaffold> {
   int _selectedTab = 0;
 
+  /// Used for any item that doesn't bring its own [PersistentTabItem.navigatorkey].
+  final _fallbackKeys = <int, GlobalKey<NavigatorState>>{};
+
+  GlobalKey<NavigatorState> _keyFor(int index) =>
+      widget.items[index].navigatorkey ??
+      _fallbackKeys.putIfAbsent(index, () => GlobalKey<NavigatorState>());
+
+  NavigatorState? get _activeNavigator => _keyFor(_selectedTab).currentState;
+
   @override
   Widget build(BuildContext context) {
     return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (val, result) async {
-        /// Check if curent tab can be popped
-        if (widget.items[_selectedTab].navigatorkey?.currentState?.canPop() ??
-            false) {
-          widget.items[_selectedTab].navigatorkey?.currentState?.pop();
-          return;
-        } else {
-          // if current tab can't be popped then use the root navigator
-          // return true;
-          Navigator.of(context).pop();
-        }
+      // Only block the pop while the active tab has a route of its own to
+      // close. At a tab root the framework pops this page, or leaves the app.
+      canPop: !(_activeNavigator?.canPop() ?? false),
+      onPopInvokedWithResult: (didPop, result) {
+        if (didPop) return;
+        _activeNavigator?.maybePop();
       },
       child: Scaffold(
         /// Using indexedStack to maintain the order of the tabs and the state of the
         /// previously opened tab
-        body: IndexedStack(
-          index: _selectedTab,
-          children: widget.items
-              .map(
-                (page) => Navigator(
+        body: NotificationListener<NavigationNotification>(
+          // Tab navigators report every push and pop here, which refreshes
+          // canPop above. Returning false lets the notification carry on up.
+          onNotification: (_) {
+            setState(() {});
+            return false;
+          },
+          child: IndexedStack(
+            index: _selectedTab,
+            children: [
+              for (var i = 0; i < widget.items.length; i++)
+                Navigator(
                   /// Each tab is wrapped in a Navigator so that naigation in
                   /// one tab can be independent of the other tabs
-                  key: page.navigatorkey,
+                  key: _keyFor(i),
                   onGenerateInitialRoutes: (navigator, initialRoute) {
-                    return [MaterialPageRoute(builder: (context) => page.tab)];
+                    return [
+                      MaterialPageRoute(
+                        builder: (context) => widget.items[i].tab,
+                      ),
+                    ];
                   },
                 ),
-              )
-              .toList(),
+            ],
+          ),
         ),
 
         /// Define the persistent bottom bar

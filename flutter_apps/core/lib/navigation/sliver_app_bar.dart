@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
-class CollapsingAppBar extends StatelessWidget {
+class CollapsingAppBar extends StatefulWidget {
   const CollapsingAppBar({super.key});
+
+  @override
+  State<CollapsingAppBar> createState() => _CollapsingAppBarState();
+}
+
+class _CollapsingAppBarState extends State<CollapsingAppBar> {
+  var _favorite = false;
 
   @override
   Widget build(BuildContext context) {
@@ -32,10 +39,15 @@ class CollapsingAppBar extends StatelessWidget {
             ),
             actions: [
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.favorite_border)),
+                  tooltip:
+                      _favorite ? 'Remove from favorites' : 'Add to favorites',
+                  isSelected: _favorite,
+                  onPressed: () => setState(() => _favorite = !_favorite),
+                  icon: const Icon(Icons.favorite_border),
+                  selectedIcon: const Icon(Icons.favorite)),
               IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.share)),
+                  tooltip: 'Share',
+                  onPressed: () => _showDemo(context, 'Share (demo)'), icon: const Icon(Icons.share)),
             ],
           ),
           SliverList(
@@ -52,4 +64,10 @@ class CollapsingAppBar extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -38,12 +38,12 @@ class AboutPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () => _showDemo(context, 'Terms of Service (demo)'),
               child: const Text('Terms of Service'),
             ),
             const SizedBox(height: 8),
             OutlinedButton(
-              onPressed: () {},
+              onPressed: () => _showDemo(context, 'Privacy Policy (demo)'),
               child: const Text('Privacy Policy'),
             ),
           ],
@@ -51,4 +51,10 @@ class AboutPage extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -5,10 +5,11 @@ class _Event {
   final String date;
   final String place;
   final String price;
+  final String category;
   final IconData icon;
   final Color color;
-  const _Event(
-      this.title, this.date, this.place, this.price, this.icon, this.color);
+  const _Event(this.title, this.date, this.place, this.price, this.category,
+      this.icon, this.color);
 }
 
 class EventsList extends StatefulWidget {
@@ -24,24 +25,27 @@ class _EventsListState extends State<EventsList> {
 
   static const _events = [
     _Event('Indie Nights Live', 'Fri, Jul 12 · 8 PM', 'The Warehouse', '\$25',
-        Icons.music_note, Color(0xFFBA68C8)),
+        'Music', Icons.music_note, Color(0xFFBA68C8)),
     _Event('Flutter DevFest', 'Sat, Jul 13 · 10 AM', 'Tech Hub', 'Free',
-        Icons.code, Color(0xFF42A5F5)),
+        'Tech', Icons.code, Color(0xFF42A5F5)),
     _Event('Street Food Fair', 'Sun, Jul 14 · 12 PM', 'Riverside Park', '\$10',
-        Icons.fastfood, Color(0xFFFFB74D)),
+        'Food', Icons.fastfood, Color(0xFFFFB74D)),
     _Event('City Marathon', 'Sun, Jul 21 · 6 AM', 'Downtown', '\$40',
-        Icons.directions_run, Color(0xFF66BB6A)),
+        'Sports', Icons.directions_run, Color(0xFF66BB6A)),
   ];
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final events = _filter == 0
+        ? _events
+        : _events.where((e) => e.category == _filters[_filter]).toList();
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('Discover'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+          IconButton(tooltip: 'Search', onPressed: () => _showDemo(context, 'Search (demo)'), icon: const Icon(Icons.search)),
         ],
       ),
       body: Column(
@@ -65,9 +69,9 @@ class _EventsListState extends State<EventsList> {
           Expanded(
             child: ListView.builder(
               padding: const EdgeInsets.all(16),
-              itemCount: _events.length,
+              itemCount: events.length,
               itemBuilder: (context, i) {
-                final e = _events[i];
+                final e = events[i];
                 return Card(
                   clipBehavior: Clip.antiAlias,
                   margin: const EdgeInsets.only(bottom: 16),
@@ -132,4 +136,10 @@ class _EventsListState extends State<EventsList> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

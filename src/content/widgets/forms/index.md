@@ -1,6 +1,6 @@
 ---
 title: Forms
-description: A collection of form templates and components for user input. Includes sign-in forms, registration forms, and other form-related components with validation and responsive design.
+description: "Flutter form examples: sign-in, sign-up, multi-step forms, payment forms, OTP entry, surveys, tag input, file upload, ratings, and signature pads, with validation."
 category: widgets
 order: 3
 icon: mdi:form-select

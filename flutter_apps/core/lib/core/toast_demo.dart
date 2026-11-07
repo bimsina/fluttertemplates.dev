@@ -14,7 +14,7 @@ class ToastDemo extends StatelessWidget {
   }) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text(message),
+        content: Text(message, style: TextStyle(color: textColor)),
         behavior: behavior,
         duration: duration,
         backgroundColor: backgroundColor,

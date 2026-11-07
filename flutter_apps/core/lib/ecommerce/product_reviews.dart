@@ -3,6 +3,14 @@ import 'package:flutter/material.dart';
 const _ratings = [5, 4, 3, 2, 1];
 const _counts = [12, 8, 3, 1, 0];
 final _maxCount = _counts.reduce((a, b) => a > b ? a : b);
+final _totalReviews = _counts.reduce((a, b) => a + b);
+final _averageRating = _totalReviews == 0
+    ? 0.0
+    : List.generate(
+          _ratings.length,
+          (i) => _ratings[i] * _counts[i],
+        ).reduce((a, b) => a + b) /
+        _totalReviews;
 const _reviews = [
   {'user': 'Alice', 'rating': 5, 'text': 'Great product!'},
   {'user': 'Bob', 'rating': 4, 'text': 'Good value for money.'},
@@ -21,7 +29,7 @@ class ProductReviews extends StatelessWidget {
           Row(
             children: [
               Text(
-                '4.5',
+                _averageRating.toStringAsFixed(1),
                 style: Theme.of(context).textTheme.displaySmall,
               ),
               const SizedBox(width: 16),

@@ -8,6 +8,7 @@ class Chatbot extends StatefulWidget {
 }
 
 class _ChatbotState extends State<Chatbot> {
+  final _controller = TextEditingController();
   final _messages = <(String, bool)>[
     ('Hi! I\'m Bolt, your support assistant. How can I help today?', false),
   ];
@@ -18,6 +19,19 @@ class _ChatbotState extends State<Chatbot> {
     'Return an item',
     'Talk to a human',
   ];
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  void _send() {
+    final text = _controller.text.trim();
+    if (text.isEmpty) return;
+    _controller.clear();
+    _reply(text);
+  }
 
   void _reply(String text) {
     setState(() {
@@ -110,9 +124,12 @@ class _ChatbotState extends State<Chatbot> {
               padding: const EdgeInsets.fromLTRB(12, 0, 12, 8),
               child: Row(
                 children: [
-                  const Expanded(
+                  Expanded(
                     child: TextField(
-                      decoration: InputDecoration(
+                      controller: _controller,
+                      textInputAction: TextInputAction.send,
+                      onSubmitted: (_) => _send(),
+                      decoration: const InputDecoration(
                         hintText: 'Type a message',
                         border: OutlineInputBorder(),
                         isDense: true,
@@ -121,8 +138,8 @@ class _ChatbotState extends State<Chatbot> {
                   ),
                   const SizedBox(width: 8),
                   IconButton.filled(
-                      onPressed: () => _reply('Custom question'),
-                      icon: const Icon(Icons.send)),
+                      tooltip: 'Send message',
+                      onPressed: _send, icon: const Icon(Icons.send)),
                 ],
               ),
             ),

@@ -1,6 +1,6 @@
 ---
 title: "Notifications"
-description: "Notification center, email inbox, banners, settings"
+description: "Flutter notification UI: a notification center, email inbox, in-app banners, and notification settings screens."
 order: 15
 icon: mdi:bell
 ---

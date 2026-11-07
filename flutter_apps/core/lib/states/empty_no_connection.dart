@@ -10,6 +10,13 @@ class EmptyNoConnection extends StatefulWidget {
 class _EmptyNoConnectionState extends State<EmptyNoConnection> {
   var _loading = false;
 
+  // Simulated: replace the delay with a real request or connectivity check.
+  Future<void> _retry() async {
+    setState(() => _loading = true);
+    await Future<void>.delayed(const Duration(seconds: 2));
+    if (mounted) setState(() => _loading = false);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,14 +45,7 @@ class _EmptyNoConnectionState extends State<EmptyNoConnection> {
               ),
               const SizedBox(height: 24),
               FilledButton.icon(
-                onPressed: _loading
-                    ? null
-                    : () {
-                        setState(() => _loading = true);
-                        Future.delayed(const Duration(seconds: 2), () {
-                          if (mounted) setState(() => _loading = false);
-                        });
-                      },
+                onPressed: _loading ? null : _retry,
                 icon: _loading
                     ? const SizedBox(
                         width: 20,
@@ -54,6 +54,12 @@ class _EmptyNoConnectionState extends State<EmptyNoConnection> {
                       )
                     : const Icon(Icons.refresh),
                 label: Text(_loading ? 'Retrying...' : 'Retry'),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'Demo only: retry is simulated, no network check runs.',
+                textAlign: TextAlign.center,
+                style: Theme.of(context).textTheme.bodySmall,
               ),
             ],
           ),

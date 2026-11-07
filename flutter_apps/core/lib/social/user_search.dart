@@ -11,6 +11,7 @@ class UserSearch extends StatefulWidget {
 
 class _UserSearchState extends State<UserSearch> {
   var _query = '';
+  final _following = <String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -31,12 +32,15 @@ class _UserSearchState extends State<UserSearch> {
         itemCount: filtered.length,
         itemBuilder: (context, i) {
           final u = filtered[i];
+          final following = _following.contains(u);
           return ListTile(
             leading: CircleAvatar(child: Text(u[0])),
             title: Text(u),
             trailing: FilledButton(
-              onPressed: () {},
-              child: const Text('Follow'),
+              onPressed: () => setState(() {
+                if (!_following.add(u)) _following.remove(u);
+              }),
+              child: Text(following ? 'Following' : 'Follow'),
             ),
           );
         },

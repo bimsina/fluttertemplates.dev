@@ -10,6 +10,7 @@ class FlightBooking extends StatefulWidget {
 class _FlightBookingState extends State<FlightBooking> {
   var _tripType = 'Round trip';
   var _passengers = 1;
+  var _cabin = 'Economy';
 
   @override
   Widget build(BuildContext context) {
@@ -63,18 +64,20 @@ class _FlightBookingState extends State<FlightBooking> {
                   ),
                 ),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: TextField(
-                  decoration: InputDecoration(
-                    labelText: 'Return',
-                    prefixIcon: const Icon(Icons.calendar_today),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(12),
+              if (_tripType == 'Round trip') ...[
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TextField(
+                    decoration: InputDecoration(
+                      labelText: 'Return',
+                      prefixIcon: const Icon(Icons.calendar_today),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
                     ),
                   ),
                 ),
-              ),
+              ],
             ],
           ),
           const SizedBox(height: 12),
@@ -98,7 +101,7 @@ class _FlightBookingState extends State<FlightBooking> {
               const SizedBox(width: 12),
               Expanded(
                 child: DropdownButtonFormField<String>(
-                  initialValue: 'Economy',
+                  initialValue: _cabin,
                   decoration: InputDecoration(
                     labelText: 'Class',
                     border: OutlineInputBorder(
@@ -108,14 +111,14 @@ class _FlightBookingState extends State<FlightBooking> {
                   items: ['Economy', 'Premium', 'Business', 'First']
                       .map((c) => DropdownMenuItem(value: c, child: Text(c)))
                       .toList(),
-                  onChanged: (_) {},
+                  onChanged: (v) => setState(() => _cabin = v ?? _cabin),
                 ),
               ),
             ],
           ),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Search Flights (demo)'),
             style: FilledButton.styleFrom(
               padding: const EdgeInsets.symmetric(vertical: 16),
               shape: RoundedRectangleBorder(
@@ -128,4 +131,10 @@ class _FlightBookingState extends State<FlightBooking> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

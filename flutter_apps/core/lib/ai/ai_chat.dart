@@ -1,4 +1,25 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+
+const _cannedReply =
+    'Great choice. Start with a Scaffold, a monthly summary card, and a '
+    'categorized transaction list backed by a simple model.';
+const _tokenInterval = Duration(milliseconds: 60);
+
+/// Ticks to wait before the first token, so the typing dots get a moment.
+const _thinkingTicks = 10;
+
+/// Simulated model output: splits [reply] into word tokens and emits one per
+/// tick. Swap this for your provider's streaming response. Stream.periodic
+/// stops its timer when the subscription is cancelled.
+Stream<String> _simulatedTokens(String reply) {
+  final tokens = RegExp(r'\S+\s*').allMatches(reply).map((m) => m[0]!).toList();
+  return Stream<int>.periodic(_tokenInterval, (tick) => tick)
+      .skip(_thinkingTicks)
+      .take(tokens.length)
+      .map((tick) => tokens[tick - _thinkingTicks]);
+}
 
 class _Msg {
   final String text;
@@ -15,43 +36,69 @@ class AiChat extends StatefulWidget {
 
 class _AiChatState extends State<AiChat> {
   final _controller = TextEditingController();
+  final _scrollController = ScrollController();
   final _messages = <_Msg>[
     const _Msg('Give me three ideas for a weekend project in Flutter.', true),
     const _Msg(
-        'Sure! Here are three: 1) A habit tracker with streaks, 2) a Markdown notes app with live preview, and 3) a small budgeting dashboard. Want me to sketch the architecture for one?',
-        false),
+      'Sure! Here are three: 1) A habit tracker with streaks, 2) a Markdown notes app with live preview, and 3) a small budgeting dashboard. Want me to sketch the architecture for one?',
+      false,
+    ),
     const _Msg('The budgeting dashboard sounds fun.', true),
   ];
-  bool _typing = true;
+
+  /// The reply so far: null when idle, empty until the first token arrives.
+  String? _partialReply;
+  StreamSubscription<String>? _replySubscription;
 
   @override
   void dispose() {
+    _replySubscription?.cancel();
     _controller.dispose();
+    _scrollController.dispose();
     super.dispose();
+  }
+
+  void _scrollToEnd() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!_scrollController.hasClients) return;
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    });
   }
 
   void _send() {
     final text = _controller.text.trim();
-    if (text.isEmpty) return;
+    if (text.isEmpty || _partialReply != null) return;
     setState(() {
       _messages.add(_Msg(text, true));
       _controller.clear();
-      _typing = true;
+      _partialReply = '';
     });
-    Future.delayed(const Duration(milliseconds: 900), () {
-      if (!mounted) return;
-      setState(() {
-        _typing = false;
-        _messages.add(const _Msg(
-            'Great choice. Start with a Scaffold, a monthly summary card, and a categorized transaction list backed by a simple model.',
-            false));
-      });
+    _scrollToEnd();
+    _replySubscription = _simulatedTokens(_cannedReply).listen((token) {
+      setState(() => _partialReply = _partialReply! + token);
+      _scrollToEnd();
+    }, onDone: _finishReply);
+  }
+
+  /// Moves the streamed text into the history.
+  void _finishReply() {
+    _replySubscription = null;
+    setState(() {
+      final reply = _partialReply ?? '';
+      if (reply.isNotEmpty) _messages.add(_Msg(reply, false));
+      _partialReply = null;
     });
+  }
+
+  void _stopReply() {
+    _replySubscription?.cancel();
+    _finishReply();
   }
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
+    final partialReply = _partialReply;
 
     return Scaffold(
       appBar: AppBar(
@@ -67,11 +114,20 @@ class _AiChatState extends State<AiChat> {
         children: [
           Expanded(
             child: ListView.builder(
+              controller: _scrollController,
               padding: const EdgeInsets.all(16),
-              itemCount: _messages.length + (_typing ? 1 : 0),
+              itemCount: _messages.length + (partialReply != null ? 1 : 0),
               itemBuilder: (context, i) {
-                if (_typing && i == _messages.length) {
-                  return const _Bubble(fromUser: false, child: _TypingDots());
+                if (i == _messages.length) {
+                  return _Bubble(
+                    fromUser: false,
+                    child: partialReply!.isEmpty
+                        ? const _TypingDots()
+                        : Text(
+                            partialReply,
+                            style: TextStyle(color: scheme.onSurfaceVariant),
+                          ),
+                  );
                 }
                 final m = _messages[i];
                 return _Bubble(
@@ -88,6 +144,12 @@ class _AiChatState extends State<AiChat> {
               },
             ),
           ),
+          Text(
+            'Demo: replies are simulated, no model is called',
+            style: Theme.of(
+              context,
+            ).textTheme.labelSmall?.copyWith(color: scheme.onSurfaceVariant),
+          ),
           SafeArea(
             top: false,
             child: Padding(
@@ -102,7 +164,9 @@ class _AiChatState extends State<AiChat> {
                         hintText: 'Message Assistant…',
                         filled: true,
                         contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 16, vertical: 12),
+                          horizontal: 16,
+                          vertical: 12,
+                        ),
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(24),
                           borderSide: BorderSide.none,
@@ -111,8 +175,17 @@ class _AiChatState extends State<AiChat> {
                     ),
                   ),
                   const SizedBox(width: 8),
-                  IconButton.filled(
-                      onPressed: _send, icon: const Icon(Icons.arrow_upward)),
+                  partialReply == null
+                      ? IconButton.filled(
+                          tooltip: 'Send message',
+                          onPressed: _send,
+                          icon: const Icon(Icons.arrow_upward),
+                        )
+                      : IconButton.filled(
+                          tooltip: 'Stop response',
+                          onPressed: _stopReply,
+                          icon: const Icon(Icons.stop),
+                        ),
                 ],
               ),
             ),
@@ -156,9 +229,10 @@ class _TypingDots extends StatefulWidget {
 
 class _TypingDotsState extends State<_TypingDots>
     with SingleTickerProviderStateMixin {
-  late final AnimationController _c =
-      AnimationController(vsync: this, duration: const Duration(milliseconds: 900))
-        ..repeat();
+  late final AnimationController _c = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..repeat();
 
   @override
   void dispose() {
@@ -182,7 +256,9 @@ class _TypingDotsState extends State<_TypingDots>
               margin: const EdgeInsets.symmetric(horizontal: 3),
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: color.withValues(alpha: 0.4 + 0.6 * (1 - (t - 0.5).abs() * 2)),
+                color: color.withValues(
+                  alpha: 0.4 + 0.6 * (1 - (t - 0.5).abs() * 2),
+                ),
               ),
             );
           }),

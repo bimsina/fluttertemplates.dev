@@ -8,8 +8,10 @@ class AudioMessagePlayer extends StatefulWidget {
 }
 
 class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
-  bool _isPlaying = false;
-  double _progress = 0.3;
+  // Only one message plays at a time.
+  int? _playingIndex;
+  // One playback position per message, indexed like _messages.
+  final List<double> _progress = [0.3, 0.3, 0.3];
 
   final List<Map<String, dynamic>> _messages = [
     {
@@ -52,6 +54,7 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
           final message = _messages[index];
           return _buildAudioMessage(
             context,
+            index: index,
             sender: message['sender'],
             avatar: message['avatar'],
             audioDuration: message['audioDuration'],
@@ -66,6 +69,7 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
 
   Widget _buildAudioMessage(
     BuildContext context, {
+    required int index,
     required String sender,
     required String avatar,
     required String audioDuration,
@@ -73,6 +77,11 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
     required String timestamp,
     required bool isDark,
   }) {
+    final isPlaying = _playingIndex == index;
+    final metaColor = isMe
+        ? Colors.white70
+        : (isDark ? Colors.white54 : Colors.grey[600]);
+
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: Row(
@@ -108,13 +117,24 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                Text(
+                  sender,
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.bold,
+                    color: isMe
+                        ? Colors.white
+                        : (isDark ? Colors.white : Colors.grey[800]),
+                  ),
+                ),
+                const SizedBox(height: 4),
                 Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     GestureDetector(
                       onTap: () {
                         setState(() {
-                          _isPlaying = !_isPlaying;
+                          _playingIndex = isPlaying ? null : index;
                         });
                       },
                       child: Container(
@@ -127,7 +147,7 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
                           shape: BoxShape.circle,
                         ),
                         child: Icon(
-                          _isPlaying ? Icons.pause : Icons.play_arrow,
+                          isPlaying ? Icons.pause : Icons.play_arrow,
                           color: isMe ? Colors.white : Colors.blue[700],
                           size: 24,
                         ),
@@ -146,9 +166,9 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
                               ),
                             ),
                             child: Slider(
-                              value: _progress,
+                              value: _progress[index],
                               onChanged: (value) {
-                                setState(() => _progress = value);
+                                setState(() => _progress[index] = value);
                               },
                               activeColor: isMe
                                   ? Colors.white
@@ -158,16 +178,24 @@ class _AudioMessagePlayerState extends State<AudioMessagePlayer> {
                                   : Colors.blue[200],
                             ),
                           ),
-                          Text(
-                            audioDuration,
-                            style: TextStyle(
-                              fontSize: 11,
-                              color: isMe
-                                  ? Colors.white70
-                                  : (isDark
-                                        ? Colors.white54
-                                        : Colors.grey[600]),
-                            ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                audioDuration,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: metaColor,
+                                ),
+                              ),
+                              Text(
+                                timestamp,
+                                style: TextStyle(
+                                  fontSize: 11,
+                                  color: metaColor,
+                                ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

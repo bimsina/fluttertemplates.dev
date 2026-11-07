@@ -155,6 +155,7 @@ class _UnitConverterState extends State<UnitConverter> {
                       ),
                       const SizedBox(width: 12),
                       IconButton(
+                        tooltip: 'Swap units',
                         icon: const Icon(Icons.swap_horiz),
                         onPressed: () {
                           setState(() {

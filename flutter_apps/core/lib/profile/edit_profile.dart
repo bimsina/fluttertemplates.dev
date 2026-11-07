@@ -13,9 +13,41 @@ class _EditProfileState extends State<EditProfile> {
   final _bioController = TextEditingController(text: 'Flutter Developer');
   final _locationController = TextEditingController(text: 'San Francisco, CA');
   final _websiteController = TextEditingController(text: 'johndoe.dev');
+  final _handleController = TextEditingController();
+  final _facebookController = TextEditingController();
+  final _instagramController = TextEditingController();
 
   String _selectedGender = 'Male';
   DateTime _selectedDate = DateTime(1990, 1, 1);
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _bioController.dispose();
+    _locationController.dispose();
+    _websiteController.dispose();
+    _handleController.dispose();
+    _facebookController.dispose();
+    _instagramController.dispose();
+    super.dispose();
+  }
+
+  void _save() {
+    if (!_formKey.currentState!.validate()) return;
+    final socialLinks = [
+      _handleController,
+      _facebookController,
+      _instagramController,
+    ].where((controller) => controller.text.trim().isNotEmpty).length;
+    // Send the controller values to your API here.
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Saved ${_nameController.text.trim()}, social links: $socialLinks',
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,7 +60,7 @@ class _EditProfileState extends State<EditProfile> {
         foregroundColor: Colors.white,
         actions: [
           TextButton(
-            onPressed: () {},
+            onPressed: _save,
             child: const Text(
               'Save',
               style: TextStyle(
@@ -80,7 +112,7 @@ class _EditProfileState extends State<EditProfile> {
                 icon: Icons.person_outline,
                 isDark: isDark,
                 validator: (v) =>
-                    v?.isEmpty == true ? 'Name is required' : null,
+                    v == null || v.trim().isEmpty ? 'Name is required' : null,
               ),
               const SizedBox(height: 16),
               _buildTextField(
@@ -169,18 +201,21 @@ class _EditProfileState extends State<EditProfile> {
               _buildSectionTitle('Social Links', isDark),
               const SizedBox(height: 16),
               _buildSocialLink(
+                controller: _handleController,
                 icon: Icons.alternate_email,
                 placeholder: '@username',
                 isDark: isDark,
               ),
               const SizedBox(height: 12),
               _buildSocialLink(
+                controller: _facebookController,
                 icon: Icons.link,
                 placeholder: 'facebook.com/username',
                 isDark: isDark,
               ),
               const SizedBox(height: 12),
               _buildSocialLink(
+                controller: _instagramController,
                 icon: Icons.camera_alt,
                 placeholder: 'instagram.com/username',
                 isDark: isDark,
@@ -244,6 +279,7 @@ class _EditProfileState extends State<EditProfile> {
   }
 
   Widget _buildSocialLink({
+    required TextEditingController controller,
     required IconData icon,
     required String placeholder,
     required bool isDark,
@@ -260,6 +296,7 @@ class _EditProfileState extends State<EditProfile> {
           const SizedBox(width: 16),
           Expanded(
             child: TextFormField(
+              controller: controller,
               decoration: InputDecoration(
                 hintText: placeholder,
                 border: InputBorder.none,

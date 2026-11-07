@@ -71,7 +71,7 @@ class CallHistory extends StatelessWidget {
         title: const Text('Call History'),
         backgroundColor: isDark ? Colors.grey[900] : Colors.blue[700],
         foregroundColor: Colors.white,
-        actions: [IconButton(icon: const Icon(Icons.search), onPressed: () {})],
+        actions: [IconButton(tooltip: 'Search', icon: const Icon(Icons.search), onPressed: () => _showDemo(context, 'Search (demo)'))],
       ),
       body: ListView.builder(
         itemCount: calls.length,
@@ -81,7 +81,7 @@ class CallHistory extends StatelessWidget {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => _showDemo(context, 'New call (demo)'),
         backgroundColor: Colors.green,
         child: const Icon(Icons.add_call, color: Colors.white),
       ),
@@ -170,18 +170,26 @@ class CallHistory extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           IconButton(
+            tooltip: 'Call',
             icon: const Icon(Icons.call, color: Colors.green),
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Call (demo)'),
           ),
           IconButton(
+            tooltip: 'Video call',
             icon: Icon(
               Icons.videocam,
               color: isDark ? Colors.white70 : Colors.grey[700],
             ),
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Video call (demo)'),
           ),
         ],
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -125,7 +125,7 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
                 width: double.infinity,
                 height: 52,
                 child: FilledButton(
-                    onPressed: () {}, child: const Text('Continue')),
+                    onPressed: () => _showDemo(context, 'Continue (demo)'), child: const Text('Continue')),
               ),
             ),
           ],
@@ -133,4 +133,10 @@ class _FeatureCarouselState extends State<FeatureCarousel> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

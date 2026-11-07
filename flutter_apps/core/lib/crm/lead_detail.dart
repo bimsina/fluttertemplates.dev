@@ -3,6 +3,12 @@ import 'package:flutter/material.dart';
 class LeadDetail extends StatelessWidget {
   const LeadDetail({super.key});
 
+  void _notify(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -11,7 +17,7 @@ class LeadDetail extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Lead'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.edit))],
+        actions: [IconButton(tooltip: 'Edit lead', onPressed: () => _showDemo(context, 'Edit (demo)'), icon: const Icon(Icons.edit))],
       ),
       body: ListView(
         children: [
@@ -30,9 +36,12 @@ class LeadDetail extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    _action(scheme, Icons.call, 'Call'),
-                    _action(scheme, Icons.mail_outline, 'Email'),
-                    _action(scheme, Icons.event, 'Meet'),
+                    _action(scheme, Icons.call, 'Call',
+                        () => _notify(context, 'Calling Amara Okafor…')),
+                    _action(scheme, Icons.mail_outline, 'Email',
+                        () => _notify(context, 'New email to Amara Okafor')),
+                    _action(scheme, Icons.event, 'Meet',
+                        () => _notify(context, 'Scheduling a meeting…')),
                   ],
                 ),
               ],
@@ -73,18 +82,23 @@ class LeadDetail extends StatelessWidget {
     );
   }
 
-  Widget _action(ColorScheme scheme, IconData icon, String label) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 12),
-      child: Column(
-        children: [
-          CircleAvatar(
-            backgroundColor: scheme.primaryContainer,
-            child: Icon(icon, color: scheme.onPrimaryContainer),
-          ),
-          const SizedBox(height: 6),
-          Text(label, style: const TextStyle(fontSize: 12)),
-        ],
+  Widget _action(
+      ColorScheme scheme, IconData icon, String label, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(12),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+        child: Column(
+          children: [
+            CircleAvatar(
+              backgroundColor: scheme.primaryContainer,
+              child: Icon(icon, color: scheme.onPrimaryContainer),
+            ),
+            const SizedBox(height: 6),
+            Text(label, style: const TextStyle(fontSize: 12)),
+          ],
+        ),
       ),
     );
   }
@@ -122,4 +136,10 @@ class LeadDetail extends StatelessWidget {
           style: TextStyle(fontSize: 12, color: scheme.onSurfaceVariant)),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

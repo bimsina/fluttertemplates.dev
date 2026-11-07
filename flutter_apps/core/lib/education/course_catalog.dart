@@ -18,7 +18,8 @@ class CourseCatalog extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: MediaQuery.of(context).size.width > 600 ? 3 : 2,
-          childAspectRatio: 0.8,
+          // Cells grow with the text scale so large text stays inside the card.
+          childAspectRatio: 0.8 / MediaQuery.textScalerOf(context).scale(1),
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
@@ -32,7 +33,8 @@ class CourseCatalog extends StatelessWidget {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.primaries[i].withValues(alpha: 0.3),
+                      color: Colors.primaries[i % Colors.primaries.length]
+                          .withValues(alpha: 0.3),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(12),
                       ),
@@ -42,7 +44,7 @@ class CourseCatalog extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.all(12),
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       Text(
                         c['title'] as String,
@@ -52,11 +54,17 @@ class CourseCatalog extends StatelessWidget {
                         c['instructor'] as String,
                         style: Theme.of(context).textTheme.bodySmall,
                       ),
-                      Row(
+                      Wrap(
+                        alignment: WrapAlignment.spaceBetween,
+                        crossAxisAlignment: WrapCrossAlignment.center,
                         children: [
-                          Icon(Icons.star, size: 14, color: Colors.amber[700]),
-                          Text(' ${c['rating']}'),
-                          const Spacer(),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(Icons.star, size: 14, color: Colors.amber[700]),
+                              Text(' ${c['rating']}'),
+                            ],
+                          ),
                           Text('${c['hours']} hrs'),
                         ],
                       ),

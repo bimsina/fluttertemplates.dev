@@ -44,7 +44,7 @@ class ContactPage extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () {},
+              onPressed: () => _showDemo(context, 'Send Message (demo)'),
               style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -56,16 +56,22 @@ class ContactPage extends StatelessWidget {
             ListTile(
               leading: const Icon(Icons.email),
               title: const Text('support@example.com'),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'support@example.com (demo)'),
             ),
             ListTile(
               leading: const Icon(Icons.phone),
               title: const Text('+1 (555) 123-4567'),
-              onTap: () {},
+              onTap: () => _showDemo(context, '+1 (555) 123-4567 (demo)'),
             ),
           ],
         ),
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

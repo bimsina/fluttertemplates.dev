@@ -9,7 +9,9 @@ class MultiStepForm extends StatefulWidget {
 
 class _MultiStepFormState extends State<MultiStepForm> {
   var _step = 0;
-  final _formKey = GlobalKey<FormState>();
+  // One Form per input step. IndexedStack keeps every step mounted, so a single
+  // Form would also validate the hidden steps.
+  final _formKeys = [GlobalKey<FormState>(), GlobalKey<FormState>()];
 
   @override
   Widget build(BuildContext context) {
@@ -21,16 +23,13 @@ class _MultiStepFormState extends State<MultiStepForm> {
             value: (_step + 1) / 3,
           ),
           Expanded(
-            child: Form(
-              key: _formKey,
-              child: IndexedStack(
-                index: _step,
-                children: [
-                  _Step1(),
-                  _Step2(),
-                  _Step3(),
-                ],
-              ),
+            child: IndexedStack(
+              index: _step,
+              children: [
+                Form(key: _formKeys[0], child: _Step1()),
+                Form(key: _formKeys[1], child: _Step2()),
+                _Step3(),
+              ],
             ),
           ),
           Padding(
@@ -47,10 +46,9 @@ class _MultiStepFormState extends State<MultiStepForm> {
                   const SizedBox(),
                 FilledButton(
                   onPressed: () {
-                    if (_formKey.currentState?.validate() ?? false) {
-                      if (_step < 2) {
-                        setState(() => _step++);
-                      }
+                    if (_step < 2 &&
+                        (_formKeys[_step].currentState?.validate() ?? false)) {
+                      setState(() => _step++);
                     }
                   },
                   child: Text(_step < 2 ? 'Next' : 'Submit'),
@@ -67,7 +65,7 @@ class _MultiStepFormState extends State<MultiStepForm> {
 class _Step1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -100,7 +98,7 @@ class _Step1 extends StatelessWidget {
 class _Step2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -132,7 +130,7 @@ class _Step2 extends StatelessWidget {
 class _Step3 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Padding(
+    return SingleChildScrollView(
       padding: const EdgeInsets.all(24),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

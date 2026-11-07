@@ -24,34 +24,40 @@ class AdminDashboard extends StatelessWidget {
             LayoutBuilder(
               builder: (context, constraints) {
                 final count = constraints.maxWidth > 600 ? 4 : 2;
-                return GridView.count(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  crossAxisCount: count,
-                  mainAxisSpacing: 12,
-                  crossAxisSpacing: 12,
-                  childAspectRatio: 1.5,
-                  children: _metrics.map((m) => Card(
-                    child: Padding(
-                      padding: const EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(m['icon'] as IconData, size: 24),
-                          const SizedBox(height: 8),
-                          Text(m['value'] as String,
-                              style: Theme.of(context).textTheme.titleLarge),
-                          Text(m['label'] as String,
-                              style: Theme.of(context).textTheme.bodySmall),
-                          Text(m['change'] as String,
-                              style: TextStyle(
-                                color: (m['change'] as String).startsWith('+')
-                                    ? Colors.green
-                                    : Colors.red,
-                                fontSize: 12,
-                              )),
-                        ],
+                const spacing = 12.0;
+                final tileWidth =
+                    ((constraints.maxWidth - spacing * (count - 1)) / count)
+                        .floorToDouble();
+                // Wrap lets each card take the height of its content, unlike
+                // a grid cell, which clips it at a fixed aspect ratio.
+                return Wrap(
+                  spacing: spacing,
+                  runSpacing: spacing,
+                  children: _metrics.map((m) => SizedBox(
+                    width: tileWidth,
+                    child: Card(
+                      margin: EdgeInsets.zero,
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(m['icon'] as IconData, size: 24),
+                            const SizedBox(height: 8),
+                            Text(m['value'] as String,
+                                style: Theme.of(context).textTheme.titleLarge),
+                            Text(m['label'] as String,
+                                style: Theme.of(context).textTheme.bodySmall),
+                            Text(m['change'] as String,
+                                style: TextStyle(
+                                  color: (m['change'] as String).startsWith('+')
+                                      ? Colors.green
+                                      : Colors.red,
+                                  fontSize: 12,
+                                )),
+                          ],
+                        ),
                       ),
                     ),
                   )).toList(),

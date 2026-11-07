@@ -23,7 +23,7 @@ class SnackbarVariants extends StatelessWidget {
                 content: const Text('Action snackbar'),
                 action: SnackBarAction(
                   label: 'Undo',
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Undone (demo)'),
                 ),
               ),
             ),
@@ -59,4 +59,10 @@ class SnackbarVariants extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

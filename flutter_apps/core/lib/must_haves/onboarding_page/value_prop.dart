@@ -76,12 +76,12 @@ class ValueProp extends StatelessWidget {
               SizedBox(
                 height: 52,
                 child: FilledButton(
-                    onPressed: () {}, child: const Text('Get started')),
+                    onPressed: () => _showDemo(context, 'Get started (demo)'), child: const Text('Get started')),
               ),
               const SizedBox(height: 12),
               Center(
                 child: TextButton(
-                    onPressed: () {}, child: const Text('I already have an account')),
+                    onPressed: () => _showDemo(context, 'Sign in (demo)'), child: const Text('I already have an account')),
               ),
             ],
           ),
@@ -89,4 +89,10 @@ class ValueProp extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

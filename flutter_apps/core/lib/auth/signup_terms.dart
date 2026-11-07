@@ -8,8 +8,35 @@ class SignupTerms extends StatefulWidget {
 }
 
 class _SignupTermsState extends State<SignupTerms> {
+  static final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+  static const _minStrength = 3;
+
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
   String _password = '';
   bool _agreed = false;
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  String get _email => _emailController.text.trim();
+  bool get _emailValid => _emailPattern.hasMatch(_email);
+
+  bool get _canSubmit =>
+      _nameController.text.trim().isNotEmpty &&
+      _emailValid &&
+      _strength >= _minStrength &&
+      _agreed;
+
+  void _submit() {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text('Account created for $_email')),
+    );
+  }
 
   int get _strength {
     var score = 0;
@@ -43,19 +70,27 @@ class _SignupTermsState extends State<SignupTerms> {
               style: theme.textTheme.headlineSmall
                   ?.copyWith(fontWeight: FontWeight.bold)),
           const SizedBox(height: 20),
-          const TextField(
-            decoration: InputDecoration(
+          TextField(
+            controller: _nameController,
+            onChanged: (_) => setState(() {}),
+            decoration: const InputDecoration(
               labelText: 'Full name',
               prefixIcon: Icon(Icons.person_outline),
               border: OutlineInputBorder(),
             ),
           ),
           const SizedBox(height: 16),
-          const TextField(
+          TextField(
+            controller: _emailController,
+            keyboardType: TextInputType.emailAddress,
+            onChanged: (_) => setState(() {}),
             decoration: InputDecoration(
               labelText: 'Email',
-              prefixIcon: Icon(Icons.mail_outline),
-              border: OutlineInputBorder(),
+              prefixIcon: const Icon(Icons.mail_outline),
+              border: const OutlineInputBorder(),
+              errorText: _email.isEmpty || _emailValid
+                  ? null
+                  : 'Enter a valid email address',
             ),
           ),
           const SizedBox(height: 16),
@@ -85,7 +120,9 @@ class _SignupTermsState extends State<SignupTerms> {
             }),
           ),
           const SizedBox(height: 6),
-          Text('Strength: ${_labels[_strength]}',
+          Text(
+              'Strength: ${_labels[_strength]}'
+              '${_strength < _minStrength ? ' (needs ${_labels[_minStrength]})' : ''}',
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: scheme.onSurfaceVariant)),
           const SizedBox(height: 12),
@@ -100,7 +137,7 @@ class _SignupTermsState extends State<SignupTerms> {
           SizedBox(
             height: 52,
             child: FilledButton(
-              onPressed: _agreed ? () {} : null,
+              onPressed: _canSubmit ? _submit : null,
               child: const Text('Create account'),
             ),
           ),

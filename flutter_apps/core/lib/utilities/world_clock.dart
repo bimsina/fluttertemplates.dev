@@ -1,83 +1,87 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
-class WorldClock extends StatelessWidget {
-  const WorldClock({super.key});
+class _City {
+  final String name;
+  final String country;
+  final String timezone;
+
+  /// Fixed offset from UTC in minutes. Daylight saving is not modelled.
+  final int offsetMinutes;
+  const _City(this.name, this.country, this.timezone, this.offsetMinutes);
+}
+
+const _cities = [
+  _City('New York', 'USA', 'EST', -5 * 60),
+  _City('London', 'UK', 'GMT', 0),
+  _City('Paris', 'France', 'CET', 1 * 60),
+  _City('Dubai', 'UAE', 'GST', 4 * 60),
+  _City('Mumbai', 'India', 'IST', 5 * 60 + 30),
+  _City('Tokyo', 'Japan', 'JST', 9 * 60),
+  _City('Sydney', 'Australia', 'AEDT', 11 * 60),
+];
+
+class WorldClock extends StatefulWidget {
+  /// The time source, replaceable in tests.
+  final DateTime Function() now;
+
+  const WorldClock({super.key, this.now = DateTime.now});
+
+  @override
+  State<WorldClock> createState() => _WorldClockState();
+}
+
+class _WorldClockState extends State<WorldClock> {
+  Timer? _timer;
+
+  @override
+  void initState() {
+    super.initState();
+    _scheduleTick();
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  /// Fires at the start of the next minute, then reschedules itself.
+  void _scheduleTick() {
+    final now = widget.now();
+    final untilNextMinute =
+        const Duration(minutes: 1) -
+        Duration(seconds: now.second, milliseconds: now.millisecond);
+    _timer = Timer(untilNextMinute, () {
+      setState(() {});
+      _scheduleTick();
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final locations = [
-      {
-        'city': 'New York',
-        'country': 'USA',
-        'timezone': 'EST',
-        'offset': -5,
-        'isDay': false,
-      },
-      {
-        'city': 'London',
-        'country': 'UK',
-        'timezone': 'GMT',
-        'offset': 0,
-        'isDay': true,
-      },
-      {
-        'city': 'Paris',
-        'country': 'France',
-        'timezone': 'CET',
-        'offset': 1,
-        'isDay': true,
-      },
-      {
-        'city': 'Dubai',
-        'country': 'UAE',
-        'timezone': 'GST',
-        'offset': 4,
-        'isDay': true,
-      },
-      {
-        'city': 'Tokyo',
-        'country': 'Japan',
-        'timezone': 'JST',
-        'offset': 9,
-        'isDay': true,
-      },
-      {
-        'city': 'Sydney',
-        'country': 'Australia',
-        'timezone': 'AEDT',
-        'offset': 11,
-        'isDay': true,
-      },
-    ];
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('World Clock'),
         backgroundColor: isDark ? Colors.grey[900] : Colors.blue[700],
         foregroundColor: Colors.white,
-        actions: [IconButton(icon: const Icon(Icons.add), onPressed: () {})],
+        actions: [IconButton(tooltip: 'Add city', icon: const Icon(Icons.add), onPressed: () => _showDemo(context, 'Add city (demo)'))],
       ),
       body: ListView.builder(
         padding: const EdgeInsets.all(16),
-        itemCount: locations.length,
-        itemBuilder: (context, index) {
-          final location = locations[index];
-          return _buildLocationCard(context, location, isDark);
-        },
+        itemCount: _cities.length,
+        itemBuilder: (context, index) => _buildLocationCard(_cities[index]),
       ),
     );
   }
 
-  Widget _buildLocationCard(
-    BuildContext context,
-    Map<String, dynamic> location,
-    bool isDark,
-  ) {
-    final now = DateTime.now().toUtc();
-    final offset = Duration(hours: location['offset'] as int);
-    final localTime = now.add(offset);
+  Widget _buildLocationCard(_City city) {
+    final localTime = widget.now().toUtc().add(
+      Duration(minutes: city.offsetMinutes),
+    );
     final hour = localTime.hour;
     final minute = localTime.minute.toString().padLeft(2, '0');
     final isDay = hour >= 6 && hour < 18;
@@ -112,7 +116,7 @@ class WorldClock extends StatelessWidget {
                     ),
                     const SizedBox(width: 6),
                     Text(
-                      location['timezone'],
+                      city.timezone,
                       style: TextStyle(
                         color: Colors.white.withValues(alpha: 0.7),
                         fontSize: 12,
@@ -122,7 +126,7 @@ class WorldClock extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  location['city'],
+                  city.name,
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 24,
@@ -131,7 +135,7 @@ class WorldClock extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  location['country'],
+                  city.country,
                   style: TextStyle(
                     color: Colors.white.withValues(alpha: 0.7),
                     fontSize: 14,
@@ -162,11 +166,18 @@ class WorldClock extends StatelessWidget {
           ),
           const SizedBox(width: 16),
           IconButton(
+            tooltip: 'More options',
             icon: const Icon(Icons.more_vert, color: Colors.white54),
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'More options (demo)'),
           ),
         ],
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

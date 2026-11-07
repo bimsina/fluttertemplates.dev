@@ -62,7 +62,7 @@ class _SearchSuggestionsState extends State<SearchSuggestions> {
               (s) => ListTile(
                 leading: const Icon(Icons.search),
                 title: Text(s),
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Search for $s (demo)'),
               ),
             ),
           ],
@@ -91,11 +91,17 @@ class _SearchSuggestionsState extends State<SearchSuggestions> {
             (s) => ListTile(
               leading: const Icon(Icons.trending_up),
               title: Text(s),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Search for $s (demo)'),
             ),
           ),
         ],
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

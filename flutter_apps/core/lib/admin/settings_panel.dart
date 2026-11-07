@@ -30,11 +30,25 @@ class SettingsPanel extends StatelessWidget {
   }
 }
 
-class _GeneralTab extends StatelessWidget {
+class _GeneralTab extends StatefulWidget {
   const _GeneralTab();
 
   @override
+  State<_GeneralTab> createState() => _GeneralTabState();
+}
+
+// TabBarView disposes tabs that scroll away, so keep this one alive.
+class _GeneralTabState extends State<_GeneralTab>
+    with AutomaticKeepAliveClientMixin {
+  bool _productEmails = true;
+  String _timezone = 'UTC−05:00 Eastern';
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
@@ -45,7 +59,8 @@ class _GeneralTab extends StatelessWidget {
         ),
         const SizedBox(height: 16),
         DropdownButtonFormField<String>(
-          initialValue: 'UTC−05:00 Eastern',
+          initialValue: _timezone,
+          isExpanded: true,
           decoration: const InputDecoration(
               labelText: 'Timezone', border: OutlineInputBorder()),
           items: const [
@@ -57,12 +72,12 @@ class _GeneralTab extends StatelessWidget {
                 value: 'UTC+05:45 Kathmandu',
                 child: Text('UTC+05:45 Kathmandu')),
           ],
-          onChanged: (_) {},
+          onChanged: (v) => setState(() => _timezone = v ?? _timezone),
         ),
         const SizedBox(height: 8),
         SwitchListTile(
-          value: true,
-          onChanged: (_) {},
+          value: _productEmails,
+          onChanged: (v) => setState(() => _productEmails = v),
           title: const Text('Product update emails'),
           contentPadding: EdgeInsets.zero,
         ),
@@ -71,28 +86,41 @@ class _GeneralTab extends StatelessWidget {
   }
 }
 
-class _SecurityTab extends StatelessWidget {
+class _SecurityTab extends StatefulWidget {
   const _SecurityTab();
 
   @override
+  State<_SecurityTab> createState() => _SecurityTabState();
+}
+
+class _SecurityTabState extends State<_SecurityTab>
+    with AutomaticKeepAliveClientMixin {
+  bool _requireTwoFactor = true;
+  bool _singleSignOn = false;
+
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
   Widget build(BuildContext context) {
+    super.build(context);
     return ListView(
       padding: const EdgeInsets.all(16),
-      children: const [
+      children: [
         SwitchListTile(
-          value: true,
-          onChanged: _noop,
-          title: Text('Require two-factor auth'),
-          subtitle: Text('For all organization members'),
+          value: _requireTwoFactor,
+          onChanged: (v) => setState(() => _requireTwoFactor = v),
+          title: const Text('Require two-factor auth'),
+          subtitle: const Text('For all organization members'),
           contentPadding: EdgeInsets.zero,
         ),
         SwitchListTile(
-          value: false,
-          onChanged: _noop,
-          title: Text('Single sign-on (SSO)'),
+          value: _singleSignOn,
+          onChanged: (v) => setState(() => _singleSignOn = v),
+          title: const Text('Single sign-on (SSO)'),
           contentPadding: EdgeInsets.zero,
         ),
-        ListTile(
+        const ListTile(
           contentPadding: EdgeInsets.zero,
           leading: Icon(Icons.vpn_key_outlined),
           title: Text('Active sessions'),
@@ -103,8 +131,6 @@ class _SecurityTab extends StatelessWidget {
     );
   }
 }
-
-void _noop(bool _) {}
 
 class _BillingTab extends StatelessWidget {
   const _BillingTab();
@@ -121,7 +147,7 @@ class _BillingTab extends StatelessWidget {
             title: const Text('Pro plan'),
             subtitle: const Text('\$49 / month · renews Aug 1'),
             trailing: TextButton(
-                onPressed: () {}, child: const Text('Manage')),
+                onPressed: () => _showDemo(context, 'Manage (demo)'), child: const Text('Manage')),
           ),
         ),
         const ListTile(
@@ -139,4 +165,10 @@ class _BillingTab extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

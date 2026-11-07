@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 
 class MarqueeText extends StatefulWidget {
   const MarqueeText({super.key});
@@ -88,48 +89,59 @@ class _Marquee extends StatefulWidget {
 }
 
 class _MarqueeState extends State<_Marquee> with SingleTickerProviderStateMixin {
-  late final AnimationController _c = AnimationController(
-    vsync: this,
-    duration: const Duration(seconds: 1),
-  )..repeat();
-
+  late final Ticker _ticker = createTicker(_tick);
   final _scroll = ScrollController();
+  Duration _lastElapsed = Duration.zero;
 
   @override
   void initState() {
     super.initState();
-    _c.addListener(_tick);
+    _ticker.start();
   }
 
-  void _tick() {
-    if (!_scroll.hasClients) return;
-    final max = _scroll.position.maxScrollExtent;
-    if (max <= 0) return;
-    var next = _scroll.offset + widget.velocity / 60;
-    if (next >= max) next = 0;
-    _scroll.jumpTo(next);
+  void _tick(Duration elapsed) {
+    final seconds = (elapsed - _lastElapsed).inMicroseconds /
+        Duration.microsecondsPerSecond;
+    _lastElapsed = elapsed;
+    if (!_scroll.hasClients || !_scroll.position.hasContentDimensions) return;
+
+    final viewport = _scroll.position.viewportDimension;
+    // Content is two equal copies, so this is the width of one copy.
+    final copyWidth = (_scroll.position.maxScrollExtent + viewport) / 2;
+    if (copyWidth <= viewport) return; // The text fits, nothing to scroll.
+
+    // At one copy's width the view matches offset 0, so wrapping is invisible.
+    _scroll.jumpTo((_scroll.offset + widget.velocity * seconds) % copyWidth);
   }
 
   @override
   void dispose() {
-    _c.removeListener(_tick);
-    _c.dispose();
+    _ticker.dispose();
     _scroll.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final doubled = widget.text + widget.text;
-    return ClipRect(
-      child: SingleChildScrollView(
-        controller: _scroll,
-        scrollDirection: Axis.horizontal,
-        physics: const NeverScrollableScrollPhysics(),
-        child: Text(doubled,
-            maxLines: 1,
-            style: const TextStyle(fontWeight: FontWeight.w500)),
-      ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        // Each copy fills the viewport at least, so the second copy is always
+        // ready to take over, and short text sits alone with no duplicate.
+        final copy = ConstrainedBox(
+          constraints: BoxConstraints(minWidth: constraints.maxWidth),
+          child: Text(widget.text,
+              maxLines: 1,
+              style: const TextStyle(fontWeight: FontWeight.w500)),
+        );
+        return ClipRect(
+          child: SingleChildScrollView(
+            controller: _scroll,
+            scrollDirection: Axis.horizontal,
+            physics: const NeverScrollableScrollPhysics(),
+            child: Row(children: [copy, copy]),
+          ),
+        );
+      },
     );
   }
 }

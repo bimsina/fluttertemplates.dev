@@ -1,4 +1,44 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+
+class _DayForecast {
+  final int high;
+  final int low;
+  final IconData icon;
+  const _DayForecast(this.high, this.low, this.icon);
+}
+
+const _currentTemp = 72;
+
+/// Sample data for the next 24 hours, starting now. Today's high and low in
+/// [_week] match the warmest and coolest of these.
+const _hourlyTemps = [
+  72, 73, 74, 75, 76, 75, 74, 72, 70, 68, 66, 64, //
+  63, 62, 62, 63, 64, 65, 66, 68, 69, 70, 71, 72,
+];
+
+const _week = [
+  _DayForecast(76, 62, Icons.wb_sunny),
+  _DayForecast(74, 64, Icons.wb_cloudy),
+  _DayForecast(70, 58, Icons.umbrella),
+  _DayForecast(68, 56, Icons.grain),
+  _DayForecast(71, 60, Icons.wb_cloudy),
+  _DayForecast(75, 65, Icons.wb_sunny),
+  _DayForecast(76, 66, Icons.wb_sunny),
+];
+
+const _weekdays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+const _months = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', //
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
+
+/// Formats an hour from 0 to 23 as a 12-hour label such as 12AM or 1PM.
+String _hourLabel(int hour) {
+  final displayHour = hour % 12 == 0 ? 12 : hour % 12;
+  return '$displayHour${hour < 12 ? 'AM' : 'PM'}';
+}
 
 class WeatherDashboard extends StatelessWidget {
   const WeatherDashboard({super.key});
@@ -6,6 +46,7 @@ class WeatherDashboard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final now = DateTime.now();
 
     return Scaffold(
       body: Container(
@@ -36,7 +77,8 @@ class WeatherDashboard extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Mon, Mar 2',
+                          '${_weekdays[now.weekday - 1]}, '
+                          '${_months[now.month - 1]} ${now.day}',
                           style: TextStyle(
                             color: Colors.white.withValues(alpha: 0.8),
                             fontSize: 16,
@@ -45,15 +87,16 @@ class WeatherDashboard extends StatelessWidget {
                       ],
                     ),
                     IconButton(
+                      tooltip: 'Menu',
                       icon: const Icon(Icons.menu, color: Colors.white),
-                      onPressed: () {},
+                      onPressed: () => _showDemo(context, 'Menu (demo)'),
                     ),
                   ],
                 ),
               ),
               const SizedBox(height: 20),
               const Text(
-                '72°F',
+                '$_currentTemp°F',
                 style: TextStyle(
                   color: Colors.white,
                   fontSize: 96,
@@ -66,7 +109,7 @@ class WeatherDashboard extends StatelessWidget {
               ),
               const SizedBox(height: 8),
               Text(
-                'H: 78° L: 62°',
+                'H: ${_week.first.high}° L: ${_week.first.low}°',
                 style: TextStyle(
                   color: Colors.white.withValues(alpha: 0.8),
                   fontSize: 16,
@@ -98,43 +141,16 @@ class WeatherDashboard extends StatelessWidget {
                           height: 100,
                           child: ListView.builder(
                             scrollDirection: Axis.horizontal,
-                            itemCount: 24,
+                            itemCount: _hourlyTemps.length,
                             itemBuilder: (context, index) {
-                              final temps = [
-                                70,
-                                71,
-                                72,
-                                73,
-                                74,
-                                75,
-                                74,
-                                73,
-                                72,
-                                71,
-                                70,
-                                69,
-                                68,
-                                67,
-                                68,
-                                70,
-                                72,
-                                74,
-                                75,
-                                76,
-                                75,
-                                74,
-                                73,
-                                72,
-                              ];
+                              final hour = (now.hour + index) % 24;
                               return _buildHourlyItem(
                                 context,
-                                time: index == 0
-                                    ? 'Now'
-                                    : '$index${index < 12 ? 'AM' : 'PM'}',
-                                temp: '${temps[index]}°',
-                                icon: index < 6
-                                    ? Icons.wb_cloudy
-                                    : Icons.wb_sunny,
+                                time: index == 0 ? 'Now' : _hourLabel(hour),
+                                temp: '${_hourlyTemps[index]}°',
+                                icon: hour >= 6 && hour < 18
+                                    ? Icons.wb_sunny
+                                    : Icons.nightlight_round,
                                 isDark: isDark,
                               );
                             },
@@ -149,49 +165,13 @@ class WeatherDashboard extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 16),
-                        _buildDayForecast(
-                          'Today',
-                          72,
-                          62,
-                          Icons.wb_sunny,
-                          isDark,
-                        ),
-                        _buildDayForecast(
-                          'Tue',
-                          74,
-                          64,
-                          Icons.wb_cloudy,
-                          isDark,
-                        ),
-                        _buildDayForecast(
-                          'Wed',
-                          70,
-                          58,
-                          Icons.umbrella,
-                          isDark,
-                        ),
-                        _buildDayForecast('Thu', 68, 56, Icons.grain, isDark),
-                        _buildDayForecast(
-                          'Fri',
-                          71,
-                          60,
-                          Icons.wb_cloudy,
-                          isDark,
-                        ),
-                        _buildDayForecast(
-                          'Sat',
-                          75,
-                          65,
-                          Icons.wb_sunny,
-                          isDark,
-                        ),
-                        _buildDayForecast(
-                          'Sun',
-                          76,
-                          66,
-                          Icons.wb_sunny,
-                          isDark,
-                        ),
+                        for (var i = 0; i < _week.length; i++)
+                          _buildDayForecast(
+                            i == 0
+                                ? 'Today'
+                                : _weekdays[(now.weekday - 1 + i) % 7],
+                            _week[i],
+                          ),
                         const SizedBox(height: 24),
                         Row(
                           children: [
@@ -267,13 +247,11 @@ class WeatherDashboard extends StatelessWidget {
     );
   }
 
-  Widget _buildDayForecast(
-    String day,
-    int high,
-    int low,
-    IconData icon,
-    bool isDark,
-  ) {
+  Widget _buildDayForecast(String day, _DayForecast forecast) {
+    final weekLow = _week.map((d) => d.low).reduce(min);
+    final weekHigh = _week.map((d) => d.high).reduce(max);
+    final weekRange = weekHigh - weekLow;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8),
       child: Row(
@@ -285,36 +263,46 @@ class WeatherDashboard extends StatelessWidget {
               style: const TextStyle(fontWeight: FontWeight.w500),
             ),
           ),
-          Icon(icon, color: Colors.orange, size: 20),
+          Icon(forecast.icon, color: Colors.orange, size: 20),
           const SizedBox(width: 16),
+          // The fill spans this day's low to high within the week's range.
           Expanded(
-            child: Row(
-              children: [
-                Container(
-                  width: 80,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                final scale = constraints.maxWidth / weekRange;
+                return Container(
                   height: 4,
                   decoration: BoxDecoration(
                     color: Colors.blue.withValues(alpha: 0.3),
                     borderRadius: BorderRadius.circular(2),
                   ),
-                  child: Align(
-                    alignment: Alignment.centerRight,
-                    child: Container(
-                      width: 30,
-                      height: 4,
-                      decoration: BoxDecoration(
-                        color: Colors.blue,
-                        borderRadius: BorderRadius.circular(2),
+                  child: Stack(
+                    children: [
+                      Positioned(
+                        left: (forecast.low - weekLow) * scale,
+                        width: (forecast.high - forecast.low) * scale,
+                        top: 0,
+                        bottom: 0,
+                        child: DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Colors.blue,
+                            borderRadius: BorderRadius.circular(2),
+                          ),
+                        ),
                       ),
-                    ),
+                    ],
                   ),
-                ),
-              ],
+                );
+              },
             ),
           ),
-          Text('$low°'),
           const SizedBox(width: 12),
-          Text('$high°', style: const TextStyle(fontWeight: FontWeight.bold)),
+          Text('${forecast.low}°'),
+          const SizedBox(width: 12),
+          Text(
+            '${forecast.high}°',
+            style: const TextStyle(fontWeight: FontWeight.bold),
+          ),
         ],
       ),
     );
@@ -352,4 +340,10 @@ class WeatherDashboard extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

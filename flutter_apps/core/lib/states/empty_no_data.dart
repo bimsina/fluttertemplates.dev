@@ -31,7 +31,7 @@ class EmptyNoData extends StatelessWidget {
               ),
               const SizedBox(height: 24),
               FilledButton.icon(
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'Add Item (demo)'),
                 icon: const Icon(Icons.add),
                 label: const Text('Add Item'),
               ),
@@ -41,4 +41,10 @@ class EmptyNoData extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

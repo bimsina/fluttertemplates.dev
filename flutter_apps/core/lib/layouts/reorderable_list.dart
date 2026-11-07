@@ -18,7 +18,6 @@ class _ReorderableListPageState extends State<ReorderableListPage> {
         itemCount: _items.length,
         onReorderItem: (oldIndex, newIndex) {
           setState(() {
-            if (newIndex > oldIndex) newIndex--;
             final item = _items.removeAt(oldIndex);
             _items.insert(newIndex, item);
           });

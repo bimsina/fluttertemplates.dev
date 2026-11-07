@@ -9,21 +9,24 @@ class SignInPage2 extends StatelessWidget {
 
     return Scaffold(
       body: Center(
-        child: isSmallScreen
-            ? const Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [_Logo(), _FormContent()],
-              )
-            : Container(
-                padding: const EdgeInsets.all(32.0),
-                constraints: const BoxConstraints(maxWidth: 800),
-                child: const Row(
-                  children: [
-                    Expanded(child: _Logo()),
-                    Expanded(child: Center(child: _FormContent())),
-                  ],
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.symmetric(vertical: 16.0),
+          child: isSmallScreen
+              ? const Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [_Logo(), _FormContent()],
+                )
+              : Container(
+                  padding: const EdgeInsets.all(32.0),
+                  constraints: const BoxConstraints(maxWidth: 800),
+                  child: const Row(
+                    children: [
+                      Expanded(child: _Logo()),
+                      Expanded(child: Center(child: _FormContent())),
+                    ],
+                  ),
                 ),
-              ),
+        ),
       ),
     );
   }
@@ -86,8 +89,8 @@ class __FormContentState extends State<_FormContent> {
                 }
 
                 bool emailValid = RegExp(
-                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                ).hasMatch(value);
+                  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$",
+                ).hasMatch(value.trim());
                 if (!emailValid) {
                   return 'Please enter a valid email';
                 }
@@ -120,6 +123,7 @@ class __FormContentState extends State<_FormContent> {
                 prefixIcon: const Icon(Icons.lock_outline_rounded),
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
+                  tooltip: _isPasswordVisible ? 'Hide password' : 'Show password',
                   icon: Icon(
                     _isPasswordVisible
                         ? Icons.visibility_off

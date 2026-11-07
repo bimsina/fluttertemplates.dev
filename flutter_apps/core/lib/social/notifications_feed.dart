@@ -6,6 +6,16 @@ const _notifications = [
   {'user': 'Charlie', 'type': 'comment', 'unread': false},
 ];
 
+String _message(Map<String, Object> n) {
+  final user = n['user'];
+  return switch (n['type']) {
+    'follow' => '$user followed you',
+    'like' => '$user liked your post',
+    'comment' => '$user commented on your post',
+    _ => '$user sent you a notification',
+  };
+}
+
 class NotificationsFeed extends StatelessWidget {
   const NotificationsFeed({super.key});
 
@@ -36,7 +46,7 @@ class NotificationsFeed extends StatelessWidget {
                   ),
               ],
             ),
-            title: Text('${n['user']} ${n['type']}ed you'),
+            title: Text(_message(n)),
             subtitle: Text('2h ago'),
           );
         },

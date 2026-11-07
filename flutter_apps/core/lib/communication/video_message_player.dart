@@ -8,7 +8,8 @@ class VideoMessagePlayer extends StatefulWidget {
 }
 
 class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
-  double _progress = 0.25;
+  // One playback position per message, indexed like _messages.
+  final List<double> _progress = [0.25, 0.25];
 
   final List<Map<String, dynamic>> _messages = [
     {
@@ -29,6 +30,16 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
     },
   ];
 
+  int _parseSeconds(String duration) {
+    final parts = duration.split(':');
+    return int.parse(parts[0]) * 60 + int.parse(parts[1]);
+  }
+
+  String _formatSeconds(int seconds) {
+    final remainder = (seconds % 60).toString().padLeft(2, '0');
+    return '${seconds ~/ 60}:$remainder';
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -46,11 +57,10 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
           final message = _messages[index];
           return _buildVideoMessage(
             context,
-            sender: message['sender'],
+            index: index,
             avatar: message['avatar'],
             duration: message['duration'],
             isMe: message['isMe'],
-            timestamp: message['timestamp'],
             isDark: isDark,
           );
         },
@@ -60,11 +70,10 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
 
   Widget _buildVideoMessage(
     BuildContext context, {
-    required String sender,
+    required int index,
     required String avatar,
     required String duration,
     required bool isMe,
-    required String timestamp,
     required bool isDark,
   }) {
     return Padding(
@@ -84,7 +93,7 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
             const SizedBox(width: 8),
           ],
           GestureDetector(
-            onTap: () => _showVideoPlayer(context, isDark),
+            onTap: () => _showVideoPlayer(context, index, isDark),
             child: Container(
               width: 200,
               constraints: BoxConstraints(
@@ -165,9 +174,9 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
                               ),
                             ),
                             child: Slider(
-                              value: _progress,
+                              value: _progress[index],
                               onChanged: (value) {
-                                setState(() => _progress = value);
+                                setState(() => _progress[index] = value);
                               },
                               activeColor: isMe ? Colors.white : Colors.white,
                               inactiveColor: Colors.white30,
@@ -194,7 +203,9 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
     );
   }
 
-  void _showVideoPlayer(BuildContext context, bool isDark) {
+  void _showVideoPlayer(BuildContext context, int index, bool isDark) {
+    final totalSeconds = _parseSeconds(_messages[index]['duration']);
+
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -242,32 +253,44 @@ class _VideoMessagePlayerState extends State<VideoMessagePlayer> {
                     right: 16,
                     child: Column(
                       children: [
-                        Slider(
-                          value: _progress,
-                          onChanged: (value) {
-                            setState(() => _progress = value);
-                          },
-                          activeColor: Colors.white,
-                          inactiveColor: Colors.white30,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              '0:04',
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.8),
-                                fontSize: 12,
+                        // The sheet is its own route, so the page's setState
+                        // can't rebuild it. StatefulBuilder updates this part.
+                        StatefulBuilder(
+                          builder: (context, setSheetState) => Column(
+                            children: [
+                              Slider(
+                                value: _progress[index],
+                                onChanged: (value) {
+                                  setState(() => _progress[index] = value);
+                                  setSheetState(() {});
+                                },
+                                activeColor: Colors.white,
+                                inactiveColor: Colors.white30,
                               ),
-                            ),
-                            Text(
-                              '0:32',
-                              style: TextStyle(
-                                color: Colors.white.withValues(alpha: 0.8),
-                                fontSize: 12,
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    _formatSeconds(
+                                      (_progress[index] * totalSeconds).round(),
+                                    ),
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                  Text(
+                                    _formatSeconds(totalSeconds),
+                                    style: TextStyle(
+                                      color: Colors.white.withValues(alpha: 0.8),
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ],
                     ),

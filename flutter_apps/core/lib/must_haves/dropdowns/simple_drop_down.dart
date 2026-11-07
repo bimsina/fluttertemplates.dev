@@ -11,7 +11,7 @@ class _SimpleDropDownState extends State<SimpleDropDown> {
   String? _selectedFruit;
   final List<String> _fruits = [
     '🍎 Apple',
-    '🍋 Mango',
+    '🥭 Mango',
     '🍌 Banana',
     '🍉 Watermelon',
     '🍇 Grapes',

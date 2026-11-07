@@ -53,13 +53,13 @@ class RestaurantDetail extends StatelessWidget {
                   Row(
                     children: [
                       FilledButton.icon(
-                        onPressed: () {},
+                        onPressed: () => _showDemo(context, 'View Menu (demo)'),
                         icon: const Icon(Icons.menu_book),
                         label: const Text('View Menu'),
                       ),
                       const SizedBox(width: 8),
                       OutlinedButton.icon(
-                        onPressed: () {},
+                        onPressed: () => _showDemo(context, 'Directions (demo)'),
                         icon: const Icon(Icons.location_on),
                         label: const Text('Directions'),
                       ),
@@ -73,4 +73,10 @@ class RestaurantDetail extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -1,6 +1,6 @@
 ---
 title: "Travel"
-description: "Destination cards, flight booking, hotels, itineraries"
+description: "Flutter travel app UI: destination cards, flight booking, hotel listings, boarding passes, and trip itineraries."
 order: 11
 icon: mdi:airplane
 ---

@@ -43,7 +43,7 @@ class TeamMembers extends StatelessWidget {
                     style: TextStyle(fontWeight: FontWeight.w600)),
                 const Spacer(),
                 FilledButton.icon(
-                    onPressed: () {},
+                    onPressed: () => _showDemo(context, 'Invite (demo)'),
                     icon: const Icon(Icons.person_add, size: 18),
                     label: const Text('Invite')),
               ],
@@ -80,7 +80,8 @@ class TeamMembers extends StatelessWidget {
                             style: const TextStyle(fontSize: 12)),
                       ),
                       IconButton(
-                          onPressed: () {},
+                          tooltip: 'Member options',
+                          onPressed: () => _showDemo(context, 'Options for ${m.name} (demo)'),
                           icon: const Icon(Icons.more_vert)),
                     ],
                   ),
@@ -92,4 +93,10 @@ class TeamMembers extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

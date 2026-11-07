@@ -22,7 +22,7 @@ class DestinationCards extends StatelessWidget {
           return Card(
             margin: const EdgeInsets.only(bottom: 12),
             child: InkWell(
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Open ${d['name']} (demo)'),
               borderRadius: BorderRadius.circular(12),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -82,4 +82,10 @@ class DestinationCards extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

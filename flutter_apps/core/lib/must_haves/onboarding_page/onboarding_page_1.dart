@@ -3,10 +3,19 @@ import 'package:flutter/material.dart';
 class OnboardingPage1 extends StatelessWidget {
   const OnboardingPage1({super.key});
 
+  // Replace with navigation to your first real screen.
+  void _exit(BuildContext context, String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: OnboardingPagePresenter(
+        onSkip: () => _exit(context, 'Onboarding skipped'),
+        onFinish: () => _exit(context, 'Onboarding finished'),
         pages: [
           OnboardingPageModel(
             title: 'Fast, Fluid and Secure',
@@ -63,6 +72,12 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
   final PageController _pageController = PageController(initialPage: 0);
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: AnimatedContainer(
@@ -90,7 +105,15 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                           flex: 3,
                           child: Padding(
                             padding: const EdgeInsets.all(32.0),
-                            child: Image.network(item.imageUrl),
+                            child: Image.network(
+                              item.imageUrl,
+                              errorBuilder: (context, error, stackTrace) =>
+                                  Icon(
+                                    Icons.image_not_supported_outlined,
+                                    size: 64,
+                                    color: item.textColor,
+                                  ),
+                            ),
                           ),
                         ),
                         Expanded(

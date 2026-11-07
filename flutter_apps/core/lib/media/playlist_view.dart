@@ -7,8 +7,15 @@ const _tracks = [
   {'title': 'Track Four', 'artist': 'Artist C', 'duration': '5:20'},
 ];
 
-class PlaylistView extends StatelessWidget {
+class PlaylistView extends StatefulWidget {
   const PlaylistView({super.key});
+
+  @override
+  State<PlaylistView> createState() => _PlaylistViewState();
+}
+
+class _PlaylistViewState extends State<PlaylistView> {
+  int? _playing;
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +56,8 @@ class PlaylistView extends StatelessWidget {
                   title: Text(t['title'] as String),
                   subtitle: Text(t['artist'] as String),
                   trailing: Text(t['duration'] as String),
-                  onTap: () {},
+                  selected: _playing == i,
+                  onTap: () => setState(() => _playing = i),
                 );
               },
               childCount: _tracks.length,

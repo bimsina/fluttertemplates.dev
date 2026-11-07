@@ -17,7 +17,7 @@ class EventList extends StatelessWidget {
         title: const Text('Today'),
         actions: [
           FilledButton.icon(
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Add event (demo)'),
             icon: const Icon(Icons.add, size: 18),
             label: const Text('Add'),
           ),
@@ -43,11 +43,17 @@ class EventList extends StatelessWidget {
               title: Text(e['title'] as String),
               subtitle: Text('${e['time']} • ${e['location']}'),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Open ${e['title']} (demo)'),
             ),
           );
         },
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

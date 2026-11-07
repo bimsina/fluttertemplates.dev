@@ -33,7 +33,7 @@ class ContactsList extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Contacts'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [IconButton(tooltip: 'Add contact', onPressed: () => _showDemo(context, 'Add contact (demo)'), icon: const Icon(Icons.add))],
       ),
       body: ListView(
         children: [
@@ -69,7 +69,8 @@ class ContactsList extends StatelessWidget {
                 title: Text(c.name),
                 subtitle: Text(c.company),
                 trailing: IconButton(
-                    onPressed: () {},
+                    tooltip: 'Call',
+                    onPressed: () => _showDemo(context, 'Call ${c.name} (demo)'),
                     icon: const Icon(Icons.call_outlined)),
               ),
           ],
@@ -77,4 +78,10 @@ class ContactsList extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

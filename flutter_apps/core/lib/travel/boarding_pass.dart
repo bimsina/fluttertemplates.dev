@@ -52,14 +52,23 @@ class BoardingPass extends StatelessWidget {
                 _infoRow('Gate', 'B14'),
                 _infoRow('Boarding', '10:45 AM'),
                 const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: List.generate(20, (i) => Container(
-                    width: 3,
-                    height: 40,
-                    margin: const EdgeInsets.symmetric(horizontal: 1),
-                    color: i.isEven ? Colors.black : Colors.transparent,
-                  )),
+                // The white panel keeps the black bars readable on a dark card.
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: List.generate(20, (i) => Container(
+                      width: 3,
+                      height: 40,
+                      margin: const EdgeInsets.symmetric(horizontal: 1),
+                      color: i.isEven ? Colors.black : Colors.transparent,
+                    )),
+                  ),
                 ),
               ],
             ),

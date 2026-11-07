@@ -26,25 +26,30 @@ class MasonryGrid extends StatelessWidget {
           final itemWidth =
               (constraints.maxWidth - spacing * (crossAxisCount + 1)) /
                   crossAxisCount;
-          final columns = List.generate(crossAxisCount, (_) => <double>[]);
 
+          // Send each item to whichever column is currently shortest.
+          final columns = List.generate(crossAxisCount, (_) => <int>[]);
+          final heights = List.filled(crossAxisCount, 0.0);
           for (var i = 0; i < _items.length; i++) {
-            final h = (_items[i]['h'] as double) + 48;
-            final col = i % crossAxisCount;
-            final top = columns[col].isEmpty ? 0.0 : columns[col].last + spacing;
-            columns[col].add(top + h);
+            var shortest = 0;
+            for (var col = 1; col < crossAxisCount; col++) {
+              if (heights[col] < heights[shortest]) shortest = col;
+            }
+            columns[shortest].add(i);
+            heights[shortest] += (_items[i]['h'] as double) + spacing;
           }
 
           return SingleChildScrollView(
             padding: const EdgeInsets.all(spacing),
             child: Row(
+              spacing: spacing,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: List.generate(crossAxisCount, (col) {
                 return SizedBox(
                   width: itemWidth,
                   child: Column(
                     children: [
-                      for (var i = col; i < _items.length; i += crossAxisCount)
+                      for (final i in columns[col])
                         Padding(
                           padding: const EdgeInsets.only(bottom: spacing),
                           child: _MasonryCard(
@@ -77,7 +82,6 @@ class _MasonryCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
-      height: height + 48,
       decoration: BoxDecoration(
         color: color.withValues(alpha: isDark ? 0.3 : 0.2),
         borderRadius: BorderRadius.circular(12),

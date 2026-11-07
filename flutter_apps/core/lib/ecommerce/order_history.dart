@@ -6,15 +6,8 @@ const _orders = [
   {'id': '12343', 'status': 'Processing', 'date': 'Nov 25, 2024'},
 ];
 
-class OrderHistory extends StatefulWidget {
+class OrderHistory extends StatelessWidget {
   const OrderHistory({super.key});
-
-  @override
-  State<OrderHistory> createState() => _OrderHistoryState();
-}
-
-class _OrderHistoryState extends State<OrderHistory> {
-  final _expanded = <String>{};
 
   @override
   Widget build(BuildContext context) {
@@ -27,19 +20,20 @@ class _OrderHistoryState extends State<OrderHistory> {
           return Card(
             margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
             child: ExpansionTile(
-              title: Text('Order #${o['id']}'),
-              subtitle: Text('${o['date']}'),
-              trailing: Chip(
-                label: Text(o['status'] as String),
-                backgroundColor: _statusColor(o['status'] as String),
+              // The chip sits in the title because `trailing` would replace
+              // the expand arrow.
+              title: Row(
+                children: [
+                  Expanded(child: Text('Order #${o['id']}')),
+                  const SizedBox(width: 8),
+                  Chip(
+                    label: Text(o['status'] as String),
+                    backgroundColor: _statusColor(o['status'] as String),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                ],
               ),
-              onExpansionChanged: (v) => setState(() {
-                if (v) {
-                  _expanded.add(o['id'] as String);
-                } else {
-                  _expanded.remove(o['id']);
-                }
-              }),
+              subtitle: Text('${o['date']}'),
               children: [
                 Padding(
                   padding: const EdgeInsets.all(16),

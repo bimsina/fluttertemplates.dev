@@ -34,16 +34,15 @@ class NewsFeedPage1 extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: RichText(
+                                child: Text.rich(
                                   overflow: TextOverflow.ellipsis,
-                                  text: TextSpan(
+                                  TextSpan(
                                     children: [
                                       TextSpan(
                                         text: item.user.fullName,
                                         style: const TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 16,
-                                          color: Colors.black,
                                         ),
                                       ),
                                       TextSpan(
@@ -111,12 +110,22 @@ class _AvatarImage extends StatelessWidget {
   }
 }
 
-class _ActionsRow extends StatelessWidget {
+class _ActionsRow extends StatefulWidget {
   final FeedItem item;
   const _ActionsRow({required this.item});
 
   @override
+  State<_ActionsRow> createState() => _ActionsRowState();
+}
+
+class _ActionsRowState extends State<_ActionsRow> {
+  var _favorite = false;
+
+  @override
   Widget build(BuildContext context) {
+    final item = widget.item;
+    final likes = item.likesCount + (_favorite ? 1 : 0);
+
     return Theme(
       data: Theme.of(context).copyWith(
         iconTheme: const IconThemeData(color: Colors.grey, size: 18),
@@ -130,27 +139,31 @@ class _ActionsRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           TextButton.icon(
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Comment (demo)'),
             icon: const Icon(Icons.mode_comment_outlined),
             label: Text(
               item.commentsCount == 0 ? '' : item.commentsCount.toString(),
             ),
           ),
           TextButton.icon(
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Repost (demo)'),
             icon: const Icon(Icons.repeat_rounded),
             label: Text(
               item.retweetsCount == 0 ? '' : item.retweetsCount.toString(),
             ),
           ),
           TextButton.icon(
-            onPressed: () {},
-            icon: const Icon(Icons.favorite_border),
-            label: Text(item.likesCount == 0 ? '' : item.likesCount.toString()),
+            onPressed: () => setState(() => _favorite = !_favorite),
+            icon: Icon(
+              _favorite ? Icons.favorite : Icons.favorite_border,
+              color: _favorite ? Colors.red : null,
+            ),
+            label: Text(likes == 0 ? '' : likes.toString()),
           ),
           IconButton(
+            tooltip: 'Share',
             icon: const Icon(CupertinoIcons.share_up),
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Share (demo)'),
           ),
         ],
       ),
@@ -233,3 +246,9 @@ final List<FeedItem> _feedItems = [
   FeedItem(user: _users[3], imageUrl: "https://picsum.photos/id/1005/960/540"),
   FeedItem(user: _users[0], imageUrl: "https://picsum.photos/id/1006/960/540"),
 ];
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
+}

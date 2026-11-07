@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key});
+  /// Called with the new password once every rule passes. Without it the
+  /// demo shows a SnackBar.
+  final ValueChanged<String>? onReset;
+
+  const ResetPassword({super.key, this.onReset});
 
   @override
   State<ResetPassword> createState() => _ResetPasswordState();
@@ -16,6 +20,17 @@ class _ResetPasswordState extends State<ResetPassword> {
   bool get _hasNumber => RegExp(r'[0-9]').hasMatch(_password);
   bool get _matches => _password.isNotEmpty && _password == _confirm;
   bool get _valid => _hasLength && _hasNumber && _matches;
+
+  void _reset() {
+    final onReset = widget.onReset;
+    if (onReset != null) {
+      onReset(_password);
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(const SnackBar(content: Text('Password reset (demo)')));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +57,7 @@ class _ResetPasswordState extends State<ResetPassword> {
               prefixIcon: const Icon(Icons.lock_outline),
               border: const OutlineInputBorder(),
               suffixIcon: IconButton(
+                tooltip: _obscure ? 'Show password' : 'Hide password',
                 icon: Icon(_obscure ? Icons.visibility_off : Icons.visibility),
                 onPressed: () => setState(() => _obscure = !_obscure),
               ),
@@ -65,7 +81,7 @@ class _ResetPasswordState extends State<ResetPassword> {
           SizedBox(
             height: 52,
             child: FilledButton(
-              onPressed: _valid ? () {} : null,
+              onPressed: _valid ? _reset : null,
               child: const Text('Reset password'),
             ),
           ),

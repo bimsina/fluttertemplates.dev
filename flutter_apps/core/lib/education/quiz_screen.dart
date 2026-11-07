@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class QuizScreen extends StatefulWidget {
-  const QuizScreen({super.key});
+  /// Called with the chosen option's index, or null when skipped. Without it
+  /// the demo shows a SnackBar.
+  final ValueChanged<int?>? onAnswer;
+
+  const QuizScreen({super.key, this.onAnswer});
 
   @override
   State<QuizScreen> createState() => _QuizScreenState();
@@ -12,12 +16,25 @@ class _QuizScreenState extends State<QuizScreen> {
   final _currentQuestion = 1;
   final _totalQuestions = 5;
 
+  void _answer(int? choice) {
+    final onAnswer = widget.onAnswer;
+    if (onAnswer != null) {
+      onAnswer(choice);
+      return;
+    }
+    final message = choice == null ? 'Question skipped' : 'Answer submitted';
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('$message (demo)')));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Question $_currentQuestion of $_totalQuestions'),
         leading: IconButton(
+          tooltip: 'Close quiz',
           icon: const Icon(Icons.close),
           onPressed: () => Navigator.of(context).pop(),
         ),
@@ -53,9 +70,12 @@ class _QuizScreenState extends State<QuizScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                TextButton(onPressed: () {}, child: const Text('Skip')),
+                TextButton(
+                  onPressed: () => _answer(null),
+                  child: const Text('Skip'),
+                ),
                 FilledButton(
-                  onPressed: _selected >= 0 ? () {} : null,
+                  onPressed: _selected >= 0 ? () => _answer(_selected) : null,
                   child: const Text('Submit'),
                 ),
               ],

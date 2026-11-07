@@ -21,15 +21,15 @@ class ButtonDemo extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                ElevatedButton(onPressed: () {}, child: const Text('Default')),
+                ElevatedButton(onPressed: () => _showDemo(context, 'Elevated button (demo)'), child: const Text('Default')),
                 ElevatedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Elevated button with icon (demo)'),
                   icon: const Icon(Icons.add),
                   label: const Text('With Icon'),
                 ),
-                ElevatedButton(
-                  onPressed: () {},
-                  child: const SizedBox(
+                const ElevatedButton(
+                  onPressed: null,
+                  child: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
@@ -48,15 +48,15 @@ class ButtonDemo extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                FilledButton(onPressed: () {}, child: const Text('Default')),
+                FilledButton(onPressed: () => _showDemo(context, 'Filled button (demo)'), child: const Text('Default')),
                 FilledButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Filled button with icon (demo)'),
                   icon: const Icon(Icons.add),
                   label: const Text('With Icon'),
                 ),
-                FilledButton(
-                  onPressed: () {},
-                  child: const SizedBox(
+                const FilledButton(
+                  onPressed: null,
+                  child: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
@@ -75,15 +75,15 @@ class ButtonDemo extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                OutlinedButton(onPressed: () {}, child: const Text('Default')),
+                OutlinedButton(onPressed: () => _showDemo(context, 'Outlined button (demo)'), child: const Text('Default')),
                 OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Outlined button with icon (demo)'),
                   icon: const Icon(Icons.add),
                   label: const Text('With Icon'),
                 ),
-                OutlinedButton(
-                  onPressed: () {},
-                  child: const SizedBox(
+                const OutlinedButton(
+                  onPressed: null,
+                  child: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
@@ -102,15 +102,15 @@ class ButtonDemo extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                TextButton(onPressed: () {}, child: const Text('Default')),
+                TextButton(onPressed: () => _showDemo(context, 'Text button (demo)'), child: const Text('Default')),
                 TextButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Text button with icon (demo)'),
                   icon: const Icon(Icons.add),
                   label: const Text('With Icon'),
                 ),
-                TextButton(
-                  onPressed: () {},
-                  child: const SizedBox(
+                const TextButton(
+                  onPressed: null,
+                  child: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
@@ -129,24 +129,26 @@ class ButtonDemo extends StatelessWidget {
               spacing: 8,
               runSpacing: 8,
               children: [
-                IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+                IconButton(tooltip: 'Add', onPressed: () => _showDemo(context, 'Icon button (demo)'), icon: const Icon(Icons.add)),
                 IconButton.filled(
-                  onPressed: () {},
+                  tooltip: 'Delete',
+                  onPressed: () => _showDemo(context, 'Filled icon button (demo)'),
                   icon: const Icon(Icons.delete),
                   style: IconButton.styleFrom(
                     backgroundColor: Colors.red[100],
                     foregroundColor: Colors.red,
                   ),
                 ),
-                IconButton(
-                  onPressed: () {},
-                  icon: const SizedBox(
+                const IconButton(
+                  tooltip: 'Loading',
+                  onPressed: null,
+                  icon: SizedBox(
                     width: 20,
                     height: 20,
                     child: CircularProgressIndicator(strokeWidth: 2),
                   ),
                 ),
-                const IconButton(onPressed: null, icon: Icon(Icons.settings)),
+                const IconButton(tooltip: 'Settings', onPressed: null, icon: Icon(Icons.settings)),
               ],
             ),
           ],
@@ -154,4 +156,10 @@ class ButtonDemo extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

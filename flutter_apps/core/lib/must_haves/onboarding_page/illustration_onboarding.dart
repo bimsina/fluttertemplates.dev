@@ -35,6 +35,13 @@ class _IllustrationOnboardingState extends State<IllustrationOnboarding> {
 
   bool get _isLast => _page == _slides.length - 1;
 
+  // Replace with navigation to your first real screen.
+  void _exit(String message) {
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(message)));
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -47,7 +54,8 @@ class _IllustrationOnboardingState extends State<IllustrationOnboarding> {
             Align(
               alignment: Alignment.centerRight,
               child: TextButton(
-                  onPressed: () {}, child: const Text('Skip')),
+                  onPressed: () => _exit('Onboarding skipped'),
+                  child: const Text('Skip')),
             ),
             Expanded(
               child: PageView.builder(
@@ -109,7 +117,10 @@ class _IllustrationOnboardingState extends State<IllustrationOnboarding> {
                 height: 52,
                 child: FilledButton(
                   onPressed: () {
-                    if (_isLast) return;
+                    if (_isLast) {
+                      _exit('Onboarding finished');
+                      return;
+                    }
                     _controller.nextPage(
                         duration: const Duration(milliseconds: 300),
                         curve: Curves.easeInOut);

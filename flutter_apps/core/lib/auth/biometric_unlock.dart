@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
 class BiometricUnlock extends StatefulWidget {
-  const BiometricUnlock({super.key});
+  /// Called by 'Use passcode instead'. Without it the demo shows a SnackBar.
+  final VoidCallback? onUsePasscode;
+
+  const BiometricUnlock({super.key, this.onUsePasscode});
 
   @override
   State<BiometricUnlock> createState() => _BiometricUnlockState();
@@ -67,7 +70,8 @@ class _BiometricUnlockState extends State<BiometricUnlock> {
               ),
               const Spacer(),
               OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: widget.onUsePasscode ??
+                    () => _showDemo(context, 'Passcode entry goes here (demo)'),
                 icon: const Icon(Icons.dialpad),
                 label: const Text('Use passcode instead'),
               ),
@@ -78,4 +82,10 @@ class _BiometricUnlockState extends State<BiometricUnlock> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

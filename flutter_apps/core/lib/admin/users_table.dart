@@ -8,9 +8,14 @@ class _User {
   const _User(this.name, this.email, this.role, this.status);
 }
 
-class UsersTable extends StatelessWidget {
+class UsersTable extends StatefulWidget {
   const UsersTable({super.key});
 
+  @override
+  State<UsersTable> createState() => _UsersTableState();
+}
+
+class _UsersTableState extends State<UsersTable> {
   static const _users = [
     _User('Alex Kim', 'alex@acme.io', 'Admin', 'Active'),
     _User('Bianca Rossi', 'bianca@acme.io', 'Editor', 'Active'),
@@ -19,6 +24,17 @@ class UsersTable extends StatelessWidget {
     _User('Elias Bauer', 'elias@acme.io', 'Admin', 'Active'),
     _User('Farah Nasser', 'farah@acme.io', 'Viewer', 'Active'),
   ];
+
+  String _query = '';
+
+  List<_User> get _visibleUsers {
+    final query = _query.trim().toLowerCase();
+    if (query.isEmpty) return _users;
+    return _users
+        .where((u) => [u.name, u.email, u.role, u.status]
+            .any((field) => field.toLowerCase().contains(query)))
+        .toList();
+  }
 
   Color _statusColor(BuildContext context, String s) {
     switch (s) {
@@ -35,6 +51,7 @@ class UsersTable extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    final visibleUsers = _visibleUsers;
 
     return Scaffold(
       appBar: AppBar(
@@ -43,7 +60,7 @@ class UsersTable extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(8),
             child: FilledButton.icon(
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'Add user (demo)'),
                 icon: const Icon(Icons.add),
                 label: const Text('Add user')),
           ),
@@ -57,6 +74,7 @@ class UsersTable extends StatelessWidget {
             child: SizedBox(
               width: 320,
               child: TextField(
+                onChanged: (value) => setState(() => _query = value),
                 decoration: InputDecoration(
                   hintText: 'Search users',
                   prefixIcon: const Icon(Icons.search),
@@ -80,7 +98,7 @@ class UsersTable extends StatelessWidget {
                     DataColumn(label: Text('')),
                   ],
                   rows: [
-                    for (final u in _users)
+                    for (final u in visibleUsers)
                       DataRow(cells: [
                         DataCell(Row(
                           children: [
@@ -125,16 +143,20 @@ class UsersTable extends StatelessWidget {
             padding: const EdgeInsets.all(16),
             child: Row(
               children: [
-                Text('Showing 1–6 of 128',
-                    style: TextStyle(color: scheme.onSurfaceVariant)),
-                const Spacer(),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.chevron_left)),
+                Expanded(
+                  child: Text(
+                      'Showing ${visibleUsers.length} of ${_users.length} users',
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(color: scheme.onSurfaceVariant)),
+                ),
+                // Every row fits on one page, so paging stays disabled.
+                const IconButton(
+                    tooltip: 'Previous page',
+                    onPressed: null, icon: Icon(Icons.chevron_left)),
                 const Text('1'),
-                IconButton(
-                    onPressed: () {},
-                    icon: const Icon(Icons.chevron_right)),
+                const IconButton(
+                    tooltip: 'Next page',
+                    onPressed: null, icon: Icon(Icons.chevron_right)),
               ],
             ),
           ),
@@ -142,4 +164,10 @@ class UsersTable extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -10,6 +10,11 @@ const _sleepData = [
   {'day': 'Sun', 'hours': 8.5},
 ];
 
+String _formatHours(double hours) {
+  final minutes = (hours * 60).round();
+  return '${minutes ~/ 60}h ${minutes % 60}m';
+}
+
 class SleepTracker extends StatelessWidget {
   const SleepTracker({super.key});
 
@@ -20,7 +25,7 @@ class SleepTracker extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Sleep Tracker')),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           children: [
@@ -28,20 +33,24 @@ class SleepTracker extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    Column(
-                      children: [
-                        Text('Last Night', style: Theme.of(context).textTheme.bodySmall),
-                        Text('7h 30m', style: Theme.of(context).textTheme.headlineSmall),
-                      ],
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text('Last Night', style: Theme.of(context).textTheme.bodySmall),
+                          Text(_formatHours(_sleepData.last['hours'] as double),
+                              style: Theme.of(context).textTheme.headlineSmall),
+                        ],
+                      ),
                     ),
-                    Column(
-                      children: [
-                        Text('Weekly Avg', style: Theme.of(context).textTheme.bodySmall),
-                        Text('${avgHours.toStringAsFixed(1)}h',
-                            style: Theme.of(context).textTheme.headlineSmall),
-                      ],
+                    Expanded(
+                      child: Column(
+                        children: [
+                          Text('Weekly Avg', style: Theme.of(context).textTheme.bodySmall),
+                          Text('${avgHours.toStringAsFixed(1)}h',
+                              style: Theme.of(context).textTheme.headlineSmall),
+                        ],
+                      ),
                     ),
                   ],
                 ),
@@ -53,26 +62,33 @@ class SleepTracker extends StatelessWidget {
             SizedBox(
               height: 120,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: _sleepData.map((d) {
                   final h = d['hours'] as double;
                   final pct = h / (maxHours + 1);
-                  return Column(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      Container(
-                        width: 28,
-                        height: 100 * pct,
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).colorScheme.primary,
-                          borderRadius: BorderRadius.circular(4),
+                  return Expanded(
+                    child: Column(
+                      children: [
+                        Expanded(
+                          child: Align(
+                            alignment: Alignment.bottomCenter,
+                            child: FractionallySizedBox(
+                              heightFactor: pct,
+                              child: Container(
+                                width: 28,
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  borderRadius: BorderRadius.circular(4),
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(d['day'] as String,
-                          style: Theme.of(context).textTheme.bodySmall),
-                    ],
+                        const SizedBox(height: 8),
+                        Text(d['day'] as String,
+                            style: Theme.of(context).textTheme.bodySmall),
+                      ],
+                    ),
                   );
                 }).toList(),
               ),

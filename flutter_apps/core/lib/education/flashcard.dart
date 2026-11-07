@@ -63,10 +63,12 @@ class _FlashcardState extends State<Flashcard> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton(
+                  tooltip: 'Previous card',
                   onPressed: _index > 0 ? () => setState(() { _index--; _showBack = false; }) : null,
                   icon: const Icon(Icons.chevron_left),
                 ),
                 IconButton(
+                  tooltip: 'Next card',
                   onPressed: _index < _cards.length - 1
                       ? () => setState(() { _index++; _showBack = false; })
                       : null,

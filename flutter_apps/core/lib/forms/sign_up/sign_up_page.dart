@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
+final _emailPattern = RegExp(
+  r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$",
+);
+
 class SignUpPage extends StatefulWidget {
-  const SignUpPage({super.key});
+  /// Called with the trimmed email and the password once every field
+  /// validates. Without it the demo shows a SnackBar.
+  final void Function(String email, String password)? onSubmit;
+
+  const SignUpPage({super.key, this.onSubmit});
 
   @override
   State<SignUpPage> createState() => _SignUpPageState();
@@ -9,6 +17,7 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   final _formKey = GlobalKey<FormState>();
+  final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   var _obscurePassword = true;
 
@@ -21,8 +30,21 @@ class _SignUpPageState extends State<SignUpPage> {
     return score;
   }
 
+  void _submit() {
+    if (!(_formKey.currentState?.validate() ?? false)) return;
+    final onSubmit = widget.onSubmit;
+    if (onSubmit != null) {
+      onSubmit(_emailController.text.trim(), _passwordController.text);
+      return;
+    }
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Details look good')),
+    );
+  }
+
   @override
   void dispose() {
+    _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
@@ -37,13 +59,19 @@ class _SignUpPageState extends State<SignUpPage> {
           padding: const EdgeInsets.all(24),
           children: [
             TextFormField(
+              controller: _emailController,
               decoration: const InputDecoration(
                 labelText: 'Email',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.emailAddress,
-              validator: (v) =>
-                  v?.isEmpty ?? true ? 'Required' : null,
+              validator: (v) {
+                if (v == null || v.trim().isEmpty) return 'Required';
+                if (!_emailPattern.hasMatch(v.trim())) {
+                  return 'Enter a valid email';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 16),
             TextFormField(
@@ -52,6 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 labelText: 'Password',
                 border: const OutlineInputBorder(),
                 suffixIcon: IconButton(
+                  tooltip: _obscurePassword ? 'Show password' : 'Hide password',
                   icon: Icon(
                     _obscurePassword ? Icons.visibility : Icons.visibility_off,
                   ),
@@ -65,7 +94,6 @@ class _SignUpPageState extends State<SignUpPage> {
                 if (v.length < 8) return 'Min 8 characters';
                 return null;
               },
-              onChanged: (_) => setState(() {}),
             ),
             const SizedBox(height: 8),
             ValueListenableBuilder<TextEditingValue>(
@@ -85,11 +113,17 @@ class _SignUpPageState extends State<SignUpPage> {
                 border: OutlineInputBorder(),
               ),
               obscureText: true,
-              validator: (v) => v?.isEmpty ?? true ? 'Required' : null,
+              validator: (v) {
+                if (v == null || v.isEmpty) return 'Required';
+                if (v != _passwordController.text) {
+                  return 'Passwords do not match';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () => _formKey.currentState?.validate(),
+              onPressed: _submit,
               child: const Text('Create Account'),
             ),
           ],

@@ -39,7 +39,7 @@ class RestaurantReview extends StatelessWidget {
                   ],
                 ),
                 FilledButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Write Review (demo)'),
                   icon: const Icon(Icons.edit),
                   label: const Text('Write Review'),
                 ),
@@ -96,4 +96,10 @@ class RestaurantReview extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

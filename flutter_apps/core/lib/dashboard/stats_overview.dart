@@ -1,9 +1,11 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 const _stats = [
-  {'label': 'Total Users', 'value': '24,531', 'sub': '↑ 12% this month'},
-  {'label': 'Active Sessions', 'value': '1,847', 'sub': '↑ 8% today'},
-  {'label': 'Avg. Response', 'value': '142ms', 'sub': '↓ 15% improvement'},
+  {'label': 'Total Users', 'value': '24,531', 'sub': '↑ 12% this month', 'status': 'good'},
+  {'label': 'Active Sessions', 'value': '1,847', 'sub': '↑ 8% today', 'status': 'good'},
+  {'label': 'Avg. Response', 'value': '142ms', 'sub': '↓ 15% improvement', 'status': 'good'},
   {'label': 'Error Rate', 'value': '0.02%', 'sub': 'Within SLA'},
 ];
 
@@ -12,13 +14,20 @@ class StatsOverview extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final width = MediaQuery.of(context).size.width;
+    final columns = width > 600 ? 2 : 1;
+    final tileWidth = (width - 32 - 16 * (columns - 1)) / columns;
+    // Two-to-one tiles, unless the three text lines need more height. The 56
+    // covers padding and card margin, and the 76 is the text at normal scale.
+    final minHeight = 56 + MediaQuery.textScalerOf(context).scale(76);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Stats Overview')),
       body: GridView.builder(
         padding: const EdgeInsets.all(16),
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: MediaQuery.of(context).size.width > 600 ? 2 : 1,
-          childAspectRatio: 2,
+          crossAxisCount: columns,
+          mainAxisExtent: max(tileWidth / 2, minHeight),
           crossAxisSpacing: 16,
           mainAxisSpacing: 16,
         ),
@@ -39,11 +48,11 @@ class StatsOverview extends StatelessWidget {
                       style: Theme.of(context).textTheme.headlineSmall),
                   Text(s['sub'] as String,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: (s['sub'] as String).startsWith('↑')
-                            ? Colors.green
-                            : (s['sub'] as String).startsWith('↓')
-                                ? Colors.orange
-                                : null,
+                        color: switch (s['status']) {
+                          'good' => Colors.green,
+                          'bad' => Colors.orange,
+                          _ => null,
+                        },
                       )),
                 ],
               ),

@@ -41,11 +41,13 @@ class _AnimatedCounterState extends State<AnimatedCounter> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton.filled(
+                  tooltip: 'Decrease',
                   onPressed: () => setState(() => _count--),
                   icon: const Icon(Icons.remove),
                 ),
                 const SizedBox(width: 16),
                 IconButton.filled(
+                  tooltip: 'Increase',
                   onPressed: () => setState(() => _count++),
                   icon: const Icon(Icons.add),
                 ),

@@ -106,7 +106,7 @@ class _TodoListState extends State<TodoList> {
               ),
             ),
             const SizedBox(width: 8),
-            IconButton.filled(onPressed: _add, icon: const Icon(Icons.add)),
+            IconButton.filled(tooltip: 'Add task', onPressed: _add, icon: const Icon(Icons.add)),
           ],
         ),
       ),

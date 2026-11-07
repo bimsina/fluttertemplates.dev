@@ -47,7 +47,7 @@ class _RemindersState extends State<Reminders> {
     return Scaffold(
       appBar: AppBar(title: const Text('Reminders')),
       floatingActionButton: FloatingActionButton(
-          onPressed: () {}, child: const Icon(Icons.add_alert)),
+          onPressed: () => _showDemo(context, 'New reminder (demo)'), child: const Icon(Icons.add_alert)),
       body: ListView(
         padding: const EdgeInsets.symmetric(vertical: 8),
         children: [
@@ -75,4 +75,10 @@ class _RemindersState extends State<Reminders> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

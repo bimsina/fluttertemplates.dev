@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 
 class ProductDetail extends StatefulWidget {
-  const ProductDetail({super.key});
+  /// Called with the chosen size and color index. Without it the demo shows
+  /// a SnackBar and counts adds itself.
+  final void Function(String size, int colorIndex)? onAddToCart;
+
+  /// The host's cart size for the badge. With [onAddToCart] but no count the
+  /// badge stays hidden, since only the host knows what the cart holds.
+  final int? cartCount;
+
+  const ProductDetail({super.key, this.onAddToCart, this.cartCount});
 
   @override
   State<ProductDetail> createState() => _ProductDetailState();
@@ -10,15 +18,45 @@ class ProductDetail extends StatefulWidget {
 class _ProductDetailState extends State<ProductDetail> {
   var _size = 'M';
   var _color = 0;
+  var _inCart = 0;
+
+  void _addToCart() {
+    final onAddToCart = widget.onAddToCart;
+    if (onAddToCart != null) {
+      onAddToCart(_size, _color);
+      return;
+    }
+    setState(() => _inCart++);
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(
+          SnackBar(content: Text('Added size $_size to cart (demo)')));
+  }
 
   @override
   Widget build(BuildContext context) {
+    final count =
+        widget.cartCount ?? (widget.onAddToCart == null ? _inCart : null);
+
     return Scaffold(
       body: CustomScrollView(
         slivers: [
           SliverAppBar(
             expandedHeight: 300,
             pinned: true,
+            actions: [
+              Padding(
+                padding: const EdgeInsets.only(right: 16),
+                child: Semantics(
+                  label: count == null ? 'Cart' : '$count in cart',
+                  child: Badge.count(
+                    count: count ?? 0,
+                    isLabelVisible: (count ?? 0) > 0,
+                    child: const Icon(Icons.shopping_cart_outlined),
+                  ),
+                ),
+              ),
+            ],
             flexibleSpace: FlexibleSpaceBar(
               background: Container(
                 color: Colors.blue.withValues(alpha: 0.3),
@@ -59,7 +97,7 @@ class _ProductDetailState extends State<ProductDetail> {
                       (i) => ChoiceChip(
                         label: CircleAvatar(
                           radius: 12,
-                          backgroundColor: Colors.primaries[i],
+                          backgroundColor: Colors.primaries[i % Colors.primaries.length],
                         ),
                         selected: _color == i,
                         onSelected: (_) => setState(() => _color = i),
@@ -76,7 +114,7 @@ class _ProductDetailState extends State<ProductDetail> {
         child: Padding(
           padding: const EdgeInsets.all(16),
           child: FilledButton(
-            onPressed: () {},
+            onPressed: _addToCart,
             child: const Padding(
               padding: EdgeInsets.symmetric(vertical: 12),
               child: Text('Add to Cart'),

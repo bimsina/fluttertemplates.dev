@@ -48,7 +48,7 @@ class FitnessDashboard extends StatelessWidget {
                       ? Text('Target: ${s['target']}')
                       : null,
                   trailing: Text(
-                    '${s['value']}${s['unit'] ?? ''}',
+                    [s['value'], ?s['unit']].join(' '),
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
                 ),
@@ -60,7 +60,7 @@ class FitnessDashboard extends StatelessWidget {
             children: [
               Expanded(
                 child: FilledButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Start Workout (demo)'),
                   icon: const Icon(Icons.play_arrow),
                   label: const Text('Start Workout'),
                 ),
@@ -68,7 +68,7 @@ class FitnessDashboard extends StatelessWidget {
               const SizedBox(width: 8),
               Expanded(
                 child: OutlinedButton.icon(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Log (demo)'),
                   icon: const Icon(Icons.add),
                   label: const Text('Log'),
                 ),
@@ -96,4 +96,10 @@ class _StatChip extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -28,7 +28,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Change Password',
                 subtitle: 'Last changed 30 days ago',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Change Password (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -50,7 +50,7 @@ class AccountSettings extends StatelessWidget {
                     style: TextStyle(color: Colors.green, fontSize: 12),
                   ),
                 ),
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Two-Factor Authentication (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -58,7 +58,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Active Sessions',
                 subtitle: '2 devices',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Active Sessions (demo)'),
               ),
             ],
           ),
@@ -73,7 +73,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Profile Visibility',
                 subtitle: 'Public',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Profile Visibility (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -81,7 +81,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Blocked Users',
                 subtitle: '3 users',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Blocked Users (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -89,7 +89,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Activity Status',
                 subtitle: 'Last seen enabled',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Activity Status (demo)'),
               ),
             ],
           ),
@@ -104,7 +104,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Download My Data',
                 subtitle: 'Export your data',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Download My Data (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -112,7 +112,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Storage Used',
                 subtitle: '1.2 GB',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Storage Used (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -120,7 +120,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Clear Cache',
                 subtitle: '150 MB',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Clear Cache (demo)'),
               ),
             ],
           ),
@@ -136,10 +136,10 @@ class AccountSettings extends StatelessWidget {
                 subtitle: 'Free trial ends in 14 days',
                 isDark: isDark,
                 trailing: TextButton(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Upgrade (demo)'),
                   child: const Text('Upgrade'),
                 ),
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Premium Plan (demo)'),
               ),
             ],
           ),
@@ -154,7 +154,7 @@ class AccountSettings extends StatelessWidget {
                 title: 'Sign Out',
                 subtitle: 'Sign out from all devices',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Sign Out (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -163,7 +163,7 @@ class AccountSettings extends StatelessWidget {
                 subtitle: 'Permanently delete your account',
                 isDark: isDark,
                 textColor: Colors.red,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Delete Account (demo)'),
               ),
             ],
           ),
@@ -273,4 +273,10 @@ class AccountSettings extends StatelessWidget {
       onTap: onTap,
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

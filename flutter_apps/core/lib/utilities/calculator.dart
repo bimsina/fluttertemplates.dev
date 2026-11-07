@@ -38,6 +38,8 @@ class _CalculatorState extends State<Calculator> {
                 children: [
                   Text(
                     _expression,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       fontSize: 24,
                       color: isDark ? Colors.white54 : Colors.grey[600],
@@ -130,73 +132,132 @@ class _CalculatorState extends State<Calculator> {
     );
   }
 
+  static const _errorText = 'Error';
+
+  bool get _hasError => _display == _errorText;
+
+  void _clear() {
+    _display = '0';
+    _expression = '';
+    _firstOperand = 0;
+    _operator = '';
+    _shouldResetDisplay = false;
+  }
+
+  /// Returns null when the result can't be shown, such as dividing by zero.
+  double? _calculate(double first, String op, double second) {
+    final result = switch (op) {
+      '÷' => second == 0 ? double.nan : first / second,
+      '×' => first * second,
+      '-' => first - second,
+      '+' => first + second,
+      _ => second,
+    };
+    return result.isFinite ? result : null;
+  }
+
+  String _format(double value) {
+    // 12 significant digits hides float noise such as 0.1 + 0.2.
+    final rounded = double.parse(value.toStringAsPrecision(12));
+    final isWhole = rounded == rounded.truncateToDouble();
+    return isWhole && rounded.abs() < 1e15
+        ? rounded.toInt().toString()
+        : rounded.toString();
+  }
+
+  void _showError() {
+    _clear();
+    _display = _errorText;
+  }
+
+  /// Evaluates the pending operation into the display.
+  /// Returns false when that produced an error.
+  bool _evaluatePending({required bool showExpression}) {
+    final second = double.parse(_display);
+    final result = _calculate(_firstOperand, _operator, second);
+    if (result == null) {
+      _showError();
+      return false;
+    }
+    if (showExpression) {
+      _expression =
+          '${_format(_firstOperand)} $_operator ${_format(second)} =';
+    }
+    _display = _format(result);
+    return true;
+  }
+
+  void _pressOperator(String label) {
+    final hasNewOperand = _operator.isNotEmpty && !_shouldResetDisplay;
+    if (hasNewOperand && !_evaluatePending(showExpression: false)) return;
+    _firstOperand = double.parse(_display);
+    _operator = label;
+    _expression = '$_display $label';
+    _shouldResetDisplay = true;
+  }
+
+  void _pressEquals() {
+    if (_operator.isEmpty) return;
+    if (_evaluatePending(showExpression: true)) {
+      _operator = '';
+      _shouldResetDisplay = true;
+    }
+  }
+
+  void _pressDot() {
+    if (_shouldResetDisplay) {
+      _display = '0.';
+      _shouldResetDisplay = false;
+    } else if (!_display.contains('.')) {
+      _display += '.';
+    }
+  }
+
+  void _pressBackspace() {
+    if (_shouldResetDisplay) return;
+    final shortened = _display.substring(0, _display.length - 1);
+    _display = shortened.isEmpty || shortened == '-' ? '0' : shortened;
+  }
+
+  void _pressDigit(String label) {
+    if (_shouldResetDisplay) {
+      _display = label;
+      _shouldResetDisplay = false;
+    } else {
+      _display = _display == '0' ? label : _display + label;
+    }
+  }
+
   void _onButtonPressed(String label) {
     setState(() {
+      if (_hasError) {
+        // Only clearing or starting a new number leaves the error state.
+        final startsNumber = label == '.' || int.tryParse(label) != null;
+        if (label != 'C' && !startsNumber) return;
+        _clear();
+      }
       switch (label) {
         case 'C':
-          _display = '0';
-          _expression = '';
-          _firstOperand = 0;
-          _operator = '';
-          _shouldResetDisplay = false;
-          break;
+          _clear();
         case '⌫':
-          if (_display.length > 1) {
-            _display = _display.substring(0, _display.length - 1);
-          } else {
-            _display = '0';
-          }
-          break;
+          _pressBackspace();
         case '%':
-          _display = (double.parse(_display) / 100).toString();
-          break;
+          _display = _format(double.parse(_display) / 100);
         case '±':
-          _display = (double.parse(_display) * -1).toString();
-          break;
+          _display = _display.startsWith('-')
+              ? _display.substring(1)
+              : (_display == '0' ? '0' : '-$_display');
         case '÷':
         case '×':
         case '-':
         case '+':
-          _firstOperand = double.parse(_display);
-          _operator = label;
-          _expression = '$_display $label';
-          _shouldResetDisplay = true;
-          break;
+          _pressOperator(label);
         case '=':
-          if (_operator.isNotEmpty) {
-            final secondOperand = double.parse(_display);
-            double result;
-            switch (_operator) {
-              case '÷':
-                result = _firstOperand / secondOperand;
-                break;
-              case '×':
-                result = _firstOperand * secondOperand;
-                break;
-              case '-':
-                result = _firstOperand - secondOperand;
-                break;
-              case '+':
-                result = _firstOperand + secondOperand;
-                break;
-              default:
-                result = 0;
-            }
-            _expression = '$_firstOperand $_operator $secondOperand =';
-            _display = result.truncateToDouble() == result
-                ? result.toInt().toString()
-                : result.toString();
-            _operator = '';
-            _shouldResetDisplay = true;
-          }
-          break;
+          _pressEquals();
+        case '.':
+          _pressDot();
         default:
-          if (_shouldResetDisplay) {
-            _display = label;
-            _shouldResetDisplay = false;
-          } else {
-            _display = _display == '0' ? label : _display + label;
-          }
+          _pressDigit(label);
       }
     });
   }

@@ -6,8 +6,15 @@ const _emails = [
   {'from': 'Newsletter', 'subject': 'Weekly digest', 'preview': 'Top stories this week...', 'time': 'Yesterday', 'unread': false},
 ];
 
-class EmailInbox extends StatelessWidget {
+class EmailInbox extends StatefulWidget {
   const EmailInbox({super.key});
+
+  @override
+  State<EmailInbox> createState() => _EmailInboxState();
+}
+
+class _EmailInboxState extends State<EmailInbox> {
+  final _opened = <int>{};
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +22,7 @@ class EmailInbox extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Inbox'),
         actions: [
-          IconButton(icon: const Icon(Icons.search), onPressed: () {}),
+          IconButton(tooltip: 'Search', icon: const Icon(Icons.search), onPressed: () => _showDemo(context, 'Search (demo)')),
         ],
       ),
       body: ListView.builder(
@@ -23,7 +30,7 @@ class EmailInbox extends StatelessWidget {
         itemCount: _emails.length,
         itemBuilder: (context, i) {
           final e = _emails[i];
-          final unread = e['unread'] as bool;
+          final unread = e['unread'] as bool && !_opened.contains(i);
           return ListTile(
             leading: CircleAvatar(
               child: Text((e['from'] as String)[0].toUpperCase()),
@@ -40,14 +47,23 @@ class EmailInbox extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
             trailing: Text(e['time'] as String, style: Theme.of(context).textTheme.bodySmall),
-            onTap: () {},
+            onTap: () {
+              setState(() => _opened.add(i));
+              _showDemo(context, 'Open ${e['subject']} (demo)');
+            },
           );
         },
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () => _showDemo(context, 'Compose (demo)'),
         child: const Icon(Icons.edit),
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

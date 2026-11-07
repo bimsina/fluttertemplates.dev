@@ -11,6 +11,14 @@ class _PostComposerState extends State<PostComposer> {
   final _controller = TextEditingController();
   var _hasImage = false;
 
+  void _post() {
+    setState(() {
+      _controller.clear();
+      _hasImage = false;
+    });
+    _showDemo(context, 'Posted (demo)');
+  }
+
   @override
   void dispose() {
     _controller.dispose();
@@ -24,7 +32,9 @@ class _PostComposerState extends State<PostComposer> {
         title: const Text('New Post'),
         actions: [
           FilledButton(
-            onPressed: () {},
+            onPressed: _controller.text.trim().isEmpty && !_hasImage
+                ? null
+                : _post,
             child: const Text('Post'),
           ),
         ],
@@ -46,6 +56,7 @@ class _PostComposerState extends State<PostComposer> {
           Row(
             children: [
               IconButton(
+                tooltip: 'Add image',
                 icon: const Icon(Icons.image),
                 onPressed: () => setState(() => _hasImage = !_hasImage),
               ),
@@ -66,4 +77,10 @@ class _PostComposerState extends State<PostComposer> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 
-class SellerProfile extends StatelessWidget {
+class SellerProfile extends StatefulWidget {
   const SellerProfile({super.key});
 
+  @override
+  State<SellerProfile> createState() => _SellerProfileState();
+}
+
+class _SellerProfileState extends State<SellerProfile> {
   static const _items = [
     (Icons.chair, '\$120', Color(0xFF8D6E63)),
     (Icons.headphones, '\$90', Color(0xFFBA68C8)),
@@ -11,6 +16,8 @@ class SellerProfile extends StatelessWidget {
     (Icons.table_bar, '\$60', Color(0xFF26A69A)),
     (Icons.shelves, '\$75', Color(0xFF66BB6A)),
   ];
+
+  bool _following = false;
 
   @override
   Widget build(BuildContext context) {
@@ -23,33 +30,50 @@ class SellerProfile extends StatelessWidget {
         children: [
           Padding(
             padding: const EdgeInsets.all(20),
-            child: Row(
+            // Wraps so the button drops below the name when space runs out.
+            child: SizedBox(
+              width: double.infinity,
+              child: Wrap(
+              alignment: WrapAlignment.spaceBetween,
+              crossAxisAlignment: WrapCrossAlignment.center,
+              spacing: 16,
+              runSpacing: 12,
               children: [
-                const CircleAvatar(radius: 34, child: Text('EP')),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('Elena Petrova',
-                          style: theme.textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.bold)),
-                      Row(
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const CircleAvatar(radius: 34, child: Text('EP')),
+                    const SizedBox(width: 16),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.star,
-                              color: Colors.amber, size: 16),
-                          const SizedBox(width: 4),
-                          const Text('4.9'),
-                          Text('  ·  Joined 2023',
-                              style: TextStyle(
-                                  color: scheme.onSurfaceVariant)),
+                          Text('Elena Petrova',
+                              style: theme.textTheme.titleLarge
+                                  ?.copyWith(fontWeight: FontWeight.bold)),
+                          Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              const Icon(Icons.star,
+                                  color: Colors.amber, size: 16),
+                              const SizedBox(width: 4),
+                              const Text('4.9'),
+                              Text('  ·  Joined 2023',
+                                  style: TextStyle(
+                                      color: scheme.onSurfaceVariant)),
+                            ],
+                          ),
                         ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                FilledButton(onPressed: () {}, child: const Text('Follow')),
+                FilledButton(
+                  onPressed: () => setState(() => _following = !_following),
+                  child: Text(_following ? 'Following' : 'Follow'),
+                ),
               ],
+              ),
             ),
           ),
           Padding(
@@ -57,7 +81,7 @@ class SellerProfile extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(child: _stat(scheme, '48', 'Sales')),
-                Expanded(child: _stat(scheme, '312', 'Followers')),
+                Expanded(child: _stat(scheme, _following ? '313' : '312', 'Followers')),
                 Expanded(child: _stat(scheme, '12', 'Listings')),
               ],
             ),

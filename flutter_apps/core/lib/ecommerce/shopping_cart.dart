@@ -5,18 +5,61 @@ const _items = [
   {'title': 'Item 2', 'price': 15.99, 'qty': 2},
 ];
 
+/// One row of the order passed to [ShoppingCart.onCheckout].
+class CartLine {
+  final String title;
+  final double price;
+  final int quantity;
+
+  const CartLine({
+    required this.title,
+    required this.price,
+    required this.quantity,
+  });
+}
+
 class ShoppingCart extends StatefulWidget {
-  const ShoppingCart({super.key});
+  /// Called with the current lines and total. Without it the demo shows a
+  /// SnackBar. Checkout is disabled while the cart is empty.
+  final void Function(List<CartLine> lines, double total)? onCheckout;
+
+  const ShoppingCart({super.key, this.onCheckout});
 
   @override
   State<ShoppingCart> createState() => _ShoppingCartState();
 }
 
 class _ShoppingCartState extends State<ShoppingCart> {
-  var items = List<Map<String, dynamic>>.from(_items);
+  // Each map is copied too: the ones in `_items` are const and can't be changed.
+  final items = _items.map((e) => Map<String, dynamic>.from(e)).toList();
 
   double get _total =>
       items.fold(0, (sum, i) => sum + (i['price'] as num) * (i['qty'] as int));
+
+  void _checkout() {
+    final onCheckout = widget.onCheckout;
+    if (onCheckout != null) {
+      final lines = [
+        for (final item in items)
+          CartLine(
+            title: item['title'] as String,
+            price: (item['price'] as num).toDouble(),
+            quantity: item['qty'] as int,
+          ),
+      ];
+      onCheckout(lines, _total);
+      return;
+    }
+    final count = items.fold<int>(0, (sum, i) => sum + (i['qty'] as int));
+    final noun = count == 1 ? 'item' : 'items';
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text(
+          'Checking out $count $noun for \$${_total.toStringAsFixed(2)} (demo)',
+        ),
+      ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +92,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           IconButton(
+                            tooltip: 'Decrease quantity',
                             icon: const Icon(Icons.remove),
                             onPressed: () {
                               setState(() {
@@ -58,6 +102,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                           ),
                           Text('${item['qty']}'),
                           IconButton(
+                            tooltip: 'Increase quantity',
                             icon: const Icon(Icons.add),
                             onPressed: () {
                               setState(() => item['qty']++);
@@ -87,7 +132,7 @@ class _ShoppingCartState extends State<ShoppingCart> {
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                    onPressed: () {},
+                    onPressed: items.isEmpty ? null : _checkout,
                     child: const Text('Checkout'),
                   ),
                 ),

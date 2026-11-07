@@ -43,7 +43,7 @@ class PaywallScreen extends StatelessWidget {
                       )),
                   const SizedBox(height: 24),
                   FilledButton(
-                    onPressed: () {},
+                    onPressed: () => _showDemo(context, 'Subscribe (demo)'),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size.fromHeight(48),
                     ),
@@ -62,4 +62,10 @@ class PaywallScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

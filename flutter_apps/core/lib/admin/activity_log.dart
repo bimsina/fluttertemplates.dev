@@ -34,7 +34,8 @@ class ActivityLog extends StatelessWidget {
         title: const Text('Activity log'),
         actions: [
           IconButton(
-              onPressed: () {}, icon: const Icon(Icons.filter_list)),
+              tooltip: 'Filter',
+              onPressed: () => _showDemo(context, 'Filter (demo)'), icon: const Icon(Icons.filter_list)),
         ],
       ),
       body: ListView.builder(
@@ -93,4 +94,10 @@ class ActivityLog extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

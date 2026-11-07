@@ -35,7 +35,7 @@ class _SmartHomeState extends State<SmartHome> {
       appBar: AppBar(
         title: const Text('Home'),
         actions: [
-          IconButton(onPressed: () {}, icon: const Icon(Icons.add)),
+          IconButton(tooltip: 'Add device', onPressed: () => _showDemo(context, 'Add device (demo)'), icon: const Icon(Icons.add)),
         ],
       ),
       body: ListView(
@@ -124,4 +124,10 @@ class _DeviceCard extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -26,7 +26,7 @@ class ExpandableList extends StatelessWidget {
                 .map((item) => ListTile(
                       leading: const Icon(Icons.circle, size: 8),
                       title: Text(item),
-                      onTap: () {},
+                      onTap: () => _showDemo(context, 'Open $item (demo)'),
                     ))
                 .toList(),
           );
@@ -34,4 +34,10 @@ class ExpandableList extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -52,7 +52,7 @@ class NewsFeedPage2 extends StatelessWidget {
                                   Icons.more_vert,
                                 ].map((e) {
                                   return InkWell(
-                                    onTap: () {},
+                                    onTap: () => _showDemo(context, 'Article action (demo)'),
                                     child: Padding(
                                       padding: const EdgeInsets.only(
                                         right: 8.0,
@@ -148,3 +148,9 @@ final List<Article> _articles = [
     postedOn: "10 hours ago",
   ),
 ];
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
+}

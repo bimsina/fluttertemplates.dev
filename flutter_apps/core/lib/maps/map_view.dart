@@ -57,7 +57,7 @@ class MapView extends StatelessWidget {
             right: 16,
             bottom: 150,
             child: FloatingActionButton.small(
-              onPressed: () {},
+              onPressed: () => _showDemo(context, 'Recenter map (demo)'),
               child: const Icon(Icons.my_location),
             ),
           ),
@@ -75,7 +75,7 @@ class MapView extends StatelessWidget {
                 title: const Text('Blue Fig Bistro'),
                 subtitle: const Text('4.6 ★ · 0.4 mi · Open now'),
                 trailing: FilledButton(
-                    onPressed: () {}, child: const Text('Go')),
+                    onPressed: () => _showDemo(context, 'Navigate to Blue Fig Bistro (demo)'), child: const Text('Go')),
               ),
             ),
           ),
@@ -152,5 +152,12 @@ class _MapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MapPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _MapPainter oldDelegate) =>
+      oldDelegate.scheme != scheme;
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

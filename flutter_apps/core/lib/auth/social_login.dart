@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 
 class SocialLogin extends StatelessWidget {
-  const SocialLogin({super.key});
+  /// Called with 'google', 'apple' or 'email' when a provider is chosen.
+  final ValueChanged<String>? onProviderSelected;
+
+  /// Called by 'Create a new account'.
+  final VoidCallback? onCreateAccount;
+
+  /// Each callback is optional. Without one, the demo shows a SnackBar.
+  const SocialLogin({super.key, this.onProviderSelected, this.onCreateAccount});
+
+  void _select(BuildContext context, String provider) {
+    final callback = onProviderSelected;
+    if (callback != null) {
+      callback(provider);
+    } else {
+      _showDemo(context, 'Continuing with $provider (demo)');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -31,19 +47,19 @@ class SocialLogin extends StatelessWidget {
               _SocialButton(
                 icon: Icons.g_mobiledata_rounded,
                 label: 'Continue with Google',
-                onTap: () {},
+                onTap: () => _select(context, 'google'),
               ),
               const SizedBox(height: 12),
               _SocialButton(
                 icon: Icons.apple,
                 label: 'Continue with Apple',
-                onTap: () {},
+                onTap: () => _select(context, 'apple'),
               ),
               const SizedBox(height: 12),
               _SocialButton(
                 icon: Icons.mail_outline,
                 label: 'Continue with Email',
-                onTap: () {},
+                onTap: () => _select(context, 'email'),
               ),
               const SizedBox(height: 28),
               Row(
@@ -59,7 +75,8 @@ class SocialLogin extends StatelessWidget {
               ),
               const SizedBox(height: 20),
               OutlinedButton(
-                onPressed: () {},
+                onPressed: onCreateAccount ??
+                    () => _showDemo(context, 'Account creation goes here (demo)'),
                 style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14)),
                 child: const Text('Create a new account'),
@@ -104,4 +121,10 @@ class _SocialButton extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

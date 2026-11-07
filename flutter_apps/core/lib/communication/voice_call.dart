@@ -43,13 +43,15 @@ class _VoiceCallScreenState extends State<VoiceCallScreen>
         backgroundColor: Colors.transparent,
         elevation: 0,
         leading: IconButton(
+          tooltip: 'Back',
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
         actions: [
           IconButton(
+            tooltip: 'Contacts',
             icon: const Icon(Icons.contacts, color: Colors.white),
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Contacts (demo)'),
           ),
         ],
       ),
@@ -152,11 +154,11 @@ class _VoiceCallScreenState extends State<VoiceCallScreen>
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 _buildSmallButton(
-                  icon: _isOnHold ? Icons.pause : Icons.pause,
+                  icon: _isOnHold ? Icons.play_arrow : Icons.pause,
                   onTap: () => setState(() => _isOnHold = !_isOnHold),
                 ),
                 const SizedBox(width: 20),
-                _buildSmallButton(icon: Icons.add, onTap: () {}),
+                _buildSmallButton(icon: Icons.add, onTap: () => _showDemo(context, 'Add call (demo)')),
               ],
             ),
             const SizedBox(height: 40),
@@ -220,4 +222,10 @@ class _VoiceCallScreenState extends State<VoiceCallScreen>
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

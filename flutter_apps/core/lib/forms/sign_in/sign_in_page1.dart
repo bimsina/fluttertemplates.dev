@@ -55,8 +55,8 @@ class _SignInPage1State extends State<SignInPage1> {
                         }
 
                         bool emailValid = RegExp(
-                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+",
-                        ).hasMatch(value);
+                          r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?(\.[a-zA-Z0-9]([a-zA-Z0-9-]*[a-zA-Z0-9])?)*\.[a-zA-Z]{2,}$",
+                        ).hasMatch(value.trim());
                         if (!emailValid) {
                           return 'Please enter a valid email';
                         }
@@ -89,6 +89,7 @@ class _SignInPage1State extends State<SignInPage1> {
                         prefixIcon: const Icon(Icons.lock_outline_rounded),
                         border: const OutlineInputBorder(),
                         suffixIcon: IconButton(
+                          tooltip: _isPasswordVisible ? 'Hide password' : 'Show password',
                           icon: Icon(
                             _isPasswordVisible
                                 ? Icons.visibility_off

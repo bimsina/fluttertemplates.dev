@@ -56,8 +56,10 @@ class _SplitViewState extends State<SplitView> {
                             title: Text(e['from'] as String),
                             subtitle: Text(e['subj'] as String),
                             selected: _selectedEmail == i,
-                            onTap: () =>
-                                setState(() => _selectedEmail = i),
+                            onTap: () => setState(() {
+                              _selectedEmail = i;
+                              _showDetail = true;
+                            }),
                           );
                         },
                       ),
@@ -76,14 +78,17 @@ class _SplitViewState extends State<SplitView> {
                                   mainAxisAlignment:
                                       MainAxisAlignment.spaceBetween,
                                   children: [
-                                    Text(
-                                      _emails[_selectedEmail!]['subj']
-                                          as String,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge,
+                                    Expanded(
+                                      child: Text(
+                                        _emails[_selectedEmail!]['subj']
+                                            as String,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge,
+                                      ),
                                     ),
                                     IconButton(
+                                      tooltip: 'Close email',
                                       icon: const Icon(Icons.close),
                                       onPressed: () => setState(
                                           () => _showDetail = false),
@@ -121,6 +126,7 @@ class _SplitViewState extends State<SplitView> {
         children: [
           AppBar(
             leading: IconButton(
+              tooltip: 'Back',
               icon: const Icon(Icons.arrow_back),
               onPressed: () => setState(() => _showDetail = false),
             ),

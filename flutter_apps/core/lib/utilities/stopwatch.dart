@@ -8,11 +8,18 @@ class StopwatchScreen extends StatefulWidget {
   State<StopwatchScreen> createState() => _StopwatchScreenState();
 }
 
+class _Lap {
+  final Duration split;
+  final Duration total;
+  const _Lap(this.split, this.total);
+}
+
 class _StopwatchScreenState extends State<StopwatchScreen> {
-  int _milliseconds = 0;
-  bool _isRunning = false;
+  final _stopwatch = Stopwatch();
   Timer? _timer;
-  final List<int> _laps = [];
+  final List<_Lap> _laps = [];
+
+  bool get _isRunning => _stopwatch.isRunning;
 
   @override
   void dispose() {
@@ -20,49 +27,47 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
     super.dispose();
   }
 
-  void _startTimer() {
-    _timer = Timer.periodic(const Duration(milliseconds: 10), (_) {
-      setState(() {
-        _milliseconds++;
-      });
-    });
-  }
-
-  void _stopTimer() {
-    _timer?.cancel();
-  }
-
   void _reset() {
     _timer?.cancel();
     setState(() {
-      _milliseconds = 0;
+      _stopwatch
+        ..stop()
+        ..reset();
       _laps.clear();
-      _isRunning = false;
     });
   }
 
   void _toggleTimer() {
-    if (_isRunning) {
-      _stopTimer();
-    } else {
-      _startTimer();
-    }
     setState(() {
-      _isRunning = !_isRunning;
+      if (_isRunning) {
+        _stopwatch.stop();
+        _timer?.cancel();
+      } else {
+        _stopwatch.start();
+        // Elapsed time comes from the Stopwatch; this only repaints.
+        _timer = Timer.periodic(
+          const Duration(milliseconds: 30),
+          (_) => setState(() {}),
+        );
+      }
     });
   }
 
   void _addLap() {
+    final total = _stopwatch.elapsed;
+    final previous = _laps.isEmpty ? Duration.zero : _laps.first.total;
     setState(() {
-      _laps.insert(0, _milliseconds);
+      _laps.insert(0, _Lap(total - previous, total));
     });
   }
 
-  String get _timeDisplay {
-    final minutes = (_milliseconds ~/ 6000).toString().padLeft(2, '0');
-    final seconds = ((_milliseconds % 6000) ~/ 100).toString().padLeft(2, '0');
-    final ms = (_milliseconds % 100).toString().padLeft(2, '0');
-    return '$minutes:$seconds.$ms';
+  String _format(Duration time) {
+    final minutes = time.inMinutes.toString().padLeft(2, '0');
+    final seconds = time.inSeconds.remainder(60).toString().padLeft(2, '0');
+    final hundredths = (time.inMilliseconds.remainder(1000) ~/ 10)
+        .toString()
+        .padLeft(2, '0');
+    return '$minutes:$seconds.$hundredths';
   }
 
   @override
@@ -77,6 +82,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
         actions: [
           if (_laps.isNotEmpty)
             IconButton(
+              tooltip: 'Clear laps',
               icon: const Icon(Icons.delete_outline),
               onPressed: () {
                 setState(() {
@@ -89,64 +95,71 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
       body: Column(
         children: [
           Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Container(
-                    width: 280,
-                    height: 280,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(
-                        color: _isRunning ? Colors.blue : Colors.grey[400]!,
-                        width: 8,
+            flex: 3,
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                // Controls need about 100px; the dial takes what's left.
+                final dial = (constraints.maxHeight - 124).clamp(48.0, 280.0);
+                return Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      width: dial,
+                      height: dial,
+                      padding: EdgeInsets.all(dial * 0.07),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(
+                          color: _isRunning ? Colors.blue : Colors.grey[400]!,
+                          width: 8,
+                        ),
                       ),
-                    ),
-                    child: Center(
-                      child: Text(
-                        _timeDisplay,
-                        style: TextStyle(
-                          fontSize: 48,
-                          fontWeight: FontWeight.w200,
-                          fontFamily: 'monospace',
-                          color: isDark ? Colors.white : Colors.black87,
+                      child: FittedBox(
+                        child: Text(
+                          _format(_stopwatch.elapsed),
+                          style: TextStyle(
+                            fontSize: 48,
+                            fontWeight: FontWeight.w200,
+                            fontFamily: 'monospace',
+                            color: isDark ? Colors.white : Colors.black87,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 60),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildControlButton(
-                        label: _isRunning ? 'Stop' : 'Start',
-                        icon: _isRunning ? Icons.stop : Icons.play_arrow,
-                        color: _isRunning ? Colors.red : Colors.blue,
-                        onTap: _toggleTimer,
-                      ),
-                      const SizedBox(width: 24),
-                      _buildControlButton(
-                        label: 'Lap',
-                        icon: Icons.flag,
-                        color: Colors.orange,
-                        onTap: _isRunning ? _addLap : null,
-                      ),
-                      const SizedBox(width: 24),
-                      _buildControlButton(
-                        label: 'Reset',
-                        icon: Icons.refresh,
-                        color: Colors.grey,
-                        onTap: _reset,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    const SizedBox(height: 16),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _buildControlButton(
+                          label: _isRunning ? 'Stop' : 'Start',
+                          icon: _isRunning ? Icons.stop : Icons.play_arrow,
+                          color: _isRunning ? Colors.red : Colors.blue,
+                          onTap: _toggleTimer,
+                        ),
+                        const SizedBox(width: 24),
+                        _buildControlButton(
+                          label: 'Lap',
+                          icon: Icons.flag,
+                          color: Colors.orange,
+                          onTap: _isRunning ? _addLap : null,
+                        ),
+                        const SizedBox(width: 24),
+                        _buildControlButton(
+                          label: 'Reset',
+                          icon: Icons.refresh,
+                          color: Colors.grey,
+                          onTap: _reset,
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              },
             ),
           ),
           if (_laps.isNotEmpty)
             Expanded(
+              flex: 2,
               child: Container(
                 decoration: BoxDecoration(
                   color: isDark ? Colors.grey[850] : Colors.grey[100],
@@ -183,14 +196,6 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                         itemCount: _laps.length,
                         itemBuilder: (context, index) {
                           final lap = _laps[index];
-                          final minutes = (lap ~/ 6000).toString().padLeft(
-                            2,
-                            '0',
-                          );
-                          final seconds = ((lap % 6000) ~/ 100)
-                              .toString()
-                              .padLeft(2, '0');
-                          final ms = (lap % 100).toString().padLeft(2, '0');
 
                           return Container(
                             margin: const EdgeInsets.only(bottom: 8),
@@ -211,7 +216,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
                                   ),
                                 ),
                                 Text(
-                                  '$minutes:$seconds.$ms',
+                                  _format(lap.split),
                                   style: const TextStyle(
                                     fontWeight: FontWeight.w500,
                                     fontFamily: 'monospace',
@@ -252,7 +257,7 @@ class _StopwatchScreenState extends State<StopwatchScreen> {
             ),
             child: Icon(icon, color: Colors.white, size: 32),
           ),
-          const SizedBox(height: 8),
+          const SizedBox(height: 4),
           Text(
             label,
             style: TextStyle(

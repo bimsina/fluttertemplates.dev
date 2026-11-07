@@ -4,7 +4,7 @@ const _restaurants = [
   {'name': 'Pizza Palace', 'cuisine': 'Italian', 'rating': 4.5, 'delivery': '25-35 min'},
   {'name': 'Sushi Bar', 'cuisine': 'Japanese', 'rating': 4.8, 'delivery': '30-45 min'},
   {'name': 'Taco Fiesta', 'cuisine': 'Mexican', 'rating': 4.2, 'delivery': '20-30 min'},
-  {'name': 'Burger King', 'cuisine': 'American', 'rating': 4.0, 'delivery': '15-25 min'},
+  {'name': 'Ember & Bun', 'cuisine': 'American', 'rating': 4.0, 'delivery': '15-25 min'},
   {'name': 'Thai Garden', 'cuisine': 'Thai', 'rating': 4.6, 'delivery': '35-45 min'},
 ];
 
@@ -44,7 +44,8 @@ class RestaurantList extends StatelessWidget {
                             style: Theme.of(context).textTheme.titleMedium),
                         Text(r['cuisine'] as String,
                             style: Theme.of(context).textTheme.bodySmall),
-                        Row(
+                        Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Icon(Icons.star, size: 14, color: Colors.amber[700]),
                             Text(' ${r['rating']}', style: Theme.of(context).textTheme.bodySmall),

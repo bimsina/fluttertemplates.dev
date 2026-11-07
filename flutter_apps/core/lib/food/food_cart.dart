@@ -1,21 +1,87 @@
 import 'package:flutter/material.dart';
 
-const _cartItems = [
-  {'name': 'Margherita Pizza', 'price': 12.00, 'qty': 2},
-  {'name': 'Garlic Bread', 'price': 5.00, 'qty': 1},
-  {'name': 'Cola', 'price': 3.00, 'qty': 2},
+/// One line of the cart, used for [FoodCart.items] and [FoodCart.onCheckout].
+class FoodCartItem {
+  final String name;
+  final double price;
+  final int quantity;
+
+  const FoodCartItem({
+    required this.name,
+    required this.price,
+    required this.quantity,
+  });
+}
+
+const _sampleItems = [
+  FoodCartItem(name: 'Margherita Pizza', price: 12.00, quantity: 2),
+  FoodCartItem(name: 'Garlic Bread', price: 5.00, quantity: 1),
+  FoodCartItem(name: 'Cola', price: 3.00, quantity: 2),
 ];
 
-class FoodCart extends StatelessWidget {
-  const FoodCart({super.key});
+const _delivery = 3.99;
+
+class FoodCart extends StatefulWidget {
+  /// The starting lines. Without it the cart opens with sample items. A new
+  /// list replaces the cart, including any quantities changed here.
+  final List<FoodCartItem>? items;
+
+  /// Called with the current lines and the total including delivery. Without
+  /// it the demo shows a SnackBar. Checkout is disabled while the cart is empty.
+  final void Function(List<FoodCartItem> items, double total)? onCheckout;
+
+  const FoodCart({super.key, this.items, this.onCheckout});
+
+  @override
+  State<FoodCart> createState() => _FoodCartState();
+}
+
+class _FoodCartState extends State<FoodCart> {
+  late List<FoodCartItem> _items = _startingItems();
+
+  List<FoodCartItem> _startingItems() => [
+    for (final item in widget.items ?? _sampleItems)
+      if (item.quantity > 0) item,
+  ];
+
+  @override
+  void didUpdateWidget(FoodCart oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.items != oldWidget.items) _items = _startingItems();
+  }
+
+  // Reaching zero removes the line.
+  void _setQuantity(int index, int quantity) {
+    setState(() {
+      if (quantity < 1) {
+        _items.removeAt(index);
+      } else {
+        final item = _items[index];
+        _items[index] = FoodCartItem(
+          name: item.name,
+          price: item.price,
+          quantity: quantity,
+        );
+      }
+    });
+  }
+
+  void _checkout(double total) {
+    final onCheckout = widget.onCheckout;
+    if (onCheckout != null) {
+      onCheckout(List.unmodifiable(_items), total);
+    } else {
+      _showDemo(context, 'Checkout (demo)');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    var subtotal = 0.0;
-    for (final item in _cartItems) {
-      subtotal += (item['price'] as double) * (item['qty'] as int);
-    }
-    final delivery = 3.99;
+    final subtotal = _items.fold<double>(
+      0,
+      (sum, item) => sum + item.price * item.quantity,
+    );
+    final delivery = _items.isEmpty ? 0.0 : _delivery;
     final total = subtotal + delivery;
 
     return Scaffold(
@@ -23,36 +89,53 @@ class FoodCart extends StatelessWidget {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(16),
-              itemCount: _cartItems.length,
-              itemBuilder: (context, i) {
-                final item = _cartItems[i];
-                final lineTotal = (item['price'] as double) * (item['qty'] as int);
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 8),
-                  child: ListTile(
-                    title: Text(item['name'] as String),
-                    subtitle: Text('\$${item['price']} × ${item['qty']}'),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text('\$${lineTotal.toStringAsFixed(2)}'),
-                        IconButton(
-                          icon: const Icon(Icons.remove_circle_outline, size: 20),
-                          onPressed: () {},
+            child: _items.isEmpty
+                ? const Center(child: Text('Your cart is empty'))
+                : ListView.builder(
+                    padding: const EdgeInsets.all(16),
+                    itemCount: _items.length,
+                    itemBuilder: (context, i) {
+                      final item = _items[i];
+                      final lineTotal = item.price * item.quantity;
+                      return Card(
+                        margin: const EdgeInsets.only(bottom: 8),
+                        child: ListTile(
+                          title: Text(item.name),
+                          subtitle: Text(
+                            '\$${item.price.toStringAsFixed(2)} × '
+                            '${item.quantity} = '
+                            '\$${lineTotal.toStringAsFixed(2)}',
+                          ),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                tooltip: item.quantity == 1
+                                    ? 'Remove ${item.name}'
+                                    : 'Decrease quantity',
+                                icon: const Icon(
+                                  Icons.remove_circle_outline,
+                                  size: 20,
+                                ),
+                                onPressed: () =>
+                                    _setQuantity(i, item.quantity - 1),
+                              ),
+                              Text('${item.quantity}'),
+                              IconButton(
+                                tooltip: 'Increase quantity',
+                                icon: const Icon(
+                                  Icons.add_circle_outline,
+                                  size: 20,
+                                ),
+                                onPressed: () =>
+                                    _setQuantity(i, item.quantity + 1),
+                              ),
+                            ],
+                          ),
                         ),
-                        Text('${item['qty']}'),
-                        IconButton(
-                          icon: const Icon(Icons.add_circle_outline, size: 20),
-                          onPressed: () {},
-                        ),
-                      ],
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
-            ),
           ),
           Container(
             padding: const EdgeInsets.all(16),
@@ -68,7 +151,7 @@ class FoodCart extends StatelessWidget {
                     bold: true),
                 const SizedBox(height: 12),
                 FilledButton(
-                  onPressed: () {},
+                  onPressed: _items.isEmpty ? null : () => _checkout(total),
                   style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 48)),
                   child: const Text('Checkout'),
                 ),
@@ -101,4 +184,10 @@ class _SummaryRow extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

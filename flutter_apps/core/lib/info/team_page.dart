@@ -22,17 +22,23 @@ class TeamPage extends StatelessWidget {
             margin: const EdgeInsets.only(bottom: 12),
             child: ListTile(
               leading: CircleAvatar(
-                backgroundColor: Colors.primaries[i].withValues(alpha: 0.3),
+                backgroundColor: Colors.primaries[i % Colors.primaries.length].withValues(alpha: 0.3),
                 child: Text((t['name'] as String)[0]),
               ),
               title: Text(t['name'] as String),
               subtitle: Text(t['role'] as String),
               trailing: const Icon(Icons.chevron_right),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Open ${t['name']} (demo)'),
             ),
           );
         },
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

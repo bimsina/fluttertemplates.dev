@@ -133,7 +133,7 @@ class _PrivacySettingsState extends State<PrivacySettings> {
                 title: 'Blocked Accounts',
                 subtitle: '3 accounts',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Blocked Accounts (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -141,7 +141,7 @@ class _PrivacySettingsState extends State<PrivacySettings> {
                 title: 'Muted Accounts',
                 subtitle: '5 accounts',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Muted Accounts (demo)'),
               ),
             ],
           ),
@@ -156,7 +156,7 @@ class _PrivacySettingsState extends State<PrivacySettings> {
                 title: 'Archived Chats',
                 subtitle: 'Show in profile',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Archived Chats (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -164,7 +164,7 @@ class _PrivacySettingsState extends State<PrivacySettings> {
                 title: 'Download My Data',
                 subtitle: 'Export your data',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Download My Data (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -173,7 +173,7 @@ class _PrivacySettingsState extends State<PrivacySettings> {
                 subtitle: 'Remove all chat history',
                 isDark: isDark,
                 textColor: Colors.red,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Delete All Chats (demo)'),
               ),
             ],
           ),
@@ -281,4 +281,10 @@ class _PrivacySettingsState extends State<PrivacySettings> {
       onTap: onTap,
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

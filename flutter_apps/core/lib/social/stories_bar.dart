@@ -13,7 +13,8 @@ class StoriesBar extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
-            height: 100,
+            // 8px list padding on each side + 72px avatar + 4px gap + label.
+            height: 116,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.all(8),
@@ -25,7 +26,7 @@ class StoriesBar extends StatelessWidget {
                     children: [
                       CircleAvatar(
                         radius: 36,
-                        backgroundColor: Colors.primaries[i].withValues(alpha: 0.5),
+                        backgroundColor: Colors.primaries[i % Colors.primaries.length].withValues(alpha: 0.5),
                         child: i == 0
                             ? const Icon(Icons.add)
                             : Text(_users[i][0]),
@@ -53,7 +54,8 @@ class StoriesBar extends StatelessWidget {
               itemCount: 5,
               itemBuilder: (context, i) => ListTile(
                 leading: CircleAvatar(
-                  backgroundColor: Colors.primaries[i % 5].withValues(alpha: 0.5),
+                  backgroundColor: Colors.primaries[i % Colors.primaries.length]
+                      .withValues(alpha: 0.5),
                 ),
                 title: Text('Feed item ${i + 1}'),
                 subtitle: const Text('Posted 2h ago'),

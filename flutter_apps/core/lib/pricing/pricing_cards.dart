@@ -84,7 +84,7 @@ class PricingCards extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   FilledButton(
-                    onPressed: () {},
+                    onPressed: () => _showDemo(context, 'Get Started (demo)'),
                     style: FilledButton.styleFrom(
                       minimumSize: const Size.fromHeight(44),
                     ),
@@ -98,4 +98,10 @@ class PricingCards extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

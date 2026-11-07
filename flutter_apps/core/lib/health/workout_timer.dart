@@ -72,6 +72,7 @@ class _WorkoutTimerState extends State<WorkoutTimer> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 IconButton.filled(
+                  tooltip: _isRunning ? 'Pause workout' : 'Start workout',
                   onPressed: () {
                     setState(() {
                       if (_isRunning) {
@@ -87,6 +88,7 @@ class _WorkoutTimerState extends State<WorkoutTimer> {
                 ),
                 const SizedBox(width: 16),
                 IconButton.outlined(
+                  tooltip: 'Reset timer',
                   onPressed: () {
                     _stopTimer();
                     setState(() {

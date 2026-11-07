@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 
 const _products = [
@@ -14,14 +16,40 @@ class FlashSale extends StatefulWidget {
 }
 
 class _FlashSaleState extends State<FlashSale> {
-  final _remaining = const Duration(hours: 2, minutes: 30);
+  final _endsAt = DateTime.now().add(const Duration(hours: 2, minutes: 30));
+  late Duration _remaining = _timeLeft();
+  Timer? _timer;
+
+  // Rounded up, so the clock starts on 2h 30m 0s and reaches zero when it ends.
+  Duration _timeLeft() {
+    final left = _endsAt.difference(DateTime.now());
+    if (left <= Duration.zero) return Duration.zero;
+    return Duration(seconds: (left.inMilliseconds / 1000).ceil());
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      setState(() => _remaining = _timeLeft());
+      if (_remaining == Duration.zero) timer.cancel();
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
+    // 116px of image and padding plus two lines of text, which grow with scale.
+    final cardHeight = 116 + MediaQuery.textScalerOf(context).scale(64);
+
     return Scaffold(
       appBar: AppBar(title: const Text('Flash Sale')),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      body: ListView(
         children: [
           Padding(
             padding: const EdgeInsets.all(16),
@@ -29,15 +57,20 @@ class _FlashSaleState extends State<FlashSale> {
               children: [
                 const Icon(Icons.timer),
                 const SizedBox(width: 8),
-                Text(
-                  '${_remaining.inHours}h ${_remaining.inMinutes % 60}m left',
-                  style: Theme.of(context).textTheme.titleMedium,
+                Expanded(
+                  child: Text(
+                    _remaining == Duration.zero
+                        ? 'Sale ended'
+                        : '${_remaining.inHours}h ${_remaining.inMinutes % 60}m '
+                              '${_remaining.inSeconds % 60}s left',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
                 ),
               ],
             ),
           ),
           SizedBox(
-            height: 180,
+            height: cardHeight,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -54,7 +87,8 @@ class _FlashSaleState extends State<FlashSale> {
                         Container(
                           height: 100,
                           decoration: BoxDecoration(
-                            color: Colors.primaries[i].withValues(alpha: 0.3),
+                            color: Colors.primaries[i % Colors.primaries.length]
+                                .withValues(alpha: 0.3),
                           ),
                           child: Center(
                             child: Container(
@@ -80,7 +114,8 @@ class _FlashSaleState extends State<FlashSale> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(p['title'] as String),
-                              Row(
+                              Wrap(
+                                spacing: 4,
                                 children: [
                                   Text(
                                     p['price'] as String,
@@ -88,7 +123,6 @@ class _FlashSaleState extends State<FlashSale> {
                                       context,
                                     ).textTheme.titleSmall,
                                   ),
-                                  const SizedBox(width: 4),
                                   Text(
                                     p['original'] as String,
                                     style: Theme.of(context).textTheme.bodySmall

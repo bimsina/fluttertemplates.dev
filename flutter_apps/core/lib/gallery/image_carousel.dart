@@ -12,6 +12,12 @@ class _ImageCarouselState extends State<ImageCarousel> {
   var _currentPage = 0;
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Gallery')),
@@ -26,7 +32,8 @@ class _ImageCarouselState extends State<ImageCarousel> {
                 return Container(
                   margin: const EdgeInsets.all(16),
                   decoration: BoxDecoration(
-                    color: Colors.primaries[i].withValues(alpha: 0.5),
+                    color: Colors.primaries[i % Colors.primaries.length]
+                        .withValues(alpha: 0.5),
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: Icon(

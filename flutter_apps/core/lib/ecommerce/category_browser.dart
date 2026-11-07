@@ -10,7 +10,20 @@ const _categories = [
 ];
 
 class CategoryBrowser extends StatelessWidget {
-  const CategoryBrowser({super.key});
+  /// Called with the tapped category's name. Without it the demo shows a
+  /// SnackBar.
+  final ValueChanged<String>? onCategorySelected;
+
+  const CategoryBrowser({super.key, this.onCategorySelected});
+
+  void _select(BuildContext context, String name) {
+    final callback = onCategorySelected;
+    if (callback != null) {
+      callback(name);
+    } else {
+      _showDemo(context, 'Browsing $name (demo)');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +42,7 @@ class CategoryBrowser extends StatelessWidget {
           final c = _categories[i];
           return Card(
             child: InkWell(
-              onTap: () {},
+              onTap: () => _select(context, c['name'] as String),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -44,4 +57,10 @@ class CategoryBrowser extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

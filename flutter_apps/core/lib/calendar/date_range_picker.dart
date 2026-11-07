@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
 
 class DateRangePicker extends StatefulWidget {
-  const DateRangePicker({super.key});
+  /// Called with the chosen range. Without it the demo shows a SnackBar.
+  /// 'Apply Range' stays disabled until both dates are set.
+  final ValueChanged<DateTimeRange>? onApply;
+
+  const DateRangePicker({super.key, this.onApply});
 
   @override
   State<DateRangePicker> createState() => _DateRangePickerState();
@@ -10,6 +14,22 @@ class DateRangePicker extends StatefulWidget {
 class _DateRangePickerState extends State<DateRangePicker> {
   DateTime? _start;
   DateTime? _end;
+
+  String _format(DateTime d) => '${d.month}/${d.day}/${d.year}';
+
+  void _apply() {
+    final range = DateTimeRange(start: _start!, end: _end!);
+    final onApply = widget.onApply;
+    if (onApply != null) {
+      onApply(range);
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text('Selected ${_format(range.start)} to ${_format(range.end)}'),
+      ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,18 +47,21 @@ class _DateRangePickerState extends State<DateRangePicker> {
                     child: ListTile(
                       leading: const Icon(Icons.calendar_today),
                       title: Text(
-                        _start != null
-                            ? '${_start!.month}/${_start!.day}/${_start!.year}'
-                            : 'Start date',
+                        _start != null ? _format(_start!) : 'Start date',
                       ),
                       onTap: () async {
                         final d = await showDatePicker(
                           context: context,
-                          initialDate: DateTime.now(),
+                          initialDate: _start ?? DateTime.now(),
                           firstDate: DateTime.now(),
                           lastDate: DateTime.now().add(const Duration(days: 365)),
                         );
-                        if (d != null) setState(() => _start = d);
+                        if (d == null || !mounted) return;
+                        setState(() {
+                          _start = d;
+                          // A later start invalidates the end, so ask again.
+                          if (_end != null && _end!.isBefore(d)) _end = null;
+                        });
                       },
                     ),
                   ),
@@ -59,11 +82,12 @@ class _DateRangePickerState extends State<DateRangePicker> {
                       onTap: () async {
                         final d = await showDatePicker(
                           context: context,
-                          initialDate: _start ?? DateTime.now(),
+                          initialDate: _end ?? _start ?? DateTime.now(),
                           firstDate: _start ?? DateTime.now(),
                           lastDate: DateTime.now().add(const Duration(days: 365)),
                         );
-                        if (d != null) setState(() => _end = d);
+                        if (d == null || !mounted) return;
+                        setState(() => _end = d);
                       },
                     ),
                   ),
@@ -72,7 +96,7 @@ class _DateRangePickerState extends State<DateRangePicker> {
             ),
             const SizedBox(height: 24),
             FilledButton(
-              onPressed: () {},
+              onPressed: _start != null && _end != null ? _apply : null,
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('Apply Range'),

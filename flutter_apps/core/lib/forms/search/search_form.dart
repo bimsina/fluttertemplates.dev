@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 
 class SearchForm extends StatefulWidget {
-  const SearchForm({super.key});
+  /// Called with the query and filters once the query isn't empty. Without
+  /// it the demo shows a SnackBar.
+  final void Function(
+    String query,
+    String category,
+    String dateRange,
+    Set<String> options,
+  )? onSearch;
+
+  const SearchForm({super.key, this.onSearch});
 
   @override
   State<SearchForm> createState() => _SearchFormState();
@@ -10,6 +19,38 @@ class SearchForm extends StatefulWidget {
 class _SearchFormState extends State<SearchForm> {
   var _category = 'All';
   var _dateRange = 'Any';
+  final _queryController = TextEditingController();
+  final _options = {'Option C'};
+  String? _queryError;
+
+  @override
+  void dispose() {
+    _queryController.dispose();
+    super.dispose();
+  }
+
+  void _toggleOption(String option, bool selected) {
+    setState(() {
+      selected ? _options.add(option) : _options.remove(option);
+    });
+  }
+
+  void _search() {
+    final query = _queryController.text.trim();
+    setState(() => _queryError = query.isEmpty ? 'Enter a search term' : null);
+    if (query.isEmpty) return;
+
+    final onSearch = widget.onSearch;
+    if (onSearch != null) {
+      onSearch(query, _category, _dateRange, {..._options});
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(
+        content: Text('Searching $_category for "$query" (demo)'),
+      ));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -19,8 +60,14 @@ class _SearchFormState extends State<SearchForm> {
         padding: const EdgeInsets.all(24),
         children: [
           TextField(
+            controller: _queryController,
+            onChanged: (_) {
+              if (_queryError != null) setState(() => _queryError = null);
+            },
+            onSubmitted: (_) => _search(),
             decoration: InputDecoration(
               labelText: 'Search',
+              errorText: _queryError,
               border: const OutlineInputBorder(),
               prefixIcon: const Icon(Icons.search),
             ),
@@ -59,25 +106,16 @@ class _SearchFormState extends State<SearchForm> {
           Wrap(
             spacing: 8,
             children: [
-              FilterChip(
-                label: const Text('Option A'),
-                selected: false,
-                onSelected: (_) {},
-              ),
-              FilterChip(
-                label: const Text('Option B'),
-                selected: false,
-                onSelected: (_) {},
-              ),
-              FilterChip(
-                label: const Text('Option C'),
-                selected: true,
-                onSelected: (_) {},
-              ),
+              for (final option in ['Option A', 'Option B', 'Option C'])
+                FilterChip(
+                  label: Text(option),
+                  selected: _options.contains(option),
+                  onSelected: (selected) => _toggleOption(option, selected),
+                ),
             ],
           ),
           const SizedBox(height: 24),
-          FilledButton(onPressed: () {}, child: const Text('Search')),
+          FilledButton(onPressed: _search, child: const Text('Search')),
         ],
       ),
     );

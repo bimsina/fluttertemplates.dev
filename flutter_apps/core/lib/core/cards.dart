@@ -66,7 +66,7 @@ class Cards extends StatelessWidget {
           Card(
             clipBehavior: Clip.antiAlias,
             child: InkWell(
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Tappable media card (demo)'),
               child: Column(
                 children: [
                   Container(
@@ -112,4 +112,10 @@ class Cards extends StatelessWidget {
               color: Theme.of(context).colorScheme.onSurfaceVariant)),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

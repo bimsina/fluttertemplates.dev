@@ -1,12 +1,23 @@
 import 'package:flutter/material.dart';
 
 class Welcome extends StatelessWidget {
-  const Welcome({super.key});
+  /// Called by 'Get started'.
+  final VoidCallback? onGetStarted;
+
+  /// Called by 'I already have an account'.
+  final VoidCallback? onSignIn;
+
+  /// Each callback is optional. Without one, the demo shows a SnackBar.
+  const Welcome({super.key, this.onGetStarted, this.onSignIn});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final scheme = theme.colorScheme;
+    // Shift away from onPrimary, so contrast with the text can only improve.
+    final shade =
+        scheme.onPrimary.computeLuminance() > 0.5 ? Colors.black : Colors.white;
+    final gradientEnd = Color.lerp(scheme.primary, shade, 0.3)!;
 
     return Scaffold(
       body: Container(
@@ -14,7 +25,7 @@ class Welcome extends StatelessWidget {
           gradient: LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
-            colors: [scheme.primary, scheme.primaryContainer],
+            colors: [scheme.primary, gradientEnd],
           ),
         ),
         child: SafeArea(
@@ -45,15 +56,16 @@ class Welcome extends StatelessWidget {
                   'Plan your day, track your habits, and stay in flow — all in one calm workspace.',
                   textAlign: TextAlign.center,
                   style: theme.textTheme.bodyLarge?.copyWith(
-                    color: scheme.onPrimary.withValues(alpha: 0.85),
+                    color: scheme.onPrimary,
                   ),
                 ),
                 const Spacer(),
                 SizedBox(
                   width: double.infinity,
                   child: FilledButton(
-                    onPressed: () {},
-                    style: FilledButton.styleFrom(
+                    onPressed: onGetStarted ??
+                      () => _showDemo(context, 'Sign up goes here (demo)'),
+                  style: FilledButton.styleFrom(
                       backgroundColor: scheme.onPrimary,
                       foregroundColor: scheme.primary,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -63,9 +75,10 @@ class Welcome extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 TextButton(
-                  onPressed: () {},
-                  child: Text(
-                    'I already have an account',
+                  onPressed: onSignIn ??
+                    () => _showDemo(context, 'Sign in goes here (demo)'),
+                child: Text(
+                  'I already have an account',
                     style: TextStyle(color: scheme.onPrimary),
                   ),
                 ),
@@ -77,4 +90,10 @@ class Welcome extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

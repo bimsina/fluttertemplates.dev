@@ -1,55 +1,72 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
-class ProfilePage1 extends StatelessWidget {
+class ProfilePage1 extends StatefulWidget {
   const ProfilePage1({super.key});
+
+  @override
+  State<ProfilePage1> createState() => _ProfilePage1State();
+}
+
+class _ProfilePage1State extends State<ProfilePage1> {
+  var _following = false;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          const Expanded(flex: 2, child: _TopPortion()),
-          Expanded(
-            flex: 3,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                children: [
-                  Text(
-                    "Richie Lorie",
-                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      FloatingActionButton.extended(
-                        onPressed: () {},
-                        heroTag: 'follow',
-                        elevation: 0,
-                        label: const Text("Follow"),
-                        icon: const Icon(Icons.person_add_alt_1),
-                      ),
-                      const SizedBox(width: 16.0),
-                      FloatingActionButton.extended(
-                        onPressed: () {},
-                        heroTag: 'mesage',
-                        elevation: 0,
-                        backgroundColor: Colors.red,
-                        label: const Text("Message"),
-                        icon: const Icon(Icons.message_rounded),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  const _ProfileInfoRow(),
-                ],
+      body: LayoutBuilder(
+        builder: (context, constraints) => SingleChildScrollView(
+          child: Column(
+            children: [
+              SizedBox(
+                height: max(constraints.maxHeight * 2 / 5, 200),
+                child: const _TopPortion(),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "Richie Lorie",
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      alignment: WrapAlignment.center,
+                      spacing: 16,
+                      runSpacing: 12,
+                      children: [
+                        FloatingActionButton.extended(
+                          onPressed: () =>
+                              setState(() => _following = !_following),
+                          heroTag: 'follow',
+                          elevation: 0,
+                          label: Text(_following ? "Following" : "Follow"),
+                          icon: Icon(
+                            _following ? Icons.check : Icons.person_add_alt_1,
+                          ),
+                        ),
+                        FloatingActionButton.extended(
+                          onPressed: () => _showDemo(context, 'Message (demo)'),
+                          heroTag: 'message',
+                          elevation: 0,
+                          backgroundColor: Colors.red,
+                          label: const Text("Message"),
+                          icon: const Icon(Icons.message_rounded),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 16),
+                    const _ProfileInfoRow(),
+                  ],
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }
@@ -67,22 +84,23 @@ class _ProfileInfoRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 80,
-      constraints: const BoxConstraints(maxWidth: 400),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: _items
-            .map(
-              (item) => Expanded(
-                child: Row(
-                  children: [
-                    if (_items.indexOf(item) != 0) const VerticalDivider(),
-                    Expanded(child: _singleItem(context, item)),
-                  ],
+      constraints: const BoxConstraints(maxWidth: 400, minHeight: 80),
+      child: IntrinsicHeight(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: _items
+              .map(
+                (item) => Expanded(
+                  child: Row(
+                    children: [
+                      if (_items.indexOf(item) != 0) const VerticalDivider(),
+                      Expanded(child: _singleItem(context, item)),
+                    ],
+                  ),
                 ),
-              ),
-            )
-            .toList(),
+              )
+              .toList(),
+        ),
       ),
     );
   }
@@ -97,7 +115,10 @@ class _ProfileInfoRow extends StatelessWidget {
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
         ),
       ),
-      Text(item.title, style: Theme.of(context).textTheme.bodySmall),
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(item.title, style: Theme.of(context).textTheme.bodySmall),
+      ),
     ],
   );
 }
@@ -113,6 +134,8 @@ class _TopPortion extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final scheme = Theme.of(context).colorScheme;
+
     return Stack(
       fit: StackFit.expand,
       children: [
@@ -138,16 +161,12 @@ class _TopPortion extends StatelessWidget {
             child: Stack(
               fit: StackFit.expand,
               children: [
-                Container(
-                  decoration: const BoxDecoration(
-                    color: Colors.black,
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: NetworkImage(
-                        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80',
-                      ),
-                    ),
+                CircleAvatar(
+                  backgroundColor: scheme.primaryContainer,
+                  child: Icon(
+                    Icons.person,
+                    size: 90,
+                    color: scheme.onPrimaryContainer,
                   ),
                 ),
                 Positioned(
@@ -172,4 +191,10 @@ class _TopPortion extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

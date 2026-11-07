@@ -1,6 +1,7 @@
 ---
 title: "TMDB Movie App"
-description: "Build a professional movie discovery app with this Flutter template. Features real-time movie search, TMDB API integration, dark/light theme support, and responsive UI. Perfect for learning Flutter development and creating production-ready movie applications."
+description: "An open-source Flutter movie browser using the TMDB API, with search, movie details, and light and dark themes. An older example hosted separately: sign-in is a placeholder and the search bar has a dark mode bug."
+summary: "Search movies and open their details, using the TMDB API."
 demoUrl: "https://tmdb-movies-9g5.pages.dev/"
 heroImage: "../../assets/template_images/tmdb.png"
 appImages:
@@ -16,10 +17,12 @@ githubUrl: "https://github.com/bimsina/Matinee-Flutter"
 youtubeVideoId: "5_bDIUYLWzg"
 ---
 
-## ✨ Features
+## What it shows
 
-- 🎯 Real-time movie search functionality
-- 🌓 Dynamic theming with Provider state management
-- 🔄 Asynchronous API data fetching from TMDB
-- 🎨 Modern and responsive UI design
-- 📱 Cross-platform compatibility
+- Movie search and detail pages backed by the TMDB API
+- Theme switching with Provider
+- Asynchronous data loading
+
+## Known gaps
+
+This is an older example, kept separately from the library. Log In / Sign Up opens a "Coming Soon" page, and the search field is hard to read in dark mode. For a complete sign-in flow, see the [Login and Auth Flow](/templates/auth-flow/).

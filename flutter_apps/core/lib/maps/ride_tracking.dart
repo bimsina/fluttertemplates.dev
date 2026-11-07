@@ -24,7 +24,8 @@ class RideTracking extends StatelessWidget {
                   child: CircleAvatar(
                     backgroundColor: scheme.surface,
                     child: IconButton(
-                        onPressed: () {},
+                        tooltip: 'Back',
+                        onPressed: () => Navigator.maybePop(context),
                         icon: const Icon(Icons.arrow_back)),
                   ),
                 ),
@@ -88,7 +89,8 @@ class RideTracking extends StatelessWidget {
                       CircleAvatar(
                         backgroundColor: scheme.primaryContainer,
                         child: IconButton(
-                            onPressed: () {},
+                            tooltip: 'Call',
+                            onPressed: () => _showDemo(context, 'Call (demo)'),
                             icon: Icon(Icons.call,
                                 color: scheme.onPrimaryContainer)),
                       ),
@@ -96,7 +98,8 @@ class RideTracking extends StatelessWidget {
                       CircleAvatar(
                         backgroundColor: scheme.primaryContainer,
                         child: IconButton(
-                            onPressed: () {},
+                            tooltip: 'Message',
+                            onPressed: () => _showDemo(context, 'Message (demo)'),
                             icon: Icon(Icons.message,
                                 color: scheme.onPrimaryContainer)),
                       ),
@@ -106,7 +109,7 @@ class RideTracking extends StatelessWidget {
                   SizedBox(
                     width: double.infinity,
                     child: OutlinedButton(
-                        onPressed: () {},
+                        onPressed: () => _showDemo(context, 'Cancel ride (demo)'),
                         child: const Text('Cancel ride')),
                   ),
                 ],
@@ -159,5 +162,12 @@ class _RoutePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _RoutePainter oldDelegate) => false;
+  bool shouldRepaint(covariant _RoutePainter oldDelegate) =>
+      oldDelegate.scheme != scheme;
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -130,12 +130,12 @@ class _ConferenceCallState extends State<ConferenceCall> {
                   _buildControlButton(
                     icon: Icons.person_add,
                     label: 'Invite',
-                    onTap: () {},
+                    onTap: () => _showDemo(context, 'Invite (demo)'),
                   ),
                   _buildControlButton(
                     icon: Icons.chat_bubble_outline,
                     label: 'Chat',
-                    onTap: () {},
+                    onTap: () => _showDemo(context, 'Chat (demo)'),
                   ),
                   _buildControlButton(
                     icon: _isSpeakerOn ? Icons.volume_up : Icons.volume_off,
@@ -267,4 +267,10 @@ class _ConferenceCallState extends State<ConferenceCall> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

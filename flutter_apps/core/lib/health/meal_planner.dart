@@ -19,30 +19,40 @@ class MealPlanner extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         children: [
           Card(
-            child: DataTable(
-              headingRowColor: WidgetStateProperty.all(
-                  Theme.of(context).colorScheme.surfaceContainerHighest),
-              columns: const [
-                DataColumn(label: Text('Day')),
-                DataColumn(label: Text('Breakfast')),
-                DataColumn(label: Text('Lunch')),
-                DataColumn(label: Text('Dinner')),
-              ],
-              rows: _meals
-                  .map((m) => DataRow(
-                        cells: [
-                          DataCell(Text(m['day'] as String)),
-                          DataCell(Text(m['breakfast'] as String)),
-                          DataCell(Text(m['lunch'] as String)),
-                          DataCell(Text(m['dinner'] as String)),
-                        ],
-                      ))
-                  .toList(),
+            clipBehavior: Clip.antiAlias,
+            child: LayoutBuilder(
+              builder: (context, constraints) => SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: ConstrainedBox(
+                  // Still fills the card on screens wide enough for the table.
+                  constraints: BoxConstraints(minWidth: constraints.maxWidth),
+                  child: DataTable(
+                    headingRowColor: WidgetStateProperty.all(
+                        Theme.of(context).colorScheme.surfaceContainerHighest),
+                    columns: const [
+                      DataColumn(label: Text('Day')),
+                      DataColumn(label: Text('Breakfast')),
+                      DataColumn(label: Text('Lunch')),
+                      DataColumn(label: Text('Dinner')),
+                    ],
+                    rows: _meals
+                        .map((m) => DataRow(
+                              cells: [
+                                DataCell(Text(m['day'] as String)),
+                                DataCell(Text(m['breakfast'] as String)),
+                                DataCell(Text(m['lunch'] as String)),
+                                DataCell(Text(m['dinner'] as String)),
+                              ],
+                            ))
+                        .toList(),
+                  ),
+                ),
+              ),
             ),
           ),
           const SizedBox(height: 16),
           FilledButton.icon(
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Add Day (demo)'),
             icon: const Icon(Icons.add),
             label: const Text('Add Day'),
             style: FilledButton.styleFrom(minimumSize: const Size(double.infinity, 48)),
@@ -51,4 +61,10 @@ class MealPlanner extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

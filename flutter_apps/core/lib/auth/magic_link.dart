@@ -8,7 +8,25 @@ class MagicLink extends StatefulWidget {
 }
 
 class _MagicLinkState extends State<MagicLink> {
+  static final _emailPattern = RegExp(r'^[^@\s]+@[^@\s]+\.[^@\s]+$');
+
+  final _emailController = TextEditingController();
+  String? _emailError;
   bool _sent = false;
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    super.dispose();
+  }
+
+  void _send() {
+    final valid = _emailPattern.hasMatch(_emailController.text.trim());
+    setState(() {
+      _emailError = valid ? null : 'Enter a valid email address';
+      _sent = valid;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +51,7 @@ class _MagicLinkState extends State<MagicLink> {
                           ?.copyWith(fontWeight: FontWeight.bold)),
                   const SizedBox(height: 10),
                   Text(
-                    'We sent a magic sign-in link to alex@example.com. Tap the link to log in — no password needed.',
+                    'We sent a magic sign-in link to ${_emailController.text.trim()}. Tap the link to log in — no password needed.',
                     textAlign: TextAlign.center,
                     style: theme.textTheme.bodyMedium
                         ?.copyWith(color: scheme.onSurfaceVariant),
@@ -58,19 +76,28 @@ class _MagicLinkState extends State<MagicLink> {
                       style: theme.textTheme.bodyMedium
                           ?.copyWith(color: scheme.onSurfaceVariant)),
                   const SizedBox(height: 28),
-                  const TextField(
+                  TextField(
+                    controller: _emailController,
                     keyboardType: TextInputType.emailAddress,
+                    textInputAction: TextInputAction.send,
+                    onSubmitted: (_) => _send(),
+                    onChanged: (_) {
+                      if (_emailError != null) {
+                        setState(() => _emailError = null);
+                      }
+                    },
                     decoration: InputDecoration(
                       labelText: 'Email address',
-                      prefixIcon: Icon(Icons.mail_outline),
-                      border: OutlineInputBorder(),
+                      prefixIcon: const Icon(Icons.mail_outline),
+                      border: const OutlineInputBorder(),
+                      errorText: _emailError,
                     ),
                   ),
                   const SizedBox(height: 16),
                   SizedBox(
                     height: 52,
                     child: FilledButton.icon(
-                      onPressed: () => setState(() => _sent = true),
+                      onPressed: _send,
                       icon: const Icon(Icons.send_outlined),
                       label: const Text('Send magic link'),
                     ),

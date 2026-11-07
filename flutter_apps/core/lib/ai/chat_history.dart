@@ -30,7 +30,7 @@ class ChatHistory extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
-        actions: [IconButton(onPressed: () {}, icon: const Icon(Icons.add))],
+        actions: [IconButton(tooltip: 'New chat', onPressed: () => _showDemo(context, 'New chat (demo)'), icon: const Icon(Icons.add))],
       ),
       body: ListView(
         children: [
@@ -90,4 +90,10 @@ class ChatHistory extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

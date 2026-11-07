@@ -1,9 +1,21 @@
 import 'package:flutter/material.dart';
 
-class ResponsiveNavBarPage extends StatelessWidget {
-  ResponsiveNavBarPage({super.key});
+class ResponsiveNavBarPage extends StatefulWidget {
+  const ResponsiveNavBarPage({super.key});
 
+  @override
+  State<ResponsiveNavBarPage> createState() => _ResponsiveNavBarPageState();
+}
+
+class _ResponsiveNavBarPageState extends State<ResponsiveNavBarPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  String _selected = _menuItems.first;
+
+  // The links, the drawer and the profile menu all land here.
+  void _select(String item) {
+    setState(() => _selected = item);
+    _showDemo(context, 'Open $item (demo)');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,6 +33,7 @@ class ResponsiveNavBarPage extends StatelessWidget {
           leading: isLargeScreen
               ? null
               : IconButton(
+                  tooltip: 'Open menu',
                   icon: const Icon(Icons.menu),
                   onPressed: () => _scaffoldKey.currentState?.openDrawer(),
                 ),
@@ -40,15 +53,15 @@ class ResponsiveNavBarPage extends StatelessWidget {
               ],
             ),
           ),
-          actions: const [
+          actions: [
             Padding(
-              padding: EdgeInsets.only(right: 16.0),
-              child: CircleAvatar(child: _ProfileIcon()),
+              padding: const EdgeInsets.only(right: 16.0),
+              child: CircleAvatar(child: _ProfileIcon(onSelected: _select)),
             ),
           ],
         ),
         drawer: isLargeScreen ? null : _drawer(),
-        body: const Center(child: Text("Body")),
+        body: Center(child: Text(_selected)),
       ),
     );
   }
@@ -58,8 +71,11 @@ class ResponsiveNavBarPage extends StatelessWidget {
       children: _menuItems
           .map(
             (item) => ListTile(
+              selected: item == _selected,
+              selectedColor: Colors.green,
               onTap: () {
-                _scaffoldKey.currentState?.openEndDrawer();
+                _scaffoldKey.currentState?.closeDrawer();
+                _select(item);
               },
               title: Text(item),
             ),
@@ -73,14 +89,23 @@ class ResponsiveNavBarPage extends StatelessWidget {
     crossAxisAlignment: CrossAxisAlignment.center,
     children: _menuItems
         .map(
-          (item) => InkWell(
-            onTap: () {},
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                vertical: 24.0,
-                horizontal: 16,
+          (item) => Semantics(
+            selected: item == _selected,
+            child: InkWell(
+              onTap: () => _select(item),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 24.0,
+                  horizontal: 16,
+                ),
+                child: Text(
+                  item,
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: item == _selected ? Colors.green : null,
+                  ),
+                ),
               ),
-              child: Text(item, style: const TextStyle(fontSize: 18)),
             ),
           ),
         )
@@ -98,14 +123,21 @@ final List<String> _menuItems = <String>[
 enum Menu { itemOne, itemTwo, itemThree }
 
 class _ProfileIcon extends StatelessWidget {
-  const _ProfileIcon();
+  const _ProfileIcon({required this.onSelected});
+
+  final ValueChanged<String> onSelected;
 
   @override
   Widget build(BuildContext context) {
     return PopupMenuButton<Menu>(
+      tooltip: 'Profile menu',
       icon: const Icon(Icons.person),
       offset: const Offset(0, 40),
-      onSelected: (Menu item) {},
+      onSelected: (Menu item) => onSelected(switch (item) {
+        Menu.itemOne => 'Account',
+        Menu.itemTwo => 'Settings',
+        Menu.itemThree => 'Sign Out',
+      }),
       itemBuilder: (BuildContext context) => <PopupMenuEntry<Menu>>[
         const PopupMenuItem<Menu>(value: Menu.itemOne, child: Text('Account')),
         const PopupMenuItem<Menu>(value: Menu.itemTwo, child: Text('Settings')),
@@ -116,4 +148,10 @@ class _ProfileIcon extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -74,7 +74,7 @@ class _ModelPickerState extends State<ModelPicker> {
           ),
           const SizedBox(height: 24),
           FilledButton(
-            onPressed: () {},
+            onPressed: () => _showDemo(context, 'Apply (demo)'),
             style: FilledButton.styleFrom(
                 padding: const EdgeInsets.symmetric(vertical: 14)),
             child: const Text('Apply'),
@@ -115,4 +115,10 @@ class _SliderTile extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

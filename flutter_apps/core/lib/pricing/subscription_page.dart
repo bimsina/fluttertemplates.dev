@@ -56,7 +56,7 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
             ),
             const Spacer(),
             FilledButton(
-              onPressed: () {},
+              onPressed: () => _showDemo(context, 'Continue (demo)'),
               child: const Padding(
                 padding: EdgeInsets.symmetric(vertical: 12),
                 child: Text('Continue'),
@@ -67,4 +67,10 @@ class _SubscriptionPageState extends State<SubscriptionPage> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

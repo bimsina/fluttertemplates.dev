@@ -47,7 +47,7 @@ class UsageDashboard extends StatelessWidget {
                   ),
                   const Spacer(),
                   FilledButton(
-                      onPressed: () {}, child: const Text('Upgrade')),
+                      onPressed: () => _showDemo(context, 'Upgrade (demo)'), child: const Text('Upgrade')),
                 ],
               ),
             ),
@@ -104,4 +104,10 @@ class _MeterTile extends StatelessWidget {
 
   String _fmt(int n) =>
       n >= 1000 ? '${(n / 1000).toStringAsFixed(n % 1000 == 0 ? 0 : 1)}k' : '$n';
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

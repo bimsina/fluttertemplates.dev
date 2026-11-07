@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 
 class EmailVerification extends StatelessWidget {
-  const EmailVerification({super.key});
+  /// Called by 'Open email app'.
+  final VoidCallback? onOpenEmailApp;
+
+  /// Called by 'Resend email'.
+  final VoidCallback? onResendEmail;
+
+  /// Each callback is optional. Without one, the demo shows a SnackBar.
+  const EmailVerification({super.key, this.onOpenEmailApp, this.onResendEmail});
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +59,8 @@ class EmailVerification extends StatelessWidget {
             SizedBox(
               height: 52,
               child: FilledButton.icon(
-                onPressed: () {},
+                onPressed: onOpenEmailApp ??
+                    () => _showDemo(context, 'Opening email app (demo)'),
                 icon: const Icon(Icons.open_in_new),
                 label: const Text('Open email app'),
               ),
@@ -63,7 +71,10 @@ class EmailVerification extends StatelessWidget {
               children: [
                 Text("Didn't get it?",
                     style: TextStyle(color: scheme.onSurfaceVariant)),
-                TextButton(onPressed: () {}, child: const Text('Resend email')),
+                TextButton(
+                    onPressed: onResendEmail ??
+                        () => _showDemo(context, 'Verification email sent (demo)'),
+                    child: const Text('Resend email')),
               ],
             ),
             const Spacer(),
@@ -72,4 +83,10 @@ class EmailVerification extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

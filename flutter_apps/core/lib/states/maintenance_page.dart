@@ -30,7 +30,7 @@ class MaintenancePage extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               OutlinedButton.icon(
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'Check back later (demo)'),
                 icon: const Icon(Icons.refresh),
                 label: const Text('Check back later'),
               ),
@@ -40,4 +40,10 @@ class MaintenancePage extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

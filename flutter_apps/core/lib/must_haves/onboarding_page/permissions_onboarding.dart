@@ -26,7 +26,18 @@ class _PermissionsOnboardingState extends State<PermissionsOnboarding> {
         'Find friends who already use the app.'),
   ];
 
-  final _granted = <int>{0};
+  final _granted = <int>{};
+
+  /// UI demo: no system prompt appears. This is where to call a permission
+  /// plugin, for example with `permission_handler`:
+  ///
+  /// ```dart
+  /// final status = await Permission.camera.request();
+  /// if (status.isGranted) setState(() => _granted.add(index));
+  /// ```
+  void _request(int index) {
+    setState(() => _granted.add(index));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,6 +59,10 @@ class _PermissionsOnboardingState extends State<PermissionsOnboarding> {
                   const SizedBox(height: 8),
                   Text('You can change these anytime in Settings.',
                       style: theme.textTheme.bodyMedium
+                          ?.copyWith(color: scheme.onSurfaceVariant)),
+                  const SizedBox(height: 4),
+                  Text('UI demo: no system permissions are requested.',
+                      style: theme.textTheme.bodySmall
                           ?.copyWith(color: scheme.onSurfaceVariant)),
                 ],
               ),
@@ -85,14 +100,12 @@ class _PermissionsOnboardingState extends State<PermissionsOnboarding> {
                             ),
                           ),
                           granted
-                              ? FilledButton.tonal(
-                                  onPressed: () =>
-                                      setState(() => _granted.remove(i)),
-                                  child: const Text('Allowed'),
+                              ? const FilledButton.tonal(
+                                  onPressed: null,
+                                  child: Text('Allowed'),
                                 )
                               : OutlinedButton(
-                                  onPressed: () =>
-                                      setState(() => _granted.add(i)),
+                                  onPressed: () => _request(i),
                                   child: const Text('Allow'),
                                 ),
                         ],
@@ -108,7 +121,7 @@ class _PermissionsOnboardingState extends State<PermissionsOnboarding> {
                 width: double.infinity,
                 height: 52,
                 child: FilledButton(
-                    onPressed: () {}, child: const Text('Continue')),
+                    onPressed: () => _showDemo(context, 'Continue (demo)'), child: const Text('Continue')),
               ),
             ),
           ],
@@ -116,4 +129,10 @@ class _PermissionsOnboardingState extends State<PermissionsOnboarding> {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

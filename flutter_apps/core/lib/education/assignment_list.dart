@@ -36,11 +36,17 @@ class AssignmentList extends StatelessWidget {
               trailing: Chip(
                 label: Text(a['status'] as String, style: const TextStyle(fontSize: 12)),
               ),
-              onTap: () {},
+              onTap: () => _showDemo(context, 'Open ${a['title']} (demo)'),
             ),
           );
         },
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

@@ -39,12 +39,16 @@ class _TabBarsState extends State<TabBars> {
                 onSelectionChanged: (s) => setState(() => _segment = s.first),
               ),
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
-                  _GridTab(icon: Icons.photo, count: 12),
-                  _GridTab(icon: Icons.play_circle_outline, count: 6),
-                  _GridTab(icon: Icons.music_note, count: 9),
+                  _GridTab(icon: Icons.photo, count: 12, period: _segment),
+                  _GridTab(
+                    icon: Icons.play_circle_outline,
+                    count: 6,
+                    period: _segment,
+                  ),
+                  _GridTab(icon: Icons.music_note, count: 9, period: _segment),
                 ],
               ),
             ),
@@ -58,7 +62,12 @@ class _TabBarsState extends State<TabBars> {
 class _GridTab extends StatelessWidget {
   final IconData icon;
   final int count;
-  const _GridTab({required this.icon, required this.count});
+  final int period; // 0 day, 1 week, 2 month
+  const _GridTab({
+    required this.icon,
+    required this.count,
+    required this.period,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +78,8 @@ class _GridTab extends StatelessWidget {
       mainAxisSpacing: 12,
       crossAxisSpacing: 12,
       children: List.generate(
-        count,
+        // Day shows a third of the items, Week two thirds, Month all of them.
+        count * (period + 1) ~/ 3,
         (i) => Container(
           decoration: BoxDecoration(
             color: scheme.surfaceContainerHighest,

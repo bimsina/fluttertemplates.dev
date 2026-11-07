@@ -1,56 +1,67 @@
 import 'package:flutter/material.dart';
 
-class NotificationBanners extends StatelessWidget {
+class _Banner {
+  final MaterialColor color;
+  final IconData icon;
+  final String title;
+  final String message;
+
+  const _Banner(this.color, this.icon, this.title, this.message);
+}
+
+const _banners = [
+  _Banner(Colors.blue, Icons.info_outline, 'Info',
+      'Your changes have been saved.'),
+  _Banner(Colors.green, Icons.check_circle_outline, 'Success',
+      'Payment completed successfully.'),
+  _Banner(Colors.orange, Icons.warning_amber_outlined, 'Warning',
+      'Your session will expire soon.'),
+  _Banner(Colors.red, Icons.error_outline, 'Error',
+      'Something went wrong. Please try again.'),
+];
+
+class NotificationBanners extends StatefulWidget {
   const NotificationBanners({super.key});
+
+  @override
+  State<NotificationBanners> createState() => _NotificationBannersState();
+}
+
+class _NotificationBannersState extends State<NotificationBanners> {
+  final _visible = [..._banners];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Notification Banners')),
-      body: ListView(
-        padding: const EdgeInsets.all(16),
-        children: [
-          Card(
-            color: Colors.blue.withValues(alpha: 0.2),
-            child: ListTile(
-              leading: Icon(Icons.info_outline, color: Colors.blue[700]),
-              title: const Text('Info'),
-              subtitle: const Text('Your changes have been saved.'),
-              trailing: IconButton(icon: const Icon(Icons.close), onPressed: () {}),
+      body: _visible.isEmpty
+          ? Center(
+              child: TextButton(
+                onPressed: () => setState(() => _visible.addAll(_banners)),
+                child: const Text('Show banners again'),
+              ),
+            )
+          : ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                for (final banner in _visible)
+                  Card(
+                    margin: const EdgeInsets.only(bottom: 8),
+                    color: banner.color.withValues(alpha: 0.2),
+                    child: ListTile(
+                      leading: Icon(banner.icon, color: banner.color[700]),
+                      title: Text(banner.title),
+                      subtitle: Text(banner.message),
+                      trailing: IconButton(
+                        tooltip: 'Dismiss',
+                        icon: const Icon(Icons.close),
+                        onPressed: () =>
+                            setState(() => _visible.remove(banner)),
+                      ),
+                    ),
+                  ),
+              ],
             ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            color: Colors.green.withValues(alpha: 0.2),
-            child: ListTile(
-              leading: Icon(Icons.check_circle_outline, color: Colors.green[700]),
-              title: const Text('Success'),
-              subtitle: const Text('Payment completed successfully.'),
-              trailing: IconButton(icon: const Icon(Icons.close), onPressed: () {}),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            color: Colors.orange.withValues(alpha: 0.2),
-            child: ListTile(
-              leading: Icon(Icons.warning_amber_outlined, color: Colors.orange[700]),
-              title: const Text('Warning'),
-              subtitle: const Text('Your session will expire soon.'),
-              trailing: IconButton(icon: const Icon(Icons.close), onPressed: () {}),
-            ),
-          ),
-          const SizedBox(height: 8),
-          Card(
-            color: Colors.red.withValues(alpha: 0.2),
-            child: ListTile(
-              leading: Icon(Icons.error_outline, color: Colors.red[700]),
-              title: const Text('Error'),
-              subtitle: const Text('Something went wrong. Please try again.'),
-              trailing: IconButton(icon: const Icon(Icons.close), onPressed: () {}),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

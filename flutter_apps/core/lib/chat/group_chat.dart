@@ -24,6 +24,7 @@ class ChatService {
   final StreamController<Set<User>> _typingController =
       StreamController<Set<User>>.broadcast();
   final Random _random = Random();
+  final Map<Timer, User> _pendingReplies = {};
 
   // Simulated users
   final List<User> users = [
@@ -50,10 +51,12 @@ class ChatService {
     _simulateResponses(text);
   }
 
+  // Emits a copy, so listeners never hold a set that changes under them.
+  void _emitTyping() => _typingController.add(_pendingReplies.values.toSet());
+
   void _simulateResponses(String originalMessage) {
     // Random number of responses (1-3)
     final numResponses = _random.nextInt(3) + 1;
-    final typingUsers = <User>{};
 
     for (var i = 0; i < numResponses; i++) {
       // Random delay between 1-3 seconds
@@ -61,15 +64,12 @@ class ChatService {
 
       // Pick a random user (excluding current user)
       final randomUser = users[_random.nextInt(users.length - 1) + 1];
-      typingUsers.add(randomUser);
 
-      // Show typing indicator
-      _typingController.add(typingUsers);
-
-      Future.delayed(Duration(seconds: delay), () {
-        // Remove user from typing
-        typingUsers.remove(randomUser);
-        _typingController.add(typingUsers);
+      late final Timer timer;
+      timer = Timer(Duration(seconds: delay), () {
+        // A user stays typing until their last pending reply lands
+        _pendingReplies.remove(timer);
+        _emitTyping();
 
         final response = Message(
           text: "${randomUser.name} responds to: $originalMessage",
@@ -79,10 +79,18 @@ class ChatService {
 
         _messageController.add(response);
       });
+      _pendingReplies[timer] = randomUser;
     }
+
+    // Show typing indicator
+    _emitTyping();
   }
 
   void dispose() {
+    for (final timer in _pendingReplies.keys) {
+      timer.cancel();
+    }
+    _pendingReplies.clear();
     _messageController.close();
     _typingController.close();
   }
@@ -101,18 +109,20 @@ class _GroupChatState extends State<GroupChat> {
   final ChatService _chatService = ChatService();
   final List<Message> _messages = [];
   Set<User> _typingUsers = {};
+  late final StreamSubscription<Message> _messageSubscription;
+  late final StreamSubscription<Set<User>> _typingSubscription;
 
   @override
   void initState() {
     super.initState();
-    _chatService.messageStream.listen((message) {
+    _messageSubscription = _chatService.messageStream.listen((message) {
       setState(() {
         _messages.add(message);
       });
       _scrollToBottom();
     });
 
-    _chatService.typingStream.listen((users) {
+    _typingSubscription = _chatService.typingStream.listen((users) {
       setState(() {
         _typingUsers = users;
       });
@@ -121,6 +131,8 @@ class _GroupChatState extends State<GroupChat> {
 
   @override
   void dispose() {
+    _messageSubscription.cancel();
+    _typingSubscription.cancel();
     _controller.dispose();
     _scrollController.dispose();
     _chatService.dispose();
@@ -134,7 +146,7 @@ class _GroupChatState extends State<GroupChat> {
 
   void _scrollToBottom() {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (_scrollController.hasClients) {
+      if (mounted && _scrollController.hasClients) {
         _scrollController.animateTo(
           _scrollController.position.maxScrollExtent,
           duration: const Duration(milliseconds: 300),
@@ -172,42 +184,10 @@ class _GroupChatState extends State<GroupChat> {
                   : Colors.grey[200],
               borderRadius: BorderRadius.circular(20),
             ),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                _buildDot(0),
-                const SizedBox(width: 4),
-                _buildDot(1),
-                const SizedBox(width: 4),
-                _buildDot(2),
-              ],
-            ),
+            child: const _TypingDots(),
           ),
         ],
       ),
-    );
-  }
-
-  Widget _buildDot(int index) {
-    return TweenAnimationBuilder<double>(
-      tween: Tween(begin: 0.0, end: 1.0),
-      duration: Duration(milliseconds: 600),
-      curve: Interval(index * 0.2, (index + 1) * 0.2, curve: Curves.easeInOut),
-      builder: (context, value, child) {
-        return Transform.translate(
-          offset: Offset(0, -2 * value),
-          child: Container(
-            width: 8,
-            height: 8,
-            decoration: BoxDecoration(
-              color: Theme.of(context).brightness == Brightness.dark
-                  ? Colors.grey[400]
-                  : Colors.grey[600],
-              shape: BoxShape.circle,
-            ),
-          ),
-        );
-      },
     );
   }
 
@@ -344,12 +324,67 @@ class _GroupChatState extends State<GroupChat> {
                   ),
                 ),
                 IconButton(
+                  tooltip: 'Send message',
                   icon: Icon(Icons.send, color: Theme.of(context).primaryColor),
                   onPressed: () => _sendMessage(_controller.text),
                 ),
               ],
             ),
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _TypingDots extends StatefulWidget {
+  const _TypingDots();
+
+  @override
+  State<_TypingDots> createState() => _TypingDotsState();
+}
+
+class _TypingDotsState extends State<_TypingDots>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _bounce = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  )..repeat();
+
+  @override
+  void dispose() {
+    _bounce.dispose();
+    super.dispose();
+  }
+
+  Widget _buildDot(int index, Color color) {
+    final start = index * 0.2;
+    final hop = Interval(start, start + 0.4, curve: Curves.easeInOut);
+    return Transform.translate(
+      offset: Offset(0, -4 * sin(pi * hop.transform(_bounce.value))),
+      child: Container(
+        width: 8,
+        height: 8,
+        decoration: BoxDecoration(color: color, shape: BoxShape.circle),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final color = Theme.of(context).brightness == Brightness.dark
+        ? Colors.grey[400]!
+        : Colors.grey[600]!;
+    return AnimatedBuilder(
+      animation: _bounce,
+      builder: (context, _) => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          _buildDot(0, color),
+          const SizedBox(width: 4),
+          _buildDot(1, color),
+          const SizedBox(width: 4),
+          _buildDot(2, color),
         ],
       ),
     );

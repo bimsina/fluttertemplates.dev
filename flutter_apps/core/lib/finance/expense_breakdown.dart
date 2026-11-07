@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 const _expenses = [
@@ -96,5 +97,6 @@ class _DonutPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
+  bool shouldRepaint(_DonutPainter oldDelegate) =>
+      oldDelegate.total != total || !listEquals(oldDelegate.expenses, expenses);
 }

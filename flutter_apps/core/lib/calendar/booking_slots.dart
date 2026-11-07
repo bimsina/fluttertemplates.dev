@@ -6,7 +6,10 @@ const _slots = [
 ];
 
 class BookingSlots extends StatefulWidget {
-  const BookingSlots({super.key});
+  /// Called with the chosen slot. Without it the demo shows a SnackBar.
+  final ValueChanged<String>? onConfirm;
+
+  const BookingSlots({super.key, this.onConfirm});
 
   @override
   State<BookingSlots> createState() => _BookingSlotsState();
@@ -14,6 +17,18 @@ class BookingSlots extends StatefulWidget {
 
 class _BookingSlotsState extends State<BookingSlots> {
   var _selectedSlot = -1;
+
+  void _confirm() {
+    final slot = _slots[_selectedSlot];
+    final onConfirm = widget.onConfirm;
+    if (onConfirm != null) {
+      onConfirm(slot);
+      return;
+    }
+    ScaffoldMessenger.of(context)
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text('Booked $slot (demo)')));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +58,7 @@ class _BookingSlotsState extends State<BookingSlots> {
             ),
             const Spacer(),
             FilledButton(
-              onPressed: _selectedSlot >= 0 ? () {} : null,
+              onPressed: _selectedSlot >= 0 ? _confirm : null,
               style: FilledButton.styleFrom(
                 minimumSize: const Size.fromHeight(48),
               ),

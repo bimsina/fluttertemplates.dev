@@ -1,41 +1,46 @@
 import 'package:flutter/material.dart';
 
-class SocialProfile extends StatefulWidget {
+class SocialProfile extends StatelessWidget {
   const SocialProfile({super.key});
 
-  @override
-  State<SocialProfile> createState() => _SocialProfileState();
-}
+  static const _coverHeight = 200.0;
+  static const _avatarRadius = 50.0;
 
-class _SocialProfileState extends State<SocialProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (_, _) => [
           SliverAppBar(
-            expandedHeight: 200,
+            // The avatar lives in the header so it can straddle the cover's
+            // lower edge and collapse with it.
+            expandedHeight: _coverHeight + _avatarRadius,
             pinned: true,
+            backgroundColor: Colors.blue.shade700,
+            foregroundColor: Colors.white,
             flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [Colors.blue.shade700, Colors.blue.shade400],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          SliverToBoxAdapter(
-            child: Transform.translate(
-              offset: const Offset(0, -30),
-              child: Center(
-                child: Column(
+              background: ColoredBox(
+                color: Theme.of(context).scaffoldBackgroundColor,
+                child: Stack(
+                  alignment: Alignment.bottomCenter,
                   children: [
+                    Positioned.fill(
+                      bottom: _avatarRadius,
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.blue.shade700,
+                              Colors.blue.shade400,
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
                     CircleAvatar(
-                      radius: 50,
+                      radius: _avatarRadius,
                       backgroundColor: Colors.white,
                       child: CircleAvatar(
                         radius: 46,
@@ -45,28 +50,36 @@ class _SocialProfileState extends State<SocialProfile> {
                         ),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    Text(
-                      'John Doe',
-                      style: Theme.of(context).textTheme.titleLarge,
-                    ),
-                    Text(
-                      '@johndoe',
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    const SizedBox(height: 8),
-                    const Text('Bio: Flutter developer'),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        _StatCell('120', 'Posts'),
-                        _StatCell('1.2K', 'Followers'),
-                        _StatCell('400', 'Following'),
-                      ],
-                    ),
                   ],
                 ),
+              ),
+            ),
+          ),
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 8, bottom: 16),
+              child: Column(
+                children: [
+                  Text(
+                    'John Doe',
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  Text(
+                    '@johndoe',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(height: 8),
+                  const Text('Bio: Flutter developer'),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      _StatCell('120', 'Posts'),
+                      _StatCell('1.2K', 'Followers'),
+                      _StatCell('400', 'Following'),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),

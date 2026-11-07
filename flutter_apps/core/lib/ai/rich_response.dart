@@ -1,8 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class RichResponse extends StatelessWidget {
+class RichResponse extends StatefulWidget {
   const RichResponse({super.key});
+
+  @override
+  State<RichResponse> createState() => _RichResponseState();
+}
+
+class _RichResponseState extends State<RichResponse> {
+  // True for a thumbs up, false for a thumbs down, null when unrated.
+  bool? _rating;
+
+  void _rate(bool good) =>
+      setState(() => _rating = _rating == good ? null : good);
 
   @override
   Widget build(BuildContext context) {
@@ -49,18 +60,29 @@ class RichResponse extends StatelessWidget {
           Row(
             children: [
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.thumb_up_outlined)),
+                  tooltip: 'Good response',
+                  isSelected: _rating == true,
+                  onPressed: () => _rate(true),
+                  icon: const Icon(Icons.thumb_up_outlined),
+                  selectedIcon: const Icon(Icons.thumb_up)),
               IconButton(
-                  onPressed: () {},
-                  icon: const Icon(Icons.thumb_down_outlined)),
+                  tooltip: 'Bad response',
+                  isSelected: _rating == false,
+                  onPressed: () => _rate(false),
+                  icon: const Icon(Icons.thumb_down_outlined),
+                  selectedIcon: const Icon(Icons.thumb_down)),
               IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.refresh)),
+                  tooltip: 'Regenerate',
+                  onPressed: () => _showDemo(context, 'Regenerate (demo)'), icon: const Icon(Icons.refresh)),
               IconButton(
-                  onPressed: () {}, icon: const Icon(Icons.share_outlined)),
-              const Spacer(),
-              Text('Regenerate',
-                  style: TextStyle(color: scheme.onSurfaceVariant)),
+                  tooltip: 'Share',
+                  onPressed: () => _showDemo(context, 'Share (demo)'), icon: const Icon(Icons.share_outlined)),
+              Expanded(
+                child: Text('Regenerate',
+                    textAlign: TextAlign.end,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(color: scheme.onSurfaceVariant)),
+              ),
             ],
           ),
         ],
@@ -141,4 +163,10 @@ class _CodeBlock extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

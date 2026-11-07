@@ -76,9 +76,25 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                 borderRadius: BorderRadius.circular(10),
                 child: _isVideoOn
                     ? Container(
-                        color: Colors.grey[800],
-                        child: const Center(
-                          child: Icon(Icons.person, color: Colors.white54),
+                        color: _isFrontCamera
+                            ? Colors.grey[800]
+                            : Colors.blueGrey[700],
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              _isFrontCamera ? Icons.person : Icons.landscape,
+                              color: Colors.white54,
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              _isFrontCamera ? 'Front' : 'Rear',
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 11,
+                              ),
+                            ),
+                          ],
                         ),
                       )
                     : const Center(
@@ -120,7 +136,7 @@ class _VideoCallScreenState extends State<VideoCallScreen> {
                   onTap: () => setState(() => _isSpeakerOn = !_isSpeakerOn),
                 ),
                 _buildControlButton(
-                  icon: Icons.flip_camera_ios,
+                  icon: _isFrontCamera ? Icons.camera_front : Icons.camera_rear,
                   label: 'Flip',
                   onTap: () => setState(() => _isFrontCamera = !_isFrontCamera),
                 ),

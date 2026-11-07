@@ -32,7 +32,7 @@ class Error404 extends StatelessWidget {
               ),
               const SizedBox(height: 32),
               FilledButton.icon(
-                onPressed: () {},
+                onPressed: () => _showDemo(context, 'Go Home (demo)'),
                 icon: const Icon(Icons.home),
                 label: const Text('Go Home'),
               ),
@@ -42,4 +42,10 @@ class Error404 extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

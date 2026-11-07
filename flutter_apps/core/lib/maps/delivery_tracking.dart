@@ -52,7 +52,8 @@ class CourierTracking extends StatelessWidget {
                 title: const Text('Maria Jansen'),
                 subtitle: const Text('Your courier · 4.8 ★'),
                 trailing: IconButton(
-                    onPressed: () {}, icon: const Icon(Icons.call)),
+                    tooltip: 'Call',
+                    onPressed: () => _showDemo(context, 'Call (demo)'), icon: const Icon(Icons.call)),
               ),
             ),
           ),
@@ -164,5 +165,12 @@ class _MiniMapPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _MiniMapPainter oldDelegate) => false;
+  bool shouldRepaint(covariant _MiniMapPainter oldDelegate) =>
+      oldDelegate.scheme != scheme;
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

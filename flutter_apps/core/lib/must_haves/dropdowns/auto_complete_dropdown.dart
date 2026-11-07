@@ -33,17 +33,25 @@ class _SimpleDropDownState extends State<AutocompleteDropDown> {
                     labelText: 'Select country',
                     border: OutlineInputBorder(),
                   ),
+                  // Only a picked suggestion counts, so typing a valid name
+                  // without selecting it does not pass.
                   validator: (val) {
-                    if (_countries.contains(val)) {
+                    if (_selectedItem.isNotEmpty && val == _selectedItem) {
                       return null;
-                    } else {
-                      return 'Invalid Country';
                     }
+                    return 'Select a country from the list';
                   },
                   onItemSelect: (selected) {
                     setState(() {
                       _selectedItem = selected;
                     });
+                  },
+                  onChanged: (text) {
+                    if (text != _selectedItem) {
+                      setState(() {
+                        _selectedItem = '';
+                      });
+                    }
                   },
                 ),
                 const SizedBox(height: 20),
@@ -68,106 +76,44 @@ class _SimpleDropDownState extends State<AutocompleteDropDown> {
   }
 }
 
-class AutocompleteTextField extends StatefulWidget {
+/// A form field built on Flutter's [Autocomplete], which owns the text
+/// controller, focus node and suggestions overlay.
+class AutocompleteTextField extends StatelessWidget {
   final List<String> items;
-  final Function(String) onItemSelect;
+  final ValueChanged<String> onItemSelect;
+  final ValueChanged<String>? onChanged;
   final InputDecoration? decoration;
   final String? Function(String?)? validator;
   const AutocompleteTextField({
     super.key,
     required this.items,
     required this.onItemSelect,
+    this.onChanged,
     this.decoration,
     this.validator,
   });
 
   @override
-  State<AutocompleteTextField> createState() => _AutocompleteTextFieldState();
-}
-
-class _AutocompleteTextFieldState extends State<AutocompleteTextField> {
-  final FocusNode _focusNode = FocusNode();
-  late OverlayEntry _overlayEntry;
-  final LayerLink _layerLink = LayerLink();
-  late List<String> _filteredItems;
-
-  final TextEditingController _controller = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    _filteredItems = widget.items;
-    _focusNode.addListener(() {
-      if (_focusNode.hasFocus) {
-        _overlayEntry = _createOverlayEntry();
-        Overlay.of(context).insert(_overlayEntry);
-      } else {
-        _overlayEntry.remove();
-      }
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return CompositedTransformTarget(
-      link: _layerLink,
-      child: TextFormField(
-        controller: _controller,
-        focusNode: _focusNode,
-        onChanged: _onFieldChange,
-        decoration: widget.decoration,
-        validator: widget.validator,
-      ),
-    );
-  }
-
-  void _onFieldChange(String val) {
-    setState(() {
-      if (val == '') {
-        _filteredItems = widget.items;
-      } else {
-        _filteredItems = widget.items
-            .where(
-              (element) => element.toLowerCase().contains(val.toLowerCase()),
-            )
-            .toList();
-      }
-    });
-  }
-
-  OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    var size = renderBox.size;
-
-    return OverlayEntry(
-      builder: (context) => Positioned(
-        width: size.width,
-        child: CompositedTransformFollower(
-          link: _layerLink,
-          showWhenUnlinked: false,
-          offset: Offset(0.0, size.height + 5.0),
-          child: Material(
-            elevation: 4.0,
-            child: Container(
-              constraints: const BoxConstraints(maxHeight: 200),
-              child: ListView.builder(
-                itemCount: _filteredItems.length,
-                itemBuilder: (BuildContext context, int index) {
-                  final item = _filteredItems[index];
-                  return ListTile(
-                    title: Text(item),
-                    onTap: () {
-                      _controller.text = item;
-                      _focusNode.unfocus();
-                      widget.onItemSelect(item);
-                    },
-                  );
-                },
-              ),
-            ),
-          ),
-        ),
-      ),
+    return Autocomplete<String>(
+      optionsBuilder: (value) {
+        final query = value.text.toLowerCase();
+        if (query.isEmpty) return items;
+        return items.where((item) => item.toLowerCase().contains(query));
+      },
+      onSelected: onItemSelect,
+      fieldViewBuilder: (context, controller, focusNode, onFieldSubmitted) {
+        return TextFormField(
+          controller: controller,
+          focusNode: focusNode,
+          decoration: decoration,
+          validator: validator,
+          onChanged: onChanged,
+          onFieldSubmitted: (_) => onFieldSubmitted(),
+          // Closes the suggestions so they can't sit over the Continue button.
+          onTapOutside: (_) => focusNode.unfocus(),
+        );
+      },
     );
   }
 }
@@ -228,10 +174,10 @@ final List<String> _countries = [
   "Congo, the Democratic Republic of the",
   "Cook Islands",
   "Costa Rica",
-  "CÃte d'Ivoire",
+  "Côte d'Ivoire",
   "Croatia",
   "Cuba",
-  "CuraÃ§ao",
+  "Curaçao",
   "Cyprus",
   "Czech Republic",
   "Denmark",
@@ -354,11 +300,11 @@ final List<String> _countries = [
   "Portugal",
   "Puerto Rico",
   "Qatar",
-  "RÃ©union",
+  "Réunion",
   "Romania",
   "Russian Federation",
   "Rwanda",
-  "Saint BarthÃ©lemy",
+  "Saint Barthélemy",
   "Saint Helena, Ascension and Tristan da Cunha",
   "Saint Kitts and Nevis",
   "Saint Lucia",

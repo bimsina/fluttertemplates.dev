@@ -32,7 +32,7 @@ class AlbumGrid extends StatelessWidget {
                 Expanded(
                   child: Container(
                     decoration: BoxDecoration(
-                      color: Colors.primaries[i].withValues(alpha: 0.3),
+                      color: Colors.primaries[i % Colors.primaries.length].withValues(alpha: 0.3),
                       borderRadius: const BorderRadius.vertical(
                         top: Radius.circular(12),
                       ),

@@ -74,7 +74,7 @@ class SecuritySettings extends StatelessWidget {
                 title: 'Change Password',
                 subtitle: 'Last changed 30 days ago',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Change Password (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -82,7 +82,7 @@ class SecuritySettings extends StatelessWidget {
                 title: 'Forgot Password',
                 subtitle: 'Reset your password',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Forgot Password (demo)'),
               ),
             ],
           ),
@@ -110,7 +110,7 @@ class SecuritySettings extends StatelessWidget {
                   ),
                 ),
                 trailing: TextButton(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Manage (demo)'),
                   child: const Text('Manage'),
                 ),
               ),
@@ -127,7 +127,7 @@ class SecuritySettings extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: OutlinedButton(
-                  onPressed: () {},
+                  onPressed: () => _showDemo(context, 'Sign Out All Devices (demo)'),
                   style: OutlinedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 14),
                     side: const BorderSide(color: Colors.red),
@@ -164,7 +164,7 @@ class SecuritySettings extends StatelessWidget {
                 title: 'Security Questions',
                 subtitle: 'Add recovery questions',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Security Questions (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -172,7 +172,7 @@ class SecuritySettings extends StatelessWidget {
                 title: 'Recovery Email',
                 subtitle: 'john.doe@email.com',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Recovery Email (demo)'),
               ),
               _buildSettingTile(
                 context,
@@ -180,7 +180,7 @@ class SecuritySettings extends StatelessWidget {
                 title: 'Recovery Phone',
                 subtitle: '+1 *** *** **90',
                 isDark: isDark,
-                onTap: () {},
+                onTap: () => _showDemo(context, 'Recovery Phone (demo)'),
               ),
             ],
           ),
@@ -306,8 +306,9 @@ class SecuritySettings extends StatelessWidget {
       trailing: isCurrent
           ? null
           : IconButton(
+              tooltip: 'Sign out of this session',
               icon: const Icon(Icons.logout, color: Colors.red),
-              onPressed: () {},
+              onPressed: () => _showDemo(context, 'Sign out of this device (demo)'),
             ),
     );
   }
@@ -358,4 +359,10 @@ class SecuritySettings extends StatelessWidget {
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }

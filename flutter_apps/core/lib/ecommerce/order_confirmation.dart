@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
+const _months = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
+];
+
+String _formatDate(DateTime date) =>
+    '${_months[date.month - 1]} ${date.day}, ${date.year}';
+
 class OrderConfirmation extends StatefulWidget {
-  const OrderConfirmation({super.key});
+  /// Called by 'Continue Shopping'. Without it the demo shows a SnackBar.
+  final VoidCallback? onContinueShopping;
+
+  const OrderConfirmation({super.key, this.onContinueShopping});
 
   @override
   State<OrderConfirmation> createState() => _OrderConfirmationState();
@@ -11,6 +22,7 @@ class _OrderConfirmationState extends State<OrderConfirmation>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _scaleAnim;
+  final _estimatedDelivery = DateTime.now().add(const Duration(days: 5));
 
   @override
   void initState() {
@@ -60,13 +72,14 @@ class _OrderConfirmationState extends State<OrderConfirmation>
               ),
               const SizedBox(height: 8),
               Text(
-                'Estimated delivery: Dec 20, 2024',
+                'Estimated delivery: ${_formatDate(_estimatedDelivery)}',
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(height: 32),
               FilledButton(
-                onPressed: () {},
-                child: const Text('Continue Shopping'),
+                onPressed: widget.onContinueShopping ??
+                  () => _showDemo(context, 'Back to the shop (demo)'),
+              child: const Text('Continue Shopping'),
               ),
             ],
           ),
@@ -74,4 +87,10 @@ class _OrderConfirmationState extends State<OrderConfirmation>
       ),
     );
   }
+}
+
+void _showDemo(BuildContext context, String message) {
+  ScaffoldMessenger.of(context)
+    ..hideCurrentSnackBar()
+    ..showSnackBar(SnackBar(content: Text(message)));
 }
