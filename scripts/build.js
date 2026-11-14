@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { execSync } from "child_process";
+import { createHash } from "crypto";
 import { fileURLToPath } from "url";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -11,6 +12,32 @@ function ensureDirectoryExists(dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
+}
+
+// Flutter emits its bundles under fixed names, so they can't be cached for
+// long. Rename them to include a content hash and point the build config in
+// flutter_bootstrap.js at the new names; public/_headers marks them immutable.
+function fingerprintBundles(dir) {
+  const bootstrapPath = path.join(dir, "flutter_bootstrap.js");
+  let bootstrap = fs.readFileSync(bootstrapPath, "utf8");
+
+  for (const name of ["main.dart.wasm", "main.dart.mjs", "main.dart.js"]) {
+    const file = path.join(dir, name);
+    if (!fs.existsSync(file)) continue;
+    if (!bootstrap.includes(`"${name}"`)) {
+      throw new Error(`${name} is not referenced in flutter_bootstrap.js`);
+    }
+
+    const hash = createHash("sha256")
+      .update(fs.readFileSync(file))
+      .digest("hex")
+      .slice(0, 12);
+    const hashed = name.replace("main.dart.", `main.dart.${hash}.`);
+    fs.renameSync(file, path.join(dir, hashed));
+    bootstrap = bootstrap.replaceAll(`"${name}"`, `"${hashed}"`);
+  }
+
+  fs.writeFileSync(bootstrapPath, bootstrap);
 }
 
 // Main build function
@@ -55,6 +82,7 @@ async function buildFlutterApps() {
 
       // Copy the build output
       fs.cpSync(buildOutput, targetDir, { recursive: true });
+      fingerprintBundles(targetDir);
       console.log(
         `Successfully built and copied ${folder} to public/flutter_apps/${folder}`
       );

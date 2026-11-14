@@ -543,7 +543,7 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'URL Parameters Demo',
+      title: 'Flutter Templates preview',
       theme: queryParams["theme"] == "dark"
           ? ThemeData.dark()
           : ThemeData(

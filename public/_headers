@@ -1,0 +1,4 @@
+# Fingerprinted Flutter bundles (see scripts/build.js): the name changes
+# whenever the content does, so they never need revalidating.
+/flutter_apps/:app/main.dart.*
+  Cache-Control: public, max-age=31536000, immutable

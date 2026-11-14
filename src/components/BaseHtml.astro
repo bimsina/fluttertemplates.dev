@@ -2,6 +2,7 @@
 import BaseHead from "@/components/BaseHead.astro";
 import Header from "@/components/Header.astro";
 import { SITE_TITLE, SITE_DESCRIPTION } from "@/consts";
+import { previewWasmUrl } from "@/lib/previewBundle";
 
 interface Props {
   title?: string;
@@ -11,6 +12,8 @@ interface Props {
   searchTitle?: string;
   // Listing pages are left out of site search.
   searchable?: boolean;
+  // Set on pages that show a live preview near the top.
+  preloadPreview?: boolean;
 }
 const {
   title,
@@ -18,7 +21,10 @@ const {
   image = "/og.png",
   searchTitle,
   searchable = true,
+  preloadPreview = false,
 } = Astro.props;
+// In dev the preview comes from the Flutter dev server instead.
+const wasmUrl = preloadPreview && import.meta.env.PROD ? previewWasmUrl() : null;
 ---
 
 <!doctype html>
@@ -30,6 +36,19 @@ const {
       image={image}
     />
     {searchTitle && <meta data-pagefind-meta={`title:${searchTitle}`} />}
+    {
+      // The preview iframe only starts loading after hydration; this starts the
+      // largest download with the page and the iframe picks it up from cache.
+      wasmUrl && (
+        <link
+          rel="preload"
+          href={wasmUrl}
+          as="fetch"
+          type="application/wasm"
+          crossorigin
+        />
+      )
+    }
   </head>
   <body>
     <Header />
